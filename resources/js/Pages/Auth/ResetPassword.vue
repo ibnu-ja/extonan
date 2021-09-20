@@ -1,56 +1,104 @@
 <template>
-  <div>
-    Reset Password
+  <web-layout>
+    <v-row justify="center">
+      <v-col
+        cols="10"
+        sm="8"
+        md="6"
+      >
+        <v-card class="p-2">
+          <v-card-title>Reset Password</v-card-title>
+          <v-card-text>
+            <validation-errors class="mb-4" />
 
-    <!-- <jet-authentication-card>
-            <template #logo>
-                <jet-authentication-card-logo />
-            </template>
-
-            <jet-validation-errors class="mb-4" />
+            <div
+              v-if="status"
+              class="mb-4 font-medium text-sm text-green-600"
+            >
+              {{ status }}
+            </div>
 
             <form @submit.prevent="submit">
-                <div>
-                    <jet-label for="email" value="Email" />
-                    <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus />
-                </div>
-
-                <div class="mt-4">
-                    <jet-label for="password" value="Password" />
-                    <jet-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
-                </div>
-
-                <div class="mt-4">
-                    <jet-label for="password_confirmation" value="Confirm Password" />
-                    <jet-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
-                </div>
-
-                <div class="flex items-center justify-end mt-4">
-                    <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Reset Password
-                    </jet-button>
-                </div>
+              <v-text-field
+                v-model="form.email"
+                dense
+                outlined
+                label="Email Address"
+                required
+                autofocus
+              />
+              <v-text-field
+                v-model="form.password"
+                dense
+                outlined
+                label="New Password"
+                required
+                autocomplete="current-password"
+                :append-icon="show_pass ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="show_pass ? 'text' : 'password'"
+                hint="At least 8 characters"
+                @click:append="show_pass = !show_pass"
+              />
+              <v-text-field
+                v-model="form.password_confirmation"
+                dense
+                outlined
+                label="Comfirn New Password"
+                required
+                autocomplete="current-password"
+                :append-icon="
+                  show_pass_confirmation ? 'mdi-eye' : 'mdi-eye-off'
+                "
+                :type="show_pass_confirmation ? 'text' : 'password'"
+                hint="At least 8 characters"
+                @click:append="show_pass_confirmation = !show_pass_confirmation"
+              />
+              <v-btn
+                block
+                color="primary"
+                type="submit"
+                :disabled="form.processing"
+              >
+                Reset Password
+              </v-btn>
             </form>
-        </jet-authentication-card> -->
-  </div>
+
+            <div class="my-3 d-flex justify-space-between text-body-1">
+              <a
+                href="#"
+                @click.prevent="toggleRecovery"
+                v-text="
+                  !recovery ? 'Use recovery code' : 'Use authenticator code'
+                "
+              />
+
+              <div>
+                Don't have an account?
+                <inertia-link :href="route('register')">
+                  Sign up
+                </inertia-link>
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-sheet
+      class=""
+      color="gray pulse"
+      width="200px"
+    />
+  </web-layout>
 </template>
 
 <script>
-// import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-// import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-// import JetButton from '@/Jetstream/Button'
-// import JetInput from '@/Jetstream/Input'
-// import JetLabel from '@/Jetstream/Label'
-// import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import WebLayout from '@/Layouts/WebLayout.vue'
+import ValidationErrors from '@/Components/ValidationErrors'
 
 export default {
   components: {
-    // JetAuthenticationCard,
-    // JetAuthenticationCardLogo,
-    // JetButton,
-    // JetInput,
-    // JetLabel,
-    // JetValidationErrors
+    WebLayout,
+    ValidationErrors
   },
 
   props: {
@@ -62,6 +110,8 @@ export default {
 
   data () {
     return {
+      show_pass_confirmation: false,
+      show_pass: false,
       form: this.$inertia.form({
         token: this.token,
         email: this.email,
