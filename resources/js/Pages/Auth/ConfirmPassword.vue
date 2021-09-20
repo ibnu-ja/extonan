@@ -1,56 +1,64 @@
 <template>
-  <div>
-    Card de autenticacion con solo la password bb
-    <!-- <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
-
-        <div class="mb-4 text-sm text-gray-600">
-            This is a secure area of the application. Please confirm your password before continuing.
-        </div>
-
-        <jet-validation-errors class="mb-4" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <jet-label for="password" value="Password" />
-                <jet-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="current-password" autofocus />
+  <web-layout>
+    <v-row justify="center">
+      <v-col
+        cols="10"
+        sm="8"
+        md="6"
+        align-self="center"
+      >
+        <v-card class="p-2">
+          <v-card-title>Confirm Password</v-card-title>
+          <v-card-text>
+            <div class="mb-4">
+              This is a secure area of the application. Please confirm your
+              password before continuing.
             </div>
 
-            <div class="flex justify-end mt-4">
-                <jet-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Confirm
-                </jet-button>
-            </div>
-        </form>
-        </jet-authentication-card> -->
-  </div>
+            <validation-errors class="mb-4" />
+
+            <form @submit.prevent="submit">
+              <v-text-field
+                v-model="form.password"
+                dense
+                outlined
+                label="Password"
+                required
+                autocomplete="current-password"
+                :append-icon="showP ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showP ? 'text' : 'password'"
+                hint="At least 8 characters"
+                @click:append="showP = !showP"
+              />
+              <v-btn
+                block
+                color="primary"
+                type="submit"
+                :disabled="form.processing"
+              >
+                Confirm
+              </v-btn>
+            </form>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </web-layout>
 </template>
 
 <script>
-// import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-// import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-// import JetButton from '@/Jetstream/Button'
-// import JetInput from '@/Jetstream/Input'
-// import JetLabel from '@/Jetstream/Label'
-// import JetValidationErrors from '@/Jetstream/ValidationErrors'
-
+import WebLayout from '../../Layouts/WebLayout.vue'
 export default {
   components: {
-    // JetAuthenticationCard,
-    // JetAuthenticationCardLogo,
-    // JetButton,
-    // JetInput,
-    // JetLabel,
-    // JetValidationErrors
+    WebLayout
   },
 
   data () {
     return {
       form: this.$inertia.form({
         password: ''
-      })
+      }),
+      showP: false
     }
   },
 

@@ -1,5 +1,5 @@
 <template>
-  <guest-layout>
+  <web-layout>
     <v-row justify="center">
       <v-col
         cols="10"
@@ -141,16 +141,16 @@
         </v-card>
       </v-col>
     </v-row>
-  </guest-layout>
+  </web-layout>
 </template>
 
 <script>
-import GuestLayout from '@/Layouts/GuestLayout.vue'
+import WebLayout from '@/Layouts/WebLayout.vue'
 import ValidationErrors from '@/Components/ValidationErrors'
 
 export default {
   components: {
-    GuestLayout,
+    WebLayout,
     ValidationErrors
   },
 

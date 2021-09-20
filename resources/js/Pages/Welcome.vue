@@ -1,5 +1,5 @@
 <template>
-  <guest-layout>
+  <web-layout>
     <v-container>
       <v-row
         justify="center"
@@ -74,17 +74,17 @@
         </v-row>
       </v-container>
     </v-sheet>
-  </guest-layout>
+  </web-layout>
 </template>
 
 <script>
-import GuestLayout from '@/Layouts/GuestLayout.vue'
+import WebLayout from '@/Layouts/WebLayout.vue'
 // import ValidationErrors from '@/Components/ValidationErrors'
 import SvgBusinessAnalytics from '@/Components/svg/BusinessAnalytics'
 
 export default {
   components: {
-    GuestLayout,
+    WebLayout,
     // ValidationErrors,
     SvgBusinessAnalytics
   },

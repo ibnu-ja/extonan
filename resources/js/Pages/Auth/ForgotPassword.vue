@@ -1,5 +1,5 @@
 <template>
-  <guest-layout>
+  <web-layout>
     <v-row justify="center">
       <v-col
         cols="10"
@@ -17,7 +17,7 @@
 
             <div
               v-if="status"
-              class="mb-4 font-medium text-sm text-green-600"
+              class="mb-4 success--text"
             >
               {{ status }}
             </div>
@@ -53,16 +53,16 @@
       color="gray pulse"
       width="200px"
     />
-  </guest-layout>
+  </web-layout>
 </template>
 
 <script>
-import GuestLayout from '@/Layouts/GuestLayout.vue'
+import WebLayout from '@/Layouts/WebLayout.vue'
 import ValidationErrors from '@/Components/ValidationErrors'
 
 export default {
   components: {
-    GuestLayout,
+    WebLayout,
     ValidationErrors
   },
 

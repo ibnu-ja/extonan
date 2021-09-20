@@ -1,5 +1,5 @@
 <template>
-  <guest-layout>
+  <web-layout>
     <v-row justify="center">
       <v-col
         cols="10"
@@ -30,7 +30,6 @@
               <v-text-field
                 v-model="form.password"
                 dense
-                hide-details
                 outlined
                 label="Password"
                 required
@@ -74,7 +73,7 @@
               <v-icon>mdi-github</v-icon> Sign with Github
             </v-btn>
             <br>
-            <div class="mb-3 d-flex justify-space-between">
+            <div class="mb-3 d-flex justify-space-between text-body-1">
               <inertia-link
                 v-if="canResetPassword"
                 :href="route('password.request')"
@@ -98,16 +97,16 @@
       color="gray pulse"
       width="200px"
     />
-  </guest-layout>
+  </web-layout>
 </template>
 
 <script>
-import GuestLayout from '@/Layouts/GuestLayout.vue'
+import WebLayout from '@/Layouts/WebLayout.vue'
 import ValidationErrors from '@/Components/ValidationErrors'
 
 export default {
   components: {
-    GuestLayout,
+    WebLayout,
     ValidationErrors
   },
 
@@ -142,9 +141,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-a {
-  font-size: 1.15rem;
-}
-</style>
