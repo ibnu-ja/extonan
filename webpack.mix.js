@@ -9,6 +9,7 @@ mix.extend(
     register (config = {}) {
       this.watch = config.watch ?? ['routes/**/*.php']
       this.path = config.path ?? ''
+      // eslint-disable-next-line no-undef
       this.enabled = config.enabled ?? !Mix.inProduction()
     }
 
@@ -18,11 +19,12 @@ mix.extend(
       const command = () =>
         exec(
           `php artisan ziggy:generate ${this.path}`,
-          (error, stdout, stderr) => console.log(stdout)
+          (_error, stdout, stderr) => console.log(stdout)
         )
 
       command()
 
+      // eslint-disable-next-line no-undef
       if (Mix.isWatching() && this.watch) {
         require('chokidar')
           .watch(this.watch)
@@ -65,13 +67,6 @@ mix
   })
   .vue()
   .disableNotifications()
-  .browserSync({
-    proxy: process.env.APP_URL,
-    socket: {
-      domain: process.env.APP_URL
-    },
-    open: false
-  })
 
 if (mix.inProduction()) {
   mix.version()
