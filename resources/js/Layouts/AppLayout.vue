@@ -13,14 +13,6 @@
       />
 
       <!-- Logo -->
-      <inertia-link :href="route('dashboard')">
-        <!-- <v-avatar
-          class="mr-10"
-          color="grey darken-1"
-          size="32"
-          ></v-avatar> -->
-        <!-- <jet-application-mark class="block  w-auto" style="height: 2.25rem;"/> -->
-      </inertia-link>
 
       <transition name="fade">
         <v-toolbar-title
@@ -46,7 +38,7 @@
         :active="route().current('dashboard')"
         as="v-btn"
         text
-        class="text-capitalize d-none d-sm-flex"
+        class="d-none d-sm-flex text-capitalize"
       >
         Dashboard
       </inertia-link>
@@ -62,7 +54,7 @@
           <v-btn
             text
             v-bind="attrs"
-            class="text-capitalize d-none d-sm-flex"
+            class="d-none d-sm-flex"
             v-on="on"
           >
             {{ $page.props.user.current_team.name }}
@@ -159,6 +151,12 @@
           </v-btn>
         </template>
         <v-list dense>
+          <inertia-link
+            as="v-list-item"
+            href="/"
+          >
+            Home
+          </inertia-link>
           <v-subheader>Manage Account</v-subheader>
           <inertia-link
             class="v-list-item"
@@ -411,10 +409,6 @@ export default {
 <style>
 main.v-main {
   background-color: #f3f4f6;
-}
-.v-app-bar .v-btn.v-btn--text {
-  text-transform: capitalize;
-  font-weight: 400;
 }
 /* .v-app-bar svg {
   width: 1rem;
