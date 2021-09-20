@@ -1,102 +1,94 @@
 <template>
-  <div>
-    Two factor challenge
-    <jet-authentication-card>
-      <template #logo>
-        <jet-authentication-card-logo />
-      </template>
+  <web-layout>
+    <v-row justify="center">
+      <v-col
+        cols="10"
+        sm="8"
+        md="6"
+      >
+        <v-card class="p-2">
+          <v-card-title>Two Factor authentication</v-card-title>
+          <v-card-text>
+            <validation-errors class="mb-4" />
 
-      <div class="mb-4 text-sm text-gray-600">
-        <template v-if="!recovery">
-          Please confirm access to your account by entering the authentication
-          code provided by your authenticator application.
-        </template>
+            <div
+              v-if="status"
+              class="mb-4 font-medium text-sm text-green-600"
+            >
+              {{ status }}
+            </div>
 
-        <template v-else>
-          Please confirm access to your account by entering one of your
-          emergency recovery codes.
-        </template>
-      </div>
+            <form @submit.prevent="submit">
+              <v-text-field
+                v-if="!recovery"
+                id="code"
+                ref="code"
+                v-model="form.code"
+                type="text"
+                inputmode="numeric"
+                class="mt-1 block w-full"
+                autofocus
+                autocomplete="one-time-code"
+                dense
+                outlined
+                label="Code"
+                required
+              />
+              <v-text-field
+                v-else
+                id="recovery_code"
+                ref="recovery_code"
+                v-model="form.recovery_code"
+                type="text"
+                inputmode="numeric"
+                class="mt-1 block w-full"
+                autofocus
+                autocomplete="one-time-code"
+                dense
+                outlined
+                label="Recovery Code"
+                required
+              />
+              <v-btn
+                block
+                color="primary"
+                type="submit"
+                :disabled="form.processing"
+              >
+                Sign In
+              </v-btn>
+            </form>
+            <div class="my-3 d-flex justify-space-between text-body-1">
+              <a
+                href="#"
+                @click.prevent="toggleRecovery"
+                v-text="
+                  !recovery ? 'Use recovery code' : 'Use authenticator code'
+                "
+              />
 
-      <jet-validation-errors class="mb-4" />
-
-      <form @submit.prevent="submit">
-        <div v-if="!recovery">
-          <jet-label
-            for="code"
-            value="Code"
-          />
-          <jet-input
-            id="code"
-            ref="code"
-            v-model="form.code"
-            type="text"
-            inputmode="numeric"
-            class="mt-1 block w-full"
-            autofocus
-            autocomplete="one-time-code"
-          />
-        </div>
-
-        <div v-else>
-          <jet-label
-            for="recovery_code"
-            value="Recovery Code"
-          />
-          <jet-input
-            id="recovery_code"
-            ref="recovery_code"
-            v-model="form.recovery_code"
-            type="text"
-            class="mt-1 block w-full"
-            autocomplete="one-time-code"
-          />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-          <button
-            type="button"
-            class="text-sm text-gray-600 hover:text-gray-900 underline cursor-pointer"
-            @click.prevent="toggleRecovery"
-          >
-            <template v-if="!recovery">
-              Use a recovery code
-            </template>
-
-            <template v-else>
-              Use an authentication code
-            </template>
-          </button>
-
-          <jet-button
-            class="ml-4"
-            :class="{ 'opacity-25': form.processing }"
-            :disabled="form.processing"
-          >
-            Login
-          </jet-button>
-        </div>
-      </form>
-    </jet-authentication-card>
-  </div>
+              <div>
+                Don't have an account?
+                <inertia-link :href="route('register')">
+                  Sign up
+                </inertia-link>
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </web-layout>
 </template>
 
 <script>
-import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-import JetButton from '@/Jetstream/Button'
-import JetInput from '@/Jetstream/Input'
-import JetLabel from '@/Jetstream/Label'
-import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import WebLayout from '@/Layouts/WebLayout.vue'
+import ValidationErrors from '@/Components/ValidationErrors'
 
 export default {
   components: {
-    JetAuthenticationCard,
-    JetAuthenticationCardLogo,
-    JetButton,
-    JetInput,
-    JetLabel,
-    JetValidationErrors
+    WebLayout,
+    ValidationErrors
   },
 
   data () {
