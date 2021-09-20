@@ -24,10 +24,15 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/test', function () {
-    return Inertia::render('Test');
+Route::middleware(['password.confirm'])->get('/test', function () {
+    return Inertia::render('Test', [
+        'msg' => 'tes bambang'
+    ]);
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
+
+require_once __DIR__ . '/fortify.php';
+require_once __DIR__ . '/jetstream_inertia.php';
