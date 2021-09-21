@@ -56,15 +56,14 @@ mix
     ziggy: path.resolve('vendor/tightenco/ziggy/dist/vue')
   })
   .js('resources/js/app.js', 'public/js')
+  // .sass('resources/sass/app.scss', 'public/css')
   .eslint({
     // fix: true,
     extensions: ['js', 'vue'],
     exclude: ['/node_modules/*', '/resources/js/ziggy.js']
     // ...
   })
-  .vuetify('vuetify-loader', {
-    extract: '/js/app.css'
-  })
+  .vuetify('vuetify-loader')
   .vue()
   .disableNotifications()
 
