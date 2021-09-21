@@ -2,7 +2,6 @@
   <v-app>
     <v-app-bar
       app
-      color="white"
       flat
       elevate-on-scroll
     >
@@ -15,6 +14,8 @@
       </inertia-link>
 
       <v-spacer />
+
+      <home-settings />
 
       <inertia-link
         v-if="$page.props.user"
@@ -96,10 +97,17 @@
   </v-app>
 </template>
 
-<style>
-main.v-main {
-  background-color: #f3f4f6;
+<script>
+import HomeSettings from './Settings/Index.vue'
+
+export default {
+  components: {
+    HomeSettings
+  }
 }
+</script>
+
+<style>
 /* Transitions */
 .slide-fade-enter-active {
   transition: all 0.3s ease;

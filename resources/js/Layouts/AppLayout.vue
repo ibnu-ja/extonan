@@ -3,9 +3,8 @@
     <v-app-bar
       id="app-nav"
       app
-      color="white"
-      elevate-on-scroll
       fixed
+      clipped-left
     >
       <v-app-bar-nav-icon
         class="d-lg-none"
@@ -13,23 +12,6 @@
       />
 
       <!-- Logo -->
-
-      <transition name="fade">
-        <v-toolbar-title
-          v-if="$slots.header && scrolled"
-          class="text-capitalize ml-5"
-          transition="scroll-y-transition"
-        >
-          <slot name="header" />
-        </v-toolbar-title>
-        <!-- <v-toolbar-title
-          v-if="$slots.header && scrolled"
-          class="text-capitalize ml-5"
-          transition="scroll-y-transition"
-        >
-          <slot name="header" />
-        </v-toolbar-title> -->
-      </transition>
 
       <v-spacer />
       <!-- Navigation Links -->
@@ -42,6 +24,8 @@
       >
         Dashboard
       </inertia-link>
+
+      <home-settings />
 
       <!-- Teams Dropdown -->
       <v-menu
@@ -185,6 +169,7 @@
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="mini"
+      clipped
       app
     >
       <v-list
@@ -340,7 +325,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main v-scroll="onScroll">
+    <v-main>
       <v-container class="pt-7">
         <header
           v-if="$slots.header"
@@ -356,19 +341,18 @@
 </template>
 
 <script>
-// import JetApplicationMark from '@/Jetstream/ApplicationMark'
+import HomeSettings from './Settings/Index.vue'
 
 export default {
   components: {
-    // JetApplicationMark
+    HomeSettings
   },
 
   data () {
     return {
       drawer: true,
       mini: false,
-      showingNavigationDropdown: false,
-      scrolled: false
+      showingNavigationDropdown: false
     }
   },
 
@@ -387,46 +371,12 @@ export default {
 
     logout () {
       this.$inertia.post(this.route('logout'))
-    },
-
-    onScroll (e) {
-      // console.log('haciendo scroll')
-      const currentScrollPosition =
-        window.pageYOffset || document.documentElement.scrollTop // Because of momentum scrolling on mobiles, we shouldn't continue if it is less than zero
-      if (currentScrollPosition < 0) {
-        return
-      }
-      if (currentScrollPosition > 60) {
-        this.scrolled = true
-      } else {
-        this.scrolled = false
-      }
     }
   }
 }
 </script>
 
 <style>
-main.v-main {
-  background-color: #f3f4f6;
-}
-/* .v-app-bar svg {
-  width: 1rem;
-  height: 1rem;
-}
- */
-#app-nav v-toolbar-title.text-capitalize.ml-5 h2 {
-  color: rgba(0, 0, 0, 0.6) !important;
-}
-#pageheader {
-  line-height: 1.25;
-  font-size: 1.5rem;
-  padding-left: 2.5rem;
-}
-#pageheader h2 {
-  color: #424242 !important;
-  caret-color: #424242 !important;
-}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
