@@ -30,7 +30,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-sheet color="white">
+    <v-sheet>
       <v-container
         fluid
         class="py-4 py-lg-8"
