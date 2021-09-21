@@ -3,6 +3,7 @@ import Vue from 'vue'
 import { ZiggyVue } from 'ziggy'
 import { Ziggy } from './ziggy'
 import axios from 'axios'
+import store from './Store'
 import VueAxios from 'vue-axios'
 import {
   App as InertiaApp,
@@ -26,6 +27,7 @@ Vue.use(InertiaPlugin)
 const app = document.getElementById('app')
 
 new Vue({
+  store,
   vuetify,
   render: h =>
     h(InertiaApp, {
