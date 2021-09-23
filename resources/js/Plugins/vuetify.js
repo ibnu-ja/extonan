@@ -4,8 +4,7 @@ import Vue from 'vue'
 import Vuetify, { VBtn } from 'vuetify/lib'
 import id from 'vuetify/lib/locale/id'
 import { Ripple } from 'vuetify/lib/directives'
-// Vuetify's CSS styles
-import 'vuetify/dist/vuetify.min.css'
+import '@mdi/font/css/materialdesignicons.css'
 
 Vue.use(Vuetify, {
   directives: {
@@ -25,14 +24,14 @@ const vuetify = new Vuetify({
     dark: false,
     themes: {
       light: {
-        primary: '#FFA800',
-        secondary: '#FF4343',
-        accent: '#204165'
+        primary: '#7e2c59',
+        secondary: '#314094',
+        accent: '#2c7e43'
       },
       dark: {
-        primary: '#50778D',
-        secondary: '#0B1C3D',
-        accent: '#204165'
+        primary: '#df76b0',
+        secondary: '#2e4e8d',
+        accent: '#59bb75'
       }
     },
     options: { customProperties: true }
