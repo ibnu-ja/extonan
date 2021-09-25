@@ -341,9 +341,10 @@
 </template>
 
 <script>
-import HomeSettings from './Settings/Index.vue'
+import HomeSettings from '../Settings/Index.vue'
 
 export default {
+  name: 'DashLayout',
   components: {
     HomeSettings
   },

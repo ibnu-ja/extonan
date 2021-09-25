@@ -2,26 +2,61 @@
   <v-app>
     <v-app-bar
       app
-      flat
       elevate-on-scroll
     >
+      <v-spacer />
+
       <inertia-link href="/">
         <v-avatar
-          class="mr-10"
           color="grey darken-1"
           size="32"
         />
       </inertia-link>
 
-      <v-spacer />
+      <v-text-field
+        placeholder="Search ..."
+        autocomplete="off"
+        class="mx-2 mx-md-4"
+        dense
+        hide-details
+        solo
+        style="max-width: 400px;"
+      >
+        <template #prepend-inner>
+          <v-icon class="ml-1 mr-2">
+            mdi-magnify
+          </v-icon>
+          <!-- <v-icon
+            :color="!isFocused ? 'grey' : undefined"
+            class="ml-1 mr-2"
+          >
+            mdi-magnify
+          </v-icon> -->
+        </template>
+      </v-text-field>
 
-      <home-settings />
+      <inertia-link
+        v-for="test in 3"
+        :key="test"
+        as="v-btn"
+        text
+        class="d-none d-sm-flex mx-1 text-capitalize"
+        href="/"
+      >
+        Album
+      </inertia-link>
+
+      <v-divider
+        vertical
+        inset
+        class="mx-1"
+      />
 
       <inertia-link
         v-if="$page.props.user"
         as="v-btn"
         text
-        class="d-none d-sm-flex mr-2 text-capitalize"
+        class="d-none d-sm-flex mx-1 text-capitalize"
         href="/dashboard"
       >
         Dashboard
@@ -32,6 +67,7 @@
           v-if="!route().current('login') && !route().current('register')"
           :href="route('login')"
           as="v-btn"
+          class="mx-1"
           text
           outlined
         >
@@ -42,7 +78,7 @@
           :href="route('register')"
           as="v-btn"
           color="primary"
-          class="ml-2"
+          class="mx-1"
         >
           Register
         </inertia-link>
@@ -55,6 +91,7 @@
             <div
               v-if="route().current('login')"
               key="registerLink"
+              class="mx-1"
             >
               Don't have an account?
               <inertia-link :href="route('register')">
@@ -64,6 +101,7 @@
             <div
               v-else
               key="loginLink"
+              class="mx-1"
             >
               Already have an account?
               <inertia-link :href="route('login')">
@@ -73,9 +111,12 @@
           </transition>
         </div>
       </template>
+
+      <home-settings />
+      <v-spacer />
     </v-app-bar>
 
-    <v-main class="mt-6">
+    <v-main>
       <slot />
     </v-main>
 
@@ -98,9 +139,10 @@
 </template>
 
 <script>
-import HomeSettings from './Settings/Index.vue'
+import HomeSettings from '../Settings/Index.vue'
 
 export default {
+  name: 'WebLayout',
   components: {
     HomeSettings
   }
