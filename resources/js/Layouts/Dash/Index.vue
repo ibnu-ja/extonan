@@ -205,6 +205,24 @@
             <v-list-item-title>Dashboard</v-list-item-title>
           </inertia-link>
 
+          <v-subheader v-if="mini">
+            PO
+          </v-subheader>
+          <v-subheader v-else>
+            Manajemen Postingan
+          </v-subheader>
+          <v-divider />
+
+          <inertia-link
+            as="v-list-item"
+            href="/dashboard/album"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-album</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Album</v-list-item-title>
+          </inertia-link>
+
           <!-- API Management -->
           <inertia-link
             v-if="$page.props.jetstream.hasApiFeatures"

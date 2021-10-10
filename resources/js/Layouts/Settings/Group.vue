@@ -13,7 +13,7 @@
         <template #default="{ active, toggle }">
           <v-card
             :color="
-              active ? 'primary' : `grey ${dark ? 'darken' : 'lighten'}-3`
+              active ? 'primary' : `primary ${dark ? 'darken' : 'lighten'}-3`
             "
             :dark="!dark && active"
             class="v-card--group py-3 px-4 text-center position-relative cursor-pointer d-flex align-center justify-space-between"

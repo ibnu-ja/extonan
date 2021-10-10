@@ -12,24 +12,14 @@
       <v-btn
         icon
         v-bind="attrs"
+        class="mx-2"
+        sm
         v-on="on"
       >
-        <v-icon large>
-          mdi-cog
+        <v-icon>
+          mdi-cog-outline
         </v-icon>
       </v-btn>
-      <!-- <v-card
-        id="settings"
-        class="py-2 px-4"
-        color="#0000004D"
-        dark
-        flat
-        style="position: fixed; top: 164px; right: -35px;"
-        width="100"
-        v-bind="attrs"
-        v-on="on"
-      >
-      </v-card> -->
     </template>
 
     <v-card class="py-2">
@@ -45,7 +35,7 @@
           class="d-flex justify-center"
         >
           <v-item
-            v-for="color in colors"
+            v-for="color in colors[$vuetify.theme.isDark ? 'dark' : 'light']"
             :key="color"
             :value="color"
           >
@@ -78,7 +68,9 @@
               <template #default="{ active, toggle }">
                 <v-card
                   :color="
-                    active ? 'primary' : `grey ${dark ? 'darken' : 'lighten'}-3`
+                    active
+                      ? 'primary'
+                      : `${dark ? 'primary darken-3' : 'grey lighten-3'}`
                   "
                   :dark="!dark && active"
                   class="v-card--group py-3 px-4 text-center position-relative cursor-pointer d-flex align-center justify-space-between"
@@ -87,8 +79,6 @@
                   @click="toggle"
                 >
                   {{ text }}
-                  <!-- <i18n :path="text" /> -->
-
                   <v-icon v-text="icon" />
                 </v-card>
               </template>
@@ -108,19 +98,29 @@ export default {
   name: 'HomeSettings',
 
   components: {
+    // eslint-disable-next-line vue/no-unused-components
     BaseTitle
   },
 
   data () {
     return {
       path: 'theme',
-      colors: [this.$vuetify.theme.currentTheme.primary, '#9368e9', '#F4511E'],
-      menu: false
+      colors: {
+        dark: [this.$vuetify.theme.themes.dark.primary, '#9368e9', '#F4511E'],
+        light: [this.$vuetify.theme.themes.light.primary, '#9368e9', '#F4511E']
+      },
+      menu: false,
+      tes: 'test'
     }
   },
 
   computed: {
     ...sync('settings', ['theme@dark', 'theme@system']),
+    ...sync('settings', {
+      primaryDark: 'color@dark.primary',
+      primaryLight: 'color@light.primary'
+    }),
+    // colorss: sync('settings/color'),
     items () {
       return [
         {
@@ -142,11 +142,19 @@ export default {
     },
     currentThemePrimary: {
       get () {
-        return this.$vuetify.theme.currentTheme.primary
+        const target = this.$vuetify.theme.isDark ? 'dark' : 'light'
+        return this.$vuetify.theme.themes[target].primary
       },
       set (val) {
-        const target = this.$vuetify.theme.isDark ? 'dark' : 'light'
-        this.$vuetify.theme.themes[target].primary = val
+        if (val) {
+          const target = this.$vuetify.theme.isDark ? 'dark' : 'light'
+          const color = this.$vuetify.theme.isDark
+            ? 'primaryDark'
+            : 'primaryLight'
+          this.$vuetify.theme.themes[target].primary = val
+          this[color] = val
+          // this.colo[target].primary = val
+        }
       }
     },
     internalValue: {
@@ -161,7 +169,7 @@ export default {
     }
   },
   watch: {
-    '$vuetify.theme.dark' (val) {
+    '$vuetify.theme.isDark' (val) {
       if (this.dark === val) return
       this.dark = val
     },
@@ -182,6 +190,8 @@ export default {
       }
     }
     this.$vuetify.theme.dark = this.dark
+    this.$vuetify.theme.themes.dark.primary = this.primaryDark
+    this.$vuetify.theme.themes.light.primary = this.primaryLight
   },
   methods: {
     getMatchMedia () {
