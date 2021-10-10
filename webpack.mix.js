@@ -6,14 +6,14 @@ const { exec } = require('child_process')
 mix.extend(
   'ziggy',
   new (class {
-    register (config = {}) {
+    register(config = {}) {
       this.watch = config.watch ?? ['routes/**/*.php']
       this.path = config.path ?? ''
       // eslint-disable-next-line no-undef
       this.enabled = config.enabled ?? !Mix.inProduction()
     }
 
-    boot () {
+    boot() {
       if (!this.enabled) return
 
       const command = () =>
@@ -60,7 +60,7 @@ mix
   .eslint({
     // fix: true,
     extensions: ['js', 'vue'],
-    exclude: ['/node_modules/*', '/resources/js/ziggy.js']
+    exclude: ['**/node_modules/*', '/resources/js/ziggy.js']
     // ...
   })
   .vuetify('vuetify-loader')
