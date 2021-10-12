@@ -52,8 +52,6 @@
         >
           Remove Photo
         </v-btn>
-
-        <!-- <jet-input-error :message="form.errors.photo" class="mt-2" /> -->
       </div>
 
       <!-- Name -->
