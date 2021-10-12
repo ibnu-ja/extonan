@@ -82,13 +82,13 @@
 </template>
 
 <script>
-import WebLayout from '@/Layouts/WebLayout.vue'
 import ValidationErrors from '@/Components/ValidationErrors'
+import WebLayout from '@/Layouts/Web/Index.vue'
 
 export default {
   components: {
-    WebLayout,
-    ValidationErrors
+    ValidationErrors,
+    WebLayout
   },
 
   data () {

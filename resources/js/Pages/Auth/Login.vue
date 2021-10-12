@@ -6,8 +6,27 @@
         sm="8"
         md="6"
       >
-        <v-card class="p-2">
-          <v-card-title>Sign in to your account</v-card-title>
+        <v-card>
+          <v-toolbar flat>
+            <v-btn
+              icon
+              class="hidden-xs-only"
+            >
+              <v-icon>mdi-arrow-left</v-icon>
+            </v-btn>
+
+            <v-toolbar-title>Title</v-toolbar-title>
+
+            <v-spacer />
+
+            <v-btn
+              icon
+              class="hidden-xs-only"
+            >
+              <v-icon>mdi-magnify</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <!-- <v-card-title>Sign in to your account</v-card-title> -->
           <v-card-text>
             <validation-errors class="mb-4" />
 
@@ -101,13 +120,13 @@
 </template>
 
 <script>
-import WebLayout from '@/Layouts/WebLayout.vue'
 import ValidationErrors from '@/Components/ValidationErrors'
+import WebLayout from '@/Layouts/Web/Index.vue'
 
 export default {
   components: {
-    WebLayout,
-    ValidationErrors
+    ValidationErrors,
+    WebLayout
   },
 
   props: {

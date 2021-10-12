@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <web-layout>
     <template #header>
       API Tokens
     </template>
@@ -13,18 +13,18 @@
         />
       </div>
     </div>
-  </app-layout>
+  </web-layout>
 </template>
 
 <script>
 /* eslint-disable vue/require-prop-types */
 import ApiTokenManager from './ApiTokenManager'
-import AppLayout from '@/Layouts/AppLayout'
+import WebLayout from '@/Layouts/Web/Index.vue'
 
 export default {
   components: {
     ApiTokenManager,
-    AppLayout
+    WebLayout
   },
   props: ['tokens', 'availablePermissions', 'defaultPermissions']
 }
