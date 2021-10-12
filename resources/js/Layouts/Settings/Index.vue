@@ -14,6 +14,7 @@
         v-bind="attrs"
         class="mx-2"
         sm
+        title="Settings"
         v-on="on"
       >
         <v-icon>
