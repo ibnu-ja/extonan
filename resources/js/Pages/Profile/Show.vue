@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <dash-layout>
     <template #header>
       <h2>
         Profile
@@ -38,11 +38,11 @@
         </template>
       </div>
     </div>
-  </app-layout>
+  </dash-layout>
 </template>
 
 <script>
-import AppLayout from '@/Layouts/AppLayout'
+import DashLayout from '@/Layouts/Dash/Index.vue'
 import UpdateProfileInformationForm from './UpdateProfileInformationForm'
 import UpdatePasswordForm from './UpdatePasswordForm'
 import TwoFactorAuthenticationForm from './TwoFactorAuthenticationForm'
@@ -51,7 +51,7 @@ import DeleteUserForm from './DeleteUserForm'
 
 export default {
   components: {
-    AppLayout,
+    DashLayout,
     UpdateProfileInformationForm,
     UpdatePasswordForm,
     TwoFactorAuthenticationForm,
