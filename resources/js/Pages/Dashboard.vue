@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <dash-layout>
     <template #header>
       <h2>
         Dashboard
@@ -91,15 +91,15 @@
         </div>
       </div>
     </div>
-  </app-layout>
+  </dash-layout>
 </template>
 
 <script>
-import AppLayout from '@/Layouts/AppLayout'
+import DashLayout from '@/Layouts/Dash/Index.vue'
 import SvgBusinessAnalytics from '@/Components/svg/BusinessAnalytics'
 export default {
   components: {
-    AppLayout,
+    DashLayout,
     SvgBusinessAnalytics
   }
 }
