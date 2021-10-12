@@ -6,6 +6,7 @@
     >
       <v-spacer />
 
+      <!-- TODO logo -->
       <inertia-link href="/">
         <v-avatar
           color="grey darken-1"
@@ -111,13 +112,14 @@
           </transition>
         </div>
       </template>
-
       <home-settings />
       <v-spacer />
     </v-app-bar>
 
     <v-main>
-      <slot />
+      <v-container>
+        <slot />
+      </v-container>
     </v-main>
 
     <v-footer padless>
@@ -139,12 +141,15 @@
 </template>
 
 <script>
+import { VBtn } from 'vuetify/lib'
 import HomeSettings from '../Settings/Index.vue'
 
 export default {
   name: 'WebLayout',
   components: {
-    HomeSettings
+    HomeSettings,
+    // eslint-disable-next-line vue/no-unused-components
+    VBtn
   }
 }
 </script>
