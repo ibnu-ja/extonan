@@ -1,7 +1,7 @@
 // Vuetify Documentation https://vuetifyjs.com
 
 import Vue from 'vue'
-import Vuetify, { VBtn } from 'vuetify/lib'
+import Vuetify from 'vuetify/lib'
 import id from 'vuetify/lib/locale/id'
 import { Ripple } from 'vuetify/lib/directives'
 import '@mdi/font/css/materialdesignicons.css'
@@ -9,9 +9,17 @@ import '@mdi/font/css/materialdesignicons.css'
 Vue.use(Vuetify, {
   directives: {
     Ripple
-  },
-  components: {
-    VBtn
+  }
+})
+
+Vue.component('RouterLink', {
+  functional: true,
+  render (h, context) {
+    const data = { ...context.data }
+    delete data.nativeOn
+    const props = data.props || {}
+    props.href = props.to /// v-btn passes `to` prop but inertia-link requires `href`, so we just copy it
+    return h('inertia-link', data, context.children)
   }
 })
 
