@@ -51,7 +51,10 @@ class AlbumController extends Controller
         ]);
         // return $request;
         Album::create($validated);
-        return redirect()->route('album.index');
+        return redirect()->route('album.index')->with('snackbar', [
+            'message' => 'Success storing data',
+            'color'    => 'info',
+        ]);
     }
 
     /**
@@ -99,7 +102,10 @@ class AlbumController extends Controller
         ]);
         // return $request;
         $album->update($validated);
-        return redirect()->route('album.index');
+        return redirect()->route('album.index')->with('snackbar', [
+            'message' => 'Success updating data',
+            'color'    => 'info',
+        ]);
     }
 
     /**

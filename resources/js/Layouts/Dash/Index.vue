@@ -7,6 +7,7 @@
       clipped-left
       dense
     >
+      <snackbar />
       <v-app-bar-nav-icon
         class="d-lg-none"
         @click.stop="drawer = !drawer"
@@ -129,6 +130,7 @@
 </template>
 
 <script>
+import Snackbar from '../../Components/Snackbar.vue'
 import HomeSettings from '../Settings/Index.vue'
 import TambahDropdown from './TambahDropdown.vue'
 import TeamsDropdown from './TeamsDropdown.vue'
@@ -138,7 +140,8 @@ export default {
     HomeSettings,
     TambahDropdown,
     TeamsDropdown,
-    Drawer: () => import('./Drawer.vue')
+    Drawer: () => import('./Drawer.vue'),
+    Snackbar
   },
 
   data () {
