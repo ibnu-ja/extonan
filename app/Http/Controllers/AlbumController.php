@@ -85,7 +85,21 @@ class AlbumController extends Controller
      */
     public function update(Request $request, Album $album)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'sometimes|string',
+            'name_real' => 'string',
+            'name_trans' => 'string',
+            'catalog' => 'string',
+            'barcode' => 'string',
+            'classification' => 'string',
+            'release_date' => 'date',
+            'discs' => 'array',
+            'media_format' => 'string',
+            'desc' => 'string',
+        ]);
+        // return $request;
+        $album->update($validated);
+        return redirect()->route('album.index');
     }
 
     /**
@@ -96,6 +110,7 @@ class AlbumController extends Controller
      */
     public function destroy(Album $album)
     {
-        //
+        $album->delete();
+        return redirect()->route('album.index');
     }
 }
