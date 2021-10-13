@@ -26,7 +26,7 @@ class AlbumController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Dashboard/Album/New');
+        return Inertia::render('Dashboard/Album/Edit');
     }
 
     /**
@@ -39,7 +39,8 @@ class AlbumController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'names.*' => 'string',
+            'name_real' => 'string',
+            'name_trans' => 'string',
             'catalog' => 'string',
             'barcode' => 'string',
             'classification' => 'string',
@@ -50,7 +51,7 @@ class AlbumController extends Controller
         ]);
         // return $request;
         Album::create($validated);
-        return Inertia::render('Dashboard/Album/Index');
+        return redirect()->route('album.index');
     }
 
     /**
@@ -61,7 +62,7 @@ class AlbumController extends Controller
      */
     public function show(Album $album)
     {
-        //
+        // return Inertia::render('Dashboard/Album/Edit', ['album' => $album]);
     }
 
     /**
@@ -72,7 +73,7 @@ class AlbumController extends Controller
      */
     public function edit(Album $album)
     {
-        return $album;
+        return Inertia::render('Dashboard/Album/Edit', ['album' => $album]);
     }
 
     /**
