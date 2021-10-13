@@ -6,7 +6,10 @@
     :to="item.to"
     v-bind="$attrs"
     :class="{
-      'v-item--active v-list-item--active': active(item.exact, item.to)
+      'primary white--text v-item--active v-list-item--active': active(
+        item.exact,
+        item.to
+      )
     }"
     v-on="$listeners"
   >
@@ -50,10 +53,7 @@ export default {
   methods: {
     active (exact, link) {
       if (exact) return link === this.$page.url
-      else {
-        console.log(this.$page.url.startsWith(link))
-        return this.$page.url.startsWith(link)
-      }
+      else return this.$page.url.startsWith(link)
     }
   }
 }
