@@ -379,6 +379,14 @@ export default {
       return Object.keys(this.$page.props.errors).length > 0
     }
   },
+  created () {
+    if (this.$page.props.album) {
+      this.track_lang = Object.keys(
+        this.$page.props.album.discs[0].tracks[0].names
+      )
+      this.album = this.$page.props.album
+    }
+  },
   methods: {
     test () {
       this.axios
@@ -400,7 +408,9 @@ export default {
         .catch(err => console.log(err.data))
     },
     submit () {
-      this.$inertia.post('/dashboard/album', this.album)
+      if (this.$page.props.album) {
+        this.$inertia.put('/dashboard/album/' + this.album.id, this.album)
+      } else this.$inertia.post('/dashboard/album', this.album)
     },
     splice (array, index) {
       array.splice(index, 1)
