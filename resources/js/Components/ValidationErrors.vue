@@ -1,10 +1,15 @@
 <template>
-  <div v-if="hasErrors">
-    <div class="font-medium red--text">
-      Whoops! Something went wrong.
-    </div>
+  <v-alert
+    v-if="hasErrors"
+    dense
+    text
+    border="left"
+    type="error"
+    class="mb-0"
+  >
+    Whoops! Something went wrong.
 
-    <ul class="mt-3 text-sm red--text">
+    <ul class="">
       <li
         v-for="(error, key) in errors"
         :key="key"
@@ -12,7 +17,7 @@
         {{ error }}
       </li>
     </ul>
-  </div>
+  </v-alert>
 </template>
 
 <script>
