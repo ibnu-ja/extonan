@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO verify email -->
   <div>
     Verify email
 
