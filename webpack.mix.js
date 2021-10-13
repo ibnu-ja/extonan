@@ -65,7 +65,7 @@ mix
   })
   .vuetify('vuetify-loader')
   .vue()
-  .disableNotifications()
+  .disableSuccessNotifications()
 
 if (mix.inProduction()) {
   mix.version()
