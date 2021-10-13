@@ -41,12 +41,13 @@
 
             <div class="mt-4">
               <v-text-field
+                ref="password"
                 v-model="form.password"
                 type="password"
                 class="mt-1"
                 label="Password"
                 outlined
-                :error-messages="form.error"
+                :error-messages="Object.values(form.errors)"
                 @keyup.enter.native="confirmPassword"
               />
             </div>
@@ -110,7 +111,13 @@ export default {
       this.form.delete(this.route('current-user.destroy'), {
         preserveScroll: true,
         onSuccess: () => this.closeModal(),
-        onError: () => this.$refs.password.focus(),
+        onError: () => {
+          this.$nextTick(() => {
+            setTimeout(() => {
+              this.$refs.password.focus()
+            })
+          })
+        },
         onFinish: () => this.form.reset()
       })
     },
