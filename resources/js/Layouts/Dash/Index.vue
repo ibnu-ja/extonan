@@ -22,20 +22,6 @@
       >
         <v-icon>mdi-home</v-icon>
       </inertia-link>
-      <!-- <v-btn
-        to="/dashboard"
-        :class="{ active: $page.url.startsWith('/dashboard') }"
-      >
-        Dashboard
-      </v-btn> -->
-      <!-- <inertia-link
-        href="
-        dashboard"
-        color="primary"
-        :class="{ active: $page.url.startsWith('/dashboard') }"
-      >
-        tes
-        </inertia-link> -->
       <tambah-dropdown />
       <v-divider
         vertical
