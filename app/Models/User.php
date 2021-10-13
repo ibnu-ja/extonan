@@ -58,4 +58,19 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    /**
+     * @return string
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        // You can add any of the gravatar supported options to this array.
+        // See https://gravatar.com/site/implement/images/
+        $config = [
+            'default' => $this->defaultProfilePhotoUrl(),
+            'size' => '200' // use 200px by 200px image
+        ];
+
+        return 'https://www.gravatar.com/avatar/' . md5($this->email) . '?' . http_build_query($config);
+    }
 }
