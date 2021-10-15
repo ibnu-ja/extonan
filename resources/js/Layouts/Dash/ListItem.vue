@@ -5,11 +5,9 @@
     :target="item.href ? '_blank' : undefined"
     :to="item.to"
     v-bind="$attrs"
+    :aria-selected="active(item.exact, item.to)"
     :class="{
-      'primary white--text v-item--active v-list-item--active': active(
-        item.exact,
-        item.to
-      )
+      'primary white--text v-list-item--active': active(item.exact, item.to)
     }"
     v-on="$listeners"
   >

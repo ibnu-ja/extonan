@@ -24,8 +24,9 @@
         :key="item.to"
         as="v-list-item"
         :href="item.to"
+        :aria-selected="$page.url === item.to"
         :class="{
-          'v-item--active v-list-item--active': $page.url === item.to
+          'primary white--text v-list-item--active': $page.url === item.to
         }"
       >
         <v-list-item-icon> <v-icon v-text="item.icon" /> </v-list-item-icon>
