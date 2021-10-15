@@ -130,6 +130,11 @@ export default {
         icon: 'mdi-album',
         to: '/dashboard/album'
       },
+      {
+        title: 'Artist',
+        icon: 'mdi-account-music',
+        to: '/dashboard/artist'
+      },
       { divider: true, inset: false },
       { header: 'Account', mini: 'AC' },
       {
