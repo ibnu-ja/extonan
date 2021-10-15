@@ -12,7 +12,7 @@
       <v-btn
         text
         v-bind="attrs"
-        @click="active = false"
+        @click="hasMessage = false"
       >
         Close
       </v-btn>
@@ -23,13 +23,14 @@
 <script>
 export default {
   name: 'BaseSnackbar',
+  data () {
+    return {
+      hasMessage: !!this.snackbar.message
+    }
+  },
   computed: {
     snackbar () {
       return this.$page.props.snackbar
-    },
-
-    hasMessage () {
-      return !!this.snackbar.message
     }
   }
 }
