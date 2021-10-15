@@ -25,7 +25,7 @@ export default {
   name: 'BaseSnackbar',
   data () {
     return {
-      hasMessage: !!this.snackbar.message
+      hasMessage: !!this.$page.props.snackbar.message
     }
   },
   computed: {
