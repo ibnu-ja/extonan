@@ -389,6 +389,8 @@ export default {
   },
   methods: {
     test () {
+      // TODO: rename method
+      // TODO: add loader
       this.axios
         .get('https://vgmdb.info/album/' + this.vgmdb_id + '?format=json')
         .then(res => {
