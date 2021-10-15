@@ -2,7 +2,7 @@
   <dash-layout>
     <confirm-dialog ref="confirm" />
     <template #header>
-      <h3>Album</h3>
+      <h3>Album Listing</h3>
     </template>
     <div>
       <v-card>
@@ -12,7 +12,10 @@
             as="v-btn"
             color="primary"
           >
-            Tambah
+            <v-icon left>
+              mdi-plus
+            </v-icon>
+            Add
           </inertia-link>
         </v-toolbar>
         <v-data-table
