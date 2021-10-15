@@ -117,6 +117,9 @@ class AlbumController extends Controller
     public function destroy(Album $album)
     {
         $album->delete();
-        return redirect()->route('album.index');
+        return redirect()->back()->with('snackbar', [
+            'message' => 'Success deleting data',
+            'color'    => 'info',
+        ]);
     }
 }

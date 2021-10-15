@@ -113,6 +113,10 @@ class ArtistController extends Controller
      */
     public function destroy(Artist $artist)
     {
-        //
+        $artist->delete();
+        return redirect()->back()->with('snackbar', [
+            'message' => 'Success deleting data',
+            'color'    => 'info',
+        ]);
     }
 }
