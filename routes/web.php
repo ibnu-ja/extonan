@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,9 +27,12 @@ Route::get('/', function () {
     ]);
 });
 
-Route::prefix('dashboard')->group(function () {
-    Route::resources(['album' => AlbumController::class]);
-    Route::resources(['artist' => ArtistController::class]);
+Route::middleware('auth')->prefix('dashboard')->group(function () {
+    Route::resources([
+        'album' => AlbumController::class,
+        'artist' => ArtistController::class,
+        'product' => ProductController::class
+    ]);
 });
 
 // Route::get('/dashboard/album', [AlbumController::class, 'index']);
