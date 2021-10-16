@@ -7,26 +7,7 @@
         md="6"
       >
         <v-card>
-          <v-toolbar flat>
-            <v-btn
-              icon
-              class="hidden-xs-only"
-            >
-              <v-icon>mdi-arrow-left</v-icon>
-            </v-btn>
-
-            <v-toolbar-title>Title</v-toolbar-title>
-
-            <v-spacer />
-
-            <v-btn
-              icon
-              class="hidden-xs-only"
-            >
-              <v-icon>mdi-magnify</v-icon>
-            </v-btn>
-          </v-toolbar>
-          <!-- <v-card-title>Sign in to your account</v-card-title> -->
+          <v-card-title>Sign in to your account</v-card-title>
           <v-card-text>
             <validation-errors class="mb-4" />
 
@@ -72,27 +53,9 @@
               </v-btn>
             </form>
 
-            <h5 class="my-6 text-center">
-              OR
-            </h5>
+            <socialstream-providers v-if="$page.props.socialstream.show" />
 
-            <v-btn
-              block
-              outlined
-              color="primary"
-              class="mb-5"
-            >
-              <v-icon>mdi-google</v-icon> Sign in with Google
-            </v-btn>
-            <v-btn
-              block
-              color="primary"
-              class="mb-6"
-            >
-              <v-icon>mdi-github</v-icon> Sign with Github
-            </v-btn>
-            <br>
-            <div class="mb-3 d-flex justify-space-between text-body-1">
+            <div class="mt-4 d-flex justify-space-between text-body-1">
               <inertia-link
                 v-if="canResetPassword"
                 :href="route('password.request')"
@@ -122,10 +85,13 @@
 <script>
 import ValidationErrors from '@/Components/ValidationErrors'
 import WebLayout from '@/Layouts/Web/Index.vue'
+import SocialstreamProviders from '@/Socialstream/Providers.vue'
 
 export default {
   components: {
     ValidationErrors,
+    // eslint-disable-next-line vue/no-unused-components
+    SocialstreamProviders,
     WebLayout
   },
 
