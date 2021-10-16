@@ -4,6 +4,7 @@ use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Providers;
 
 return [
+    'show' => true,
 
     /*
     |--------------------------------------------------------------------------

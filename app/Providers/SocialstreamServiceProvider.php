@@ -31,6 +31,9 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Socialstream::enabled(function () {
+            return config('socialstream.show', true);
+        });
         Socialstream::resolvesSocialiteUsersUsing(ResolveSocialiteUser::class);
         Socialstream::createUsersFromProviderUsing(CreateUserFromProvider::class);
         Socialstream::createConnectedAccountsUsing(CreateConnectedAccount::class);
