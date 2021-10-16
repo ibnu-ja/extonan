@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO list condition -->
   <v-list-item
     :href="item.href"
     :rel="item.href ? 'nofollow' : undefined"
