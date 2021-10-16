@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
@@ -14,7 +15,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $product = Product::latest()->get();
+        return Inertia::render('Dashboard/Product/Index', ['product' => $product]);
     }
 
     /**
@@ -24,7 +26,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render(
+            'Dashboard/Product/Edit',
+            ['type' => Product::select('type')->groupBy('type')->get()->pluck('type')]
+        );
     }
 
     /**
@@ -35,7 +40,19 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'name_real' => 'string',
+            'release_date' => 'date',
+            'type' => 'string',
+            'meta.*' => 'string',
+        ]);
+
+        Product::create($validated);
+        return redirect()->route('product.index')->with('snackbar', [
+            'message' => 'Success storing data',
+            'color'    => 'info',
+        ]);
     }
 
     /**
@@ -57,7 +74,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return Inertia::render(
+            'Dashboard/Product/Edit',
+            ['product' => $product],
+            ['type' => Product::select('type')->groupBy('type')->get()->pluck('type')]
+        );
     }
 
     /**
@@ -69,7 +90,19 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'string',
+            'name_real' => 'string',
+            'release_date' => 'date',
+            'type' => 'string',
+            'meta.*' => 'string',
+        ]);
+
+        $product->update($validated);
+        return redirect()->route('product.index')->with('snackbar', [
+            'message' => 'Success updating data',
+            'color'    => 'info',
+        ]);
     }
 
     /**
@@ -80,6 +113,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+        return redirect()->route('product.index')->with('snackbar', [
+            'message' => 'Success deleting data',
+            'color'    => 'info',
+        ]);
     }
 }
