@@ -113,7 +113,7 @@ export default {
   components: {
     ItemList: () =>
       import(
-        /* webpackChunkName: "default-list" */
+        /* webpackChunkName: "dashboard-list" */
         './List'
       )
   },
