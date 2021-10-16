@@ -39,3 +39,4 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 require_once __DIR__ . '/fortify.php';
 require_once __DIR__ . '/jetstream_inertia.php';
+require_once __DIR__ . '/socialstream.php';
