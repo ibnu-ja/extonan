@@ -14,8 +14,19 @@
           <v-divider class="my-8" />
         </div>
 
-        <div v-if="$page.props.jetstream.canUpdatePassword">
+        <div
+          v-if="
+            $page.props.jetstream.canUpdatePassword &&
+              $page.props.socialstream.hasPassword
+          "
+        >
           <update-password-form class="mt-10 mt-sm-0" />
+
+          <v-divider class="my-8" />
+        </div>
+
+        <div v-else>
+          <set-password-form class="mt-10 mt-sm-0" />
 
           <v-divider class="my-8" />
         </div>
@@ -31,6 +42,12 @@
           class="mt-10 mt-sm-0"
         />
 
+        <template v-if="$page.props.socialstream.show">
+          <v-divider class="my-8" />
+
+          <connected-accounts-form class="mt-10 sm:mt-0" />
+        </template>
+
         <template v-if="$page.props.jetstream.hasAccountDeletionFeatures">
           <v-divider class="my-8" />
 
@@ -45,9 +62,11 @@
 import DashLayout from '@/Layouts/Dash/Index.vue'
 import UpdateProfileInformationForm from './UpdateProfileInformationForm'
 import UpdatePasswordForm from './UpdatePasswordForm'
+import SetPasswordForm from './SetPasswordForm'
 import TwoFactorAuthenticationForm from './TwoFactorAuthenticationForm'
 import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm'
 import DeleteUserForm from './DeleteUserForm'
+import ConnectedAccountsForm from './ConnectedAccountsForm'
 
 export default {
   components: {
@@ -56,7 +75,9 @@ export default {
     UpdatePasswordForm,
     TwoFactorAuthenticationForm,
     LogoutOtherBrowserSessionsForm,
-    DeleteUserForm
+    DeleteUserForm,
+    SetPasswordForm,
+    ConnectedAccountsForm
   },
 
   // eslint-disable-next-line vue/require-prop-types
