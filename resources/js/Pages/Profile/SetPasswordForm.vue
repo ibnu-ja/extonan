@@ -1,5 +1,5 @@
 <template>
-  <app-user-section @submitted="updatePassword">
+  <app-user-section @submitted="setPassword">
     <template #title>
       Update Password
     </template>
@@ -9,18 +9,6 @@
     </template>
 
     <template #content>
-      <v-text-field
-        ref="current_password"
-        v-model="form.current_password"
-        label="Current Password"
-        outlined
-        autocomplete="current-password"
-        :error-messages="form.errors.current_password"
-        :append-icon="showCP ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="showCP ? 'text' : 'password'"
-        @click:append="showCP = !showCP"
-      />
-
       <v-text-field
         ref="password"
         v-model="form.password"
@@ -65,7 +53,6 @@
       <v-spacer />
 
       <v-btn
-        class="ml-3"
         :class="{ 'opacity-25': form.processing }"
         :disabled="form.processing"
         type="submit"
@@ -87,11 +74,9 @@ export default {
 
   data () {
     return {
-      showCP: false,
       showP: false,
       showNP: false,
       form: this.$inertia.form({
-        current_password: '',
         password: '',
         password_confirmation: ''
       })
@@ -99,9 +84,9 @@ export default {
   },
 
   methods: {
-    updatePassword () {
-      this.form.put(this.route('user-password.update'), {
-        errorBag: 'updatePassword',
+    setPassword () {
+      this.form.put(this.route('user-password.set'), {
+        errorBag: 'setPassword',
         preserveScroll: true,
         onSuccess: () => this.form.reset(),
         onError: () => {
@@ -110,15 +95,6 @@ export default {
             this.$nextTick(() => {
               setTimeout(() => {
                 this.$refs.password.focus()
-              })
-            })
-          }
-
-          if (this.form.errors.current_password) {
-            this.form.reset('current_password')
-            this.$nextTick(() => {
-              setTimeout(() => {
-                this.$refs.current_password.focus()
               })
             })
           }

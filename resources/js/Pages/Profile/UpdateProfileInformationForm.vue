@@ -1,5 +1,5 @@
 <template>
-  <app-form-section @submitted="updateProfileInformation">
+  <app-user-section @submitted="updateProfileInformation">
     <template #title>
       Profile Information
     </template>
@@ -8,7 +8,7 @@
       Update your account's profile information and email address.
     </template>
 
-    <template #form>
+    <template #content>
       <!-- Profile Photo -->
       <div
         v-if="$page.props.jetstream.managesProfilePhotos"
@@ -88,6 +88,8 @@
         </div>
       </transition>
 
+      <v-spacer />
+
       <v-btn
         class="ml-3"
         :class="{ 'opacity-25': form.processing }"
@@ -98,15 +100,15 @@
         Save
       </v-btn>
     </template>
-  </app-form-section>
+  </app-user-section>
 </template>
 
 <script>
-import AppFormSection from '@/Components/FormSection'
+import AppUserSection from '@/Components/UserSection'
 
 export default {
   components: {
-    AppFormSection
+    AppUserSection
   },
 
   // eslint-disable-next-line vue/require-prop-types

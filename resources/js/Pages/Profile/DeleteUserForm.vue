@@ -1,5 +1,5 @@
 <template>
-  <app-action-section>
+  <app-user-section>
     <template #title>
       Delete Account
     </template>
@@ -9,21 +9,11 @@
     </template>
 
     <template #content>
-      <div class="text-sm">
+      <p>
         Once your account is deleted, all of its resources and data will be
         permanently deleted. Before deleting your account, please download any
         data or information that you wish to retain.
-      </div>
-
-      <div class="mt-5">
-        <v-btn
-          color="secondary"
-          @click.native="confirmUserDeletion"
-        >
-          Delete Account
-        </v-btn>
-      </div>
-
+      </p>
       <v-dialog
         v-model="confirmingUserDeletion"
         max-width="672"
@@ -34,23 +24,23 @@
           </v-card-title>
 
           <v-card-text>
-            Are you sure you want to delete your account? Once your account is
-            deleted, all of its resources and data will be permanently deleted.
-            Please enter your password to confirm you would like to permanently
-            delete your account.
+            <p>
+              Are you sure you want to delete your account? Once your account is
+              deleted, all of its resources and data will be permanently
+              deleted. Please enter your password to confirm you would like to
+              permanently delete your account.
+            </p>
 
-            <div class="mt-4">
-              <v-text-field
-                ref="password"
-                v-model="form.password"
-                type="password"
-                class="mt-1"
-                label="Password"
-                outlined
-                :error-messages="Object.values(form.errors)"
-                @keyup.enter.native="confirmPassword"
-              />
-            </div>
+            <v-text-field
+              ref="password"
+              v-model="form.password"
+              type="password"
+              class="pt-4"
+              label="Password"
+              outlined
+              :error-messages="Object.values(form.errors)"
+              @keyup.enter.native="confirmPassword"
+            />
           </v-card-text>
 
           <v-card-actions class="px-6 py-4">
@@ -74,16 +64,25 @@
         </v-card>
       </v-dialog>
     </template>
-  </app-action-section>
+
+    <template #actions>
+      <v-btn
+        color="secondary"
+        @click.native="confirmUserDeletion"
+      >
+        Delete Account
+      </v-btn>
+    </template>
+  </app-user-section>
 </template>
 
 <script>
-import AppActionSection from '@/Components/ActionSection'
+import AppUserSection from '@/Components/UserSection'
 // import AppConfirmsPassword from '@/Components/ConfirmsPassword'
 
 export default {
   components: {
-    AppActionSection
+    AppUserSection
     // AppConfirmsPassword
   },
 

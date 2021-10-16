@@ -16,16 +16,16 @@
       cols="11"
       md="9"
     >
-      <v-card class="elevation-2 pt-5">
+      <v-card class="elevation-2">
         <form @submit.prevent="$emit('submitted')">
+          <v-card-title v-if="hasCardTitle">
+            <slot name="card-title" />
+          </v-card-title>
           <v-card-text>
-            <slot name="form" />
+            <slot name="content" />
           </v-card-text>
 
-          <v-card-actions
-            v-if="hasActions"
-            class="justify-end pr-6 py-2"
-          >
+          <v-card-actions v-if="hasActions">
             <slot name="actions" />
           </v-card-actions>
         </form>
@@ -39,20 +39,10 @@ export default {
   computed: {
     hasActions () {
       return !!this.$slots.actions
+    },
+    hasCardTitle () {
+      return !!this.$slots['card-title']
     }
   }
 }
 </script>
-
-<style scoped>
-.v-card__text {
-  padding: 1.5rem;
-  padding-bottom: 0;
-}
-.v-card__actions {
-  background-color: #f3f4f6;
-  /* position: relative;
-    width: 102%;
-    left: -17px; */
-}
-</style>
