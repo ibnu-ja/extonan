@@ -51,7 +51,7 @@ import DashLayout from '@/Layouts/Dash/Index.vue'
 import { VBtn } from 'vuetify/lib'
 
 export default {
-  name: 'DashboardAlbum',
+  name: 'DashboardArtist',
   components: {
     DashLayout,
     ConfirmDialog,
