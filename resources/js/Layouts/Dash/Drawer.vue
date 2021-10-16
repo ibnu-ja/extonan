@@ -135,6 +135,11 @@ export default {
         icon: 'mdi-account-music',
         to: '/dashboard/artist'
       },
+      {
+        title: 'Product',
+        icon: 'mdi-package-variant',
+        to: '/dashboard/product'
+      },
       { divider: true, inset: false },
       { header: 'Account', mini: 'AC' },
       {
