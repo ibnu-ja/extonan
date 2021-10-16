@@ -18,6 +18,7 @@
 
           <div class="mt-4">
             <v-text-field
+              ref="password"
               v-model="form.password"
               type="password"
               class="mt-1"
@@ -105,7 +106,11 @@ export default {
         .catch(error => {
           this.form.processing = false
           this.form.error = error.response.data.errors.password[0]
-          this.$refs.password.focus()
+          this.$nextTick(() => {
+            setTimeout(() => {
+              this.$refs.password.focus()
+            })
+          })
         })
     },
 
@@ -117,9 +122,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-v-card-actions {
-  background-color: #f3f4f6;
-}
-</style>
