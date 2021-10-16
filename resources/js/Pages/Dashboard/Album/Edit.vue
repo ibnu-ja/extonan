@@ -78,6 +78,7 @@
                         <template #activator="{ on, attrs }">
                           <v-text-field
                             v-model="album.release_date"
+                            clearable
                             label="Release Date"
                             prepend-icon="mdi-calendar"
                             readonly

@@ -79,6 +79,7 @@
                         <template #activator="{ on, attrs }">
                           <v-text-field
                             v-model="artist.birthdate"
+                            clearable
                             label="Release Date"
                             prepend-icon="mdi-calendar"
                             readonly
