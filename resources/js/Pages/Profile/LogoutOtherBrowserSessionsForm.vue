@@ -74,13 +74,13 @@
           <v-list-item-icon>
             <v-icon
               v-if="session.agent.is_desktop"
-              size="35"
+              size="50"
             >
               mdi-desktop-tower-monitor
             </v-icon>
             <v-icon
               v-else
-              size="35"
+              size="50"
             >
               mdi-cellphone
             </v-icon>
