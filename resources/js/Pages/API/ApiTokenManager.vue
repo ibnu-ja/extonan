@@ -1,7 +1,8 @@
 <template>
   <div>
+    <!-- TODO: API Token page cleaning -->
     <!-- Generate API Token -->
-    <app-form-section @submitted="createApiToken">
+    <app-user-section @submitted="createApiToken">
       <template #title>
         Create API Token
       </template>
@@ -11,7 +12,7 @@
         application on your behalf.
       </template>
 
-      <template #form>
+      <template #content>
         <!-- Token Name -->
         <v-text-field
           v-model="createApiTokenForm.name"
@@ -20,12 +21,11 @@
           class="mt-1"
           autofocus
         />
-        <!-- <jet-input id="name" type="text" class="mt-1 block w-full" v-model="createApiTokenForm.name" autofocus /> -->
 
         <!-- Token Permissions -->
         <div
           v-if="availablePermissions.length > 0"
-          class="pb-8"
+          class="pb-4"
         >
           <div>Permissions</div>
 
@@ -72,14 +72,14 @@
           Create
         </v-btn>
       </template>
-    </app-form-section>
+    </app-user-section>
 
     <div v-if="tokens.length > 0">
       <v-divider class="my-8" />
 
       <!-- Manage API Tokens -->
-      <div class="mt-10 sm:mt-0">
-        <app-action-section>
+      <div>
+        <app-user-section>
           <template #title>
             Manage API Tokens
           </template>
@@ -130,7 +130,7 @@
               </div>
             </div>
           </template>
-        </app-action-section>
+        </app-user-section>
       </div>
     </div>
 
@@ -262,13 +262,11 @@
 
 <script>
 /* eslint-disable vue/require-prop-types */
-import AppActionSection from '@/Components/ActionSection'
-import AppFormSection from '@/Components/FormSection'
+import AppUserSection from '@/Components/UserSection'
 
 export default {
   components: {
-    AppActionSection,
-    AppFormSection
+    AppUserSection
   },
 
   props: ['tokens', 'availablePermissions', 'defaultPermissions'],
