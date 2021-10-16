@@ -1,7 +1,9 @@
 <template>
-  <web-layout>
+  <dash-layout>
     <template #header>
-      API Tokens
+      <h3>
+        API Tokens
+      </h3>
     </template>
 
     <div>
@@ -13,19 +15,19 @@
         />
       </div>
     </div>
-  </web-layout>
+  </dash-layout>
 </template>
 
 <script>
-/* eslint-disable vue/require-prop-types */
 import ApiTokenManager from './ApiTokenManager'
-import WebLayout from '@/Layouts/Web/Index.vue'
+import DashLayout from '@/Layouts/Dash/Index.vue'
 
 export default {
   components: {
     ApiTokenManager,
-    WebLayout
+    DashLayout
   },
+  // eslint-disable-next-line vue/require-prop-types
   props: ['tokens', 'availablePermissions', 'defaultPermissions']
 }
 </script>
