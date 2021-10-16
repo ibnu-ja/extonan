@@ -49,12 +49,12 @@ export default {
       {
         text: 'Product',
         icon: 'mdi-package-variant',
-        to: '/dashboard/product/new'
+        to: '/dashboard/product/create'
       },
       {
         text: 'Organizations',
         icon: 'mdi-account-group',
-        to: '/dashboard/org/new'
+        to: '/dashboard/org/create'
       },
       { text: 'Event', icon: 'mdi-calendar', to: '/dashboard/event/new' }
     ]
