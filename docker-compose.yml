@@ -23,26 +23,34 @@ services:
         networks:
             - sail
         depends_on:
-            - mariadb
+            - pgsql
             - redis
             - meilisearch
             - selenium
-    mariadb:
-        image: "mariadb:10"
+    pgsql:
+        image: "postgres:13"
         ports:
-            - "${FORWARD_DB_PORT:-3306}:3306"
+            - "${FORWARD_DB_PORT:-5432}:5432"
         environment:
-            MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
-            MYSQL_DATABASE: "${DB_DATABASE}"
-            MYSQL_USER: "${DB_USERNAME}"
-            MYSQL_PASSWORD: "${DB_PASSWORD}"
-            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+            PGPASSWORD: "${DB_PASSWORD:-secret}"
+            POSTGRES_DB: "${DB_DATABASE}"
+            POSTGRES_USER: "${DB_USERNAME}"
+            POSTGRES_PASSWORD: "${DB_PASSWORD:-secret}"
         volumes:
-            - "sailmariadb:/var/lib/mysql"
+            - "sailpgsql:/var/lib/postgresql/data"
         networks:
             - sail
         healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+            test:
+                [
+                    "CMD",
+                    "pg_isready",
+                    "-q",
+                    "-d",
+                    "${DB_DATABASE}",
+                    "-U",
+                    "${DB_USERNAME}",
+                ]
             retries: 3
             timeout: 5s
     redis:
@@ -86,7 +94,7 @@ networks:
     sail:
         driver: bridge
 volumes:
-    sailmariadb:
+    sailpgsql:
         driver: local
     sailredis:
         driver: local
