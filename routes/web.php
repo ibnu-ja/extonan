@@ -41,6 +41,6 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
 
-require_once __DIR__ . '/fortify.php';
-require_once __DIR__ . '/jetstream_inertia.php';
+// require_once __DIR__ . '/fortify.php';
+// require_once __DIR__ . '/jetstream_inertia.php';
 require_once __DIR__ . '/socialstream.php';
