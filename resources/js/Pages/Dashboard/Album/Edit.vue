@@ -1,7 +1,7 @@
 <template>
   <dash-layout>
     <template #header>
-      <h3>New Album</h3>
+      <h3 v-text="$page.props.album ? 'Edit Album' : 'New Album'" />
     </template>
     <form @submit.prevent="submit">
       <v-row>
@@ -19,7 +19,10 @@
             <!-- Album -->
             <v-col cols="12">
               <v-card>
-                <v-toolbar flat>
+                <v-toolbar
+                  flat
+                  dense
+                >
                   <v-toolbar-title><h4>Album</h4></v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
@@ -140,7 +143,6 @@
                 <v-toolbar
                   flat
                   dense
-                  class="mb-2"
                 >
                   <v-toolbar-title><h4>Discs</h4></v-toolbar-title>
                   <v-spacer />
@@ -149,46 +151,42 @@
                     Add Disc
                   </v-btn>
                 </v-toolbar>
-                <v-row no-gutters>
-                  <v-col cols="12">
-                    <v-card
-                      v-for="(disc, index) in album.discs"
-                      :key="index"
-                      class="ma-2 pa-2"
-                      outlined
+                <v-card-text class="pa-2">
+                  <v-card
+                    v-for="(disc, index) in album.discs"
+                    :key="index"
+                    outlined
+                  >
+                    <v-toolbar
+                      flat
+                      dense
                     >
-                      <v-toolbar
-                        flat
-                        dense
+                      <v-toolbar-title>
+                        <h5>Disc #{{ index + 1 }}</h5>
+                      </v-toolbar-title>
+                      <v-spacer />
+                      <v-btn
+                        small
+                        icon
+                        :title="'Delete Disc ' + (index + 1)"
+                        @click="splice(album.discs, i)"
                       >
-                        <v-toolbar-title>
-                          <h5>Disc #{{ index + 1 }}</h5>
-                        </v-toolbar-title>
-                        <v-spacer />
-                        <v-btn
-                          small
-                          icon
-                          @click="splice(album.discs, i)"
-                        >
-                          <v-icon>mdi-delete</v-icon>
-                        </v-btn>
-                      </v-toolbar>
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                    </v-toolbar>
+                    <v-card-text class="pa-2">
                       <v-row dense>
-                        <v-col cols="12">
-                          <v-row dense>
-                            <v-col cols="8">
-                              <v-text-field
-                                v-model="disc.name"
-                                label="Disc Name"
-                              />
-                            </v-col>
-                            <v-col cols="4">
-                              <v-text-field
-                                v-model="disc.disc_length"
-                                label="Disc Length"
-                              />
-                            </v-col>
-                          </v-row>
+                        <v-col cols="8">
+                          <v-text-field
+                            v-model="disc.name"
+                            label="Disc Name"
+                          />
+                        </v-col>
+                        <v-col cols="4">
+                          <v-text-field
+                            v-model="disc.disc_length"
+                            label="Disc Length"
+                          />
                         </v-col>
                         <v-col
                           v-for="(track, i) in disc.tracks"
@@ -199,12 +197,10 @@
                             <v-toolbar
                               flat
                               dense
-                              max-height="30px"
-                              class="px-2"
                             >
-                              <h5>Track #{{ i + 1 }}</h5>
-                              <!-- <v-toolbar-title>
-                        </v-toolbar-title> -->
+                              <v-toolbar-title>
+                                <h5>Track #{{ i + 1 }}</h5>
+                              </v-toolbar-title>
                               <v-spacer />
                               <v-btn
                                 small
@@ -214,50 +210,46 @@
                                 <v-icon>mdi-delete</v-icon>
                               </v-btn>
                             </v-toolbar>
-                            <v-row
-                              dense
-                              class="pa-2"
-                            >
-                              <v-col
-                                cols="12"
-                                md="4"
-                              >
-                                <v-text-field
-                                  v-model="track.track_length"
-                                  :disabled="
-                                    Object.keys(track.names).length === 0
-                                  "
-                                  label="Track Length"
-                                />
-                              </v-col>
-                              <v-col
-                                v-for="(lang, j) in track_lang"
-                                :key="j"
-                                :order="j === 0 ? 'first' : ''"
-                                cols="12"
-                                md="8"
-                              >
-                                <v-text-field
-                                  v-model="track.names[lang]"
-                                  :disabled="!lang"
-                                  :label="'Title ' + lang"
-                                />
-                              </v-col>
-                            </v-row>
+                            <v-card-text class="pa-2">
+                              <v-row dense>
+                                <v-col
+                                  cols="12"
+                                  md="4"
+                                >
+                                  <v-text-field
+                                    v-model="track.track_length"
+                                    :disabled="
+                                      Object.keys(track.names).length === 0
+                                    "
+                                    label="Track Length"
+                                  />
+                                </v-col>
+                                <v-col
+                                  v-for="(lang, j) in track_lang"
+                                  :key="j"
+                                  :order="j === 0 ? 'first' : ''"
+                                  cols="12"
+                                  md="8"
+                                >
+                                  <v-text-field
+                                    v-model="track.names[lang]"
+                                    :disabled="!lang"
+                                    :label="'Title ' + lang"
+                                  />
+                                </v-col>
+                              </v-row>
+                            </v-card-text>
                           </v-card>
                         </v-col>
-                        <v-col
-                          cols="12"
-                          class="px-0"
-                        >
+                        <v-col cols="12">
                           <v-btn @click="addTrack(disc)">
                             add track
                           </v-btn>
                         </v-col>
                       </v-row>
-                    </v-card>
-                  </v-col>
-                </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-card-text>
               </v-card>
             </v-col>
           </v-row>
@@ -272,7 +264,6 @@
                 <v-toolbar
                   dense
                   flat
-                  max-height="30px"
                 >
                   <v-toolbar-title>
                     <h4>Get data from VGMDB</h4>
