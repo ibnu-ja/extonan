@@ -1,7 +1,7 @@
 <template>
   <dash-layout>
     <template #header>
-      <h3>New Artist</h3>
+      <h3 v-text="$page.props.product ? 'Edit Product' : 'New Product'" />
     </template>
     <form @submit.prevent="submit">
       <v-row>
