@@ -4,61 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f9fe1f8fcfa9eee9f58faef6724bee7",
+    "content-hash": "87dbdd493681e2942cfc3973b567d368",
     "packages": [
-        {
-            "name": "arewebs/jet-vuetify",
-            "version": "v0.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/AreWebs/Jet-Vuetify.git",
-                "reference": "3fbd639800dafecca0615b7bcfc0f3427b885565"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/AreWebs/Jet-Vuetify/zipball/3fbd639800dafecca0615b7bcfc0f3427b885565",
-                "reference": "3fbd639800dafecca0615b7bcfc0f3427b885565",
-                "shasum": ""
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "AreWebs\\JetVuetify\\JetVuetifyServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "AreWebs\\JetVuetify\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "AreWebs",
-                    "email": "arewebs@gmail.com"
-                },
-                {
-                    "name": "Kevin Arellano",
-                    "email": "k3vin.arellano@gmail.com"
-                }
-            ],
-            "description": "Frontend UI package made with Vuetify for Laravel Jetstream with Inertia scaffolding.",
-            "keywords": [
-                "laravel",
-                "ui",
-                "vuetify"
-            ],
-            "support": {
-                "issues": "https://github.com/AreWebs/Jet-Vuetify/issues",
-                "source": "https://github.com/AreWebs/Jet-Vuetify/tree/v0.0.0"
-            },
-            "time": "2021-02-11T22:46:18+00:00"
-        },
         {
             "name": "asm89/stack-cors",
             "version": "v2.0.3",
