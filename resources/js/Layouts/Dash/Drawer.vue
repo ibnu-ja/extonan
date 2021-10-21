@@ -140,6 +140,16 @@ export default {
         icon: 'mdi-package-variant',
         to: '/dashboard/product'
       },
+      {
+        title: 'Event',
+        icon: 'mdi-calendar',
+        to: '/dashboard/event'
+      },
+      {
+        title: 'Organizations',
+        icon: 'mdi-account-group',
+        to: '/dashboard/organization'
+      },
       { divider: true, inset: false },
       { header: 'Account', mini: 'AC' },
       {

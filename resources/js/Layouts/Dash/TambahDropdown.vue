@@ -54,9 +54,9 @@ export default {
       {
         text: 'Organizations',
         icon: 'mdi-account-group',
-        to: '/dashboard/org/create'
+        to: '/dashboard/organization/create'
       },
-      { text: 'Event', icon: 'mdi-calendar', to: '/dashboard/event/new' }
+      { text: 'Event', icon: 'mdi-calendar', to: '/dashboard/event/create' }
     ]
   })
 }
