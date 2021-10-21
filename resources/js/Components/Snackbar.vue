@@ -1,9 +1,9 @@
 <template>
+  <!-- TODO fix timeout -->
   <v-snackbar
     v-model="hasMessage"
     top
     :color="snackbar.color"
-    :timeout="snackbar.timeout"
     dismissible
   >
     {{ snackbar.message }}
