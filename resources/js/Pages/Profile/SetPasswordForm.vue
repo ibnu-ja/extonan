@@ -1,11 +1,17 @@
 <template>
   <app-user-section @submitted="setPassword">
     <template #title>
-      Update Password
+      Set Password
     </template>
 
     <template #description>
       Ensure your account is using a long, random password to stay secure.
+    </template>
+
+    <template #card-title>
+      <h4>
+        You have not set your password.
+      </h4>
     </template>
 
     <template #content>
