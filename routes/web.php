@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -31,7 +33,9 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::resources([
         'album' => AlbumController::class,
         'artist' => ArtistController::class,
-        'product' => ProductController::class
+        'product' => ProductController::class,
+        'event' => EventController::class,
+        'organization' => OrganizationController::class
     ]);
 });
 
