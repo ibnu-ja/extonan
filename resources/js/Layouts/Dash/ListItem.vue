@@ -4,12 +4,15 @@
     :href="item.href"
     :rel="item.href ? 'nofollow' : undefined"
     :target="item.href ? '_blank' : undefined"
-    :to="item.to"
-    v-bind="$attrs"
-    :aria-selected="active(item.exact, item.to)"
+    :to="getDirectLink(item.to)"
     :class="{
-      'primary white--text v-list-item--active': active(item.exact, item.to)
+      'primary white--text v-list-item--active': checkIsCurrentRoute(
+        item.exact,
+        item.to
+      )
     }"
+    :aria-selected="checkIsCurrentRoute(item.exact, item.to)"
+    v-bind="$attrs"
     v-on="$listeners"
   >
     <v-list-item-icon v-if="!item.icon">
@@ -31,6 +34,7 @@
 </template>
 
 <script>
+import { has } from 'lodash'
 export default {
   name: 'DefaultListItem',
 
@@ -43,16 +47,38 @@ export default {
 
   computed: {
     title () {
-      console.log(this.item)
       const matches = this.item.title.match(/\b(\w)/g)
       return matches.join('')
     }
   },
 
   methods: {
-    active (exact, link) {
-      if (exact) return link === this.$page.url
-      else return this.$page.url.startsWith(link)
+    // TODO: remove repetitive use of code (route checking)
+    checkIsRouteOrLink (route) {
+      if (has(route, 'name')) {
+        return true
+      } else return false
+    },
+    getDirectLink (route) {
+      if (has(route, 'name')) {
+        return this.route(route.name, route.params)
+      } else {
+        return route
+      }
+    },
+    checkIsCurrentRoute (exact, route) {
+      if (this.checkIsRouteOrLink(route)) {
+        if (exact) this.route().current(route.name)
+        else {
+          return this.route().current(route.name.replace(/\.([^.]*)$/, '*'))
+        }
+      } else {
+        if (exact) {
+          return route === this.$page.url
+        } else {
+          return this.$page.url.startsWith(route)
+        }
+      }
     }
   }
 }

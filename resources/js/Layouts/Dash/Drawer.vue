@@ -117,48 +117,61 @@ export default {
         './List'
       )
   },
-  data: () => ({
-    items: [
-      {
-        title: 'Dashboard',
-        icon: 'mdi-view-dashboard',
-        to: '/dashboard',
-        exact: true
-      },
-      {
-        title: 'Album',
-        icon: 'mdi-album',
-        to: '/dashboard/album'
-      },
-      {
-        title: 'Artist',
-        icon: 'mdi-account-music',
-        to: '/dashboard/artist'
-      },
-      {
-        title: 'Product',
-        icon: 'mdi-package-variant',
-        to: '/dashboard/product'
-      },
-      {
-        title: 'Event',
-        icon: 'mdi-calendar',
-        to: '/dashboard/event'
-      },
-      {
-        title: 'Organizations',
-        icon: 'mdi-account-group',
-        to: '/dashboard/organization'
-      },
-      { divider: true, inset: false },
-      { header: 'Account', mini: 'AC' },
-      {
-        title: 'User Profile',
-        icon: 'mdi-account',
-        to: '/user/profile'
-      }
-    ]
-  }),
+  data () {
+    return {
+      items: [
+        {
+          title: 'Dashboard',
+          icon: 'mdi-view-dashboard',
+          to: '/dashboard',
+          exact: true
+        },
+        {
+          title: 'Album',
+          icon: 'mdi-album',
+          to: {
+            name: 'album.index',
+            params: {}
+          }
+        },
+        {
+          title: 'Artist',
+          icon: 'mdi-account-music',
+          to: {
+            name: 'artist.index'
+          }
+        },
+        {
+          title: 'Product',
+          icon: 'mdi-package-variant',
+          to: {
+            name: 'product.index'
+          }
+        },
+        {
+          title: 'Event',
+          icon: 'mdi-calendar',
+          to: {
+            name: 'event.index'
+          }
+        },
+        {
+          title: 'Organizations',
+          icon: 'mdi-account-group',
+          to: {
+            name: 'organization.index'
+          }
+        },
+        { divider: true, inset: false },
+        { header: 'Account', mini: 'AC' },
+        {
+          title: 'User Profile',
+          icon: 'mdi-account',
+          to: '/user/profile'
+        }
+      ]
+    }
+  },
   computed: {
     ...sync('dashboard', ['drawer', 'mini'])
   }

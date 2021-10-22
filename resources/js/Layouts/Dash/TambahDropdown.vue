@@ -21,12 +21,14 @@
     <v-list dense>
       <inertia-link
         v-for="item in items"
-        :key="item.to"
+        :key="getDirectLink(item.to)"
         as="v-list-item"
-        :href="item.to"
-        :aria-selected="$page.url === item.to"
+        :to="getDirectLink(item.to)"
         :class="{
-          'primary white--text v-list-item--active': $page.url === item.to
+          'primary white--text v-list-item--active': checkIsCurrentRoute(
+            item.exact,
+            item.to
+          )
         }"
       >
         <v-list-item-icon> <v-icon v-text="item.icon" /> </v-list-item-icon>
@@ -37,27 +39,88 @@
 </template>
 
 <script>
+import { has } from 'lodash'
+// WKWK
+// note to self: read this https://github.com/tighten/ziggy#the-router-class
 import { VListItem } from 'vuetify/lib'
 export default {
   // eslint-disable-next-line vue/no-unused-components
   components: { VListItem },
-  data: () => ({
-    selectedItem: 1,
-    items: [
-      { text: 'Album', icon: 'mdi-clock', to: '/dashboard/album/create' },
-      { text: 'Artist', icon: 'mdi-account', to: '/dashboard/artist/create' },
-      {
-        text: 'Product',
-        icon: 'mdi-package-variant',
-        to: '/dashboard/product/create'
-      },
-      {
-        text: 'Organizations',
-        icon: 'mdi-account-group',
-        to: '/dashboard/organization/create'
-      },
-      { text: 'Event', icon: 'mdi-calendar', to: '/dashboard/event/create' }
-    ]
-  })
+  data () {
+    return {
+      selectedItem: 1,
+      items: [
+        {
+          text: 'Album',
+          icon: 'mdi-album',
+          to: {
+            name: 'album.create'
+          }
+        },
+        {
+          text: 'Artist',
+          icon: 'mdi-account',
+          exact: true,
+          to: {
+            name: 'artist.create'
+          }
+        },
+        {
+          text: 'Product',
+          icon: 'mdi-package-variant',
+          exact: true,
+          to: {
+            name: 'product.create'
+          }
+        },
+        {
+          text: 'Organizations',
+          icon: 'mdi-account-group',
+          exact: true,
+          to: {
+            name: 'organization.create'
+          }
+        },
+        {
+          text: 'Event',
+          icon: 'mdi-calendar',
+          exact: true,
+          to: { name: 'event.create' }
+        }
+      ]
+    }
+  },
+  methods: {
+    // TODO: remove repetitive use of code (route checking)
+    checkIsRouteOrLink (route) {
+      if (has(route, 'name')) {
+        return true
+      } else return false
+    },
+    getDirectLink (route) {
+      if (has(route, 'name')) {
+        return this.route(route.name, route.params)
+      } else {
+        return route
+      }
+    },
+    checkIsCurrentRoute (exact, route) {
+      if (this.checkIsRouteOrLink(route)) {
+        // if it needs route() instance
+        if (exact) {
+          return this.route().current(route.name)
+        } else {
+          return this.route().current(route.name.replace(/\.([^.]*)$/, '*'))
+        }
+      } else {
+        // it's plain url
+        if (exact) {
+          return route === this.$page.url
+        } else {
+          return this.$page.url.startsWith(route)
+        }
+      }
+    }
+  }
 }
 </script>
