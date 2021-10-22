@@ -10,8 +10,6 @@ import { createInertiaApp, Link } from '@inertiajs/inertia-vue'
 // Plugins
 import vuetify from '@/Plugins/vuetify'
 
-require('./bootstrap')
-
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
 Vue.use(VueAxios, axios)
