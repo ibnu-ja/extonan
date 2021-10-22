@@ -30,6 +30,8 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->prefix('dashboard')->group(function () {
+    Route::get('/artist/reindex', [ArtistController::class, 'indexJson'])->name('artist.indexJson');
+    Route::post('/artist/insertion', [ArtistController::class, 'insertion'])->name('artist.insertVgmdb');
     Route::resources([
         'album' => AlbumController::class,
         'artist' => ArtistController::class,
@@ -37,6 +39,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
         'event' => EventController::class,
         'organization' => OrganizationController::class
     ]);
+    // Route::post('/artist/insertion', [ArtistController::class, 'insertion'])->name('artist.insertVgmdb');
 });
 
 // Route::get('/dashboard/album', [AlbumController::class, 'index']);
