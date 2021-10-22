@@ -10,7 +10,7 @@
     <drawer />
 
     <v-main>
-      <v-container class="pt-7">
+      <v-container>
         <slot />
       </v-container>
     </v-main>
