@@ -115,7 +115,6 @@ class ArtistController extends Controller
      */
     public function insertion(StoreArtistFromVgmdbReqeust $request)
     {
-        //TODO todo 
         $validated = $request->all();
         $meta = collect(['vgmdb_link' => isset($validated['link']) ?: null]);
         $artist = Artist::firstOrCreate(
