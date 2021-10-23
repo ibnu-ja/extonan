@@ -27,7 +27,7 @@
               small
               icon
               color="info"
-              :to="'/dashboard/album/' + item.id + '/edit'"
+              :to="route('album.edit', { album: item.id })"
             >
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
@@ -84,7 +84,9 @@ export default {
       // confirm
       this.$refs.confirm
         .open('Delete', 'Are you sure to delete this item?', { color: 'red' })
-        .then(() => this.$inertia.delete('/dashboard/album/' + id))
+        .then(() =>
+          this.$inertia.delete(this.route('album.destroy', { album: id }))
+        )
     }
   }
 }
