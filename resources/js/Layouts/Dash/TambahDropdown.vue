@@ -53,6 +53,7 @@ export default {
         {
           text: 'Album',
           icon: 'mdi-album',
+          exact: true,
           to: {
             name: 'album.create'
           }
