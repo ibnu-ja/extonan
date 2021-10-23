@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreArtistFromVgmdbReqeust;
+use App\Http\Requests\StoreArtistRequest;
 use App\Models\Artist;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ArtistController extends Controller
 {
-    // TODO move validation to FormRequest
     /**
      * Display a listing of the resource.
      *
@@ -48,19 +49,9 @@ class ArtistController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreArtistRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'name_real' => 'string',
-            'name_trans' => 'string',
-            'birthdate' => 'date',
-            'birthplace' => 'string',
-            'meta' => 'nullable|array|min:1',
-            'desc' => 'string',
-            'sex' => 'alpha',
-        ]);
-        Artist::create($validated);
+        Artist::create($request->all());
         return redirect()->route('artist.index')->with('snackbar', [
             'message' => 'Success storing data',
             'color'    => 'info',
@@ -98,16 +89,7 @@ class ArtistController extends Controller
      */
     public function update(Request $request, Artist $artist)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'name_real' => 'string',
-            'name_trans' => 'string',
-            'birthdate' => 'date',
-            'birthplace' => 'string',
-            'desc' => 'string|nullable',
-            'sex' => 'alpha',
-        ]);
-        $artist->update($validated);
+        $artist->update($request->all());
         return redirect()->route('artist.index')->with('snackbar', [
             'message' => 'Success updating data',
             'color'    => 'info',
@@ -131,22 +113,15 @@ class ArtistController extends Controller
     /**
      * Update or Insert from name.
      */
-    public function insertion(Request $request)
+    public function insertion(StoreArtistFromVgmdbReqeust $request)
     {
-        //FIXME refractor insertion
-        $validated = $request->validate([
-            'link' => 'string',
-            'names' => 'required|array|min:1',
-            // 'names.en' => 'string|required',
-            // 'names.ja' => 'string|nullable',
-            'names.ja' => 'required_without_all:names.en',
-            'names.en' => 'required_without_all:names.ja',
-        ]);
-        $meta = collect(['vgmdb_link' => isset($validated['link']) ? $validated['link'] : null]);
+        //TODO todo 
+        $validated = $request->all();
+        $meta = collect(['vgmdb_link' => isset($validated['link']) ?: null]);
         $artist = Artist::firstOrCreate(
             ['name' => $validated['names']['en']],
             [
-                'name_real' => isset($validated['names']['ja']) ? $validated['names']['ja'] : null,
+                'name_real' => isset($validated['names']['ja']) ?: null,
                 'meta' => $meta
             ]
         );
