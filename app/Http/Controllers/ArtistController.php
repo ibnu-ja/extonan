@@ -8,6 +8,7 @@ use Inertia\Inertia;
 
 class ArtistController extends Controller
 {
+    // TODO move validation to FormRequest
     /**
      * Display a listing of the resource.
      *
@@ -15,9 +16,20 @@ class ArtistController extends Controller
      */
     public function index()
     {
+        $artist = Artist::select('id', 'name', 'name_real', 'name_trans', 'created_at', 'updated_at')->latest()->get();
 
-        $artist = Artist::latest()->get();
         return Inertia::render('Dashboard/Artist/Index', ['artist' => $artist]);
+    }
+
+    /**
+     * Display a listing of the resource in JSON (usage for album artist insertion).
+     *
+     * @return \App\Models\Artist
+     */
+    public function indexJson()
+    {
+        $artist = Artist::select('id', 'name', 'name_real')->get();
+        return $artist;
     }
 
     /**
@@ -44,8 +56,7 @@ class ArtistController extends Controller
             'name_trans' => 'string',
             'birthdate' => 'date',
             'birthplace' => 'string',
-            // TODO: artist meta validation
-            // 'meta' => 'json|sometimes',
+            'meta' => 'nullable|array|min:1',
             'desc' => 'string',
             'sex' => 'alpha',
         ]);
@@ -93,8 +104,6 @@ class ArtistController extends Controller
             'name_trans' => 'string',
             'birthdate' => 'date',
             'birthplace' => 'string',
-            // TODO: artist meta validation
-            // 'meta' => 'json|sometimes',
             'desc' => 'string|nullable',
             'sex' => 'alpha',
         ]);
@@ -118,5 +127,29 @@ class ArtistController extends Controller
             'message' => 'Success deleting data',
             'color'    => 'info',
         ]);
+    }
+    /**
+     * Update or Insert from name.
+     */
+    public function insertion(Request $request)
+    {
+        //FIXME refractor insertion
+        $validated = $request->validate([
+            'link' => 'string',
+            'names' => 'required|array|min:1',
+            // 'names.en' => 'string|required',
+            // 'names.ja' => 'string|nullable',
+            'names.ja' => 'required_without_all:names.en',
+            'names.en' => 'required_without_all:names.ja',
+        ]);
+        $meta = collect(['vgmdb_link' => isset($validated['link']) ? $validated['link'] : null]);
+        $artist = Artist::firstOrCreate(
+            ['name' => $validated['names']['en']],
+            [
+                'name_real' => isset($validated['names']['ja']) ? $validated['names']['ja'] : null,
+                'meta' => $meta
+            ]
+        );
+        return $artist;
     }
 }

@@ -38,35 +38,38 @@ class Album extends Model
             ->saveSlugsTo('slug');
     }
 
-    // protected $hidden = ['slug', 'media'];
+    public function artists()
+    {
+        return $this->belongsToMany(Artist::class)->withPivot('role');
+    }
 
-    // public function getLinkAttribute()
-    // {
-    //     return url('/api/album/' . $this->slug);
-    // }
+    //waduhhhh gabisa custom relation nya, harus di define dulu
+    public function composers()
+    {
+        return $this->artists()->wherePivot('role', '=', 'composers');
+    }
+    public function performers()
+    {
+        return $this->artists()->wherePivot('role', '=', 'performers');
+    }
+    public function lyricists()
+    {
+        return $this->artists()->wherePivot('role', '=', 'lyricists');
+    }
+    public function arrangers()
+    {
+        return $this->artists()->wherePivot('role', '=', 'arrangers');
+    }
 
-    // public function artists()
-    // {
-    //     return $this->belongsToMany(Artist::class);
-    // }
-
-    // //waduhhhh gabisa custom relation nya, harus di define dulu
-    // public function composers()
-    // {
-    //     return $this->artists()->wherePivot('role', '=', 'composer');
-    // }
-    // public function performers()
-    // {
-    //     return $this->artists()->wherePivot('role', '=', 'performer');
-    // }
-    // public function lyricists()
-    // {
-    //     return $this->artists()->wherePivot('role', '=', 'lyricist');
-    // }
-    // public function arrangers()
-    // {
-    //     return $this->artists()->wherePivot('role', '=', 'arranger');
-    // }
+    public function getRolesAttribute()
+    {
+        return [
+            'composers' => $this->composers()->allRelatedIds()->toArray(),
+            'performers' => $this->performers()->allRelatedIds()->toArray(),
+            'lyricists' => $this->lyricists()->allRelatedIds()->toArray(),
+            'arrangers' => $this->arrangers()->allRelatedIds()->toArray(),
+        ];
+    }
 
     // public function orgs()
     // {

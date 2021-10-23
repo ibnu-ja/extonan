@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAlbumRequest;
 use App\Models\Album;
-use Illuminate\Http\Request;
+use App\Models\Artist;
 use Inertia\Inertia;
 
 class AlbumController extends Controller
@@ -26,31 +27,25 @@ class AlbumController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Dashboard/Album/Edit');
+        $artists = Artist::select('id', 'name', 'name_real')->get();
+        return Inertia::render('Dashboard/Album/Edit', ['artists' => $artists]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreAlbumRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAlbumRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'name_real' => 'string',
-            'name_trans' => 'string',
-            'catalog' => 'string',
-            'barcode' => 'string',
-            'classification' => 'string',
-            'release_date' => 'date',
-            'discs' => 'array',
-            'media_format' => 'string',
-            'desc' => 'string',
-        ]);
         // return $request;
-        Album::create($validated);
+        $album = Album::create($request->all());
+        foreach ($request['roles'] as $role => $artists_ids) {
+            foreach ($artists_ids as $artists_id) {
+                $album->artists()->attach($artists_id, ['role' => $role]);
+            }
+        }
         return redirect()->route('album.index')->with('snackbar', [
             'message' => 'Success storing data',
             'color'    => 'info',
@@ -76,32 +71,30 @@ class AlbumController extends Controller
      */
     public function edit(Album $album)
     {
-        return Inertia::render('Dashboard/Album/Edit', ['album' => $album]);
+        $artists = Artist::select('id', 'name', 'name_real')->get();
+        $album->append('roles');
+        return Inertia::render('Dashboard/Album/Edit', [
+            'album' => $album,
+            'artists' => $artists
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreAlbumRequest  $request
      * @param  \App\Models\Album  $album
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Album $album)
+    public function update(StoreAlbumRequest $request, Album $album)
     {
-        $validated = $request->validate([
-            'name' => 'sometimes|string',
-            'name_real' => 'string',
-            'name_trans' => 'string',
-            'catalog' => 'string',
-            'barcode' => 'string',
-            'classification' => 'string',
-            'release_date' => 'date',
-            'discs' => 'array',
-            'media_format' => 'string',
-            'desc' => 'string',
-        ]);
-        // return $request;
-        $album->update($validated);
+        $album->update($request->all());
+        $album->artists()->detach();
+        foreach ($request['roles'] as $role => $artists_ids) {
+            foreach ($artists_ids as $artists_id) {
+                $album->artists()->attach($artists_id, ['role' => $role]);
+            }
+        }
         return redirect()->route('album.index')->with('snackbar', [
             'message' => 'Success updating data',
             'color'    => 'info',
