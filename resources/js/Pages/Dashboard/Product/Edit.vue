@@ -45,7 +45,7 @@
                     >
                       <v-combobox
                         v-model="product.type"
-                        :items="$page.props.type"
+                        :items="types"
                         label="Type"
                       />
                       <!-- <v-text-field
@@ -189,6 +189,12 @@ export default {
     // eslint-disable-next-line vue/no-unused-components
     VBtn,
     ValidationErrors
+  },
+  props: {
+    types: {
+      type: Array,
+      default: null
+    }
   },
   data: () => ({
     vgmdb_id: '',

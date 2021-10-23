@@ -28,7 +28,7 @@ class ProductController extends Controller
     {
         return Inertia::render(
             'Dashboard/Product/Edit',
-            ['type' => Product::select('type')->groupBy('type')->get()->pluck('type')]
+            ['types' => Product::select('type')->groupBy('type')->whereNotNull('type')->get()->pluck('type')]
         );
     }
 
@@ -77,7 +77,7 @@ class ProductController extends Controller
         return Inertia::render(
             'Dashboard/Product/Edit',
             ['product' => $product],
-            ['type' => Product::select('type')->groupBy('type')->get()->pluck('type')]
+            ['types' => Product::select('type')->groupBy('type')->whereNotNull('type')->get()->pluck('type')]
         );
     }
 
