@@ -49,7 +49,7 @@
                     >
                       <v-combobox
                         v-model="organization.region"
-                        :items="$page.props.region"
+                        :items="regions"
                         label="Region"
                       />
                     </v-col>
@@ -59,7 +59,7 @@
                     >
                       <v-combobox
                         v-model="organization.type"
-                        :items="$page.props.type"
+                        :items="types"
                         label="Type"
                       />
                     </v-col>
@@ -177,6 +177,16 @@ export default {
     VBtn,
     ValidationErrors
   },
+  props: {
+    types: {
+      type: Array,
+      default: null
+    },
+    regions: {
+      type: Array,
+      default: null
+    }
+  },
   data: () => ({
     vgmdb_id: '',
     menu: false,
@@ -187,6 +197,8 @@ export default {
       release_date: '',
       name: '',
       name_real: '',
+      region: '',
+      desc: '',
       meta: {}
     }
   }),
