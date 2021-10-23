@@ -38,6 +38,14 @@
       </header>
     </v-toolbar-title>
 
+    <v-progress-linear
+      :active="loading"
+      indeterminate
+      absolute
+      bottom
+      color="primary"
+    />
+
     <v-spacer />
 
     <home-settings />
@@ -138,7 +146,7 @@ export default {
     TeamsDropdown
   },
   computed: {
-    ...sync('dashboard', ['drawer'])
+    ...sync('dashboard', ['drawer', 'loading'])
   },
   methods: {
     logout () {

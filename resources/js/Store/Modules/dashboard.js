@@ -3,7 +3,8 @@ import { make } from 'vuex-pathify'
 
 const state = {
   mini: false,
-  drawer: null
+  drawer: null,
+  loading: false
 }
 // aaa
 
