@@ -3,8 +3,8 @@ import { make } from 'vuex-pathify'
 
 const state = {
   theme: {
-    dark: false,
-    system: false
+    dark: null,
+    system: true
   },
   color: {
     dark: {
