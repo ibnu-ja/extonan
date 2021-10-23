@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEventRequest;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -35,17 +36,9 @@ class EventController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreEventRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'string',
-            'name_real' => 'string|nullable',
-            'abbr' => 'string|nullable',
-            'desc' => 'string|nullable',
-            'held_from' => 'date|nullable',
-            'held_to' => 'date|nullable',
-        ]);
-        Event::create($validated);
+        Event::create($request->all());
         return redirect()->route('event.index')->with('snackbar', [
             'message' => 'Success storing data',
             'color'    => 'info',
@@ -81,18 +74,9 @@ class EventController extends Controller
      * @param  \App\Models\Artist  $artist
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event)
+    public function update(StoreEventRequest $request, Event $event)
     {
-        //FIXME validation fuck
-        $validated = $request->validate([
-            'name' => 'string',
-            'name_real' => 'string|nullable',
-            'abbr' => 'string|nullable',
-            'desc' => 'string|nullable',
-            'held_from' => 'date|nullable',
-            'held_to' => 'date|nullable',
-        ]);
-        $event->update($validated);
+        $event->update($request->all());
         return redirect()->route('event.index')->with('snackbar', [
             'message' => 'Success updating data',
             'color'    => 'info',
