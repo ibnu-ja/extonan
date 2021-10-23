@@ -10,8 +10,11 @@ Vue.use(Vuex)
 
 const debug = process.env.NODE_ENV !== 'production'
 
+const ignoreMutations = ['dashboard/SET_LOADING']
+
 const vuexLocal = new VuexPersistence({
-  storage: window.localStorage
+  storage: window.localStorage,
+  filter: mutation => !ignoreMutations.includes(mutation.type)
 })
 
 export default new Vuex.Store({
