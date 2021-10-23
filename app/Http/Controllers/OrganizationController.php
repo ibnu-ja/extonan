@@ -8,6 +8,7 @@ use Inertia\Inertia;
 
 class OrganizationController extends Controller
 {
+    //TODO: move validation to FormRequest
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +29,10 @@ class OrganizationController extends Controller
     {
         return Inertia::render(
             'Dashboard/Organization/Edit',
-            ['type' => Organization::select('type')->groupBy('type')->get()->pluck('type'), 'type' => Organization::select('region')->groupBy('region')->get()->pluck('region')]
+            [
+                'types' => Organization::select('type')->groupBy('type')->whereNotNull('type')->get()->pluck('type'),
+                'regions' => Organization::select('region')->groupBy('region')->whereNotNull('region')->get()->pluck('region')
+            ]
         );
     }
 
@@ -42,9 +46,11 @@ class OrganizationController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'name_real' => 'string',
-            'desc' => 'string',
-            'meta.*' => 'string',
+            'name_real' => 'string|nullable',
+            'desc' => 'string|nullable',
+            'type' => 'string|nullable',
+            'region' => 'string|nullable',
+            'meta.*' => 'string|nullable',
         ]);
         Organization::create($validated);
         return redirect()->route('organization.index')->with('snackbar', [
@@ -72,7 +78,14 @@ class OrganizationController extends Controller
      */
     public function edit(Organization $organization)
     {
-        return Inertia::render('Dashboard/Organization/Edit', ['organization' => $organization]);
+        return Inertia::render(
+            'Dashboard/Organization/Edit',
+            [
+                'organization' => $organization,
+                'types' => Organization::select('type')->groupBy('type')->whereNotNull('type')->get()->pluck('type'),
+                'regions' => Organization::select('region')->groupBy('region')->whereNotNull('region')->get()->pluck('region')
+            ]
+        );
     }
 
     /**
@@ -87,9 +100,11 @@ class OrganizationController extends Controller
         //FIXME validation fuck
         $validated = $request->validate([
             'name' => 'required|string',
-            'name_real' => 'string',
-            'desc' => 'string',
-            'meta.*' => 'string',
+            'name_real' => 'string|nullable',
+            'desc' => 'string|nullable',
+            'type' => 'string|nullable',
+            'region' => 'string|nullable',
+            'meta.*' => 'string|nullable',
         ]);
         $organization->update($validated);
         return redirect()->route('organization.index')->with('snackbar', [
