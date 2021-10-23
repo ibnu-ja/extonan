@@ -3,7 +3,10 @@
     <template #header>
       <h3 v-text="$page.props.album ? 'Edit Album' : 'New Album'" />
     </template>
-    <form @submit.prevent="submit">
+    <v-form
+      :disabled="loading"
+      @submit.prevent="submit"
+    >
       <v-row>
         <v-col
           cols="12"
@@ -102,6 +105,65 @@
                       />
                     </v-col>
                   </v-row>
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col cols="12">
+              <v-card>
+                <v-toolbar
+                  flat
+                  dense
+                >
+                  <v-toolbar-title><h4>Artist</h4></v-toolbar-title>
+                  <v-spacer />
+                  <v-btn>Add Role</v-btn>
+                </v-toolbar>
+                <v-card-text>
+                  <!-- TODO Meta organization -->
+                  <v-autocomplete
+                    v-model="album.roles.performers"
+                    multiple
+                    clearable
+                    chips
+                    deletable-chips
+                    :items="artists"
+                    item-text="name"
+                    item-value="id"
+                    label="Performers"
+                  />
+                  <v-autocomplete
+                    v-model="album.roles.composers"
+                    multiple
+                    clearable
+                    chips
+                    deletable-chips
+                    :items="artists"
+                    item-text="name"
+                    item-value="id"
+                    label="Composers"
+                  />
+                  <v-autocomplete
+                    v-model="album.roles.lyricists"
+                    multiple
+                    clearable
+                    chips
+                    deletable-chips
+                    :items="artists"
+                    item-text="name"
+                    item-value="id"
+                    label="Lyricists"
+                  />
+                  <v-autocomplete
+                    v-model="album.roles.arrangers"
+                    multiple
+                    clearable
+                    chips
+                    deletable-chips
+                    :items="artists"
+                    item-text="name"
+                    item-value="id"
+                    label="Arrangers"
+                  />
                 </v-card-text>
               </v-card>
             </v-col>
@@ -321,14 +383,16 @@
           </v-row>
         </v-col>
       </v-row>
-    </form>
+    </v-form>
   </dash-layout>
 </template>
 
 <script>
+import { sync } from 'vuex-pathify'
 import DashLayout from '@/Layouts/Dash/Index.vue'
 import { VBtn } from 'vuetify/lib'
 import ValidationErrors from '@/Components/ValidationErrors.vue'
+// import { union } from 'lodash'
 
 export default {
   name: 'DashboardAlbum',
@@ -338,35 +402,45 @@ export default {
     VBtn,
     ValidationErrors
   },
-  data: () => ({
-    vgmdb_id: '',
-    menu: false,
-    date: '',
-    track_lang: [''],
-    album: {
-      name: '',
-      name_real: '',
-      name_trans: '',
-      barcode: '',
-      catalog: '',
-      release_date: '',
-      desc: '',
-      discs: [
-        {
-          disc_length: '',
-          name: '',
-          tracks: [
-            {
-              names: {},
-              track_length: ''
-            }
-          ]
-        }
-      ],
-      media_format: ''
+  data () {
+    return {
+      vgmdb_id: '',
+      menu: false,
+      date: '',
+      track_lang: [''],
+      artists: this.$page.props.artists,
+      album: {
+        name: '',
+        name_real: '',
+        name_trans: '',
+        barcode: '',
+        catalog: '',
+        release_date: '',
+        desc: '',
+        roles: {
+          arrangers: [],
+          performers: [],
+          lyricists: [],
+          composers: []
+        },
+        discs: [
+          {
+            disc_length: '',
+            name: '',
+            tracks: [
+              {
+                names: {},
+                track_length: ''
+              }
+            ]
+          }
+        ],
+        media_format: ''
+      }
     }
-  }),
+  },
   computed: {
+    ...sync('dashboard', ['loading']),
     hasErrors () {
       return Object.keys(this.$page.props.errors).length > 0
     }
@@ -380,26 +454,59 @@ export default {
     }
   },
   methods: {
-    test () {
-      // TODO: rename method
-      // TODO: add loader
-      this.axios
-        .get('https://vgmdb.info/album/' + this.vgmdb_id + '?format=json')
-        .then(res => {
-          console.log(res.data)
-          console.log(Object.keys(res.data.discs[0].tracks[0].names))
-          this.track_lang = Object.keys(res.data.discs[0].tracks[0].names)
-          this.album.discs = res.data.discs
-          this.album.name = res.data.name
-          this.album.desc = res.data.notes
-          this.album.name_real = res.data.names.ja
-          this.album.name_trans = res.data.names['ja-latn']
-          this.album.barcode = res.data.barcode
-          this.album.catalog = res.data.catalog
-          this.album.release_date = res.data.release_date
-          this.album.media_format = res.data.media_format
+    async getIdsForCreditedArtists (vgmdb) {
+      return await Promise.all(
+        Object.keys(this.album.roles).map(async role => {
+          // return role
+          return await Promise.all(
+            vgmdb[role].map(async artist => {
+              // this.album.roles[role] = []
+              if (artist.link) artist.link = 'https://vgmdb.net/' + artist.link
+              const res = await this.axios.post(
+                this.route('artist.insertVgmdb'),
+                artist
+              )
+              return res.data
+            })
+          )
         })
-        .catch(err => console.log(err.data))
+      )
+    },
+    async test () {
+      // TODO: rename method
+      try {
+        this.loading = true
+        const vgmdb = await this.axios
+          .get('https://vgmdb.info/album/' + this.vgmdb_id + '?format=json')
+          .then(res => {
+            return res.data
+          })
+        const credit = await this.getIdsForCreditedArtists(vgmdb)
+        this.artists = await this.axios
+          .get(this.route('artist.indexJson'))
+          .then(res => {
+            return res.data
+          })
+        Object.keys(this.album.roles).forEach((role, index) => {
+          this.album.roles[role] = credit[index].map(el => {
+            return el.id
+          })
+        })
+        this.track_lang = Object.keys(vgmdb.discs[0].tracks[0].names)
+        this.album.discs = vgmdb.discs
+        this.album.name = vgmdb.name
+        this.album.desc = vgmdb.notes
+        this.album.name_real = vgmdb.names.ja
+        this.album.name_trans = vgmdb.names['ja-latn']
+        this.album.barcode = vgmdb.barcode
+        this.album.catalog = vgmdb.catalog
+        this.album.release_date = vgmdb.release_date
+        this.album.media_format = vgmdb.media_format
+
+        this.loading = false
+      } catch (e) {
+        console.error(e)
+      }
     },
     submit () {
       if (this.$page.props.album) {
