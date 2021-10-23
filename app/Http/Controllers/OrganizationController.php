@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreOrganizationRequest;
 use App\Models\Organization;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class OrganizationController extends Controller
 {
-    //TODO: move validation to FormRequest
     /**
      * Display a listing of the resource.
      *
@@ -42,17 +42,9 @@ class OrganizationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreOrganizationRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'name_real' => 'string|nullable',
-            'desc' => 'string|nullable',
-            'type' => 'string|nullable',
-            'region' => 'string|nullable',
-            'meta.*' => 'string|nullable',
-        ]);
-        Organization::create($validated);
+        Organization::create($request->all());
         return redirect()->route('organization.index')->with('snackbar', [
             'message' => 'Success storing data',
             'color'    => 'info',
@@ -95,18 +87,9 @@ class OrganizationController extends Controller
      * @param  \App\Models\Artist  $artist
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Organization $organization)
+    public function update(StoreOrganizationRequest $request, Organization $organization)
     {
-        //FIXME validation fuck
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'name_real' => 'string|nullable',
-            'desc' => 'string|nullable',
-            'type' => 'string|nullable',
-            'region' => 'string|nullable',
-            'meta.*' => 'string|nullable',
-        ]);
-        $organization->update($validated);
+        $organization->update($request->all());
         return redirect()->route('organization.index')->with('snackbar', [
             'message' => 'Success updating data',
             'color'    => 'info',
