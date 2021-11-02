@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreOrganizationRequest extends FormRequest
+class StoreOrganizationFromVgmdbRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StoreOrganizationRequest extends FormRequest
      */
     public function authorize()
     {
-        //TODO permissions for store Organization
+        //TODO permissions for store OrganizationVgmdb
         return true;
     }
 
@@ -25,7 +25,11 @@ class StoreOrganizationRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'link' => 'string',
+            'names' => 'required|array|min:1',
+            'names.ja' => 'required_without_all:names.en,ja-latn',
+            'names.en' => 'required_without_all:names.ja,ja-latn',
+            'names.ja-latn' => 'required_without_all:names.ja,en',
         ];
     }
 }

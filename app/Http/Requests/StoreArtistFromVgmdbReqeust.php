@@ -13,6 +13,7 @@ class StoreArtistFromVgmdbReqeust extends FormRequest
      */
     public function authorize()
     {
+        //TODO permissions for store ArtistVgmdb
         return true;
     }
 

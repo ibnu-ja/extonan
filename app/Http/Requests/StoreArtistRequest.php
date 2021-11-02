@@ -13,6 +13,7 @@ class StoreArtistRequest extends FormRequest
      */
     public function authorize()
     {
+        //TODO permissions for store Artist
         return true;
     }
 
