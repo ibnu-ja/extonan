@@ -23,17 +23,6 @@ class ArtistController extends Controller
     }
 
     /**
-     * Display a listing of the resource in JSON (usage for album artist insertion).
-     *
-     * @return \App\Models\Artist
-     */
-    public function indexJson()
-    {
-        $artist = Artist::select('id', 'name', 'name_real')->get();
-        return $artist;
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -110,17 +99,29 @@ class ArtistController extends Controller
             'color'    => 'info',
         ]);
     }
+
+    /**
+     * Display a listing of the resource in JSON (usage for album artist insertion).
+     *
+     * @return \App\Models\Artist
+     */
+    public function indexJson()
+    {
+        $artist = Artist::select('id', 'name', 'name_real')->get();
+        return $artist;
+    }
+
     /**
      * Update or Insert from name.
      */
     public function insertion(StoreArtistFromVgmdbReqeust $request)
     {
         $validated = $request->all();
-        $meta = collect(['vgmdb_link' => isset($validated['link']) ?: null]);
+        $meta = collect(['vgmdb_link' => isset($validated['link']) ? $validated['link'] : null]);
         $artist = Artist::firstOrCreate(
             ['name' => $validated['names']['en']],
             [
-                'name_real' => isset($validated['names']['ja']) ?: null,
+                'name_real' => isset($validated['names']['ja']) ? $validated['names']['ja'] : null,
                 'meta' => $meta
             ]
         );
