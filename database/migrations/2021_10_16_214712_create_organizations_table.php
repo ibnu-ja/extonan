@@ -17,6 +17,7 @@ class CreateOrganizationsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('name_real')->nullable();
+            $table->string('name_trans')->nullable();
             $table->string('type')->nullable();
             $table->string('region')->nullable();
             $table->longText('desc')->nullable();
