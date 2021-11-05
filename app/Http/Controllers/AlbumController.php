@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAlbumRequest;
 use App\Models\Album;
 use App\Models\Artist;
+use App\Models\Event;
 use App\Models\Organization;
 use Inertia\Inertia;
 
@@ -29,7 +30,13 @@ class AlbumController extends Controller
     public function create()
     {
         $artists = Artist::select('id', 'name', 'name_real')->get();
-        return Inertia::render('Dashboard/Album/Edit', ['artists' => $artists]);
+        $organizations = Organization::select('id', 'name', 'name_real')->get();
+        $events = Event::select('id', 'name', 'name_real')->get();
+        return Inertia::render('Dashboard/Album/Edit',  [
+            'artists' => $artists,
+            'organizations' => $organizations,
+            'events' => $events,
+        ]);
     }
 
     /**
@@ -79,11 +86,13 @@ class AlbumController extends Controller
     {
         $artists = Artist::select('id', 'name', 'name_real')->get();
         $organizations = Organization::select('id', 'name', 'name_real')->get();
+        $events = Event::select('id', 'name', 'name_real')->get();
         $album->append('roles', 'orgs');
         return Inertia::render('Dashboard/Album/Edit', [
             'album' => $album,
             'artists' => $artists,
-            'organizations' => $organizations
+            'organizations' => $organizations,
+            'events' => $events,
         ]);
     }
 

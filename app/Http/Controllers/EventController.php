@@ -97,4 +97,33 @@ class EventController extends Controller
             'color'    => 'info',
         ]);
     }
+
+    /**
+     * Display a listing of the resource in JSON (usage for album artist insertion).
+     *
+     * @return \App\Models\Event
+     */
+    public function indexJson()
+    {
+        $event = Event::select('id', 'name')->get();
+        return $event;
+    }
+
+    /**
+     * Update or Insert from name.
+     */
+    public function insertion(StoreEventRequest $request)
+    {
+        $validated = $request->all();
+        $meta = collect(['vgmdb_link' => isset($validated['link']) ? $validated['link'] : null]);
+        $event = Event::firstOrCreate(
+            ['name' => $validated['name']],
+            [
+                'held_from' => isset($validated['held_from']) ? $validated['held_from'] : null,
+                'held_to' => isset($validated['held_to']) ? $validated['held_to'] : null,
+                'meta' => $meta
+            ]
+        );
+        return $event;
+    }
 }

@@ -30,6 +30,8 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->prefix('dashboard')->group(function () {
+    Route::get('/event/reindex', [EventController::class, 'indexJson'])->name('event.indexJson');
+    Route::post('/event/insertion', [EventController::class, 'insertion'])->name('event.insertVgmdb');
     Route::get('/artist/reindex', [ArtistController::class, 'indexJson'])->name('artist.indexJson');
     Route::post('/artist/insertion', [ArtistController::class, 'insertion'])->name('artist.insertVgmdb');
     Route::get('/organization/reindex', [OrganizationController::class, 'indexJson'])->name('organization.indexJson');

@@ -115,8 +115,6 @@
                   dense
                 >
                   <v-toolbar-title><h4>Artist</h4></v-toolbar-title>
-                  <v-spacer />
-                  <v-btn>Add Role</v-btn>
                 </v-toolbar>
                 <v-card-text>
                   <!-- TODO Meta organization -->
@@ -174,8 +172,6 @@
                   dense
                 >
                   <v-toolbar-title><h4>Organizations</h4></v-toolbar-title>
-                  <v-spacer />
-                  <v-btn>Add Org</v-btn>
                 </v-toolbar>
                 <v-card-text>
                   <v-autocomplete
@@ -183,7 +179,6 @@
                     multiple
                     clearable
                     chips
-                    small-chips
                     deletable-chips
                     :items="organizations"
                     item-text="name"
@@ -195,7 +190,6 @@
                     multiple
                     clearable
                     chips
-                    small-chips
                     deletable-chips
                     :items="organizations"
                     item-text="name"
@@ -207,7 +201,6 @@
                     multiple
                     clearable
                     chips
-                    small-chips
                     deletable-chips
                     :items="organizations"
                     item-text="name"
@@ -407,7 +400,32 @@
             </v-col>
             <v-col cols="12">
               <v-card>
-                <v-toolbar flat>
+                <v-toolbar
+                  dense
+                  flat
+                >
+                  <v-toolbar-title>
+                    <h4>Event</h4>
+                  </v-toolbar-title>
+                </v-toolbar>
+                <v-card-text class="normal--text">
+                  <v-autocomplete
+                    v-model="album.event_id"
+                    clearable
+                    :items="events"
+                    item-text="name"
+                    item-value="id"
+                    label="Event"
+                  />
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col cols="12">
+              <v-card>
+                <v-toolbar
+                  dense
+                  flat
+                >
                   <v-toolbar-title> <h4>Publication</h4></v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
@@ -462,11 +480,13 @@ export default {
       track_lang: [''],
       // orgg: ['label', 'publisher', 'distributor', 'manufacturer'],
       artists: this.$page.props.artists,
+      events: this.$page.props.events,
       organizations: this.$page.props.organizations,
       album: {
         name: '',
         name_real: '',
         name_trans: '',
+        event_id: '',
         barcode: '',
         catalog: '',
         release_date: '',
@@ -533,6 +553,23 @@ export default {
         })
       )
     },
+    async createEventIfNotExist (vgmdb) {
+      const event = vgmdb.release_events[0]
+      const dates = event.name.match(
+        // eslint-disable-next-line no-useless-escape
+        /(?:(((Jan(uary)?|Ma(r(ch)?|y)|Jul(y)?|Aug(ust)?|Oct(ober)?|Dec(ember)?)\ 31)|((Jan(uary)?|Ma(r(ch)?|y)|Apr(il)?|Ju((ly?)|(ne?))|Aug(ust)?|Oct(ober)?|(Sep(t(ember)?)?|Nov|Dec)(ember)?)\ (0?[1-9]|([12]\d)|30))|(Feb(ruary)?\ (0?[1-9]|1\d|2[0-8]|(29(?=,\ ((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00)))))))\,\ ((1[6-9]|[2-9]\d)\d{2}))/g
+      )
+      if (dates[0]) {
+        event.held_from = new Date(dates[0]).toISOString().split('T')[0]
+      }
+      if (dates[1]) {
+        event.held_to = new Date(dates[1]).toISOString().split('T')[0]
+      }
+      delete event.shortname
+      if (event.link) event.link = 'https://vgmdb.net/' + event.link
+      event.name = event.name.replace(/(Released at )|( \(.*)/g, '')
+      return await this.axios.post(this.route('event.insertVgmdb'), event)
+    },
     async getIdsForOrganizations (vgmdb) {
       return await Promise.all(
         vgmdb.organizations.map(async org => {
@@ -555,6 +592,15 @@ export default {
             return res.data
           })
         const credit = await this.getIdsForCreditedArtists(vgmdb)
+        if (vgmdb.release_events.length > 0) {
+          const event = await this.createEventIfNotExist(vgmdb)
+          this.events = await this.axios
+            .get(this.route('event.indexJson'))
+            .then(res => {
+              return res.data
+            })
+          this.album.event_id = event.data.id
+        }
         this.artists = await this.axios
           .get(this.route('artist.indexJson'))
           .then(res => {
@@ -567,10 +613,10 @@ export default {
         })
 
         await this.getIdsForOrganizations(vgmdb)
+        // console.log(event)
         this.organizations = await this.axios
           .get(this.route('organization.indexJson'))
           .then(res => {
-            console.log(res.data)
             return res.data
           })
 
@@ -584,10 +630,10 @@ export default {
         this.album.catalog = vgmdb.catalog
         this.album.release_date = vgmdb.release_date
         this.album.media_format = vgmdb.media_format
-
-        this.loading = false
       } catch (e) {
         console.error(e)
+      } finally {
+        this.loading = false
       }
     },
     submit () {

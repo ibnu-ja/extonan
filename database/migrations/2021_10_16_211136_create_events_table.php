@@ -20,8 +20,8 @@ class CreateEventsTable extends Migration
             $table->string('abbr')->nullable();
             $table->longText('desc')->nullable();
             $table->string('slug');
-            $table->date('held_from');
-            $table->date('held_to');
+            $table->date('held_from')->nullable();
+            $table->date('held_to')->nullable();
             $table->timestamps();
         });
     }
