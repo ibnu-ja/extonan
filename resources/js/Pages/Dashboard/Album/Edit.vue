@@ -167,6 +167,67 @@
                 </v-card-text>
               </v-card>
             </v-col>
+            <v-col cols="12">
+              <v-card>
+                <v-toolbar
+                  flat
+                  dense
+                >
+                  <v-toolbar-title><h4>Organizations</h4></v-toolbar-title>
+                  <v-spacer />
+                  <v-btn>Add Org</v-btn>
+                </v-toolbar>
+                <v-card-text>
+                  <v-autocomplete
+                    v-model="album.organizations.label"
+                    multiple
+                    clearable
+                    chips
+                    small-chips
+                    deletable-chips
+                    :items="organizations"
+                    item-text="name"
+                    item-value="id"
+                    label="Label"
+                  />
+                  <v-autocomplete
+                    v-model="album.organizations.publisher"
+                    multiple
+                    clearable
+                    chips
+                    small-chips
+                    deletable-chips
+                    :items="organizations"
+                    item-text="name"
+                    item-value="id"
+                    label="Publisher"
+                  />
+                  <v-autocomplete
+                    v-model="album.organizations.distributor"
+                    multiple
+                    clearable
+                    chips
+                    small-chips
+                    deletable-chips
+                    :items="organizations"
+                    item-text="name"
+                    item-value="id"
+                    label="Distributor"
+                  />
+                  <v-autocomplete
+                    v-model="album.organizations.manufacturer"
+                    multiple
+                    clearable
+                    chips
+                    deletable-chips
+                    :items="organizations"
+                    item-text="name"
+                    item-value="id"
+                    label="Manufacturer"
+                  />
+                </v-card-text>
+              </v-card>
+            </v-col>
             <!-- Disc Type -->
             <v-col cols="12">
               <v-card>
@@ -332,21 +393,16 @@
                   </v-toolbar-title>
                 </v-toolbar>
                 <v-card-text class="normal--text">
-                  <v-row no-gutters>
-                    <v-col cols="12">
-                      <v-text-field
-                        v-model="vgmdb_id"
-                        label="Album ID"
-                      />
-                    </v-col>
-                    <!-- TODO preview function -->
-                    <v-col cols="12">
-                      <v-btn @click="test">
-                        submit
-                      </v-btn>
-                    </v-col>
-                  </v-row>
+                  <v-text-field
+                    v-model="vgmdb_id"
+                    label="Album ID"
+                  />
                 </v-card-text>
+                <v-card-actions>
+                  <v-btn @click="test">
+                    submit
+                  </v-btn>
+                </v-card-actions>
               </v-card>
             </v-col>
             <v-col cols="12">
@@ -354,18 +410,7 @@
                 <v-toolbar flat>
                   <v-toolbar-title> <h4>Publication</h4></v-toolbar-title>
                 </v-toolbar>
-                <v-card-text class="normal--text">
-                  <v-row no-gutters>
-                    <v-col cols="6">
-                      <v-btn type="submit">
-                        Save
-                      </v-btn>
-                    </v-col>
-                    <!-- TODO preview function -->
-                    <v-col cols="6">
-                      <v-btn> Preview (TBA)</v-btn>
-                    </v-col>
-                  </v-row>
+                <v-card-text>
                   di sini ngurus visibility tanggal publish dsb
                   <v-list dense>
                     <v-list-item class="py-0">
@@ -378,6 +423,13 @@
                     </v-list-item>
                   </v-list>
                 </v-card-text>
+                <v-card-actions>
+                  <v-btn type="submit">
+                    Save
+                  </v-btn>
+                  <v-spacer />
+                  <v-btn> Preview (TBA)</v-btn>
+                </v-card-actions>
               </v-card>
             </v-col>
           </v-row>
@@ -408,7 +460,9 @@ export default {
       menu: false,
       date: '',
       track_lang: [''],
+      // orgg: ['label', 'publisher', 'distributor', 'manufacturer'],
       artists: this.$page.props.artists,
+      organizations: this.$page.props.organizations,
       album: {
         name: '',
         name_real: '',
@@ -422,6 +476,12 @@ export default {
           performers: [],
           lyricists: [],
           composers: []
+        },
+        orgs: {
+          label: [],
+          publisher: [],
+          distributor: [],
+          manufacturer: []
         },
         discs: [
           {
@@ -472,6 +532,18 @@ export default {
         })
       )
     },
+    async getIdsForOrganizations (vgmdb) {
+      return await Promise.all(
+        vgmdb.organizations.map(async org => {
+          if (org.link) org.link = 'https://vgmdb.net/' + org.link
+          const res = await this.axios.post(
+            this.route('organization.insertVgmdb'),
+            org
+          )
+          return res
+        })
+      )
+    },
     async test () {
       // TODO: rename method
       try {
@@ -492,6 +564,14 @@ export default {
             return el.id
           })
         })
+
+        await this.getIdsForOrganizations(vgmdb)
+        this.organizations = await this.axios
+          .get(this.route('organization.indexJson'))
+          .then(res => {
+            return res.data
+          })
+
         this.track_lang = Object.keys(vgmdb.discs[0].tracks[0].names)
         this.album.discs = vgmdb.discs
         this.album.name = vgmdb.name
