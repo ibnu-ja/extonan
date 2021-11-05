@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAlbumRequest;
 use App\Models\Album;
 use App\Models\Artist;
+use App\Models\Organization;
 use Inertia\Inertia;
 
 class AlbumController extends Controller
@@ -46,6 +47,11 @@ class AlbumController extends Controller
                 $album->artists()->attach($artists_id, ['role' => $role]);
             }
         }
+        foreach ($request['orgs'] as $role => $org_ids) {
+            foreach ($org_ids as $org_id) {
+                $album->organizations()->attach($org_id, ['role' => $role]);
+            }
+        }
         return redirect()->route('album.index')->with('snackbar', [
             'message' => 'Success storing data',
             'color'    => 'info',
@@ -72,10 +78,12 @@ class AlbumController extends Controller
     public function edit(Album $album)
     {
         $artists = Artist::select('id', 'name', 'name_real')->get();
-        $album->append('roles');
+        $organizations = Organization::select('id', 'name', 'name_real')->get();
+        $album->append('roles', 'orgs');
         return Inertia::render('Dashboard/Album/Edit', [
             'album' => $album,
-            'artists' => $artists
+            'artists' => $artists,
+            'organizations' => $organizations
         ]);
     }
 
@@ -90,9 +98,15 @@ class AlbumController extends Controller
     {
         $album->update($request->all());
         $album->artists()->detach();
+        $album->organizations()->detach();
         foreach ($request['roles'] as $role => $artists_ids) {
             foreach ($artists_ids as $artists_id) {
                 $album->artists()->attach($artists_id, ['role' => $role]);
+            }
+        }
+        foreach ($request['orgs'] as $role => $org_ids) {
+            foreach ($org_ids as $org_id) {
+                $album->organizations()->attach($org_id, ['role' => $role]);
             }
         }
         return redirect()->route('album.index')->with('snackbar', [
