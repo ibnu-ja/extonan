@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreOrganizationFromVgmdbRequest;
 use App\Http\Requests\StoreOrganizationRequest;
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class OrganizationController extends Controller
@@ -109,5 +111,37 @@ class OrganizationController extends Controller
             'message' => 'Success deleting data',
             'color'    => 'info',
         ]);
+    }
+
+
+    /**
+     * Display a listing of the resource in JSON (usage for album artist insertion).
+     *
+     * @return \App\Models\Artist
+     */
+    public function indexJson()
+    {
+        $artist = Organization::select('id', 'name')->get();
+        return $artist;
+    }
+
+    /**
+     * Update or Insert from vgmdb.
+     */
+    public function insertion(StoreOrganizationFromVgmdbRequest $request)
+    {
+        $validated = $request->all();
+        $meta = collect(['vgmdb_link' => isset($validated['link']) ? $validated['link'] : null]);
+        $organization = Organization::firstOrCreate(
+            [
+                'name' => $validated['names']['en']
+            ],
+            [
+                'name_real' => isset($validated['names']['ja']) ? $validated['names']['ja'] : null,
+                'name_trans' =>  $validated['names']["ja-latn"],
+                'meta' => $meta
+            ]
+        );
+        return $organization;
     }
 }
