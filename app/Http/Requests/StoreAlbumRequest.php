@@ -13,7 +13,6 @@ class StoreAlbumRequest extends FormRequest
      */
     public function authorize()
     {
-        //TODO permissions for store Album
         return true;
     }
 

@@ -36,6 +36,8 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::post('/artist/insertion', [ArtistController::class, 'insertion'])->name('artist.insertVgmdb');
     Route::get('/organization/reindex', [OrganizationController::class, 'indexJson'])->name('organization.indexJson');
     Route::post('/organization/insertion', [OrganizationController::class, 'insertion'])->name('organization.insertVgmdb');
+    Route::get('/product/reindex', [ProductController::class, 'indexJson'])->name('product.indexJson');
+    Route::post('/product/insertion', [ProductController::class, 'insertion'])->name('product.insertVgmdb');
     // Route::get('/organization/test', [OrganizationController::class, 'insertion'])->name('organization.testing');
     Route::resources([
         'album' => AlbumController::class,

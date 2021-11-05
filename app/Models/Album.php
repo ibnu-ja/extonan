@@ -61,6 +61,11 @@ class Album extends Model
         return $this->artists()->wherePivot('role', '=', 'arrangers');
     }
 
+    public function products()
+    {
+        return $this->belongsToMany(Product::class);
+    }
+
     public function getRolesAttribute()
     {
         return [

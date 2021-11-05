@@ -114,6 +114,87 @@
                   flat
                   dense
                 >
+                  <v-toolbar-title><h4>Organizations</h4></v-toolbar-title>
+                </v-toolbar>
+                <v-card-text>
+                  <v-autocomplete
+                    v-model="album.orgs.label"
+                    multiple
+                    clearable
+                    chips
+                    deletable-chips
+                    :items="organizations"
+                    item-text="name"
+                    item-value="id"
+                    label="Label"
+                  />
+                  <v-autocomplete
+                    v-model="album.orgs.publisher"
+                    multiple
+                    clearable
+                    chips
+                    deletable-chips
+                    :items="organizations"
+                    item-text="name"
+                    item-value="id"
+                    label="Publisher"
+                  />
+                  <v-autocomplete
+                    v-model="album.orgs.distributor"
+                    multiple
+                    clearable
+                    chips
+                    deletable-chips
+                    :items="organizations"
+                    item-text="name"
+                    item-value="id"
+                    label="Distributor"
+                  />
+                  <v-autocomplete
+                    v-model="album.orgs.manufacturer"
+                    multiple
+                    clearable
+                    chips
+                    deletable-chips
+                    :items="organizations"
+                    item-text="name"
+                    item-value="id"
+                    label="Manufacturer"
+                  />
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col cols="12">
+              <v-card>
+                <v-toolbar
+                  flat
+                  dense
+                >
+                  <v-toolbar-title>
+                    <h4>Products</h4>
+                  </v-toolbar-title>
+                </v-toolbar>
+                <v-card-text>
+                  <v-autocomplete
+                    v-model="album.products"
+                    multiple
+                    clearable
+                    chips
+                    deletable-chips
+                    :items="products"
+                    item-text="name"
+                    item-value="id"
+                    label="Product Represented"
+                  />
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col cols="12">
+              <v-card>
+                <v-toolbar
+                  flat
+                  dense
+                >
                   <v-toolbar-title><h4>Artist</h4></v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
@@ -161,62 +242,6 @@
                     item-text="name"
                     item-value="id"
                     label="Arrangers"
-                  />
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12">
-              <v-card>
-                <v-toolbar
-                  flat
-                  dense
-                >
-                  <v-toolbar-title><h4>Organizations</h4></v-toolbar-title>
-                </v-toolbar>
-                <v-card-text>
-                  <v-autocomplete
-                    v-model="album.orgs.label"
-                    multiple
-                    clearable
-                    chips
-                    deletable-chips
-                    :items="organizations"
-                    item-text="name"
-                    item-value="id"
-                    label="Label"
-                  />
-                  <v-autocomplete
-                    v-model="album.orgs.publisher"
-                    multiple
-                    clearable
-                    chips
-                    deletable-chips
-                    :items="organizations"
-                    item-text="name"
-                    item-value="id"
-                    label="Publisher"
-                  />
-                  <v-autocomplete
-                    v-model="album.orgs.distributor"
-                    multiple
-                    clearable
-                    chips
-                    deletable-chips
-                    :items="organizations"
-                    item-text="name"
-                    item-value="id"
-                    label="Distributor"
-                  />
-                  <v-autocomplete
-                    v-model="album.orgs.manufacturer"
-                    multiple
-                    clearable
-                    chips
-                    deletable-chips
-                    :items="organizations"
-                    item-text="name"
-                    item-value="id"
-                    label="Manufacturer"
                   />
                 </v-card-text>
               </v-card>
@@ -480,6 +505,7 @@ export default {
       track_lang: [''],
       // orgg: ['label', 'publisher', 'distributor', 'manufacturer'],
       artists: this.$page.props.artists,
+      products: this.$page.props.products,
       events: this.$page.props.events,
       organizations: this.$page.props.organizations,
       album: {
@@ -535,6 +561,18 @@ export default {
     }
   },
   methods: {
+    async getIdsForRepresentedProducts (vgmdb) {
+      return await Promise.all(
+        vgmdb.products.map(async product => {
+          if (product.link) product.link = 'https://vgmdb.net/' + product.link
+          const res = await this.axios.post(
+            this.route('product.insertVgmdb'),
+            product
+          )
+          return res.data.id
+        })
+      )
+    },
     async getIdsForCreditedArtists (vgmdb) {
       return await Promise.all(
         Object.keys(this.album.roles).map(async role => {
@@ -619,6 +657,15 @@ export default {
           .then(res => {
             return res.data
           })
+
+        const products = await this.getIdsForRepresentedProducts(vgmdb)
+        this.products = await this.axios
+          .get(this.route('product.indexJson'))
+          .then(res => {
+            return res.data
+          })
+
+        this.album.products = products
 
         this.track_lang = Object.keys(vgmdb.discs[0].tracks[0].names)
         this.album.discs = vgmdb.discs

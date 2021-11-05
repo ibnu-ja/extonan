@@ -1,7 +1,10 @@
 <?php
+// TODO: product type untuk edit dan store
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\StoreProductRequestFromVgmdbRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -88,15 +91,9 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(StoreProductRequest $request, Product $product)
     {
-        $validated = $request->validate([
-            'name' => 'string',
-            'name_real' => 'string',
-            'release_date' => 'date',
-            'type' => 'string',
-            'meta.*' => 'string',
-        ]);
+        $validated = $request->validate();
 
         $product->update($validated);
         return redirect()->route('product.index')->with('snackbar', [
@@ -118,5 +115,33 @@ class ProductController extends Controller
             'message' => 'Success deleting data',
             'color'    => 'info',
         ]);
+    }
+
+    /**
+     * Display a listing of the resource in JSON (usage for album artist insertion).
+     *
+     * @return \App\Models\Artist
+     */
+    public function indexJson()
+    {
+        $products = Product::select('id', 'name', 'name_real')->get();
+        return $products;
+    }
+
+    /**
+     * Update or Insert from name.
+     */
+    public function insertion(StoreProductRequestFromVgmdbRequest $request)
+    {
+        $validated = $request->all();
+        $meta = collect(['vgmdb_link' => isset($validated['link']) ? $validated['link'] : null]);
+        $product = Product::firstOrCreate(
+            ['name' => $validated['names']['en']],
+            [
+                'name_real' => isset($validated['names']['ja']) ? $validated['names']['ja'] : null,
+                'meta' => $meta
+            ]
+        );
+        return $product;
     }
 }
