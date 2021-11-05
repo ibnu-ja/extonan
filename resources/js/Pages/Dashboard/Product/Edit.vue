@@ -48,10 +48,6 @@
                         :items="types"
                         label="Type"
                       />
-                      <!-- <v-text-field
-                        v-model="product.type"
-                        label="Birthplace"
-                      /> -->
                     </v-col>
                     <v-col
                       cols="12"
@@ -193,7 +189,7 @@ export default {
   props: {
     types: {
       type: Array,
-      default: null
+      default: () => []
     }
   },
   data: () => ({
