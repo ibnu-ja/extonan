@@ -179,7 +179,7 @@
                 </v-toolbar>
                 <v-card-text>
                   <v-autocomplete
-                    v-model="album.organizations.label"
+                    v-model="album.orgs.label"
                     multiple
                     clearable
                     chips
@@ -191,7 +191,7 @@
                     label="Label"
                   />
                   <v-autocomplete
-                    v-model="album.organizations.publisher"
+                    v-model="album.orgs.publisher"
                     multiple
                     clearable
                     chips
@@ -203,7 +203,7 @@
                     label="Publisher"
                   />
                   <v-autocomplete
-                    v-model="album.organizations.distributor"
+                    v-model="album.orgs.distributor"
                     multiple
                     clearable
                     chips
@@ -215,7 +215,7 @@
                     label="Distributor"
                   />
                   <v-autocomplete
-                    v-model="album.organizations.manufacturer"
+                    v-model="album.orgs.manufacturer"
                     multiple
                     clearable
                     chips
@@ -511,6 +511,7 @@ export default {
         this.$page.props.album.discs[0].tracks[0].names
       )
       this.album = this.$page.props.album
+      this.organizations = this.$page.props.organizations
     }
   },
   methods: {
@@ -569,6 +570,7 @@ export default {
         this.organizations = await this.axios
           .get(this.route('organization.indexJson'))
           .then(res => {
+            console.log(res.data)
             return res.data
           })
 
