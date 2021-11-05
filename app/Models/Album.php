@@ -104,7 +104,7 @@ class Album extends Model
 
     public function event()
     {
-        return $this->hasOne(Event::class);
+        return $this->belongsTo(Event::class);
     }
 
     // public function products()
