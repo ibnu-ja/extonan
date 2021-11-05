@@ -36,6 +36,7 @@ class StoreAlbumRequest extends FormRequest
             'media_format' => 'string',
             'desc' => 'string',
             'roles' => 'nullable|array|min:1',
+            'orgs' => 'nullable|array|min:1',
             'roles.composers' => 'nullable|array',
             'roles.performers' => 'nullable|array',
             'roles.lyricists' => 'nullable|array',
@@ -44,6 +45,14 @@ class StoreAlbumRequest extends FormRequest
             'roles.performers.*' => 'sometimes|numeric|exists:artists,id',
             'roles.lyricists.*' => 'sometimes|numeric|exists:artists,id',
             'roles.arrangers.*' => 'sometimes|numeric|exists:artists,id',
+            'orgs.label' => 'nullable|array',
+            'orgs.publisher' => 'nullable|array',
+            'orgs.distributor' => 'nullable|array',
+            'orgs.manufacturer' => 'nullable|array',
+            'orgs.composers.*' => 'sometimes|numeric|exists:organizations,id',
+            'orgs.performers.*' => 'sometimes|numeric|exists:organizations,id',
+            'orgs.lyricists.*' => 'sometimes|numeric|exists:organizations,id',
+            'orgs.arrangers.*' => 'sometimes|numeric|exists:organizations,id',
         ];
     }
 }
