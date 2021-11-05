@@ -73,7 +73,7 @@ class Album extends Model
 
     public function organizations()
     {
-        return $this->belongsToMany(Organization::class);
+        return $this->belongsToMany(Organization::class)->withPivot('role');
     }
     public function label()
     {
@@ -100,6 +100,11 @@ class Album extends Model
             'distributor' => $this->distributor()->allRelatedIds()->toArray(),
             'manufacturer' => $this->manufacturer()->allRelatedIds()->toArray(),
         ];
+    }
+
+    public function event()
+    {
+        return $this->hasOne(Event::class);
     }
 
     // public function products()
