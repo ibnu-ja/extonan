@@ -41,15 +41,9 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'name_real' => 'string',
-            'release_date' => 'date',
-            'type' => 'string',
-            'meta.*' => 'string',
-        ]);
+        $validated = $request->all();
 
         Product::create($validated);
         return redirect()->route('product.index')->with('snackbar', [
@@ -79,8 +73,10 @@ class ProductController extends Controller
     {
         return Inertia::render(
             'Dashboard/Product/Edit',
-            ['product' => $product],
-            ['types' => Product::select('type')->groupBy('type')->whereNotNull('type')->get()->pluck('type')]
+            [
+                'types' => Product::select('type')->groupBy('type')->whereNotNull('type')->get()->pluck('type'),
+                'product' => $product
+            ],
         );
     }
 
@@ -93,9 +89,10 @@ class ProductController extends Controller
      */
     public function update(StoreProductRequest $request, Product $product)
     {
-        $validated = $request->validate();
+        $validated = $request->all();
 
         $product->update($validated);
+        // return $product;
         return redirect()->route('product.index')->with('snackbar', [
             'message' => 'Success updating data',
             'color'    => 'info',
