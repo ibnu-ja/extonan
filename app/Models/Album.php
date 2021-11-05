@@ -71,22 +71,36 @@ class Album extends Model
         ];
     }
 
-    // public function orgs()
-    // {
-    //     return $this->belongsToMany(Organization::class);
-    // }
-    // public function label()
-    // {
-    //     return $this->orgs()->wherePivot('role', '=', 'label');
-    // }
-    // public function publisher()
-    // {
-    //     return $this->orgs()->wherePivot('role', '=', 'publisher');
-    // }
-    // public function distributor()
-    // {
-    //     return $this->orgs()->wherePivot('role', '=', 'distributor');
-    // }
+    public function organizations()
+    {
+        return $this->belongsToMany(Organization::class);
+    }
+    public function label()
+    {
+        return $this->organizations()->wherePivot('role', '=', 'label');
+    }
+    public function publisher()
+    {
+        return $this->organizations()->wherePivot('role', '=', 'publisher');
+    }
+    public function distributor()
+    {
+        return $this->organizations()->wherePivot('role', '=', 'distributor');
+    }
+    public function manufacturer()
+    {
+        return $this->organizations()->wherePivot('role', '=', 'manufacturer');
+    }
+
+    public function getOrgsAttribute()
+    {
+        return [
+            'label' => $this->label()->allRelatedIds()->toArray(),
+            'publisher' => $this->publisher()->allRelatedIds()->toArray(),
+            'distributor' => $this->distributor()->allRelatedIds()->toArray(),
+            'manufacturer' => $this->manufacturer()->allRelatedIds()->toArray(),
+        ];
+    }
 
     // public function products()
     // {
