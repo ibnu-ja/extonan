@@ -424,6 +424,13 @@
               </v-card>
             </v-col>
             <v-col cols="12">
+              <image-gallery-upload
+                v-model="testt"
+                multiple
+                @remove="onRemove"
+              />
+            </v-col>
+            <v-col cols="12">
               <v-card>
                 <v-toolbar
                   dense
@@ -487,21 +494,25 @@ import { sync } from 'vuex-pathify'
 import DashLayout from '@/Layouts/Dash/Index.vue'
 import { VBtn } from 'vuetify/lib'
 import ValidationErrors from '@/Components/ValidationErrors.vue'
+import ImageGalleryUpload from '@/Components/ImageGalleryUpload.vue'
 // import { union } from 'lodash'
 
 export default {
   name: 'DashboardAlbum',
   components: {
     DashLayout,
+    ImageGalleryUpload,
     // eslint-disable-next-line vue/no-unused-components
     VBtn,
     ValidationErrors
   },
   data () {
     return {
+      serverImage: ['aaa', 'bbb'],
       vgmdb_id: '',
       menu: false,
       date: '',
+      testt: null,
       track_lang: [''],
       // orgg: ['label', 'publisher', 'distributor', 'manufacturer'],
       artists: this.$page.props.artists,
@@ -572,6 +583,9 @@ export default {
           return res.data.id
         })
       )
+    },
+    onRemove (item) {
+      console.log(item)
     },
     async getIdsForCreditedArtists (vgmdb) {
       return await Promise.all(
