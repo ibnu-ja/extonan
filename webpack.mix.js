@@ -28,7 +28,7 @@ mix.extend(
       if (Mix.isWatching() && this.watch) {
         require('chokidar')
           .watch(this.watch)
-          .on('change', path => {
+          .on('change', (path) => {
             console.log(`${path} changed...`)
             command()
           })
@@ -39,17 +39,14 @@ mix.extend(
 
 require('dotenv').config()
 require('vuetifyjs-mix-extension')
-require('laravel-mix-eslint')
-/*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel applications. By default, we are compiling the CSS
- | file for the application as well as bundling up all the JS files.
- |
- */
+const ESLintPlugin = require('eslint-webpack-plugin')
+// require('laravel-mix-eslint')
+
+const options = {
+  extensions: ['js', 'vue'],
+  exclude: ['/node_modules/']
+}
+
 mix
   .alias({
     '@': path.resolve('resources/js'),
@@ -57,15 +54,18 @@ mix
   })
   .js('resources/js/app.js', 'public/js')
   // .sass('resources/sass/app.scss', 'public/css')
-  .eslint({
-    // fix: true,
-    extensions: ['js', 'vue'],
-    exclude: ['**/node_modules/*', '/resources/js/ziggy.js']
-    // ...
-  })
+  //   .eslint({
+  //     // fix: true,
+  //     extensions: ['js', 'vue'],
+  //     exclude: ['**/node_modules/*', '/resources/js/ziggy.js']
+  //     // ...
+  //   })
   .vuetify('vuetify-loader')
   .vue()
   .disableSuccessNotifications()
+  .webpackConfig({
+    plugins: [new ESLintPlugin(options)]
+  })
 
 if (mix.inProduction()) {
   mix.version()
