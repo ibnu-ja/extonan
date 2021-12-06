@@ -1,15 +1,5 @@
 <template>
   <div>
-    <v-row
-      class="my-6"
-      align="center"
-    >
-      <v-divider class="ml-8 mr-4" />
-      <h5 class="text-center">
-        OR
-      </h5>
-      <v-divider class="mr-8 ml-4" />
-    </v-row>
     <v-btn
       v-if="$page.props.socialstream.providers.includes('google')"
       block

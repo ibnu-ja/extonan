@@ -4,7 +4,6 @@
       <v-col
         cols="10"
         sm="8"
-        md="6"
       >
         <v-card>
           <v-card-title>Sign in to your account</v-card-title>
@@ -18,58 +17,81 @@
               {{ status }}
             </div>
 
-            <form @submit.prevent="submit">
-              <v-text-field
-                v-model="form.email"
-                dense
-                outlined
-                label="Email Address"
-                required
-                autofocus
+            <v-row>
+              <v-divider
+                v-if="$vuetify.breakpoint.lgAndUp"
+                vertical
               />
-              <v-text-field
-                v-model="form.password"
-                dense
-                outlined
-                label="Password"
-                required
-                autocomplete="current-password"
-                :append-icon="showP ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showP ? 'text' : 'password'"
-                hint="At least 8 characters"
-                @click:append="showP = !showP"
-              />
-              <v-checkbox
-                v-model="form.remember"
-                label="Remember me"
-              />
-              <v-btn
-                block
-                color="primary"
-                type="submit"
-                :disabled="form.processing"
+              <v-col
+                cols="12"
+                lg="6"
               >
-                Sign In
-              </v-btn>
-            </form>
+                <form @submit.prevent="submit">
+                  <v-text-field
+                    v-model="form.email"
+                    dense
+                    outlined
+                    label="Email Address"
+                    required
+                    autofocus
+                  />
+                  <v-text-field
+                    v-model="form.password"
+                    dense
+                    outlined
+                    label="Password"
+                    required
+                    autocomplete="current-password"
+                    :append-icon="showP ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="showP ? 'text' : 'password'"
+                    hint="At least 8 characters"
+                    @click:append="showP = !showP"
+                  />
+                  <v-checkbox
+                    v-model="form.remember"
+                    label="Remember me"
+                  />
+                  <v-btn
+                    block
+                    color="primary"
+                    type="submit"
+                    :disabled="form.processing"
+                  >
+                    Sign In
+                  </v-btn>
+                </form>
+              </v-col>
 
-            <socialstream-providers v-if="$page.props.socialstream.show" />
+              <v-divider
+                v-if="$vuetify.breakpoint.mdAndDown"
+              />
 
-            <div class="mt-4 d-flex justify-space-between text-body-1">
-              <inertia-link
-                v-if="canResetPassword"
-                :href="route('password.request')"
+              <v-col
+                cols="12"
+                lg="6"
+                order-lg="first"
               >
-                Forgot your password?
-              </inertia-link>
+                <socialstream-providers v-if="$page.props.socialstream.show" />
+              </v-col>
 
-              <div>
-                Don't have an account?
-                <inertia-link :href="route('register')">
-                  Sign up
-                </inertia-link>
-              </div>
-            </div>
+              <v-col cols="12">
+                <div class="mt-4 d-flex justify-space-between text-body-1">
+                  <inertia-link
+                    v-if="canResetPassword"
+                    :href="route('password.request')"
+                  >
+                    Forgot your password?
+                  </inertia-link>
+
+                  <div>
+                    Don't have an account?
+                    <inertia-link :href="route('register')">
+                      Sign up
+                    </inertia-link>
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
           </v-card-text>
         </v-card>
       </v-col>
