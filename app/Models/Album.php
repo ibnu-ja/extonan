@@ -10,6 +10,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Album extends Model implements HasMedia
 //  implements HasMedia
+// TODO image conversions
 {
     use HasSlug;
     use InteractsWithMedia;
