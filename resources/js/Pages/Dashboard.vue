@@ -1,5 +1,6 @@
 <template>
   <dash-layout>
+    <!-- TODO dashboard nampilin analitik (i.e. jumlah album, jumlah komentar, jumlah produk, dll) -->
     <template #header>
       <h2>
         Dashboard
