@@ -497,6 +497,7 @@ import { VBtn } from 'vuetify/lib'
 import ValidationErrors from '@/Components/ValidationErrors.vue'
 import ImageGalleryUpload from '@/Components/ImageGalleryUpload.vue'
 import ConfirmDialog from '@/Components/ConfirmDialog.vue'
+import { sync } from 'vuex-pathify'
 
 export default {
   components: {
@@ -507,8 +508,13 @@ export default {
     VBtn,
     ValidationErrors
   },
+  computed: {
+    ...sync('dashboard', ['loading']),
+    hasErrors () {
+      return Object.keys(this.$page.props.errors).length > 0
+    }
+  },
   methods: {
-
     async getIdsForRepresentedProducts (vgmdb) {
       return await Promise.all(
         vgmdb.products.map(async product => {

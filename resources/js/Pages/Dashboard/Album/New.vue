@@ -1,6 +1,5 @@
 <script>
 import Forms from './Forms.vue'
-import { sync } from 'vuex-pathify'
 import DashLayout from '@/Layouts/Dash/Index.vue'
 import { VBtn } from 'vuetify/lib'
 import ValidationErrors from '@/Components/ValidationErrors.vue'
@@ -64,12 +63,6 @@ export default {
         ],
         media_format: ''
       })
-    }
-  },
-  computed: {
-    ...sync('dashboard', ['loading']),
-    hasErrors () {
-      return Object.keys(this.$page.props.errors).length > 0
     }
   },
   methods: {
