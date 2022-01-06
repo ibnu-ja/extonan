@@ -151,4 +151,15 @@ class AlbumController extends Controller
             'color'    => 'info',
         ]);
     }
+
+    public function destroyGallery(Album $album, $imageIndex)
+    {
+
+        $mediaItem = $album->getMedia('gallery');
+        $mediaItem[$imageIndex]->delete();
+        return redirect()->back()->with('snackbar', [
+            'message' => 'Success deleting data',
+            'color'    => 'info',
+        ]);
+    }
 }
