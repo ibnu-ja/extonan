@@ -1,5 +1,7 @@
 <template>
   <dash-layout>
+    <!-- TODO collapsible forms -->
+    <!-- TODO draggable forms -->
     <confirm-dialog ref="confirm" />
     <template #header>
       <h3 v-text="$page.props.album ? 'Edit Album' : 'New Album'" />
