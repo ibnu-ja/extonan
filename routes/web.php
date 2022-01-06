@@ -38,6 +38,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::post('/organization/insertion', [OrganizationController::class, 'insertion'])->name('organization.insertVgmdb');
     Route::get('/product/reindex', [ProductController::class, 'indexJson'])->name('product.indexJson');
     Route::post('/product/insertion', [ProductController::class, 'insertion'])->name('product.insertVgmdb');
+    Route::post('/album/{album}/gallery', [AlbumController::class, 'storeGallery'])->name('album.storeGallery');
     Route::delete('/album/{album}/gallery/{index}', [AlbumController::class, 'destroyGallery'])->name('album.destroyGallery');
     // Route::get('/organization/test', [OrganizationController::class, 'insertion'])->name('organization.testing');
     Route::resources([
