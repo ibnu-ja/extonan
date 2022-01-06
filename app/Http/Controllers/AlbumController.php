@@ -8,6 +8,7 @@ use App\Models\Artist;
 use App\Models\Event;
 use App\Models\Organization;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class AlbumController extends Controller
@@ -34,7 +35,7 @@ class AlbumController extends Controller
         $products = Product::select('id', 'name', 'name_real')->get();
         $organizations = Organization::select('id', 'name', 'name_real')->get();
         $events = Event::select('id', 'name', 'name_real')->get();
-        return Inertia::render('Dashboard/Album/Edit',  [
+        return Inertia::render('Dashboard/Album/New',  [
             'artists' => $artists,
             'organizations' => $organizations,
             'products' => $products,
@@ -50,17 +51,24 @@ class AlbumController extends Controller
      */
     public function store(StoreAlbumRequest $request)
     {
-        // return $request;
         $album = Album::create($request->all());
-        foreach ($request['roles'] as $role => $artists_ids) {
-            foreach ($artists_ids as $artists_id) {
-                $album->artists()->attach($artists_id, ['role' => $role]);
+
+        if ($request->roles) {
+            foreach ($request->roles as $role => $artists_ids) {
+                foreach ($artists_ids as $artists_id) {
+                    $album->artists()->attach($artists_id, ['role' => $role]);
+                }
             }
         }
-        foreach ($request['orgs'] as $role => $org_ids) {
-            foreach ($org_ids as $org_id) {
-                $album->organizations()->attach($org_id, ['role' => $role]);
+        if ($request->orgs) {
+            foreach ($request->orgs as $role => $org_ids) {
+                foreach ($org_ids as $org_id) {
+                    $album->organizations()->attach($org_id, ['role' => $role]);
+                }
             }
+        }
+        foreach ($request->images as $image) {
+            $album->addMedia($image)->toMediaCollection('gallery');
         }
         return redirect()->route('album.index')->with('snackbar', [
             'message' => 'Success storing data',
@@ -91,7 +99,7 @@ class AlbumController extends Controller
         $organizations = Organization::select('id', 'name', 'name_real')->get();
         $products = Product::select('id', 'name', 'name_real')->get();
         $events = Event::select('id', 'name', 'name_real')->get();
-        $album->append('roles', 'orgs');
+        $album->append('roles', 'orgs', 'uploadedGallery');
         return Inertia::render('Dashboard/Album/Edit', [
             'album' => $album,
             'artists' => $artists,
