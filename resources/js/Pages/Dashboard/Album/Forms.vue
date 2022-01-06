@@ -1,5 +1,6 @@
 <template>
   <dash-layout>
+    <confirm-dialog ref="confirm" />
     <template #header>
       <h3 v-text="$page.props.album ? 'Edit Album' : 'New Album'" />
     </template>
@@ -495,10 +496,12 @@ import DashLayout from '@/Layouts/Dash/Index.vue'
 import { VBtn } from 'vuetify/lib'
 import ValidationErrors from '@/Components/ValidationErrors.vue'
 import ImageGalleryUpload from '@/Components/ImageGalleryUpload.vue'
+import ConfirmDialog from '@/Components/ConfirmDialog.vue'
 
 export default {
   components: {
     DashLayout,
+    ConfirmDialog,
     ImageGalleryUpload,
     // eslint-disable-next-line vue/no-unused-components
     VBtn,
@@ -519,7 +522,18 @@ export default {
       )
     },
     onRemove (item) {
-      console.log(item)
+      // confirm
+      const index = this.album.uploadedGallery.map(e => e.id).indexOf(item.id)
+      this.$refs.confirm
+        .open('Delete', 'Are you sure to delete this item?', { color: 'red' })
+        .then(() => {
+          this.$inertia.delete(this.route('album.destroyGallery', {
+            index: index,
+            album: this.album.id
+          }), {
+            onSuccess: () => this.album.uploadedGallery.splice(index, 1)
+          })
+        })
     },
     async getIdsForCreditedArtists (vgmdb) {
       return await Promise.all(
