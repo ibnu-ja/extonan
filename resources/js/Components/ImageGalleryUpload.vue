@@ -1,13 +1,14 @@
 <template>
   <v-card>
     <!-- TODO: data from VGMDB/URL -->
+    <!-- Preview IMG -->
     <v-dialog
       v-model="modal"
       overlay-opacity="80"
     >
       <div class="relative">
         <v-carousel
-          v-model="img"
+          v-model="previewIndex"
           height="90vh"
           :hide-delimiters="delimit"
         >
@@ -39,10 +40,61 @@
             <v-icon v-text="!delimit ? 'mdi-chevron-down' : 'mdi-chevron-up'" />
           </v-btn>
           <v-carousel-item
-            v-for="n in urls"
+            v-for="n in previewUrls"
             :key="n"
             :contain="contain"
             :src="n"
+          >
+            <!-- TODO: image name/other meta edit -->
+          </v-carousel-item>
+        </v-carousel>
+      </div>
+    </v-dialog>
+    <!-- server images -->
+    <v-dialog
+      v-if="onServerFiles"
+      v-model="modal2"
+      overlay-opacity="80"
+    >
+      <div class="relative">
+        <v-carousel
+          v-model="serverIndex"
+          height="90vh"
+          width="100%"
+          :hide-delimiters="delimit"
+        >
+          <v-btn
+            icon
+            large
+            primary
+            class="top-right ma-2 ma-md-3"
+            @click="modal2 = false"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            large
+            primary
+            class="top-left ma-2 ma-md-3"
+            @click="contain = !contain"
+          >
+            <v-icon>mdi-fullscreen</v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            large
+            primary
+            class="bottom-left ma-1 ml-md-3"
+            @click="delimit = !delimit"
+          >
+            <v-icon v-text="!delimit ? 'mdi-chevron-down' : 'mdi-chevron-up'" />
+          </v-btn>
+          <v-carousel-item
+            v-for="file in onServerFiles"
+            :key="file.id"
+            :contain="contain"
+            :src="file.original_url"
           >
             <!-- TODO: image name/other meta edit -->
           </v-carousel-item>
@@ -56,10 +108,6 @@
       <v-toolbar-title>
         <h4>Images Gallery</h4>
       </v-toolbar-title>
-      <!-- <v-spacer />
-      <v-btn @click="reset">
-        Reset
-      </v-btn> -->
     </v-toolbar>
     <v-card-text>
       <v-row dense>
@@ -69,18 +117,16 @@
             ref="input"
             label="New Uploads"
             accept="image/*"
-            @change="test"
+            @change="change"
           />
         </v-col>
         <v-col
-          v-for="(url, index) in urls"
+          v-for="(url, index) in previewUrls"
           :key="url"
           class="relative"
           cols="4"
         >
-          <!-- eslint-disable -->
           <v-hover v-slot="{ hover }">
-            <!-- eslint-enable -->
             <v-img
               :src="url"
               aspect-ratio="1"
@@ -103,23 +149,61 @@
             </v-img>
           </v-hover>
         </v-col>
-        <!-- TODO remove file di server -->
-        <v-col
-          v-if="onServerFiles"
-          cols="12"
-        >
-          <v-row
-            align="center"
+        <template v-if="onServerFiles">
+          <v-col cols="12">
+            <v-row
+              no-gutters
+              align="center"
+            >
+              <v-divider class="ml-8 mr-4" />
+              <h5 class="text-center">
+                Existing Files
+              </h5>
+              <v-divider class="mr-8 ml-4" />
+            </v-row>
+          </v-col>
+          <v-col
+            v-for="(file, index) in onServerFiles"
+            :key="file.id"
+            class="relative"
+            cols="4"
           >
-            <v-divider class="ml-8 mr-4" />
-            <h5 class="text-center">
-              Existing Files
-            </h5>
-            <v-divider class="mr-8 ml-4" />
-          </v-row>
-          {{ onServerFiles }}
-          <v-btn @click="remove" />
-        </v-col>
+            <v-hover v-slot="{ hover }">
+              <v-img
+                :src="file.original_url"
+                aspect-ratio="1"
+                class="relative"
+                :class="{ 'on-hover': hover }"
+                @click="showModalUploaded(index)"
+              >
+                <template #placeholder>
+                  <v-row
+                    class="fill-height ma-0"
+                    align="center"
+                    justify="center"
+                  >
+                    <v-progress-circular
+                      indeterminate
+                      color="grey lighten-5"
+                    />
+                  </v-row>
+                </template>
+              </v-img>
+            </v-hover>
+            <!-- TODO fix button size and position -->
+            <v-btn
+              class="delete"
+              dark
+              fab
+              color="danger"
+              @click="remove(file)"
+            >
+              <v-icon>
+                mdi-delete
+              </v-icon>
+            </v-btn>
+          </v-col>
+        </template>
       </v-row>
     </v-card-text>
   </v-card>
@@ -144,33 +228,39 @@ export default {
   data () {
     return {
       modal: false,
-      img: null,
+      modal2: false,
+      previewIndex: null,
+      serverIndex: null,
       contain: true,
       delimit: true,
       dragover: false,
-      urls: []
+      previewUrls: []
     }
   },
   methods: {
     reset () {
-      this.urls = []
+      this.previewUrls = []
       this.uploadedFiles = []
     },
-    remove () {
-      this.$emit('remove', this.onServerFiles[0])
+    remove (file) {
+      this.$emit('remove', file)
     },
     click () {
       return this.$refs.file.click()
     },
     showModal (img) {
       this.modal = true
-      this.img = img
+      this.previewIndex = img
     },
-    test (e) {
+    showModalUploaded (img) {
+      this.modal2 = true
+      this.serverIndex = img
+    },
+    change (e) {
       this.$emit('change', e)
       this.reset()
       Array.from(e).forEach((element) => {
-        this.urls.push(URL.createObjectURL(element))
+        this.previewUrls.push(URL.createObjectURL(element))
       })
       // this.$emit('change', this.$event.target.files)
     }
