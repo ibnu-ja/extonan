@@ -508,6 +508,55 @@ export default {
     VBtn,
     ValidationErrors
   },
+  data () {
+    return {
+      vgmdb_id: '',
+      menu: false,
+      date: '',
+      track_lang: [''],
+      // orgg: ['label', 'publisher', 'distributor', 'manufacturer'],
+      artists: this.$page.props.artists,
+      products: this.$page.props.products,
+      events: this.$page.props.events,
+      organizations: this.$page.props.organizations,
+      album: this.$inertia.form({
+        images: null,
+        name: '',
+        name_real: '',
+        name_trans: '',
+        event_id: '',
+        barcode: '',
+        catalog: '',
+        release_date: '',
+        desc: '',
+        roles: {
+          arrangers: [],
+          performers: [],
+          lyricists: [],
+          composers: []
+        },
+        orgs: {
+          label: [],
+          publisher: [],
+          distributor: [],
+          manufacturer: []
+        },
+        discs: [
+          {
+            disc_length: '',
+            name: '',
+            tracks: [
+              {
+                names: {},
+                track_length: ''
+              }
+            ]
+          }
+        ],
+        media_format: ''
+      })
+    }
+  },
   computed: {
     ...sync('dashboard', ['loading']),
     hasErrors () {
