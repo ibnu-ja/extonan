@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAlbumGalleryRequest;
 use App\Http\Requests\StoreAlbumRequest;
 use App\Models\Album;
 use App\Models\Artist;
@@ -121,18 +122,35 @@ class AlbumController extends Controller
         $album->update($request->all());
         $album->artists()->detach();
         $album->organizations()->detach();
-        foreach ($request['roles'] as $role => $artists_ids) {
-            foreach ($artists_ids as $artists_id) {
-                $album->artists()->attach($artists_id, ['role' => $role]);
+        if ($request->roles) {
+            foreach ($request->roles as $role => $artists_ids) {
+                foreach ($artists_ids as $artists_id) {
+                    $album->artists()->attach($artists_id, ['role' => $role]);
+                }
             }
         }
-        foreach ($request['orgs'] as $role => $org_ids) {
-            foreach ($org_ids as $org_id) {
-                $album->organizations()->attach($org_id, ['role' => $role]);
+        if ($request->orgs) {
+            foreach ($request->orgs as $role => $org_ids) {
+                foreach ($org_ids as $org_id) {
+                    $album->organizations()->attach($org_id, ['role' => $role]);
+                }
             }
         }
         return redirect()->route('album.index')->with('snackbar', [
             'message' => 'Success updating data',
+            'color'    => 'info',
+        ]);
+    }
+
+    public function storeGallery(Album $album, StoreAlbumGalleryRequest $request)
+    {
+        // return $request->all();
+        // dd($request);
+        foreach ($request->images as $image) {
+            $album->addMedia($image)->toMediaCollection('gallery');
+        }
+        return redirect()->route('album.index')->with('snackbar', [
+            'message' => 'Images stored',
             'color'    => 'info',
         ]);
     }
