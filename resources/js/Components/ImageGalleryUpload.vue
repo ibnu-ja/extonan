@@ -190,12 +190,12 @@
                 </template>
               </v-img>
             </v-hover>
-            <!-- TODO fix button size and position -->
             <v-btn
-              class="delete"
+              class="bottom-left"
               dark
               fab
-              color="danger"
+              small
+              color="error"
               @click="remove(file)"
             >
               <v-icon>
