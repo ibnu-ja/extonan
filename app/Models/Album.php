@@ -78,6 +78,12 @@ class Album extends Model implements HasMedia
         ];
     }
 
+    public function getUploadedGalleryAttribute()
+    {
+        $mediaItems = $this->getMedia('gallery');
+        return $mediaItems;
+    }
+
     public function organizations()
     {
         return $this->belongsToMany(Organization::class)->withPivot('role');
