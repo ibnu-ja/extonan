@@ -23,14 +23,12 @@
 <script>
 export default {
   name: 'BaseSnackbar',
-  data () {
-    return {
-      hasMessage: !!this.$page.props.snackbar.message
-    }
-  },
   computed: {
     snackbar () {
       return this.$page.props.snackbar
+    },
+    hasMessage () {
+      return !!this.$page.props.snackbar.message
     }
   }
 }
