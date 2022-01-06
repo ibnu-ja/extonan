@@ -1,7 +1,7 @@
 <template>
   <!-- TODO fix timeout -->
   <v-snackbar
-    v-model="hasMessage"
+    v-model="val"
     top
     :color="snackbar.color"
     dismissible
@@ -23,12 +23,19 @@
 <script>
 export default {
   name: 'BaseSnackbar',
+  data () {
+    return {
+      val: false
+    }
+  },
   computed: {
     snackbar () {
       return this.$page.props.snackbar
-    },
-    hasMessage () {
-      return !!this.$page.props.snackbar.message
+    }
+  },
+  watch: {
+    snackbar () {
+      this.val = true
     }
   }
 }
