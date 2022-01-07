@@ -1,6 +1,6 @@
 <template>
   <section id="popular-artists">
-    <v-card>
+    <v-card :tile="$vuetify.breakpoint.smAndDown">
       <v-img
         style="text-decoration: none;"
         height="180px"
