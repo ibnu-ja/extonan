@@ -18,6 +18,7 @@
               <v-col
                 v-for="album in albums"
                 :key="album.id"
+                lg="3"
                 md="4"
                 cols="6"
               >
