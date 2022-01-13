@@ -8,6 +8,7 @@
         order-md="2"
       >
         <latest-album :albums="albums" />
+        <latest-blog />
       </v-col>
       <v-col
         :class="{'px-0' : $vuetify.breakpoint.smAndDown}"
@@ -55,8 +56,9 @@
 import WebLayout from '@/Layouts/Web/Index.vue'
 import LatestAlbum from './HomeSections/LatestAlbum.vue'
 import PopularArtist from './HomeSections/PopularArtist.vue'
+import LatestBlog from './HomeSections/LatestBlog.vue'
 export default {
-  components: { WebLayout, LatestAlbum, PopularArtist },
+  components: { WebLayout, LatestAlbum, PopularArtist, LatestBlog },
   data: () => ({
     albums: [
       { id: 0, title: 'Is the order a rabbit? BALLADE SONG ALBUM: Blend of Letters', cover: 'https://media.vgm.io/albums/51/100315/100315-e7c38585b311.jpg', heart: 25, date_created: '30 Dec 2020' },
