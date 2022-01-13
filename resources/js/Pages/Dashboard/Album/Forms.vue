@@ -429,9 +429,11 @@
             <v-col cols="12">
               <image-gallery-upload
                 v-model="album.images"
+                :image-label="album.imageLabel"
                 multiple
                 :on-server-files="album.uploadedGallery"
                 @remove="onRemove"
+                @labelChange="labelChange"
               />
             </v-col>
             <v-col cols="12">
@@ -520,49 +522,18 @@ export default {
       artists: this.$page.props.artists,
       products: this.$page.props.products,
       events: this.$page.props.events,
-      organizations: this.$page.props.organizations,
-      album: this.$inertia.form({
-        images: null,
-        name: '',
-        name_real: '',
-        name_trans: '',
-        event_id: '',
-        barcode: '',
-        catalog: '',
-        release_date: '',
-        desc: '',
-        roles: {
-          arrangers: [],
-          performers: [],
-          lyricists: [],
-          composers: []
-        },
-        orgs: {
-          label: [],
-          publisher: [],
-          distributor: [],
-          manufacturer: []
-        },
-        discs: [
-          {
-            disc_length: '',
-            name: '',
-            tracks: [
-              {
-                names: {},
-                track_length: ''
-              }
-            ]
-          }
-        ],
-        media_format: ''
-      })
+      organizations: this.$page.props.organizations
     }
   },
   computed: {
     ...sync('dashboard', ['loading']),
     hasErrors () {
       return Object.keys(this.$page.props.errors).length > 0
+    }
+  },
+  watch: {
+    'album.images' (newval) {
+      this.album.imageLabel = Array.apply(null, Array(newval.length)).map(function (x, i) { return '' })
     }
   },
   methods: {
@@ -723,6 +694,10 @@ export default {
         track_length: ''
       })
     },
+    labelChange (index, label) {
+      this.album.imageLabel[index] = label
+    },
+    // insert ()
     push (array) {
       array.push('')
     }

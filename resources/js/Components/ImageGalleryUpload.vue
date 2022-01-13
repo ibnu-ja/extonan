@@ -1,10 +1,55 @@
 <template>
   <v-card>
     <!-- TODO: data from VGMDB/URL -->
+    <!-- Edit Field -->
+    <v-dialog
+      v-model="form"
+      max-width="600px"
+      @keydown.esc="cancel"
+    >
+      <v-card>
+        <v-toolbar
+          dense
+          flat
+        >
+          <v-toolbar-title>
+            Edit Label
+          </v-toolbar-title>
+        </v-toolbar>
+        <v-card-text
+          class="pa-4"
+        >
+          <v-combobox
+            v-model="label"
+            label="Label"
+            clearable
+            :items="comboboxItems"
+          />
+        </v-card-text>
+        <v-card-actions class="pt-0">
+          <v-spacer />
+          <v-btn
+            color="primary"
+            elevation="0"
+            @click="cancel"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            color="primary darken-1"
+            text
+            @click="saveForm"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <!-- Preview IMG -->
     <v-dialog
       v-model="modal"
       overlay-opacity="80"
+      @keydown.esc="cancel"
     >
       <div class="relative">
         <v-carousel
@@ -55,6 +100,7 @@
       v-if="onServerFiles"
       v-model="modal2"
       overlay-opacity="80"
+      @keydown.esc="cancel"
     >
       <div class="relative">
         <v-carousel
@@ -148,8 +194,20 @@
               </template>
             </v-img>
           </v-hover>
+          <v-btn
+            class="bottom-right"
+            dark
+            fab
+            small
+            color="warning"
+            @click="showForm(index)"
+          >
+            <v-icon>
+              mdi-pencil
+            </v-icon>
+          </v-btn>
         </v-col>
-        <template v-if="onServerFiles">
+        <template v-if="onServerFiles.length > 0">
           <v-col cols="12">
             <v-row
               no-gutters
@@ -223,14 +281,30 @@ export default {
     onServerFiles: {
       type: [Array],
       default: null
+    },
+    comboboxItems: {
+      type: Array,
+      default: () => ([
+        'Programming',
+        'Design',
+        'Vue',
+        'Vuetify'
+      ])
+    },
+    imageLabel: {
+      type: Array,
+      default: () => ([])
     }
   },
   data () {
     return {
+      label: null,
+      form: false,
       modal: false,
       modal2: false,
       previewIndex: null,
       serverIndex: null,
+      editIndex: null,
       contain: true,
       delimit: true,
       dragover: false,
@@ -252,6 +326,17 @@ export default {
       this.modal = true
       this.previewIndex = img
     },
+    showForm (index) {
+      this.form = true
+      this.editIndex = index
+      this.label = this.imageLabel[index]
+    },
+    saveForm () {
+      // this.form = true
+      this.$emit('labelChange', this.editIndex, this.label)
+      this.cancel()
+      // this.editIndex = index
+    },
     showModalUploaded (img) {
       this.modal2 = true
       this.serverIndex = img
@@ -263,6 +348,12 @@ export default {
         this.previewUrls.push(URL.createObjectURL(element))
       })
       // this.$emit('change', this.$event.target.files)
+    },
+    edit (e) {
+      this.$emit('edit', e)
+    },
+    cancel () {
+      this.form = false
     }
   }
 }
