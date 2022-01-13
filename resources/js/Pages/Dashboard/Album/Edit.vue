@@ -5,13 +5,16 @@ import Forms from './Forms.vue'
 export default {
   name: 'DashboardAlbum',
   extends: Forms,
-  created () {
-    if (this.$page.props.album) {
-      this.track_lang = Object.keys(
-        this.$page.props.album.discs[0].tracks[0].names
-      )
-      this.album = this.$inertia.form(this.$page.props.album)
+  data () {
+    return {
+      album: this.$inertia.form(this.$page.props.album)
     }
+  },
+  created () {
+    this.track_lang = Object.keys(
+      this.$page.props.album.discs[0].tracks[0].names
+    )
+    this.album.imageLabel = []
   },
   methods: {
     submit () {
