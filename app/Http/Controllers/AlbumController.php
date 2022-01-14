@@ -54,12 +54,9 @@ class AlbumController extends Controller
     public function store(StoreAlbumRequest $request)
     {
         $data = $request->validated();
-
-        // return $data;
-
         $album = Album::create($data);
-        if ($request->roles) dispatch(new CreateArtistRolesForAlbum($album, $data['roles']));
-        if ($request->orgs) dispatch(new CreateOrgRolesForAlbum($album, $data['orgs']));
+        if ($request['roles']) dispatch(new CreateArtistRolesForAlbum($album, $data['roles']));
+        if ($request['orgs']) dispatch(new CreateOrgRolesForAlbum($album, $data['orgs']));
         foreach ($data['images'] as $key => $image) {
             $album->addMedia($image)
                 ->withCustomProperties(['label' => $data['imageLabel'][$key]])
@@ -113,11 +110,11 @@ class AlbumController extends Controller
      */
     public function update(StoreAlbumRequest $request, Album $album)
     {
-        $album->update($request->all());
+        $album->update($request->validated());
         $album->artists()->detach();
         $album->organizations()->detach();
-        if ($request->roles) dispatch(new CreateArtistRolesForAlbum($album, $request->roles));
-        if ($request->orgs) dispatch(new CreateOrgRolesForAlbum($album, $request->orgs));
+        if ($request['roles']) dispatch(new CreateArtistRolesForAlbum($album, $request['roles']));
+        if ($request['orgs']) dispatch(new CreateOrgRolesForAlbum($album, $request['orgs']));
         return redirect()->route('album.index')->with('snackbar', [
             'message' => 'Success updating data',
             'color'    => 'info',

@@ -40,7 +40,7 @@ class ArtistController extends Controller
      */
     public function store(StoreArtistRequest $request)
     {
-        Artist::create($request->all());
+        Artist::create($request->validated());
         return redirect()->route('artist.index')->with('snackbar', [
             'message' => 'Success storing data',
             'color'    => 'info',
@@ -78,7 +78,7 @@ class ArtistController extends Controller
      */
     public function update(Request $request, Artist $artist)
     {
-        $artist->update($request->all());
+        $artist->update($request->validated());
         return redirect()->route('artist.index')->with('snackbar', [
             'message' => 'Success updating data',
             'color'    => 'info',
@@ -116,7 +116,7 @@ class ArtistController extends Controller
      */
     public function insertion(StoreArtistFromVgmdbReqeust $request)
     {
-        $validated = $request->all();
+        $validated = $request->validated();
         $meta = collect(['vgmdb_link' => isset($validated['link']) ? $validated['link'] : null]);
         $artist = Artist::firstOrCreate(
             ['name' => $validated['names']['en']],

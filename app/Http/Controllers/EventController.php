@@ -38,7 +38,7 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-        Event::create($request->all());
+        Event::create($request->validated());
         return redirect()->route('event.index')->with('snackbar', [
             'message' => 'Success storing data',
             'color'    => 'info',
@@ -76,7 +76,7 @@ class EventController extends Controller
      */
     public function update(StoreEventRequest $request, Event $event)
     {
-        $event->update($request->all());
+        $event->update($request->validated());
         return redirect()->route('event.index')->with('snackbar', [
             'message' => 'Success updating data',
             'color'    => 'info',
@@ -114,7 +114,7 @@ class EventController extends Controller
      */
     public function insertion(StoreEventRequest $request)
     {
-        $validated = $request->all();
+        $validated = $request->validated();
         $meta = collect(['vgmdb_link' => isset($validated['link']) ? $validated['link'] : null]);
         $event = Event::firstOrCreate(
             ['name' => $validated['name']],

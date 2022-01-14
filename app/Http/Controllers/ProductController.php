@@ -43,7 +43,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $validated = $request->all();
+        $validated = $request->validated();
 
         Product::create($validated);
         return redirect()->route('product.index')->with('snackbar', [
@@ -89,7 +89,7 @@ class ProductController extends Controller
      */
     public function update(StoreProductRequest $request, Product $product)
     {
-        $validated = $request->all();
+        $validated = $request->validated();
 
         $product->update($validated);
         // return $product;
@@ -130,7 +130,7 @@ class ProductController extends Controller
      */
     public function insertion(StoreProductRequestFromVgmdbRequest $request)
     {
-        $validated = $request->all();
+        $validated = $request->validated();
         $meta = collect(['vgmdb_link' => isset($validated['link']) ? $validated['link'] : null]);
         $product = Product::firstOrCreate(
             ['name' => $validated['names']['en']],

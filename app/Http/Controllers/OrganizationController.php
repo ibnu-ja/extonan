@@ -46,7 +46,7 @@ class OrganizationController extends Controller
      */
     public function store(StoreOrganizationRequest $request)
     {
-        Organization::create($request->all());
+        Organization::create($request->validated());
         return redirect()->route('organization.index')->with('snackbar', [
             'message' => 'Success storing data',
             'color'    => 'info',
@@ -91,7 +91,7 @@ class OrganizationController extends Controller
      */
     public function update(StoreOrganizationRequest $request, Organization $organization)
     {
-        $organization->update($request->all());
+        $organization->update($request->validated());
         return redirect()->route('organization.index')->with('snackbar', [
             'message' => 'Success updating data',
             'color'    => 'info',
@@ -130,7 +130,7 @@ class OrganizationController extends Controller
      */
     public function insertion(StoreOrganizationFromVgmdbRequest $request)
     {
-        $validated = $request->all();
+        $validated = $request->validated();
         $meta = collect(['vgmdb_link' => isset($validated['link']) ? $validated['link'] : null]);
         $organization = Organization::firstOrCreate(
             [
