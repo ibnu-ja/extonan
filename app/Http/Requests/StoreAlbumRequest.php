@@ -24,8 +24,10 @@ class StoreAlbumRequest extends FormRequest
     public function rules()
     {
         return [
-            'gallery' => 'array|nullable',
-            'gallery.*' => 'mimes:jpeg,jpg,png,gif|required|max:5000', //max 5MB
+            'images' => 'array|nullable',
+            'images.*' => 'mimes:jpeg,jpg,png,gif|required|max:5000', //max 5MB
+            'imageLabel' => 'array|nullable',
+            'imageLabel.*' => 'string|nullable',
             'name' => 'sometimes|string',
             'name_real' => 'string|nullable',
             'name_trans' => 'string|nullable',

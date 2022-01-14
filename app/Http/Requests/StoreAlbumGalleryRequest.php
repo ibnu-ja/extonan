@@ -26,6 +26,8 @@ class StoreAlbumGalleryRequest extends FormRequest
         return [
             'images' => 'array|nullable',
             'images.*' => 'mimes:jpeg,jpg,png,gif|required|max:5000', //max 5MB
+            'imageLabel' => 'array|nullable',
+            'imageLabel.*' => 'string|nullable',
         ];
     }
 }
