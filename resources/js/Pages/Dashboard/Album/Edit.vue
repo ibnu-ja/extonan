@@ -18,21 +18,27 @@ export default {
   },
   methods: {
     submit () {
-      this.$inertia.post(
+      if (this.album.imageLabel.length > 0) {
+        this.$inertia.post(
         // route
-        this.route('album.storeGallery', {
+          this.route('album.storeGallery', {
+            album: this.album.id
+          }),
+          // request data
+          { images: this.album.images, imageLabel: this.album.imageLabel },
+          // callback
+          {
+            onSuccess: () => {
+              this.album.put(this.route('album.update', {
+                album: this.album.id
+              }))
+            }
+          })
+      } else {
+        this.album.put(this.route('album.update', {
           album: this.album.id
-        }),
-        // request data
-        { images: this.album.images },
-        // callback
-        {
-          onSuccess: () => {
-            this.album.put(this.route('album.update', {
-              album: this.album.id
-            }))
-          }
-        })
+        }))
+      }
     }
   }
 }

@@ -207,7 +207,7 @@
             </v-icon>
           </v-btn>
         </v-col>
-        <template v-if="onServerFiles.length > 0">
+        <template v-if="!!onServerFiles && onServerFiles.length > 0">
           <v-col cols="12">
             <v-row
               no-gutters
@@ -226,28 +226,36 @@
             class="relative"
             cols="4"
           >
-            <v-hover v-slot="{ hover }">
-              <v-img
-                :src="file.original_url"
-                aspect-ratio="1"
-                class="relative"
-                :class="{ 'on-hover': hover }"
-                @click="showModalUploaded(index)"
-              >
-                <template #placeholder>
-                  <v-row
-                    class="fill-height ma-0"
-                    align="center"
-                    justify="center"
-                  >
-                    <v-progress-circular
-                      indeterminate
-                      color="grey lighten-5"
-                    />
-                  </v-row>
-                </template>
-              </v-img>
-            </v-hover>
+            <v-tooltip
+              :disabled="!file.custom_properties.label"
+              bottom
+            >
+              <template #activator="{ on, attrs }">
+                <v-img
+                  :src="file.original_url"
+                  aspect-ratio="1"
+                  class="relative"
+                  v-bind="attrs"
+                  :class="{ 'on-hover': on }"
+                  v-on="on"
+                  @click="showModalUploaded(index)"
+                >
+                  <template #placeholder>
+                    <v-row
+                      class="fill-height ma-0"
+                      align="center"
+                      justify="center"
+                    >
+                      <v-progress-circular
+                        indeterminate
+                        color="grey lighten-5"
+                      />
+                    </v-row>
+                  </template>
+                </v-img>
+              </template>
+              <span> {{ file.custom_properties.label }} </span>
+            </v-tooltip>
             <v-btn
               class="bottom-left"
               dark
