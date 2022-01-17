@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Dashboard\AlbumController;
-use App\Http\Controllers\Dashboard\ArtistController;
-use App\Http\Controllers\Dashboard\EventController;
-use App\Http\Controllers\Dashboard\OrganizationController;
-use App\Http\Controllers\Dashboard\ProductController;
+use App\Http\Controllers\AlbumController as AlbumController;
+use App\Http\Controllers\Dashboard\AlbumController as DashboardAlbumController;
+use App\Http\Controllers\Dashboard\ArtistController as DashboardArtistController;
+use App\Http\Controllers\Dashboard\EventController as DashboardEventController;
+use App\Http\Controllers\Dashboard\OrganizationController as DashboardOrganizationController;
+use App\Http\Controllers\Dashboard\ProductController as DashboardProductController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,24 +30,26 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware('auth')->prefix('dashboard')->group(function () {
-    Route::get('/event/reindex', [EventController::class, 'indexJson'])->name('event.indexJson');
-    Route::post('/event/insertion', [EventController::class, 'insertion'])->name('event.insertVgmdb');
-    Route::get('/artist/reindex', [ArtistController::class, 'indexJson'])->name('artist.indexJson');
-    Route::post('/artist/insertion', [ArtistController::class, 'insertion'])->name('artist.insertVgmdb');
-    Route::get('/organization/reindex', [OrganizationController::class, 'indexJson'])->name('organization.indexJson');
-    Route::post('/organization/insertion', [OrganizationController::class, 'insertion'])->name('organization.insertVgmdb');
-    Route::get('/product/reindex', [ProductController::class, 'indexJson'])->name('product.indexJson');
-    Route::post('/product/insertion', [ProductController::class, 'insertion'])->name('product.insertVgmdb');
-    Route::post('/album/{album}/gallery', [AlbumController::class, 'storeGallery'])->name('album.storeGallery');
-    Route::delete('/album/{album}/gallery/{index}', [AlbumController::class, 'destroyGallery'])->name('album.destroyGallery');
+Route::get('/album', [AlbumController::class, 'index'])->name('album.index');
+
+Route::middleware('auth')->name('dashboard.')->prefix('dashboard')->group(function () {
+    Route::get('/event/reindex', [DashboardEventController::class, 'indexJson'])->name('event.indexJson');
+    Route::post('/event/insertion', [DashboardEventController::class, 'insertion'])->name('event.insertVgmdb');
+    Route::get('/artist/reindex', [DashboardArtistController::class, 'indexJson'])->name('artist.indexJson');
+    Route::post('/artist/insertion', [DashboardArtistController::class, 'insertion'])->name('artist.insertVgmdb');
+    Route::get('/organization/reindex', [DashboardOrganizationController::class, 'indexJson'])->name('organization.indexJson');
+    Route::post('/organization/insertion', [DashboardOrganizationController::class, 'insertion'])->name('organization.insertVgmdb');
+    Route::get('/product/reindex', [DashboardProductController::class, 'indexJson'])->name('product.indexJson');
+    Route::post('/product/insertion', [DashboardProductController::class, 'insertion'])->name('product.insertVgmdb');
+    Route::post('/album/{album}/gallery', [DashboardAlbumController::class, 'storeGallery'])->name('album.storeGallery');
+    Route::delete('/album/{album}/gallery/{index}', [DashboardAlbumController::class, 'destroyGallery'])->name('album.destroyGallery');
     // Route::get('/organization/test', [OrganizationController::class, 'insertion'])->name('organization.testing');
     Route::resources([
-        'album' => AlbumController::class,
-        'artist' => ArtistController::class,
-        'product' => ProductController::class,
-        'event' => EventController::class,
-        'organization' => OrganizationController::class
+        'album' => DashboardAlbumController::class,
+        'artist' => DashboardArtistController::class,
+        'product' => DashboardProductController::class,
+        'event' => DashboardEventController::class,
+        'organization' => DashboardOrganizationController::class
     ]);
 });
 

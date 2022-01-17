@@ -533,7 +533,7 @@ export default {
   },
   watch: {
     'album.images' (newval) {
-      this.album.imageLabel = Array.apply(null, Array(newval.length)).map(function (x, i) { return '' })
+      this.album.imageLabel = Array.apply(null, Array(newval.length)).map(function (x, i) { return null })
     }
   },
   methods: {
@@ -542,7 +542,7 @@ export default {
         vgmdb.products.map(async product => {
           if (product.link) product.link = 'https://vgmdb.net/' + product.link
           const res = await this.axios.post(
-            this.route('product.insertVgmdb'),
+            this.route('dashboard.product.insertVgmdb'),
             product
           )
           return res.data.id
@@ -555,7 +555,7 @@ export default {
       this.$refs.confirm
         .open('Delete', 'Are you sure to delete this item?', { color: 'red' })
         .then(() => {
-          this.$inertia.delete(this.route('album.destroyGallery', {
+          this.$inertia.delete(this.route('dashboard.album.destroyGallery', {
             index: index,
             album: this.album.id
           }), {
@@ -572,7 +572,7 @@ export default {
               // this.album.roles[role] = []
               if (artist.link) artist.link = 'https://vgmdb.net/' + artist.link
               const res = await this.axios.post(
-                this.route('artist.insertVgmdb'),
+                this.route('dashboard.artist.insertVgmdb'),
                 artist
               )
               return res.data
@@ -596,14 +596,14 @@ export default {
       delete event.shortname
       if (event.link) event.link = 'https://vgmdb.net/' + event.link
       event.name = event.name.replace(/(Released at )|( \(.*)/g, '')
-      return await this.axios.post(this.route('event.insertVgmdb'), event)
+      return await this.axios.post(this.route('dashboard.event.insertVgmdb'), event)
     },
     async getIdsForOrganizations (vgmdb) {
       return await Promise.all(
         vgmdb.organizations.map(async org => {
           if (org.link) org.link = 'https://vgmdb.net/' + org.link
           const res = await this.axios.post(
-            this.route('organization.insertVgmdb'),
+            this.route('dashboard.organization.insertVgmdb'),
             org
           )
           return res
@@ -623,14 +623,14 @@ export default {
         if (vgmdb.release_events.length > 0) {
           const event = await this.createEventIfNotExist(vgmdb)
           this.events = await this.axios
-            .get(this.route('event.indexJson'))
+            .get(this.route('dashboard.event.indexJson'))
             .then(res => {
               return res.data
             })
           this.album.event_id = event.data.id
         }
         this.artists = await this.axios
-          .get(this.route('artist.indexJson'))
+          .get(this.route('dashboard.artist.indexJson'))
           .then(res => {
             return res.data
           })
@@ -643,14 +643,14 @@ export default {
         await this.getIdsForOrganizations(vgmdb)
         // console.log(event)
         this.organizations = await this.axios
-          .get(this.route('organization.indexJson'))
+          .get(this.route('dashboard.organization.indexJson'))
           .then(res => {
             return res.data
           })
 
         const products = await this.getIdsForRepresentedProducts(vgmdb)
         this.products = await this.axios
-          .get(this.route('product.indexJson'))
+          .get(this.route('dashboard.product.indexJson'))
           .then(res => {
             return res.data
           })

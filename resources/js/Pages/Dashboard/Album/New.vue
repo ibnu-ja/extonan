@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     submit () {
-      this.album.post(this.route('album.store'))
+      this.album.post(this.route('dashboard.album.store'))
     }
   }
 }

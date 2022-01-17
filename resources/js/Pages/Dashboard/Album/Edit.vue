@@ -21,7 +21,7 @@ export default {
       if (this.album.imageLabel.length > 0) {
         this.$inertia.post(
         // route
-          this.route('album.storeGallery', {
+          this.route('dashboard.album.storeGallery', {
             album: this.album.id
           }),
           // request data
@@ -29,13 +29,13 @@ export default {
           // callback
           {
             onSuccess: () => {
-              this.album.put(this.route('album.update', {
+              this.album.put(this.route('dashboard.album.update', {
                 album: this.album.id
               }))
             }
           })
       } else {
-        this.album.put(this.route('album.update', {
+        this.album.put(this.route('dashboard.album.update', {
           album: this.album.id
         }))
       }

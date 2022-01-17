@@ -55,7 +55,7 @@ export default {
           icon: 'mdi-album',
           exact: true,
           to: {
-            name: 'album.create'
+            name: 'dashboard.album.create'
           }
         },
         {
@@ -63,7 +63,7 @@ export default {
           icon: 'mdi-account',
           exact: true,
           to: {
-            name: 'artist.create'
+            name: 'dashboard.artist.create'
           }
         },
         {
@@ -71,7 +71,7 @@ export default {
           icon: 'mdi-package-variant',
           exact: true,
           to: {
-            name: 'product.create'
+            name: 'dashboard.product.create'
           }
         },
         {
@@ -79,14 +79,14 @@ export default {
           icon: 'mdi-account-group',
           exact: true,
           to: {
-            name: 'organization.create'
+            name: 'dashboard.organization.create'
           }
         },
         {
           text: 'Event',
           icon: 'mdi-calendar',
           exact: true,
-          to: { name: 'event.create' }
+          to: { name: 'dashboard.event.create' }
         }
       ]
     }

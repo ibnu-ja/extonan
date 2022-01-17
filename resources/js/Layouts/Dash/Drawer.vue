@@ -130,7 +130,7 @@ export default {
           title: 'Album',
           icon: 'mdi-album',
           to: {
-            name: 'album.index',
+            name: 'dashboard.album.index',
             params: {}
           }
         },
@@ -138,28 +138,28 @@ export default {
           title: 'Artist',
           icon: 'mdi-account-music',
           to: {
-            name: 'artist.index'
+            name: 'dashboard.artist.index'
           }
         },
         {
           title: 'Product',
           icon: 'mdi-package-variant',
           to: {
-            name: 'product.index'
+            name: 'dashboard.product.index'
           }
         },
         {
           title: 'Event',
           icon: 'mdi-calendar',
           to: {
-            name: 'event.index'
+            name: 'dashboard.event.index'
           }
         },
         {
           title: 'Organizations',
           icon: 'mdi-account-group',
           to: {
-            name: 'organization.index'
+            name: 'dashboard.organization.index'
           }
         },
         { divider: true, inset: false },
