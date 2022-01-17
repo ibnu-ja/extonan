@@ -24,21 +24,15 @@
             label="Label"
             clearable
             :items="comboboxItems"
+            @change="saveForm"
           />
         </v-card-text>
         <v-card-actions class="pt-0">
           <v-spacer />
           <v-btn
-            color="primary"
-            elevation="0"
-            @click="cancel"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
             color="primary darken-1"
             text
-            @click="saveForm"
+            @click="cancel"
           >
             Save
           </v-btn>
@@ -342,7 +336,7 @@ export default {
     saveForm () {
       // this.form = true
       this.$emit('labelChange', this.editIndex, this.label)
-      this.cancel()
+      // this.cancel()
       // this.editIndex = index
     },
     showModalUploaded (img) {
