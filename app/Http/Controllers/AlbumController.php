@@ -11,6 +11,7 @@ use App\Models\Artist;
 use App\Models\Event;
 use App\Models\Organization;
 use App\Models\Product;
+use App\Services\AlbumService;
 use Inertia\Inertia;
 
 class AlbumController extends Controller
@@ -51,17 +52,19 @@ class AlbumController extends Controller
      * @param  \App\Http\Requests\StoreAlbumRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAlbumRequest $request)
+    public function store(StoreAlbumRequest $request, AlbumService $albumService)
     {
         $data = $request->validated();
         $album = Album::create($data);
-        if ($request['roles']) dispatch(new CreateArtistRolesForAlbum($album, $data['roles']));
-        if ($request['orgs']) dispatch(new CreateOrgRolesForAlbum($album, $data['orgs']));
-        foreach ($data['images'] as $key => $image) {
-            $album->addMedia($image)
-                ->withCustomProperties(['label' => $data['imageLabel'][$key]])
-                ->toMediaCollection('gallery');
+
+        try {
+            if (isset($data['roles'])) $albumService->createArtistRolesForAlbum($album, $data['roles']);
+            if (isset($data['orgs'])) $albumService->createOrgRolesForAlbum($album, $data['orgs']);
+            if (isset($data['images'])) $albumService->storeImagesToGallery($album, $data['images'], $data['imageLabel']);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 422);
         }
+
         return redirect()->route('album.index')->with('snackbar', [
             'message' => 'Success storing data',
             'color'    => 'info',
@@ -108,27 +111,35 @@ class AlbumController extends Controller
      * @param  \App\Models\Album  $album
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreAlbumRequest $request, Album $album)
+    public function update(StoreAlbumRequest $request, Album $album, AlbumService $albumService)
     {
-        $album->update($request->validated());
+        $data = $request->validated();
+        $album->update($data);
         $album->artists()->detach();
         $album->organizations()->detach();
-        if ($request['roles']) dispatch(new CreateArtistRolesForAlbum($album, $request['roles']));
-        if ($request['orgs']) dispatch(new CreateOrgRolesForAlbum($album, $request['orgs']));
+
+        try {
+            if (isset($data['roles'])) $albumService->createArtistRolesForAlbum($album, $data['roles']);
+            if (isset($data['orgs'])) $albumService->createOrgRolesForAlbum($album, $data['orgs']);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 422);
+        }
         return redirect()->route('album.index')->with('snackbar', [
             'message' => 'Success updating data',
             'color'    => 'info',
         ]);
     }
 
-    public function storeGallery(Album $album, StoreAlbumGalleryRequest $request)
+    public function storeGallery(Album $album, StoreAlbumGalleryRequest $request, AlbumService $albumService)
     {
         $data = $request->validated();
-        foreach ($data['images'] as $key => $image) {
-            $album->addMedia($image)
-                ->withCustomProperties(['label' => $data['imageLabel'][$key]])
-                ->toMediaCollection('gallery');
+
+        try {
+            if (isset($data['images'])) $albumService->storeImagesToGallery($album, $data['images'], $data['imageLabel']);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 422);
         }
+
         return redirect()->route('album.index')->with('snackbar', [
             'message' => 'Images stored',
             'color'    => 'info',
