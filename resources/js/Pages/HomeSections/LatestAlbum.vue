@@ -44,7 +44,7 @@
                         <v-icon class="mr-1">
                           mdi-calendar
                         </v-icon>
-                        <span class="subheading">{{ album.created_at }}</span>
+                        <span class="subheading">{{ album.created_at | luxon({output: "date_med"}) }}</span>
                         <v-spacer />
                         <v-icon class="mr-1">
                           mdi-heart
