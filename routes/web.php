@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\AlbumController;
-use App\Http\Controllers\ArtistController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\OrganizationController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Dashboard\AlbumController;
+use App\Http\Controllers\Dashboard\ArtistController;
+use App\Http\Controllers\Dashboard\EventController;
+use App\Http\Controllers\Dashboard\OrganizationController;
+use App\Http\Controllers\Dashboard\ProductController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;

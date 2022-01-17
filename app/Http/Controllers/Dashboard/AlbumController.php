@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAlbumGalleryRequest;
 use App\Http\Requests\StoreAlbumRequest;
-use App\Jobs\CreateArtistRolesForAlbum;
-use App\Jobs\CreateOrgRolesForAlbum;
 use App\Models\Album;
 use App\Models\Artist;
 use App\Models\Event;

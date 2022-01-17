@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrganizationFromVgmdbRequest;
 use App\Http\Requests\StoreOrganizationRequest;
 use App\Models\Organization;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class OrganizationController extends Controller

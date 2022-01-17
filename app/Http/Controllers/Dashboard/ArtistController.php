@@ -1,15 +1,15 @@
 <?php
-// TODO: product type untuk edit dan store
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\StoreProductRequestFromVgmdbRequest;
-use App\Models\Product;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreArtistFromVgmdbReqeust;
+use App\Http\Requests\StoreArtistRequest;
+use App\Models\Artist;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ProductController extends Controller
+class ArtistController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +18,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::latest()->get();
-        return Inertia::render('Dashboard/Product/Index', ['product' => $product]);
+        $artist = Artist::select('id', 'name', 'name_real', 'name_trans', 'created_at', 'updated_at')->latest()->get();
+
+        return Inertia::render('Dashboard/Artist/Index', ['artist' => $artist]);
     }
 
     /**
@@ -29,10 +30,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return Inertia::render(
-            'Dashboard/Product/Edit',
-            ['types' => Product::select('type')->groupBy('type')->whereNotNull('type')->get()->pluck('type')]
-        );
+        return Inertia::render('Dashboard/Artist/Edit', ['sex' => Artist::select('sex')->groupBy('sex')->get()]);
     }
 
     /**
@@ -41,12 +39,10 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreProductRequest $request)
+    public function store(StoreArtistRequest $request)
     {
-        $validated = $request->validated();
-
-        Product::create($validated);
-        return redirect()->route('product.index')->with('snackbar', [
+        Artist::create($request->validated());
+        return redirect()->route('artist.index')->with('snackbar', [
             'message' => 'Success storing data',
             'color'    => 'info',
         ]);
@@ -55,10 +51,10 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Artist  $artist
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show(Artist $artist)
     {
         //
     }
@@ -66,34 +62,25 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Artist  $artist
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit(Artist $artist)
     {
-        return Inertia::render(
-            'Dashboard/Product/Edit',
-            [
-                'types' => Product::select('type')->groupBy('type')->whereNotNull('type')->get()->pluck('type'),
-                'product' => $product
-            ],
-        );
+        return Inertia::render('Dashboard/Artist/Edit', ['artist' => $artist]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Artist  $artist
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreProductRequest $request, Product $product)
+    public function update(Request $request, Artist $artist)
     {
-        $validated = $request->validated();
-
-        $product->update($validated);
-        // return $product;
-        return redirect()->route('product.index')->with('snackbar', [
+        $artist->update($request->validated());
+        return redirect()->route('artist.index')->with('snackbar', [
             'message' => 'Success updating data',
             'color'    => 'info',
         ]);
@@ -102,13 +89,13 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Artist  $artist
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Artist $artist)
     {
-        $product->delete();
-        return redirect()->route('product.index')->with('snackbar', [
+        $artist->delete();
+        return redirect()->back()->with('snackbar', [
             'message' => 'Success deleting data',
             'color'    => 'info',
         ]);
@@ -121,24 +108,24 @@ class ProductController extends Controller
      */
     public function indexJson()
     {
-        $products = Product::select('id', 'name', 'name_real')->get();
-        return $products;
+        $artist = Artist::select('id', 'name', 'name_real')->get();
+        return $artist;
     }
 
     /**
      * Update or Insert from name.
      */
-    public function insertion(StoreProductRequestFromVgmdbRequest $request)
+    public function insertion(StoreArtistFromVgmdbReqeust $request)
     {
         $validated = $request->validated();
         $meta = collect(['vgmdb_link' => isset($validated['link']) ? $validated['link'] : null]);
-        $product = Product::firstOrCreate(
+        $artist = Artist::firstOrCreate(
             ['name' => $validated['names']['en']],
             [
                 'name_real' => isset($validated['names']['ja']) ? $validated['names']['ja'] : null,
                 'meta' => $meta
             ]
         );
-        return $product;
+        return $artist;
     }
 }
