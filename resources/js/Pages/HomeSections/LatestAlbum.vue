@@ -24,12 +24,12 @@
               >
                 <v-card :to="'/album/'+album.slug">
                   <v-img
-                    :src="album.cover"
+                    :src="album.cover ? album.cover.original_url : ''"
                     class="white--text align-end"
                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                     height="200px"
                   >
-                    <v-card-title v-text="album.title" />
+                    <v-card-title v-text="album.name" />
                   </v-img>
 
                   <v-card-actions>
@@ -44,7 +44,7 @@
                         <v-icon class="mr-1">
                           mdi-calendar
                         </v-icon>
-                        <span class="subheading">{{ album.date_created }}</span>
+                        <span class="subheading">{{ album.created_at }}</span>
                         <v-spacer />
                         <v-icon class="mr-1">
                           mdi-heart
@@ -77,6 +77,9 @@ export default {
         date_created: 'N/A'
       }]
     }
+  },
+  created () {
+
   }
 }
 </script>

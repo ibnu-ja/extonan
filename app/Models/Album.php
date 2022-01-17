@@ -27,6 +27,7 @@ class Album extends Model implements HasMedia
         'desc',
         'event_id'
     ];
+    protected $hidden = ['media'];
     protected $casts = ['discs' => 'array'];
 
     // protected $appends = ['link', 'cover'];
@@ -83,6 +84,14 @@ class Album extends Model implements HasMedia
     {
         $mediaItems = $this->getMedia('gallery');
         return $mediaItems;
+    }
+
+    public function getCoverAttribute()
+    {
+        $mediaItem = $this->getFirstMedia('gallery', ['label' => 'Cover']);
+
+        // $tes = $mediaItem->size;
+        return $mediaItem;
     }
 
     public function organizations()
