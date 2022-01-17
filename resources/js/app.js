@@ -5,6 +5,7 @@ import { Ziggy } from './ziggy'
 import axios from 'axios'
 import store from './Store'
 import VueAxios from 'vue-axios'
+import luxon from './Plugins/vue-luxon'
 import { createInertiaApp, Link } from '@inertiajs/inertia-vue'
 
 // Plugins
@@ -22,6 +23,7 @@ createInertiaApp({
   setup ({ el, App, props }) {
     new Vue({
       store,
+      luxon,
       vuetify,
       render: h => h(App, props)
     }).$mount(el)
