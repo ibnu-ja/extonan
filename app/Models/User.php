@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,34 +11,34 @@ use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use DarkGhostHunter\Laraconfig\HasConfig;
 
 class User extends Authenticatable
 {
     use HasApiTokens;
+    use HasConnectedAccounts;
     use HasFactory;
     use HasProfilePhoto {
-        getProfilePhotoUrlAttribute as getPhotoUrl;
+        HasProfilePhoto::profilePhotoUrl as getPhotoUrl;
     }
-    use HasConnectedAccounts;
     use Notifiable;
     use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
-    use HasConfig;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
      * The attributes that should be hidden for arrays.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -47,37 +48,33 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    /**
      * The accessors to append to the model's array form.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $appends = [
         'profile_photo_url',
     ];
 
     /**
-     * Get the URL to the user's profile photo from Gravatar.
+     * Get the attributes that should be cast.
      *
-     * @return string
+     * @return array<string, string>
      */
-    public function getProfilePhotoUrlAttribute()
+    protected function casts(): array
     {
-        // You can add any of the gravatar supported options to this array.
-        // See https://gravatar.com/site/implement/images/
-        $config = [
-            'default' => $this->defaultProfilePhotoUrl(),
-            'size' => '200' // use 200px by 200px image
+        return [
+            'email_verified_at' => 'datetime',
         ];
+    }
 
-        return 'https://www.gravatar.com/avatar/' . md5($this->email) . '?' . http_build_query($config);
+    /**
+     * Get the URL to the user's profile photo.
+     */
+    public function profilePhotoUrl(): Attribute
+    {
+        return filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)
+            ? Attribute::get(fn () => $this->profile_photo_path)
+            : $this->getPhotoUrl();
     }
 }

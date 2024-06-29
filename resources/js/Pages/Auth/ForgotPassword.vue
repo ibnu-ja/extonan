@@ -1,88 +1,61 @@
-<template>
-  <web-layout>
-    <v-row justify="center">
-      <v-col
-        cols="10"
-        sm="8"
-        md="7"
-      >
-        <v-card class="py-4 px-4 mt-10">
-          <v-card-title>Forgot password?</v-card-title>
-          <v-card-subtitle>No problem.</v-card-subtitle>
-          <v-card-text>
-            <div class="mb-6">
-              Just let us know your email address and we will email you a
-              password reset link that will allow you to choose a new one.
-            </div>
+<script setup>
+import { Head, useForm } from '@inertiajs/vue3';
+import AuthenticationCard from '@/Components/AuthenticationCard.vue';
+import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
 
-            <div
-              v-if="status"
-              class="mb-4 success--text"
-            >
-              {{ status }}
-            </div>
+defineProps({
+    status: String,
+});
 
-            <validation-errors class="mb-4" />
+const form = useForm({
+    email: '',
+});
 
-            <form @submit.prevent="submit">
-              <v-text-field
-                v-model="form.email"
-                dense
-                outlined
-                label="Email Address"
-                required
-                autofocus
-                type="email"
-              />
-
-              <v-btn
-                block
-                color="primary"
-                type="submit"
-                :disabled="form.processing"
-              >
-                Request Password Reset
-              </v-btn>
-            </form>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-sheet
-      class=""
-      color="gray pulse"
-      width="200px"
-    />
-  </web-layout>
-</template>
-
-<script>
-import ValidationErrors from '@/Components/ValidationErrors'
-import WebLayout from '@/Layouts/Web/Index.vue'
-
-export default {
-  components: {
-    ValidationErrors,
-    WebLayout
-  },
-
-  props: {
-    // eslint-disable-next-line vue/require-default-prop
-    status: String
-  },
-
-  data () {
-    return {
-      form: this.$inertia.form({
-        email: ''
-      })
-    }
-  },
-
-  methods: {
-    submit () {
-      this.form.post(this.route('password.email'))
-    }
-  }
-}
+const submit = () => {
+    form.post(route('password.email'));
+};
 </script>
+
+<template>
+    <Head title="Forgot Password" />
+
+    <AuthenticationCard>
+        <template #logo>
+            <AuthenticationCardLogo />
+        </template>
+
+        <div class="mb-4 text-sm text-gray-600">
+            Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
+        </div>
+
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+            {{ status }}
+        </div>
+
+        <form @submit.prevent="submit">
+            <div>
+                <InputLabel for="email" value="Email" />
+                <TextInput
+                    id="email"
+                    v-model="form.email"
+                    type="email"
+                    class="mt-1 block w-full"
+                    required
+                    autofocus
+                    autocomplete="username"
+                />
+                <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Email Password Reset Link
+                </PrimaryButton>
+            </div>
+        </form>
+    </AuthenticationCard>
+</template>

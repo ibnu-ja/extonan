@@ -1,130 +1,122 @@
-<template>
-  <web-layout>
-    <v-row justify="center">
-      <v-col
-        cols="10"
-        sm="8"
-        md="6"
-      >
-        <v-card>
-          <v-card-title>Sign Up with Email</v-card-title>
+<script setup>
+import {Head, Link, useForm} from '@inertiajs/vue3';
+import AuthenticationCard from '@/Components/AuthenticationCard.vue';
+import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
+import Checkbox from '@/Components/Checkbox.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import Socialstream from '@/Components/Socialstream.vue';
+import TextInput from '@/Components/TextInput.vue';
 
-          <v-card-text>
-            <validation-errors class="mb-4" />
+const form = useForm({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    terms: false,
+});
 
-            <p>Please fill registration form below.</p>
-
-            <form @submit.prevent="submit">
-              <v-text-field
-                v-model="form.name"
-                required
-                autofocus
-                dense
-                outlined
-                label="Full Name"
-              />
-              <v-text-field
-                v-model="form.email"
-                required
-                dense
-                outlined
-                label="Email address"
-              />
-              <v-text-field
-                v-model="form.password"
-                dense
-                outlined
-                label="Password"
-                required
-                autocomplete="new-password"
-                :append-icon="showP ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showP ? 'text' : 'password'"
-                hint="At least 8 characters"
-                @click:append="showP = !showP"
-              />
-              <v-text-field
-                v-model="form.password_confirmation"
-                dense
-                outlined
-                label="Confirm Password"
-                required
-                autocomplete="new-password"
-                :append-icon="showCP ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showCP ? 'text' : 'password'"
-                hint="At least 8 characters"
-                @click:append="showCP = !showCP"
-              />
-              <v-btn
-                color="success"
-                block
-                type="submit"
-                :disabled="form.processing"
-              >
-                Register
-              </v-btn>
-            </form>
-
-            <socialstream-providers
-              v-if="$page.props.socialstream.show"
-              action="Sign Up"
-            />
-          </v-card-text>
-
-          <!-- TODO tos & privacy policy dialog -->
-          <v-card-text
-            class="mb-3"
-            style="font-size: 14px;"
-          >
-            By signing up you agree to the
-            <inertia-link href="register">
-              Terms of Service
-            </inertia-link>
-            and
-            <inertia-link href="register">
-              Privacy Policy
-            </inertia-link>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </web-layout>
-</template>
-
-<script>
-import ValidationErrors from '@/Components/ValidationErrors'
-import WebLayout from '@/Layouts/Web/Index.vue'
-
-import SocialstreamProviders from '@/Socialstream/Providers.vue'
-
-export default {
-  components: {
-    ValidationErrors,
-    SocialstreamProviders,
-    WebLayout
-  },
-
-  data () {
-    return {
-      showP: false,
-      showCP: false,
-      form: this.$inertia.form({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-        terms: true
-      })
-    }
-  },
-
-  methods: {
-    submit () {
-      this.form.post(this.route('register'), {
-        onFinish: () => this.form.reset('password', 'password_confirmation')
-      })
-    }
-  }
-}
+const submit = () => {
+    form.post(route('register'), {
+        onFinish: () => form.reset('password', 'password_confirmation'),
+    });
+};
 </script>
 
-<style></style>
+<template>
+    <Head title="Register"/>
+
+    <AuthenticationCard>
+        <template #logo>
+            <AuthenticationCardLogo/>
+        </template>
+
+        <form @submit.prevent="submit">
+            <div>
+                <InputLabel for="name" value="Name"/>
+                <TextInput
+                    id="name"
+                    v-model="form.name"
+                    autocomplete="name"
+                    autofocus
+                    class="mt-1 block w-full"
+                    required
+                    type="text"
+                />
+                <InputError :message="form.errors.name" class="mt-2"/>
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="email" value="Email"/>
+                <TextInput
+                    id="email"
+                    v-model="form.email"
+                    autocomplete="username"
+                    class="mt-1 block w-full"
+                    required
+                    type="email"
+                />
+                <InputError :message="form.errors.email" class="mt-2"/>
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="password" value="Password"/>
+                <TextInput
+                    id="password"
+                    v-model="form.password"
+                    autocomplete="new-password"
+                    class="mt-1 block w-full"
+                    required
+                    type="password"
+                />
+                <InputError :message="form.errors.password" class="mt-2"/>
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="password_confirmation" value="Confirm Password"/>
+                <TextInput
+                    id="password_confirmation"
+                    v-model="form.password_confirmation"
+                    autocomplete="new-password"
+                    class="mt-1 block w-full"
+                    required
+                    type="password"
+                />
+                <InputError :message="form.errors.password_confirmation" class="mt-2"/>
+            </div>
+
+            <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
+                <InputLabel for="terms">
+                    <div class="flex items-center">
+                        <Checkbox id="terms" v-model:checked="form.terms" name="terms" required/>
+
+                        <div class="ml-2">
+                            I agree to the <a :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                              target="_blank">Terms
+                            of Service</a> and <a :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                                  target="_blank">Privacy
+                            Policy</a>
+                        </div>
+                    </div>
+                    <InputError :message="form.errors.terms" class="mt-2"/>
+                </InputLabel>
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                <Link :href="route('login')"
+                      class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Already registered?
+                </Link>
+
+                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing" class="ml-4">
+                    Register
+                </PrimaryButton>
+            </div>
+        </form>
+
+        <Socialstream v-if="$page.props.socialstream.show && $page.props.socialstream.providers.length"
+                      :error="$page.props?.errors?.socialstream || null" :prompt="$page.props.socialstream.prompt"
+                      :labels="$page.props.socialstream.labels" :providers="$page.props.socialstream.providers"/>
+    </AuthenticationCard>
+</template>

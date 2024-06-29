@@ -1,31 +1,23 @@
-// Import modules...
-import Vue from 'vue'
-import { ZiggyVue } from 'ziggy'
-import { Ziggy } from './ziggy'
-import axios from 'axios'
-import store from './Store'
-import VueAxios from 'vue-axios'
-import luxon from './Plugins/vue-luxon'
-import { createInertiaApp, Link } from '@inertiajs/inertia-vue'
+import './bootstrap';
+import '../css/app.css';
 
-// Plugins
-import vuetify from '@/Plugins/vuetify'
+import { createApp, h } from 'vue';
+import { createInertiaApp } from '@inertiajs/vue3';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
-
-Vue.use(VueAxios, axios)
-
-Vue.use(ZiggyVue, Ziggy)
-Vue.component('InertiaLink', Link)
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
-  resolve: name => require(`./Pages/${name}`),
-  setup ({ el, App, props }) {
-    new Vue({
-      store,
-      luxon,
-      vuetify,
-      render: h => h(App, props)
-    }).$mount(el)
-  }
-})
+    title: (title) => `${title} - ${appName}`,
+    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    setup({ el, App, props, plugin }) {
+        return createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .use(ZiggyVue)
+            .mount(el);
+    },
+    progress: {
+        color: '#4B5563',
+    },
+});

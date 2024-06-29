@@ -27,8 +27,19 @@ class ConnectedAccount extends SocialstreamConnectedAccount
         'email',
         'avatar_path',
         'token',
+        'secret',
         'refresh_token',
         'expires_at',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'expires_at' => 'datetime',
     ];
 
     /**

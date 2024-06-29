@@ -1,124 +1,118 @@
-<template>
-  <span>
-    <span @click="startConfirmingPassword">
-      <slot />
-    </span>
+<script setup>
+import { ref, reactive, nextTick } from 'vue';
+import DialogModal from './DialogModal.vue';
+import InputError from './InputError.vue';
+import PrimaryButton from './PrimaryButton.vue';
+import SecondaryButton from './SecondaryButton.vue';
+import TextInput from './TextInput.vue';
 
-    <v-dialog
-      v-model="confirmingPassword"
-      max-width="672"
-    >
-      <v-card>
-        <v-card-title class="headline">
-          {{ title }}
-        </v-card-title>
+const emit = defineEmits(['confirmed']);
 
-        <v-card-text>
-          {{ content }}
-
-          <div class="mt-4">
-            <v-text-field
-              ref="password"
-              v-model="form.password"
-              type="password"
-              class="mt-1"
-              label="Password"
-              outlined
-              :error-messages="form.error"
-              @keyup.enter.native="confirmPassword"
-            />
-          </div>
-        </v-card-text>
-
-        <v-card-actions class="px-6 py-4">
-          <v-spacer />
-          <v-btn
-            outlined
-            @click.native="closeModal"
-          >
-            Nevermind
-          </v-btn>
-
-          <v-btn
-            color="secondary"
-            :class="{ 'opacity-25': form.processing }"
-            :disabled="form.processing"
-            @click.native="confirmPassword"
-          >
-            {{ button }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </span>
-</template>
-
-<script>
-/* eslint-disable vue/require-prop-types */
-export default {
-  props: {
+defineProps({
     title: {
-      default: 'Confirm Password'
+        type: String,
+        default: 'Confirm Password',
     },
     content: {
-      default: 'For your security, please confirm your password to continue.'
+        type: String,
+        default: 'For your security, please confirm your password to continue.',
     },
     button: {
-      default: 'Confirm'
-    }
-  },
+        type: String,
+        default: 'Confirm',
+    },
+});
 
-  data () {
-    return {
-      confirmingPassword: false,
-      form: {
-        password: '',
-        error: ''
-      }
-    }
-  },
+const confirmingPassword = ref(false);
 
-  methods: {
-    startConfirmingPassword () {
-      this.axios.get(this.route('password.confirmation')).then(response => {
+const form = reactive({
+    password: '',
+    error: '',
+    processing: false,
+});
+
+const passwordInput = ref(null);
+
+const startConfirmingPassword = () => {
+    axios.get(route('password.confirmation')).then(response => {
         if (response.data.confirmed) {
-          this.$emit('confirmed')
+            emit('confirmed');
         } else {
-          this.confirmingPassword = true
+            confirmingPassword.value = true;
 
-          setTimeout(() => this.$refs.password.focus(), 250)
+            setTimeout(() => passwordInput.value.focus(), 250);
         }
-      })
-    },
+    });
+};
 
-    confirmPassword () {
-      this.form.processing = true
+const confirmPassword = () => {
+    form.processing = true;
 
-      this.axios
-        .post(this.route('password.confirm'), {
-          password: this.form.password
-        })
-        .then(() => {
-          this.form.processing = false
-          this.closeModal()
-          this.$nextTick(() => this.$emit('confirmed'))
-        })
-        .catch(error => {
-          this.form.processing = false
-          this.form.error = error.response.data.errors.password[0]
-          this.$nextTick(() => {
-            setTimeout(() => {
-              this.$refs.password.focus()
-            })
-          })
-        })
-    },
+    axios.post(route('password.confirm'), {
+        password: form.password,
+    }).then(() => {
+        form.processing = false;
 
-    closeModal () {
-      this.confirmingPassword = false
-      this.form.password = ''
-      this.form.error = ''
-    }
-  }
-}
+        closeModal();
+        nextTick().then(() => emit('confirmed'));
+
+    }).catch(error => {
+        form.processing = false;
+        form.error = error.response.data.errors.password[0];
+        passwordInput.value.focus();
+    });
+};
+
+const closeModal = () => {
+    confirmingPassword.value = false;
+    form.password = '';
+    form.error = '';
+};
 </script>
+
+<template>
+    <span>
+        <span @click="startConfirmingPassword">
+            <slot />
+        </span>
+
+        <DialogModal :show="confirmingPassword" @close="closeModal">
+            <template #title>
+                {{ title }}
+            </template>
+
+            <template #content>
+                {{ content }}
+
+                <div class="mt-4">
+                    <TextInput
+                        ref="passwordInput"
+                        v-model="form.password"
+                        type="password"
+                        class="mt-1 block w-3/4"
+                        placeholder="Password"
+                        autocomplete="current-password"
+                        @keyup.enter="confirmPassword"
+                    />
+
+                    <InputError :message="form.error" class="mt-2" />
+                </div>
+            </template>
+
+            <template #footer>
+                <SecondaryButton @click="closeModal">
+                    Cancel
+                </SecondaryButton>
+
+                <PrimaryButton
+                    class="ms-3"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                    @click="confirmPassword"
+                >
+                    {{ button }}
+                </PrimaryButton>
+            </template>
+        </DialogModal>
+    </span>
+</template>

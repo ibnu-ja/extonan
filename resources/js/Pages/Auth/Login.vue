@@ -1,150 +1,95 @@
-<template>
-  <web-layout>
-    <v-row justify="center">
-      <v-col
-        cols="10"
-        sm="8"
-      >
-        <v-card>
-          <v-card-title>Sign in to your account</v-card-title>
-          <v-card-text>
-            <validation-errors class="mb-4" />
+<script setup>
+import {Head, Link, useForm} from '@inertiajs/vue3';
+import AuthenticationCard from '@/Components/AuthenticationCard.vue';
+import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
+import Checkbox from '@/Components/Checkbox.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import Socialstream from '@/Components/Socialstream.vue';
+import TextInput from '@/Components/TextInput.vue';
 
-            <div
-              v-if="status"
-              class="mb-4 font-medium text-sm text-green-600"
-            >
-              {{ status }}
+defineProps({
+    canResetPassword: Boolean,
+    status: String,
+});
+
+const form = useForm({
+    email: '',
+    password: '',
+    remember: false,
+});
+
+const submit = () => {
+    form.transform(data => ({
+        ...data,
+        remember: form.remember ? 'on' : '',
+    })).post(route('login'), {
+        onFinish: () => form.reset('password'),
+    });
+};
+</script>
+
+<template>
+    <Head title="Log in"/>
+
+    <AuthenticationCard>
+        <template #logo>
+            <AuthenticationCardLogo/>
+        </template>
+
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+            {{ status }}
+        </div>
+
+        <form @submit.prevent="submit">
+            <div>
+                <InputLabel for="email" value="Email"/>
+                <TextInput
+                    id="email"
+                    v-model="form.email"
+                    autofocus
+                    class="mt-1 block w-full"
+                    required
+                    type="email"
+                />
+                <InputError :message="form.errors.email" class="mt-2"/>
             </div>
 
-            <v-row>
-              <v-divider
-                v-if="$vuetify.breakpoint.lgAndUp"
-                vertical
-              />
-              <v-col
-                cols="12"
-                lg="6"
-              >
-                <form @submit.prevent="submit">
-                  <v-text-field
-                    v-model="form.email"
-                    dense
-                    outlined
-                    label="Email Address"
-                    required
-                    autofocus
-                  />
-                  <v-text-field
+            <div class="mt-4">
+                <InputLabel for="password" value="Password"/>
+                <TextInput
+                    id="password"
                     v-model="form.password"
-                    dense
-                    outlined
-                    label="Password"
-                    required
                     autocomplete="current-password"
-                    :append-icon="showP ? 'mdi-eye' : 'mdi-eye-off'"
-                    :type="showP ? 'text' : 'password'"
-                    hint="At least 8 characters"
-                    @click:append="showP = !showP"
-                  />
-                  <v-checkbox
-                    v-model="form.remember"
-                    label="Remember me"
-                  />
-                  <v-btn
-                    block
-                    color="primary"
-                    type="submit"
-                    :disabled="form.processing"
-                  >
-                    Sign In
-                  </v-btn>
-                </form>
-              </v-col>
+                    class="mt-1 block w-full"
+                    required
+                    type="password"
+                />
+                <InputError :message="form.errors.password" class="mt-2"/>
+            </div>
 
-              <v-divider
-                v-if="$vuetify.breakpoint.mdAndDown"
-              />
+            <div class="block mt-4">
+                <label class="flex items-center">
+                    <Checkbox v-model:checked="form.remember" name="remember"/>
+                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                </label>
+            </div>
 
-              <v-col
-                cols="12"
-                lg="6"
-                order-lg="first"
-              >
-                <socialstream-providers v-if="$page.props.socialstream.show" />
-              </v-col>
-
-              <v-col cols="12">
-                <div class="mt-4 d-flex justify-space-between text-body-1">
-                  <inertia-link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                  >
+            <div class="flex items-center justify-end mt-4">
+                <Link v-if="canResetPassword" :href="route('password.request')"
+                      class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Forgot your password?
-                  </inertia-link>
+                </Link>
 
-                  <div>
-                    Don't have an account?
-                    <inertia-link :href="route('register')">
-                      Sign up
-                    </inertia-link>
-                  </div>
-                </div>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-sheet
-      class=""
-      color="gray pulse"
-      width="200px"
-    />
-  </web-layout>
+                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing" class="ml-4">
+                    Log in
+                </PrimaryButton>
+            </div>
+        </form>
+
+        <Socialstream v-if="$page.props.socialstream.show && $page.props.socialstream.providers.length"
+                      :error="$page.props?.errors?.socialstream || null" :prompt="$page.props.socialstream.prompt"
+                      :labels="$page.props.socialstream.labels" :providers="$page.props.socialstream.providers"/>
+    </AuthenticationCard>
 </template>
-
-<script>
-import ValidationErrors from '@/Components/ValidationErrors'
-import WebLayout from '@/Layouts/Web/Index.vue'
-import SocialstreamProviders from '@/Socialstream/Providers.vue'
-
-export default {
-  components: {
-    ValidationErrors,
-    // eslint-disable-next-line vue/no-unused-components
-    SocialstreamProviders,
-    WebLayout
-  },
-
-  props: {
-    canResetPassword: Boolean,
-    // eslint-disable-next-line vue/require-default-prop
-    status: String
-  },
-
-  data () {
-    return {
-      form: this.$inertia.form({
-        email: '',
-        password: '',
-        remember: false
-      }),
-      showP: false
-    }
-  },
-
-  methods: {
-    submit () {
-      this.form
-        .transform(data => ({
-          ...data,
-          remember: this.form.remember ? 'on' : ''
-        }))
-        .post(this.route('login'), {
-          onFinish: () => this.form.reset('password')
-        })
-    }
-  }
-}
-</script>

@@ -1,132 +1,85 @@
-<template>
-  <web-layout>
-    <v-row justify="center">
-      <v-col
-        cols="10"
-        sm="8"
-        md="6"
-      >
-        <v-card class="p-2">
-          <v-card-title>Reset Password</v-card-title>
-          <v-card-text>
-            <validation-errors class="mb-4" />
+<script setup>
+import { Head, useForm } from '@inertiajs/vue3';
+import AuthenticationCard from '@/Components/AuthenticationCard.vue';
+import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
 
-            <div
-              v-if="status"
-              class="mb-4 font-medium text-sm text-green-600"
-            >
-              {{ status }}
-            </div>
-
-            <form @submit.prevent="submit">
-              <v-text-field
-                v-model="form.email"
-                dense
-                outlined
-                label="Email Address"
-                required
-                autofocus
-              />
-              <v-text-field
-                v-model="form.password"
-                dense
-                outlined
-                label="New Password"
-                required
-                autocomplete="current-password"
-                :append-icon="show_pass ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="show_pass ? 'text' : 'password'"
-                hint="At least 8 characters"
-                @click:append="show_pass = !show_pass"
-              />
-              <v-text-field
-                v-model="form.password_confirmation"
-                dense
-                outlined
-                label="Comfirn New Password"
-                required
-                autocomplete="current-password"
-                :append-icon="
-                  show_pass_confirmation ? 'mdi-eye' : 'mdi-eye-off'
-                "
-                :type="show_pass_confirmation ? 'text' : 'password'"
-                hint="At least 8 characters"
-                @click:append="show_pass_confirmation = !show_pass_confirmation"
-              />
-              <v-btn
-                block
-                color="primary"
-                type="submit"
-                :disabled="form.processing"
-              >
-                Reset Password
-              </v-btn>
-            </form>
-
-            <div class="my-3 d-flex justify-space-between text-body-1">
-              <a
-                href="#"
-                @click.prevent="toggleRecovery"
-                v-text="
-                  !recovery ? 'Use recovery code' : 'Use authenticator code'
-                "
-              />
-
-              <div>
-                Don't have an account?
-                <inertia-link :href="route('register')">
-                  Sign up
-                </inertia-link>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-sheet
-      class=""
-      color="gray pulse"
-      width="200px"
-    />
-  </web-layout>
-</template>
-
-<script>
-import ValidationErrors from '@/Components/ValidationErrors'
-import WebLayout from '@/Layouts/Web/Index.vue'
-
-export default {
-  components: {
-    ValidationErrors,
-    WebLayout
-  },
-
-  props: {
-    // eslint-disable-next-line vue/require-default-prop
+const props = defineProps({
     email: String,
-    // eslint-disable-next-line vue/require-default-prop
-    token: String
-  },
+    token: String,
+});
 
-  data () {
-    return {
-      show_pass_confirmation: false,
-      show_pass: false,
-      form: this.$inertia.form({
-        token: this.token,
-        email: this.email,
-        password: '',
-        password_confirmation: ''
-      })
-    }
-  },
+const form = useForm({
+    token: props.token,
+    email: props.email,
+    password: '',
+    password_confirmation: '',
+});
 
-  methods: {
-    submit () {
-      this.form.post(this.route('password.update'), {
-        onFinish: () => this.form.reset('password', 'password_confirmation')
-      })
-    }
-  }
-}
+const submit = () => {
+    form.post(route('password.update'), {
+        onFinish: () => form.reset('password', 'password_confirmation'),
+    });
+};
 </script>
+
+<template>
+    <Head title="Reset Password" />
+
+    <AuthenticationCard>
+        <template #logo>
+            <AuthenticationCardLogo />
+        </template>
+
+        <form @submit.prevent="submit">
+            <div>
+                <InputLabel for="email" value="Email" />
+                <TextInput
+                    id="email"
+                    v-model="form.email"
+                    type="email"
+                    class="mt-1 block w-full"
+                    required
+                    autofocus
+                    autocomplete="username"
+                />
+                <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="password" value="Password" />
+                <TextInput
+                    id="password"
+                    v-model="form.password"
+                    type="password"
+                    class="mt-1 block w-full"
+                    required
+                    autocomplete="new-password"
+                />
+                <InputError class="mt-2" :message="form.errors.password" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="password_confirmation" value="Confirm Password" />
+                <TextInput
+                    id="password_confirmation"
+                    v-model="form.password_confirmation"
+                    type="password"
+                    class="mt-1 block w-full"
+                    required
+                    autocomplete="new-password"
+                />
+                <InputError class="mt-2" :message="form.errors.password_confirmation" />
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Reset Password
+                </PrimaryButton>
+            </div>
+        </form>
+    </AuthenticationCard>
+</template>

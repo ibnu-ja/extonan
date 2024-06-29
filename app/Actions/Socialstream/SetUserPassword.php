@@ -4,22 +4,18 @@ namespace App\Actions\Socialstream;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
-use Laravel\Fortify\Rules\Password;
 
 class SetUserPassword implements SetsUserPasswords
 {
     /**
      * Validate and update the user's password.
-     *
-     * @param  mixed  $user
-     * @param  array  $input
-     * @return void
      */
-    public function set($user, array $input)
+    public function set(mixed $user, array $input): void
     {
         Validator::make($input, [
-            'password' => ['required', 'string', new Password, 'confirmed'],
+            'password' => ['required', 'string', Password::default(), 'confirmed'],
         ])->validateWithBag('setPassword');
 
         $user->forceFill([
