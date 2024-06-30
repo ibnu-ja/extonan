@@ -39,6 +39,7 @@ class CustomRouteGenerator extends CommandRouteGenerator
             $path .= '/route';
         } else {
             $this->makeDirectory($path);
+            $this->makeDirectory($path . '/types');
         }
 
         $name = preg_replace('/\.json$/', '', $path);
@@ -48,7 +49,9 @@ class CustomRouteGenerator extends CommandRouteGenerator
         $this->files->put(base_path("{$name}.json"), new $output($ziggy));
 
         $types = config('ziggy.output.types', Types::class);
-        $this->files->put(base_path("{$name}.d.ts"), new $types($ziggy));
+        $tokens = explode("/", $name);
+        $joined = join("/", array_slice($tokens, 0, -1)) . "/types/" . $tokens[sizeof($tokens)-1] . ".d.ts";
+        $this->files->put(base_path($joined), new $types($ziggy));
 
         $this->info("{$name}.json created successfully.");
 

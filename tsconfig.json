@@ -11,9 +11,6 @@
         "forceConsistentCasingInFileNames": true,
         "noEmit": true,
         "skipLibCheck": true,
-        "types": [
-            "vite/client"
-        ],
         "paths": {
             "@/*": [
                 "./resources/js/*"
