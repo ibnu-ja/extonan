@@ -1,5 +1,7 @@
+import { PageProps as InertiaPageProps } from '@inertiajs/core';
+import { AxiosInstance } from 'axios';
 import { route as ziggyRoute } from 'ziggy-js';
-import { AxiosInstance } from "axios";
+import { PageProps as AppPageProps } from './';
 
 declare global {
     var route: typeof ziggyRoute;
