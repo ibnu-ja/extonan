@@ -1,5 +1,5 @@
 import './bootstrap';
-import '../css/app.css';
+import '../css/app.scss';
 
 import { createApp, h, DefineComponent } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -10,6 +10,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 import { Config } from 'ziggy-js'
 
 import * as Routes from './routes.json'
+import Vuetify from "@/plugins/vuetify";
 const config = Routes as Config
 
 createInertiaApp({
@@ -19,6 +20,7 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue, config)
+            .use(Vuetify)
             .mount(el);
     },
     progress: {
