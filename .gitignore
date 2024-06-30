@@ -23,3 +23,6 @@ yarn-error.log
 /caddy
 frankenphp
 frankenphp-worker.php
+/config/caddy/autosave.json
+/data/caddy/instance.uuid
+/data/caddy/last_clean.json
