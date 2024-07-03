@@ -10,7 +10,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 import { Config } from 'ziggy-js'
 
 import * as Routes from './routes.json'
-import Vuetify from "@/plugins/vuetify";
+import Vuetify from '@/plugins/vuetify'
 const config = Routes as Config
 
 createInertiaApp({
@@ -21,9 +21,10 @@ createInertiaApp({
       .use(plugin)
       .use(ZiggyVue, config)
       .use(Vuetify)
-            .mount(el)
+      .mount(el)
   },
   progress: {
     color: '#4B5563',
   },
+
 }).then()
