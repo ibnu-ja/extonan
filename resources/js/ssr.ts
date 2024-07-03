@@ -4,7 +4,7 @@ import { createInertiaApp } from '@inertiajs/vue3'
 import createServer from '@inertiajs/vue3/server'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import { ZiggyVue } from 'ziggy-js'
-import VuetifySSR from "@/plugins/vuetify-ssr"
+import VuetifySSR from '@/plugins/vuetify-ssr'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 
@@ -18,7 +18,7 @@ createServer(page =>
       return createSSRApp({ render: () => h(App, props) })
         .use(plugin)
         .use(VuetifySSR)
-                .use(ZiggyVue, {
+        .use(ZiggyVue, {
           ...page.props.ziggy,
           location: new URL(page.props.ziggy.location),
         })
