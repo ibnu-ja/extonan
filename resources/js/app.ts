@@ -11,6 +11,7 @@ import { Config } from 'ziggy-js'
 
 import * as Routes from './routes.json'
 import Vuetify from '@/plugins/vuetify'
+import pinia from '@/plugins/pinia'
 const config = Routes as Config
 
 createInertiaApp({
@@ -21,6 +22,7 @@ createInertiaApp({
       .use(plugin)
       .use(ZiggyVue, config)
       .use(Vuetify)
+      .use(pinia)
       .mount(el)
   },
   progress: {
