@@ -5,6 +5,7 @@ import { mdiAccount, mdiAccountPlus, mdiExitRun, mdiHome, mdiLogin, mdiMagnify, 
 import { router, usePage } from '@inertiajs/vue3'
 import { VListItem } from 'vuetify/components'
 import Link from '@/Components/InertiaLink.vue'
+import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 
 const drawer = ref<boolean | null>(null)
 
@@ -44,6 +45,8 @@ function logout() {
       hide-details
       label="Search"
     />
+
+    <ThemeSelector />
 
     <v-menu location="bottom right">
       <template #activator="{ props }">

@@ -1,14 +1,20 @@
 <script lang="ts" setup>
 
-import { onBeforeMount } from 'vue'
+import { computed, watchEffect } from 'vue'
 import { useTheme } from 'vuetify'
 import AppBar from '@/Layouts/Partials/AppBar.vue'
 import Drawer from '@/Layouts/Partials/Drawer.vue'
+import { useUserStore } from '@/stores/userStore'
+import { usePreferredDark } from '@vueuse/core'
 
-const vuetifyTheme = useTheme()
+const theme = useTheme()
+const user = useUserStore()
+const systemTheme = computed(() => usePreferredDark().value ? 'dark' : 'light')
 
-onBeforeMount(() => {
-  vuetifyTheme.global.name.value = 'dark'
+watchEffect(() => {
+  theme.global.name.value = (
+    user.theme === 'system' ? systemTheme.value : user.theme
+  )
 })
 
 </script>
