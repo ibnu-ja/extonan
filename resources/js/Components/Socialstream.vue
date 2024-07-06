@@ -1,57 +1,93 @@
-<script setup>
-import InputError from '@/Components/InputError.vue'
-import ProviderIcon from '@/Components/SocialstreamIcons/ProviderIcon.vue'
+<script setup lang="ts">
+import { SocialstreamProviders } from '@/types'
+import { siBitbucket, siFacebook, siGithub, siGitlab, siGoogle, siLinkedin, siSlack, siX } from 'simple-icons'
 
-defineProps({
-  prompt: {
-    type: String,
-    default: 'Or Login Via',
+// {"id":"github","name":"GitHub","buttonLabel":"GitHub"}
+
+withDefaults(
+  defineProps<{
+    prompt: string
+    error: string
+    providers: SocialstreamProviders[]
+  }>(), {
+    prompt: 'Or Login Via',
   },
-  error: {
-    type: String,
-    default: null,
+)
+
+const providerIcons = [
+  {
+    id: 'bitbucket',
+    icon: siBitbucket,
   },
-  providers: {
-    type: Array,
+  {
+    id: 'facebook',
+    icon: siFacebook,
   },
-  labels: {
-    type: Object,
+  {
+    id: 'github',
+    icon: siGithub,
   },
-})
+  {
+    id: 'gitlab',
+    icon: siGitlab,
+  },
+  {
+    id: 'google',
+    icon: siGoogle,
+  },
+  {
+    id: 'facebook',
+    icon: siFacebook,
+  },
+  {
+    id: 'linkedin',
+    icon: siLinkedin,
+  },
+  {
+    id: 'linkedin-openid',
+    icon: siLinkedin,
+  },
+  {
+    id: 'slack',
+    icon: siSlack,
+  },
+  {
+    id: 'twitter',
+    icon: siX,
+  },
+  {
+    id: 'twitter-oauth-2',
+    icon: siX,
+  },
+]
+
+const getIcon = (id: string) => {
+  const item = providerIcons.find(item => item.id == id)
+  return item?.icon?.path
+}
 </script>
 
 <template>
-  <div
-    v-if="providers.length"
-    class="space-y-6 mt-6 mb-2"
-  >
-    <div class="relative flex items-center">
-      <div class="flex-grow border-t border-gray-400" />
-      <span class="flex-shrink text-gray-400 px-6">
-        {{ prompt }}
-      </span>
-      <div class="flex-grow border-t border-gray-400" />
+  <div class="d-flex justify-center align-center my-4">
+    <v-divider />
+    <div
+      class="mx-2"
+      style="min-width: fit-content;"
+    >
+      {{ prompt }}
     </div>
+    <v-divider />
+  </div>
 
-    <InputError
-      v-if="error"
-      :message="error"
-      class="text-center"
+  <div class="d-flex flex-row flex-warp justify-center gap-4">
+    <v-btn
+      v-for="provider in providers"
+      :key="provider.id"
+      block
+      variant="outlined"
+      :text="provider.buttonLabel"
+      :prepend-icon="getIcon(provider.id)"
+      :href="route('oauth.redirect', provider.id)"
     />
-
-    <div class="grid gap-4">
-      <a
-        v-for="provider in providers"
-        :key="provider.id"
-        class="flex gap-2 items-center justify-center transition duration-200 border border-gray-400 w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-normal text-center inline-block"
-        :href="route('oauth.redirect', provider.id)"
-      >
-        <ProviderIcon
-          :provider="provider"
-          classes="h-6 w-6 mx-2"
-        />
-        <span class="block font-medium text-sm text-gray-700">{{ provider.buttonLabel || provider.name }}</span>
-      </a>
-    </div>
   </div>
 </template>

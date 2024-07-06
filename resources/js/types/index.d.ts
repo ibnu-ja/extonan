@@ -1,5 +1,18 @@
-import { Config } from 'ziggy-js'
+import { Config, route as ziggyRoute } from 'ziggy-js'
 
+type SocialstreamProviders = {
+  id: string
+  name: string
+  buttonLabel: string
+}
+
+type Socialstream = {
+  show: boolean
+  prompt: string
+  providers: SocialstreamProviders[]
+  hasPassword: false
+  connectedAccounts: []
+}
 export interface User {
   id: number
   name: string
@@ -25,4 +38,7 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     managesProfilePhotos?: boolean
   }
   ziggy: Config & { location: string }
+  socialstream: Socialstream
 }
+
+type Route = typeof ziggyRoute

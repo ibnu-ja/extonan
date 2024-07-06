@@ -31,12 +31,13 @@ services:
       - selenium
       - pgsql
   redis:
-    image: 'redis:alpine'
+    image: 'bitnami/redis:latest'
     ports:
       - '${FORWARD_REDIS_PORT:-6379}:6379'
-    command: '/bin/sh -c "redis-server --requirepass $${REDIS_PASSWORD:password}"'
     volumes:
       - 'sail-redis:/data'
+    environment:
+      REDIS_PASSWORD: '${REDIS_PASSWORD}'
     networks:
       - sail
     healthcheck:
