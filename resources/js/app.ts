@@ -4,14 +4,14 @@ import '../css/app.scss'
 import { createApp, h, DefineComponent } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import { ZiggyVue } from 'ziggy-js'
+import { ZiggyVue } from '@/plugins/ziggy-vue.js'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
-import { Config } from 'ziggy-js'
 
 import * as Routes from './routes.json'
 import Vuetify from '@/plugins/vuetify'
 import pinia from '@/plugins/pinia'
+import { Config } from 'ziggy-js'
 const config = Routes as Config
 
 createInertiaApp({
