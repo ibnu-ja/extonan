@@ -1,15 +1,18 @@
 <script lang="ts" setup>
 
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { mdiAccount, mdiAccountPlus, mdiExitRun, mdiHome, mdiLogin, mdiMagnify, mdiMenu } from '@mdi/js'
 import { router, usePage } from '@inertiajs/vue3'
 import { VListItem } from 'vuetify/components'
 import Link from '@/Components/InertiaLink.vue'
 import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
+import { ziggySymbol } from '@/symbols/ziggySymbol'
 
 const drawer = ref<boolean | null>(null)
 
 const inertiaProps = usePage().props
+
+const route = inject(ziggySymbol)!
 
 function logout() {
   router.post(route('logout'))
