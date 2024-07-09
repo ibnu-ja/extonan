@@ -26,7 +26,7 @@ defineProps<{
   socialstream: SocialstreamType
 }>()
 
-const route = inject(ziggySymbol)!
+// const route = inject(ziggySymbol)!
 
 const form = useForm({
   email: '',

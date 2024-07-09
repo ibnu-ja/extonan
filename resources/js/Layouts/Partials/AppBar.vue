@@ -12,7 +12,7 @@ const drawer = ref<boolean | null>(null)
 
 const inertiaProps = usePage().props
 
-const route = inject(ziggySymbol)!
+// const route = inject(ziggySymbol)!
 
 function logout() {
   router.post(route('logout'))

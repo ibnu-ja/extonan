@@ -37,7 +37,6 @@
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "vite-plugin-vuetify": "^2.0.3",
-    "vuetify": "^3.6.10",
-    "ziggy-js": "^2.2.1"
+    "vuetify": "^3.6.10"
   }
 }

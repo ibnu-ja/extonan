@@ -4,15 +4,12 @@ import '../css/app.scss'
 import { createApp, h, DefineComponent } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import { ZiggyVue } from '@/plugins/ziggy-vue.js'
+import { ZiggyVue } from '../../vendor/tightenco/ziggy'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 
-import * as Routes from './routes.json'
 import Vuetify from '@/plugins/vuetify'
 import pinia from '@/plugins/pinia'
-import { Config } from 'ziggy-js'
-const config = Routes as Config
 
 createInertiaApp({
   title: title => `${title} - ${appName}`,
@@ -20,8 +17,8 @@ createInertiaApp({
   setup({ el, App, props, plugin }) {
     createApp({ render: () => h(App, props) })
       .use(plugin)
-      .use(ZiggyVue, config)
       .use(Vuetify)
+      .use(ZiggyVue)
       .use(pinia)
       .mount(el)
   },

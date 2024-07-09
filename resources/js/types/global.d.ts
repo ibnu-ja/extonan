@@ -3,7 +3,7 @@ import { AxiosInstance } from 'axios'
 import { PageProps as AppPageProps, Route } from './'
 
 declare global {
-  // const route: typeof Route
+  const route: typeof Route
   interface Window {
     axios: AxiosInstance
   }
