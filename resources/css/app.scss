@@ -1,5 +1,8 @@
 @use 'vuetify';
 
+@import './variables.scss';
+@import './grid.scss';
+
 [x-cloak] {
     display: none;
 }
