@@ -2,16 +2,14 @@
 import { Head, useForm, usePage } from '@inertiajs/vue3'
 import Socialstream from '@/Components/Socialstream.vue'
 
-import { Route, Socialstream as SocialstreamType } from '@/types'
+import { Socialstream as SocialstreamType } from '@/types'
 
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import Link from '@/Components/InertiaLink.vue'
 import { VBtn } from 'vuetify/components'
 import { mdiEye } from '@mdi/js/commonjs/mdi'
 import { mdiEyeOff } from '@mdi/js'
-import { inject, ref } from 'vue'
-import { route as ziggyRoute } from 'ziggy-js'
-import { ziggySymbol } from '@/symbols/ziggySymbol'
+import { ref } from 'vue'
 
 // defineProps({
 //     canResetPassword: Boolean,
