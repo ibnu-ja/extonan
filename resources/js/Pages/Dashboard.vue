@@ -22,7 +22,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     title="Dashboard"
   >
     <template #header>
-      <h1 class="text-h4 text-md-h3 mb-4">
+      <h1 class="text-h4 text-md-h3">
         Dashboard
       </h1>
     </template>
