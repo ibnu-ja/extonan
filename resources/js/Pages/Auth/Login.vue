@@ -100,7 +100,8 @@ const submit = () => {
             class="mb-4"
           >
             Please sign-in to your account
-          </p><v-text-field
+          </p>
+          <v-text-field
             v-model="form.email"
             variant="outlined"
             label="Email Address"
@@ -108,6 +109,8 @@ const submit = () => {
             placeholder="john@example.com"
             required
             autofocus
+            hide-details="auto"
+            class="mb-4"
           />
           <v-text-field
             v-model="form.password"
@@ -119,12 +122,12 @@ const submit = () => {
             :error-messages="form.errors.password"
             :append-inner-icon="showP ? mdiEye : mdiEyeOff"
             :type="showP ? 'text' : 'password'"
-            hint="At least 8 characters"
+            class="mb-4"
             @click:append-inner="showP = !showP"
           />
           <v-checkbox
             v-model="form.remember"
-            hide-details
+            hide-details="auto"
             label="Remember me"
           />
           <div
