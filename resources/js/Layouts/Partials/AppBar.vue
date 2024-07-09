@@ -3,15 +3,19 @@
 import { ref } from 'vue'
 import { mdiAccount, mdiAccountPlus, mdiExitRun, mdiHome, mdiLogin, mdiMagnify, mdiMenu } from '@mdi/js'
 import { router, usePage } from '@inertiajs/vue3'
-import { VListItem } from 'vuetify/components'
+import { VBreadcrumbsItem, VListItem } from 'vuetify/components'
 import Link from '@/Components/InertiaLink.vue'
 import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
+import InertiaLink from '@/Components/InertiaLink.vue'
+import { BreadcrumbItem } from '@/types'
 
 const drawer = ref<boolean | null>(null)
 
 const inertiaProps = usePage().props
 
-// const route = inject(ziggySymbol)!
+defineProps<{
+  breadcrumbs?: BreadcrumbItem[]
+}>()
 
 function logout() {
   router.post(route('logout'))
@@ -105,29 +109,26 @@ function logout() {
         </template>
       </v-list>
     </v-menu>
-    <template #extension>
+    <template
+      v-if="breadcrumbs"
+      #extension
+    >
       <v-breadcrumbs
+        :items="breadcrumbs"
         bg-color="surface-light"
         density="compact"
-        class="flex-grow-1 mx-n4"
+        class="flex-grow-1"
       >
-        <v-container
-          class="py-0"
-          fluid
-        >
-          <v-breadcrumbs-item>
-            <v-icon :icon="mdiHome" />
-          </v-breadcrumbs-item>
-          <template
-            v-for="item in ['Foo', 'Bar', 'Fizz']"
-            :key="item"
+        <template #item="{item}">
+          <InertiaLink
+            :as="VBreadcrumbsItem"
+            :disabled="item.disabled"
+            :exact-active="item.exact"
+            :href="item.href"
           >
-            <v-breadcrumbs-divider />
-            <v-breadcrumbs-item>
-              {{ item }}
-            </v-breadcrumbs-item>
-          </template>
-        </v-container>
+            {{ item.title }}
+          </InertiaLink>
+        </template>
       </v-breadcrumbs>
     </template>
   </v-app-bar>

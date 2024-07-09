@@ -6,6 +6,7 @@ import AppBar from '@/Layouts/Partials/AppBar.vue'
 import Drawer from '@/Layouts/Partials/Drawer.vue'
 import { useUserStore } from '@/stores/userStore'
 import { usePreferredDark } from '@vueuse/core'
+import { BreadcrumbItem } from '@/types'
 
 const theme = useTheme()
 const user = useUserStore()
@@ -17,12 +18,24 @@ watchEffect(() => {
   )
 })
 
+defineProps<{
+  breadcrumbs?: BreadcrumbItem[]
+}>()
+
 </script>
 <template>
   <v-layout>
-    <AppBar />
+    <AppBar :breadcrumbs="breadcrumbs" />
     <Drawer />
     <v-main>
+      <!-- Page Heading -->
+      <v-container
+        v-if="$slots.header"
+      >
+        <header>
+          <slot name="header" />
+        </header>
+      </v-container>
       <slot />
     </v-main>
   </v-layout>

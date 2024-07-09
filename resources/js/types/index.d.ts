@@ -42,3 +42,12 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
 }
 
 type Route = typeof ziggyRoute
+
+type LinkProps = {
+  href: string | undefined
+  replace: boolean | undefined
+  to: RouteLocationRaw | undefined
+  exact: boolean | undefined
+}
+
+type BreadcrumbItem = (string | (Partial<LinkProps> & { title: string, disabled: boolean }))
