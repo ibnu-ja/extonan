@@ -7,6 +7,7 @@ import Drawer from '@/Layouts/Partials/Drawer.vue'
 import { useUserStore } from '@/stores/userStore'
 import { usePreferredDark } from '@vueuse/core'
 import { BreadcrumbItem } from '@/types'
+import { Head } from '@inertiajs/vue3'
 
 const theme = useTheme()
 const user = useUserStore()
@@ -20,17 +21,22 @@ watchEffect(() => {
 
 defineProps<{
   breadcrumbs?: BreadcrumbItem[]
+  title?: string
+
 }>()
 
 </script>
 <template>
+  <Head :title="title" />
   <v-layout>
     <AppBar :breadcrumbs="breadcrumbs" />
     <Drawer />
     <v-main>
       <!-- Page Heading -->
+      <!-- mt-md-6-->
       <v-container
         v-if="$slots.header"
+        class="py-0 my-4 mt-6 mt-lg-12"
       >
         <header>
           <slot name="header" />
