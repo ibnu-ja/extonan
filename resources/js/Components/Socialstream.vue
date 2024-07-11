@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { SocialstreamProviders } from '@/types'
-import { siBitbucket, siFacebook, siGithub, siGitlab, siGoogle, siLinkedin, siSlack, siX } from 'simple-icons'
+import { useProvider } from './SocialstreamIcons/Provider'
 
-// {"id":"github","name":"GitHub","buttonLabel":"GitHub"}
+const { getIcon } = useProvider()
 
 withDefaults(
   defineProps<{
@@ -14,57 +14,6 @@ withDefaults(
   },
 )
 
-const providerIcons = [
-  {
-    id: 'bitbucket',
-    icon: siBitbucket,
-  },
-  {
-    id: 'facebook',
-    icon: siFacebook,
-  },
-  {
-    id: 'github',
-    icon: siGithub,
-  },
-  {
-    id: 'gitlab',
-    icon: siGitlab,
-  },
-  {
-    id: 'google',
-    icon: siGoogle,
-  },
-  {
-    id: 'facebook',
-    icon: siFacebook,
-  },
-  {
-    id: 'linkedin',
-    icon: siLinkedin,
-  },
-  {
-    id: 'linkedin-openid',
-    icon: siLinkedin,
-  },
-  {
-    id: 'slack',
-    icon: siSlack,
-  },
-  {
-    id: 'twitter',
-    icon: siX,
-  },
-  {
-    id: 'twitter-oauth-2',
-    icon: siX,
-  },
-]
-
-const getIcon = (id: string) => {
-  const item = providerIcons.find(item => item.id == id)
-  return item?.icon?.path
-}
 </script>
 
 <template>
