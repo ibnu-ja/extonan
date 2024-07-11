@@ -1,22 +1,35 @@
-<script setup>
-import SectionTitle from './SectionTitle.vue'
+<script lang="ts" setup>
+import { computed, useSlots } from 'vue'
+
+const slots = useSlots()
+
+const hasActions = computed(() => !!slots.actions)
+const hasStatus = computed(() => !!slots.status)
+
 </script>
 
 <template>
-  <div class="md:grid md:grid-cols-3 md:gap-6">
-    <SectionTitle>
-      <template #title>
-        <slot name="title" />
-      </template>
-      <template #description>
-        <slot name="description" />
-      </template>
-    </SectionTitle>
+  <div class="d-grid grid-cols-1 gap-4 grid-cols-md-3">
+    <div>
+      <slot name="title" />
 
-    <div class="mt-5 md:mt-0 md:col-span-2">
-      <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-lg">
+      <p class="">
+        <slot name="description" />
+      </p>
+    </div>
+    <div class="col-span-2">
+      <v-card class="elevation-2">
+        <v-card-title
+          v-if="hasStatus"
+          class="d-flex"
+        >
+          <slot name="status" />
+        </v-card-title>
         <slot name="content" />
-      </div>
+        <v-card-actions v-if="hasActions">
+          <slot name="actions" />
+        </v-card-actions>
+      </v-card>
     </div>
   </div>
 </template>
