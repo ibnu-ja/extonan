@@ -1,17 +1,22 @@
-import { Config, route as ziggyRoute } from 'ziggy-js'
-
 type SocialstreamProviders = {
   id: string
   name: string
   buttonLabel: string
 }
 
+type ConnectedAccount = {
+  id: number
+  provider: string
+  avatar_path?: string
+  created_at: string
+}
+
 type Socialstream = {
   show: boolean
   prompt: string
   providers: SocialstreamProviders[]
-  hasPassword: false
-  connectedAccounts: []
+  hasPassword: boolean
+  connectedAccounts: ConnectedAccount[]
 }
 export interface User {
   id: number
@@ -25,7 +30,7 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
   auth: {
     user: User
   }
-  jetstream?: {
+  jetstream: {
     canCreateTeams?: boolean
     canManageTwoFactorAuthentication?: boolean
     canUpdatePassword?: boolean
@@ -40,8 +45,6 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
   ziggy: Config & { location: string }
   socialstream: Socialstream
 }
-
-type Route = typeof ziggyRoute
 
 type LinkProps = {
   href: string | undefined
