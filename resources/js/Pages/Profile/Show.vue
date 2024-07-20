@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import Layout from '@/Layouts/Layout.vue'
-import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm.vue'
-import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue'
+import { usePage } from '@inertiajs/vue3'
 import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue'
+import Layout from '@/Layouts/Layout.vue'
 import SetPasswordForm from '@/Pages/Profile/Partials/SetPasswordForm.vue'
-import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue'
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue'
-import { usePage } from '@inertiajs/vue3'
+import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue'
+import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm.vue'
+import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue'
 
 defineProps({
   confirmsTwoFactorAuthentication: Boolean,
