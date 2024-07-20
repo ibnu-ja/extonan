@@ -45,7 +45,6 @@ const { xs } = useDisplay()
           </v-card-text>
           <v-card-actions>
             <v-btn
-              class="text-none"
               :append-icon="mdiArrowRight"
             >
               Explore the documentation
@@ -71,7 +70,6 @@ const { xs } = useDisplay()
           </v-card-text>
           <v-card-actions>
             <v-btn
-              class="text-none"
               :append-icon="mdiArrowRight"
             >
               Start watching Laracasts

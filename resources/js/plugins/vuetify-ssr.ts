@@ -8,7 +8,11 @@ import { createVuetify } from 'vuetify'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
 const vuetify = createVuetify({
-  // blueprint: md3,
+  defaults: {
+    VBtn: {
+      class: 'text-none',
+    },
+  },
   icons: {
     defaultSet: 'mdi',
     aliases,
