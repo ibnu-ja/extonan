@@ -123,6 +123,7 @@ const submit = () => {
             :append-inner-icon="showP ? mdiEye : mdiEyeOff"
             :type="showP ? 'text' : 'password'"
             class="mb-4"
+            hide-details="auto"
             @click:append-inner="showP = !showP"
           />
           <v-checkbox
