@@ -108,14 +108,12 @@ const updatePassword = () => {
       </ActionMessage>
       <v-spacer />
       <v-btn
-        :class="{ 'opacity-25': form.processing }"
         :disabled="form.processing"
         @click="form.reset()"
       >
         Clear
       </v-btn>
       <v-btn
-        :class="{ 'opacity-25': form.processing }"
         :disabled="form.processing"
         type="submit"
         color="primary"
