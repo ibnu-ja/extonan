@@ -28,7 +28,7 @@ withDefaults(
     <v-divider />
   </div>
 
-  <div class="d-flex flex-row flex-warp justify-center gap-4">
+  <div class="d-flex flex-column flex-warp justify-center gap-4">
     <v-btn
       v-for="provider in providers"
       :key="provider.id"
