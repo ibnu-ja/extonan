@@ -8,11 +8,12 @@ import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfile
 import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue'
 import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm.vue'
 import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue'
+import { UserSession } from '@/types'
 
-defineProps({
-  confirmsTwoFactorAuthentication: Boolean,
-  sessions: Array,
-})
+defineProps<{
+  confirmsTwoFactorAuthentication: boolean
+  sessions: UserSession[]
+}>()
 
 const page = usePage()
 </script>
