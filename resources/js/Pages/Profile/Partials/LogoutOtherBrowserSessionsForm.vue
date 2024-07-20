@@ -139,7 +139,10 @@ const closeModal = () => {
             </v-card-text>
             <v-card-actions>
               <v-spacer />
-              <v-btn @click="closeModal">
+              <v-btn
+                :disabled="form.processing"
+                @click="closeModal"
+              >
                 Cancel
               </v-btn>
 
