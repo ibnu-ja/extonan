@@ -18,6 +18,20 @@ type Socialstream = {
   hasPassword: boolean
   connectedAccounts: ConnectedAccount[]
 }
+
+type SessionAgent = {
+  is_desktop: boolean
+  platform: string
+  browser: string
+}
+
+type UserSession = {
+  agent: SessionAgent
+  ip_address: string
+  is_current_device: boolean
+  last_active: string
+}
+
 export interface User {
   connected_accounts?: ConnectedAccount & {
     user_id: number
@@ -63,6 +77,7 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
   }
   ziggy: Config & { location: string }
   socialstream: Socialstream
+  sessions: UserSession[]
 }
 
 type LinkProps = {
