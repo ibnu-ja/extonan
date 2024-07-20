@@ -62,10 +62,13 @@ const closeModal = () => {
 
     <template #content>
       <v-card-text>
-        <p>
+        <v-alert
+          type="info"
+          variant="tonal"
+        >
           If you feel any of your connected accounts have been compromised, you should disconnect them
           immediately and change your password.
-        </p>
+        </v-alert>
       </v-card-text>
       <ConnectedAccount
         v-for="(provider) in page.props.socialstream.providers"
