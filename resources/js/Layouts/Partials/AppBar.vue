@@ -5,13 +5,13 @@ import { mdiAccount, mdiAccountPlus, mdiExitRun, mdiHome, mdiLogin, mdiMagnify, 
 import { router, usePage } from '@inertiajs/vue3'
 import { VBreadcrumbsItem, VListItem } from 'vuetify/components'
 import Link from '@/Components/InertiaLink.vue'
-import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import InertiaLink from '@/Components/InertiaLink.vue'
+import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import { BreadcrumbItem } from '@/types'
 
 const drawer = ref<boolean | null>(null)
 
-const inertiaProps = usePage().props
+const page = usePage()
 
 defineProps<{
   breadcrumbs?: BreadcrumbItem[]
@@ -37,7 +37,7 @@ function logout() {
     <v-btn
       v-for="i in 5"
       :key="i"
-      class="me-2 text-capitalize hidden-md-and-down"
+      class="me-2 hidden-md-and-down"
     >
       menu {{ i }}
     </v-btn>
@@ -63,20 +63,20 @@ function logout() {
         />
       </template>
       <v-list color="primary">
-        <template v-if="inertiaProps.user">
+        <template v-if="page.props.auth.user">
           <v-list-item>
             <v-avatar
               size="60"
             >
               <v-img
-                :alt="inertiaProps.auth.user.name!"
-                :src="inertiaProps.auth.user!.profile_photo_url!"
+                :alt="page.props.auth.user.name!"
+                :src="page.props.auth.user!.profile_photo_url!"
               />
             </v-avatar>
           </v-list-item>
           <v-list-item
-            :title="inertiaProps.auth.user.name!"
-            :subtitle="inertiaProps.auth.user.email"
+            :title="page.props.auth.user.name!"
+            :subtitle="page.props.auth.user.email"
           />
           <v-divider class="my-2" />
           <Link
