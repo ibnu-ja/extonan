@@ -19,11 +19,29 @@ type Socialstream = {
   connectedAccounts: ConnectedAccount[]
 }
 export interface User {
+  connected_accounts?: ConnectedAccount & {
+    user_id: number
+    provider_id: string
+    name: string | null
+    nickname: string | null
+    email: string | null
+    telephone: string | null
+    token: string | null
+    secret: string | null
+    refresh_token: string | null
+    expires_at: string | null
+    updated_at: string | null
+  }
+  created_at: string
+  current_team_id: string | null
+  profile_photo_path: string | null
+  two_factor_confirmed_at: string | null
+  two_factor_enabled: boolean
   id: number
   name: string
   email: string
-  email_verified_at: string
-  profile_photo_url?: string
+  email_verified_at: string | null
+  profile_photo_url: string | null
 }
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
@@ -37,6 +55,7 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     canUpdateProfileInformation?: boolean
     flash: { [key: string]: string | string[] | unknown }
     hasAccountDeletionFeatures?: boolean
+    hasEmailVerification: boolean
     hasApiFeatures?: boolean
     hasTeamFeatures?: boolean
     hasTermsAndPrivacyPolicyFeature?: boolean
