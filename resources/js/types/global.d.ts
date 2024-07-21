@@ -5,6 +5,7 @@ import { PageProps as AppPageProps } from './'
 
 declare global {
   const route: typeof ziggyRoute
+  const axios: AxiosInstance
   interface Window {
     axios: AxiosInstance
   }
