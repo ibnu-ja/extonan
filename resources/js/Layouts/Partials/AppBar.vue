@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 
 import { ref } from 'vue'
-import { mdiAccount, mdiAccountPlus, mdiExitRun, mdiHome, mdiLogin, mdiMagnify, mdiMenu } from '@mdi/js'
+import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiHome, mdiLogin, mdiMagnify, mdiMenu } from '@mdi/js'
 import { router, usePage } from '@inertiajs/vue3'
 import { VBreadcrumbsItem, VListItem } from 'vuetify/components'
-import Link from '@/Components/InertiaLink.vue'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import { BreadcrumbItem } from '@/types'
@@ -78,15 +77,22 @@ function logout() {
             :title="page.props.auth.user.name!"
             :subtitle="page.props.auth.user.email"
           />
-          <v-divider class="my-2" />
-          <Link
+          <v-list-subheader>Manage account</v-list-subheader>
+          <InertiaLink
             :as="VListItem"
             :prepend-icon="mdiAccount"
             title="Profile"
-            :active="route().current('profile.show')"
             :href="route('profile.show')"
           />
-          <Link
+          <InertiaLink
+            v-if="page.props.jetstream.hasApiFeatures"
+            :as="VListItem"
+            :prepend-icon="mdiApi"
+            title="API Tokens"
+            :href="route('api-tokens.index')"
+          />
+          <v-divider class="my-2" />
+          <InertiaLink
             :as="VListItem"
             :prepend-icon="mdiExitRun"
             title="Logout"
@@ -94,13 +100,13 @@ function logout() {
           />
         </template>
         <template v-else>
-          <Link
+          <InertiaLink
             :as="VListItem"
             :prepend-icon="mdiLogin"
             title="Login"
             :href="route('login')"
           />
-          <Link
+          <InertiaLink
             :as="VListItem"
             :prepend-icon="mdiAccountPlus"
             title="Register"
