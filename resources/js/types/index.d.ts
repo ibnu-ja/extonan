@@ -32,6 +32,19 @@ type UserSession = {
   last_active: string
 }
 
+type ApiToken = {
+  id: number
+  tokenable_type: string
+  tokenable_id: number
+  name: string
+  abilities: string[]
+  last_used_at: string | null
+  expires_at: string | null
+  created_at: string | null
+  updated_at: string | null
+  last_used_ago: string | null
+}
+
 export interface User {
   connected_accounts?: ConnectedAccount & {
     user_id: number
