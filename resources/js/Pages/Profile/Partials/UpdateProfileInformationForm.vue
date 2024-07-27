@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import { router, useForm, usePage } from '@inertiajs/vue3'
 import FormSection from '@/Components/FormSection.vue'
 import { User } from '@/types'
-import InertiaLink from '@/Components/InertiaLink.vue'
 
 const props = defineProps<{
   user: User
@@ -25,7 +24,7 @@ const form = useForm<Form>({
   photo: null,
 })
 
-const verificationLinkSent = ref(null)
+const verificationLinkSent = ref(false)
 const photoPreview = ref<string | ArrayBuffer | null>(null)
 const photoInput = ref<HTMLInputElement | null>(null)
 
@@ -42,6 +41,7 @@ const updateProfileInformation = () => {
 }
 
 const sendEmailVerification = () => {
+  axios.post(route('verification.send'))
   verificationLinkSent.value = true
 }
 
@@ -166,21 +166,22 @@ const clearPhotoFileInput = () => {
           <div v-if="page.props.jetstream.hasEmailVerification && user.email_verified_at === null">
             <p class="text-sm mt-2">
               Your email address is unverified.
-              <InertiaLink
+              <a
                 :href="route('verification.send')"
-                method="post"
                 @click.prevent="sendEmailVerification"
               >
                 Click here to re-send the verification email.
-              </InertiaLink>
+              </a>
             </p>
 
-            <div
-              v-show="verificationLinkSent"
-              class="mt-2 text-success"
-            >
-              A new verification link has been sent to your email address.
-            </div>
+            <v-scroll-x-transition>
+              <div
+                v-show="verificationLinkSent"
+                class="mt-2 text-success"
+              >
+                A new verification link has been sent to your email address.
+              </div>
+            </v-scroll-x-transition>
           </div>
         </div>
       </v-card-text>
