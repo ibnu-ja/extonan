@@ -4,7 +4,6 @@ import { router, useForm, usePage } from '@inertiajs/vue3'
 import FormSection from '@/Components/FormSection.vue'
 import { User } from '@/types'
 import InertiaLink from '@/Components/InertiaLink.vue'
-import ActionMessage from '@/Components/ActionMessage.vue'
 
 const props = defineProps<{
   user: User
@@ -188,11 +187,11 @@ const clearPhotoFileInput = () => {
     </template>
 
     <template #actions>
-      <ActionMessage
-        :on="form.recentlySuccessful"
-      >
-        Saved.
-      </ActionMessage>
+      <v-scroll-x-transition>
+        <div v-show="form.recentlySuccessful">
+          Saved.
+        </div>
+      </v-scroll-x-transition>
 
       <v-spacer />
       <v-btn

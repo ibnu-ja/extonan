@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, VNodeRef } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import ActionMessage from '@/Components/ActionMessage.vue'
 import FormSection from '@/Components/FormSection.vue'
 import { mdiEye } from '@mdi/js/commonjs/mdi'
 import { mdiEyeOff } from '@mdi/js'
@@ -77,12 +76,11 @@ const setPassword = () => {
     </template>
 
     <template #actions>
-      <ActionMessage
-        :on="form.recentlySuccessful"
-        class="mr-3"
-      >
-        Saved.
-      </ActionMessage>
+      <v-scroll-x-transition>
+        <div v-show="form.recentlySuccessful">
+          Saved.
+        </div>
+      </v-scroll-x-transition>
 
       <v-spacer />
       <v-btn
