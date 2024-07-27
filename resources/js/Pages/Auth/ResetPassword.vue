@@ -1,16 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3'
-import AuthenticationCard from '@/Components/AuthenticationCard.vue'
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue'
-import InputError from '@/Components/InputError.vue'
-import InputLabel from '@/Components/InputLabel.vue'
-import PrimaryButton from '@/Components/PrimaryButton.vue'
-import TextInput from '@/Components/TextInput.vue'
+import { VBtn } from 'vuetify/components'
+import AuthLayout from '@/Layouts/AuthLayout.vue'
+import Link from '@/Components/InertiaLink.vue'
+import { mdiEye } from '@mdi/js/commonjs/mdi.js'
+import { mdiEyeOff } from '@mdi/js'
+import { ref } from 'vue'
 
-const props = defineProps({
-  email: String,
-  token: String,
-})
+const props = defineProps<{
+  email: string
+  token: string
+}>()
+
+const showP = ref(true)
+const showCP = ref(true)
 
 const form = useForm({
   token: props.token,
@@ -29,78 +32,72 @@ const submit = () => {
 <template>
   <Head title="Reset Password" />
 
-  <AuthenticationCard>
-    <template #logo>
-      <AuthenticationCardLogo />
-    </template>
+  <AuthLayout>
+    <Link
+      :as="VBtn"
+      href="/"
+      flat
+      icon
+      size="100"
+      class="mb-4"
+    >
+      <v-avatar
+        color="grey darken-1"
+        size="100"
+      />
+    </Link>
 
-    <form @submit.prevent="submit">
-      <div>
-        <InputLabel
-          for="email"
-          value="Email"
-        />
-        <TextInput
-          id="email"
-          v-model="form.email"
-          type="email"
-          class="mt-1 block w-full"
-          required
-          autofocus
-          autocomplete="username"
-        />
-        <InputError
-          class="mt-2"
-          :message="form.errors.email"
-        />
-      </div>
-
-      <div class="mt-4">
-        <InputLabel
-          for="password"
-          value="Password"
-        />
-        <TextInput
-          id="password"
-          v-model="form.password"
-          type="password"
-          class="mt-1 block w-full"
-          required
-          autocomplete="new-password"
-        />
-        <InputError
-          class="mt-2"
-          :message="form.errors.password"
-        />
-      </div>
-
-      <div class="mt-4">
-        <InputLabel
-          for="password_confirmation"
-          value="Confirm Password"
-        />
-        <TextInput
-          id="password_confirmation"
-          v-model="form.password_confirmation"
-          type="password"
-          class="mt-1 block w-full"
-          required
-          autocomplete="new-password"
-        />
-        <InputError
-          class="mt-2"
-          :message="form.errors.password_confirmation"
-        />
-      </div>
-
-      <div class="flex items-center justify-end mt-4">
-        <PrimaryButton
-          :class="{ 'opacity-25': form.processing }"
-          :disabled="form.processing"
-        >
-          Reset Password
-        </PrimaryButton>
-      </div>
-    </form>
-  </AuthenticationCard>
+    <v-card
+      width="100%"
+      max-width="400px"
+    >
+      <v-form
+        :disabled="form.processing"
+        @submit.prevent="submit"
+      >
+        <v-card-text>
+          <v-text-field
+            v-model="form.password"
+            :error-messages="form.errors.password"
+            placeholder="************"
+            variant="outlined"
+            label="Password"
+            required
+            autocomplete="new-password"
+            :append-inner-icon="showP ? mdiEye : mdiEyeOff"
+            :type="showP ? 'text' : 'password'"
+            hide-details="auto"
+            class="mb-4"
+            @click:append-inner="showP = !showP"
+          />
+          <v-text-field
+            v-model="form.password_confirmation"
+            :error-messages="form.errors.password_confirmation"
+            placeholder="************"
+            variant="outlined"
+            label="Confirm Password"
+            required
+            autocomplete="new-password"
+            :append-inner-icon="showCP ? mdiEye : mdiEyeOff"
+            :type="showCP ? 'text' : 'password'"
+            hide-details="auto"
+            class="mb-4"
+            @click:append-inner="showCP = !showCP"
+          />
+          <div
+            class="d-flex align-center gap-4"
+          >
+            <v-spacer />
+            <v-btn
+              color="primary"
+              type="submit"
+              :disabled="form.processing"
+            >
+              Reset Password
+            </v-btn>
+          </div>
+        </v-card-text>
+      </v-form>
+    </v-card>
+  </AuthLayout>
 </template>

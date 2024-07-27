@@ -1,16 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
-import AuthenticationCard from '@/Components/AuthenticationCard.vue'
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue'
-import InputError from '@/Components/InputError.vue'
-import InputLabel from '@/Components/InputLabel.vue'
-import PrimaryButton from '@/Components/PrimaryButton.vue'
-import TextInput from '@/Components/TextInput.vue'
+import { VBtn } from 'vuetify/components'
+import AuthLayout from '@/Layouts/AuthLayout.vue'
+import Link from '@/Components/InertiaLink.vue'
+import { mdiEye } from '@mdi/js/commonjs/mdi.js'
+import { mdiEyeOff } from '@mdi/js'
 
 const form = useForm({
   password: '',
 })
+
+const showP = ref(false)
 
 const passwordInput = ref(null)
 
@@ -28,46 +29,61 @@ const submit = () => {
 <template>
   <Head title="Secure Area" />
 
-  <AuthenticationCard>
-    <template #logo>
-      <AuthenticationCardLogo />
-    </template>
+  <AuthLayout>
+    <Link
+      :as="VBtn"
+      href="/"
+      flat
+      icon
+      size="100"
+      class="mb-4"
+    >
+      <v-avatar
+        color="grey darken-1"
+        size="100"
+      />
+    </Link>
 
-    <div class="mb-4 text-sm text-gray-600">
-      This is a secure area of the application. Please confirm your password before continuing.
-    </div>
-
-    <form @submit.prevent="submit">
-      <div>
-        <InputLabel
-          for="password"
-          value="Password"
-        />
-        <TextInput
-          id="password"
-          ref="passwordInput"
-          v-model="form.password"
-          type="password"
-          class="mt-1 block w-full"
-          required
-          autocomplete="current-password"
-          autofocus
-        />
-        <InputError
-          class="mt-2"
-          :message="form.errors.password"
-        />
-      </div>
-
-      <div class="flex justify-end mt-4">
-        <PrimaryButton
-          class="ms-4"
-          :class="{ 'opacity-25': form.processing }"
-          :disabled="form.processing"
-        >
-          Confirm
-        </PrimaryButton>
-      </div>
-    </form>
-  </AuthenticationCard>
+    <v-card
+      width="100%"
+      max-width="400px"
+    >
+      <v-form
+        :disabled="form.processing"
+        @submit.prevent="submit"
+      >
+        <v-card-text>
+          <p class="mb-4">
+            This is a secure area of the application. Please confirm your password before continuing.
+          </p>
+          <v-text-field
+            v-model="form.password"
+            variant="outlined"
+            label="Password"
+            placeholder="************"
+            required
+            autocomplete="current-password"
+            :error-messages="form.errors.password"
+            :append-inner-icon="showP ? mdiEye : mdiEyeOff"
+            :type="showP ? 'text' : 'password'"
+            class="mb-4"
+            hide-details="auto"
+            @click:append-inner="showP = !showP"
+          />
+          <div
+            class="d-flex align-center gap-4"
+          >
+            <v-spacer />
+            <v-btn
+              color="primary"
+              type="submit"
+              :disabled="form.processing"
+            >
+              Confirm
+            </v-btn>
+          </div>
+        </v-card-text>
+      </v-form>
+    </v-card>
+  </AuthLayout>
 </template>
