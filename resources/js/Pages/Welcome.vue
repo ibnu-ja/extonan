@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Head } from '@inertiajs/vue3'
-import Layout from '@/Layouts/Layout.vue'
+import Layout from '@/Layouts/AppLayout.vue'
 
 defineProps<{
   canLogin?: boolean
