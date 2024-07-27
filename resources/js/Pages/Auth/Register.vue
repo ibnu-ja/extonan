@@ -19,8 +19,6 @@ const form = useForm({
 const showP = ref(false)
 const showCP = ref(false)
 
-const test = () => alert('suuu')
-
 const submit = () => {
   console.log('submitting')
   form.post(route('register'), {
@@ -48,9 +46,6 @@ const inertiaProps = usePage().props
         size="100"
       />
     </InertiaLink>
-    <v-btn @click="test">
-      asd
-    </v-btn>
     <v-card
       width="100%"
       max-width="400px"
