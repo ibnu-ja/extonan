@@ -132,7 +132,7 @@ const submit = () => {
             label="Remember me"
           />
           <div
-            class="d-flex align-center"
+            class="d-flex align-center gap-4"
           >
             <Link
               v-if="canResetPassword"
