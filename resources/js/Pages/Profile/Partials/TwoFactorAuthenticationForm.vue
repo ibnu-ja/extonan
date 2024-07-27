@@ -210,10 +210,9 @@ const disableTwoFactorAuthentication = () => {
                         v-bind="slot.props"
                         variant="plain"
                         style="position: absolute; top: 4px; right: 4px"
+                        :icon="mdiContentCopy"
                         @click="copy()"
-                      >
-                        <v-icon :icon="mdiContentCopy" />
-                      </v-btn>
+                      />
                     </template>
 
                     <span v-text="copied ? 'Copied!': 'Copy Content'" />
