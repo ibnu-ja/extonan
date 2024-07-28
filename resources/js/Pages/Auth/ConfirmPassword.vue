@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, VNodeRef } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { VBtn } from 'vuetify/components'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
@@ -13,14 +13,13 @@ const form = useForm({
 
 const showP = ref(false)
 
-const passwordInput = ref(null)
+const passwordInput = ref<VNodeRef | null>(null)
 
 const submit = () => {
   form.post(route('password.confirm'), {
     onFinish: () => {
       form.reset()
-
-      passwordInput.value.focus()
+      passwordInput.value?.focus()
     },
   })
 }

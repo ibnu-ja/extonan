@@ -25,7 +25,11 @@ const form = useForm<Form>({
 })
 
 const verificationLinkSent = ref(false)
-const photoPreview = ref<string | ArrayBuffer | null>(null)
+const photoPreview = ref<string | {
+  readonly byteLength: number
+  slice: (begin: number, end?: number | undefined) => ArrayBuffer
+  readonly [Symbol.toStringTag]: string
+} | null | undefined>(null)
 const photoInput = ref<HTMLInputElement | null>(null)
 
 const updateProfileInformation = () => {
@@ -46,18 +50,18 @@ const sendEmailVerification = () => {
 }
 
 const selectNewPhoto = () => {
-  photoInput.value.click()
+  photoInput.value?.click()
 }
 
 const updatePhotoPreview = () => {
-  const photo = photoInput.value.files[0]
+  const photo = photoInput.value?.files?.[0]
 
   if (!photo) return
 
   const reader = new FileReader()
 
   reader.onload = (e) => {
-    photoPreview.value = e.target.result
+    photoPreview.value = e.target?.result
   }
 
   reader.readAsDataURL(photo)
@@ -75,7 +79,7 @@ const deletePhoto = () => {
 
 const clearPhotoFileInput = () => {
   if (photoInput.value?.value) {
-    photoInput.value.value = null
+    photoInput.value = null
   }
 }
 </script>
