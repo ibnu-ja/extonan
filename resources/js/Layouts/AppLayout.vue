@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import { computed, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useTheme } from 'vuetify'
 import AppBar from '@/Layouts/Partials/AppBar.vue'
 import Drawer from '@/Layouts/Partials/Drawer.vue'
@@ -20,6 +20,8 @@ watchEffect(() => {
   )
 })
 
+const drawer = ref<boolean | undefined>()
+
 defineProps<{
   breadcrumbs?: BreadcrumbItem[]
   title?: string
@@ -30,8 +32,11 @@ defineProps<{
   <Head :title="title" />
   <v-app>
     <Banner />
-    <AppBar :breadcrumbs="breadcrumbs" />
-    <Drawer />
+    <AppBar
+      v-model:drawer="drawer"
+      :breadcrumbs="breadcrumbs"
+    />
+    <Drawer v-model="drawer" />
     <v-main>
       <!-- Page Heading -->
       <!-- mt-md-6-->

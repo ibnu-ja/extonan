@@ -1,33 +1,50 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 
-const drawer = ref<boolean | null>(null)
+import { VListItem } from 'vuetify/components'
+import { usePage } from '@inertiajs/vue3'
+import InertiaLink from '@/Components/InertiaLink.vue'
+import { watch } from 'vue'
+import { useDisplay } from 'vuetify'
+
+const model = defineModel<boolean | undefined>()
+
+const { name } = useDisplay()
+
+watch(name, async () => {
+  model.value = undefined
+})
+
+const page = usePage()
 </script>
 
 <template>
   <v-navigation-drawer
-    v-model="drawer"
+    v-model="model"
     temporary
     location="top"
   >
     <v-list>
-      <v-list-item
-        title="My Application"
-        subtitle="Vuetify"
-      />
-      <v-divider />
-      <v-list-item
-        link
-        title="List Item 1"
-      />
-      <v-list-item
-        link
-        title="List Item 2"
-      />
-      <v-list-item
-        link
-        title="List Item 3"
-      />
+      <!--<v-list-item-->
+      <!--  title="My Application"-->
+      <!--  subtitle="Vuetify"-->
+      <!--/>-->
+      <!--<v-divider />-->
+      <InertiaLink
+        :as="VListItem"
+        exact-active
+        class="mr-2"
+        :href="route('home')"
+      >
+        Home
+      </InertiaLink>
+
+      <InertiaLink
+        v-if="page.props.auth.user"
+        :as="VListItem"
+        :href="route('dashboard')"
+      >
+        Dashboard
+      </InertiaLink>
     </v-list>
   </v-navigation-drawer>
 </template>

@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 
-import { ref } from 'vue'
-import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiHome, mdiLogin, mdiMagnify, mdiMenu } from '@mdi/js'
+import { ref, watch } from 'vue'
+import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiLogin, mdiMenu } from '@mdi/js'
 import { router, usePage } from '@inertiajs/vue3'
-import { VBreadcrumbsItem, VBtn, VListItem } from 'vuetify/components'
+import { VBtn, VListItem, VTab } from 'vuetify/components'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import { BreadcrumbItem } from '@/types'
 
-const drawer = ref<boolean | null>(null)
+const drawer = defineModel<boolean | undefined>('drawer')
 
 const page = usePage()
 
@@ -16,12 +16,9 @@ defineProps<{
   breadcrumbs?: BreadcrumbItem[]
 }>()
 
-const menu = [
-  {
-    label: 'Dashboard',
-    url: route('dashboard'),
-  },
-]
+const test = ref(route(route().current() as string))
+
+watch(test, (e: unknown) => router.visit(e as string))
 
 function logout() {
   router.post(route('logout'))
@@ -30,42 +27,48 @@ function logout() {
 
 <template>
   <v-app-bar extension-height="34">
-    <v-btn
-      v-model="drawer"
-      class="hidden-lg-and-up"
-      :icon="mdiMenu"
-      @click="drawer = !drawer"
-    />
-    <v-app-bar-nav-icon>
-      <InertiaLink
-        :as="VBtn"
-        href="/"
-        :icon="mdiHome"
+    <v-app-bar-nav-icon class="hidden-lg-and-up">
+      <v-btn
+        v-model="drawer"
+        :icon="mdiMenu"
+        @click="drawer = !drawer"
       />
     </v-app-bar-nav-icon>
-
     <InertiaLink
-      v-for="i in menu"
-      :key="i.url"
-      :as="VBtn"
-      :href="i.url"
-      class="me-2 hidden-md-and-down"
+      href="/"
+      class="mx-4"
     >
-      {{ i.label }}
+      <img
+        width="200"
+        src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Google_Play_2022_logo.svg"
+        alt="application logo"
+      >
     </InertiaLink>
+    <v-tabs
+      v-model="test"
+      class="hidden-md-and-down"
+      color="primary"
+    >
+      <InertiaLink
+        :as="VTab"
+        exact-active
+        class="mr-2"
+        :value="route('home')"
+      >
+        Home
+      </InertiaLink>
+
+      <InertiaLink
+        v-if="page.props.auth.user"
+        :as="VTab"
+        :value="route('dashboard')"
+      >
+        Dashboard
+      </InertiaLink>
+    </v-tabs>
     <v-spacer />
-    <v-text-field
-      class="mr-3"
-      disabled
-      density="compact"
-      variant="outlined"
-      :prepend-inner-icon="mdiMagnify"
-      hide-details
-      label="Search"
-    />
-
     <ThemeSelector />
-
+    <!--user menu-->
     <v-menu location="bottom right">
       <template #activator="{ props }">
         <v-btn
@@ -128,27 +131,27 @@ function logout() {
         </template>
       </v-list>
     </v-menu>
-    <template
-      v-if="breadcrumbs"
-      #extension
-    >
-      <v-breadcrumbs
-        :items="breadcrumbs"
-        bg-color="surface-light"
-        density="compact"
-        class="flex-grow-1"
-      >
-        <template #item="{item}">
-          <InertiaLink
-            :as="VBreadcrumbsItem"
-            :disabled="item.disabled"
-            :exact-active="item.exact"
-            :href="item.href"
-          >
-            {{ item.title }}
-          </InertiaLink>
-        </template>
-      </v-breadcrumbs>
-    </template>
+    <!--<template-->
+    <!--  v-if="breadcrumbs"-->
+    <!--  #extension-->
+    <!--&gt;-->
+    <!--  <v-breadcrumbs-->
+    <!--    :items="breadcrumbs"-->
+    <!--    bg-color="surface-light"-->
+    <!--    density="compact"-->
+    <!--    class="flex-grow-1"-->
+    <!--  >-->
+    <!--    <template #item="{item}">-->
+    <!--      <InertiaLink-->
+    <!--        :as="VBreadcrumbsItem"-->
+    <!--        :disabled="item.disabled"-->
+    <!--        :exact-active="item.exact"-->
+    <!--        :href="item.href"-->
+    <!--      >-->
+    <!--        {{ item.title }}-->
+    <!--      </InertiaLink>-->
+    <!--    </template>-->
+    <!--  </v-breadcrumbs>-->
+    <!--</template>-->
   </v-app-bar>
 </template>
