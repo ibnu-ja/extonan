@@ -1,80 +1,81 @@
-<script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
-import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm.vue'
-import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue'
+<script setup lang="ts">
+import { usePage } from '@inertiajs/vue3'
 import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue'
-import SectionBorder from '@/Components/SectionBorder.vue'
+import Layout from '@/Layouts/AppLayout.vue'
 import SetPasswordForm from '@/Pages/Profile/Partials/SetPasswordForm.vue'
-import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue'
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue'
+import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue'
+import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm.vue'
+import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue'
+import { UserSession } from '@/types'
 
-defineProps({
-  confirmsTwoFactorAuthentication: Boolean,
-  sessions: Array,
-})
+defineProps<{
+  confirmsTwoFactorAuthentication: boolean
+  sessions: UserSession[]
+}>()
+
+const page = usePage()
 </script>
 
 <template>
-  <AppLayout title="Profile">
+  <Layout title="Profile">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h1 class="text-h4 text-md-h3">
         Profile
-      </h2>
+      </h1>
     </template>
 
-    <div>
-      <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-        <div v-if="$page.props.jetstream.canUpdateProfileInformation">
-          <UpdateProfileInformationForm :user="$page.props.auth.user" />
+    <v-container>
+      <template v-if="page.props.jetstream.canUpdateProfileInformation">
+        <UpdateProfileInformationForm :user="page.props.auth.user" />
 
-          <SectionBorder />
-        </div>
+        <v-divider class="my-8" />
+      </template>
 
-        <div v-if="$page.props.jetstream.canUpdatePassword && $page.props.socialstream.hasPassword">
-          <UpdatePasswordForm class="mt-10 sm:mt-0" />
+      <template v-if="page.props.jetstream.canUpdatePassword && page.props.socialstream.hasPassword">
+        <UpdatePasswordForm class="mt-10 mt-sm-0" />
 
-          <SectionBorder />
-        </div>
+        <v-divider class="my-8" />
+      </template>
 
-        <div v-else>
-          <SetPasswordForm class="mt-10 sm:mt-0" />
+      <template v-else>
+        <SetPasswordForm class="mt-10 mt-sm-0" />
 
-          <SectionBorder />
-        </div>
+        <v-divider class="my-8" />
+      </template>
 
-        <div
-          v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword"
-        >
-          <TwoFactorAuthenticationForm
-            :requires-confirmation="confirmsTwoFactorAuthentication"
-            class="mt-10 sm:mt-0"
-          />
+      <template
+        v-if="page.props.jetstream.canManageTwoFactorAuthentication && page.props.socialstream.hasPassword"
+      >
+        <TwoFactorAuthenticationForm
+          :requires-confirmation="confirmsTwoFactorAuthentication"
+          class="mt-10 mt-sm-0"
+        />
 
-          <SectionBorder />
-        </div>
+        <v-divider class="my-8" />
+      </template>
 
-        <div v-if="$page.props.socialstream.show">
-          <ConnectedAccountsForm class="mt-10 sm:mt-0" />
-        </div>
+      <template v-if="page.props.socialstream.show">
+        <ConnectedAccountsForm class="mt-10 mt-sm-0" />
+      </template>
 
-        <div v-if="$page.props.socialstream.hasPassword">
-          <SectionBorder />
+      <template v-if="page.props.socialstream.hasPassword">
+        <v-divider class="my-8" />
 
-          <LogoutOtherBrowserSessionsForm
-            :sessions="sessions"
-            class="mt-10 sm:mt-0"
-          />
-        </div>
+        <LogoutOtherBrowserSessionsForm
+          :sessions="sessions"
+          class="mt-10 mt-sm-0"
+        />
+      </template>
 
-        <template
-          v-if="$page.props.jetstream.hasAccountDeletionFeatures && $page.props.socialstream.hasPassword"
-        >
-          <SectionBorder />
+      <template
+        v-if="page.props.jetstream.hasAccountDeletionFeatures && page.props.socialstream.hasPassword"
+      >
+        <v-divider class="my-8" />
 
-          <DeleteUserForm class="mt-10 sm:mt-0" />
-        </template>
-      </div>
-    </div>
-  </AppLayout>
+        <DeleteUserForm class="mt-10 mt-sm-0" />
+      </template>
+    </v-container>
+  </Layout>
 </template>

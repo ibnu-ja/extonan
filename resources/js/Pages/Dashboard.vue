@@ -1,22 +1,32 @@
-<script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
+<script setup lang="ts">
 import Welcome from '@/Components/Welcome.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { BreadcrumbItem } from '@/types/index.js'
+
+const breadcrumbs: BreadcrumbItem[] = [
+  {
+    title: 'Home',
+    disabled: false,
+    href: '/',
+  },
+  {
+    title: 'Dashboard',
+    disabled: true,
+  },
+]
 </script>
 
 <template>
-  <AppLayout title="Dashboard">
+  <AppLayout
+    :breadcrumbs="breadcrumbs"
+    title="Dashboard"
+  >
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h1 class="text-h4 text-md-h3">
         Dashboard
-      </h2>
+      </h1>
     </template>
 
-    <div class="py-12">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-          <Welcome />
-        </div>
-      </div>
-    </div>
+    <Welcome />
   </AppLayout>
 </template>

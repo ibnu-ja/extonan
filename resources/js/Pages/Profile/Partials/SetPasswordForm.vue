@@ -1,14 +1,13 @@
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, VNodeRef } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import ActionMessage from '@/Components/ActionMessage.vue'
-import Button from '@/Components/PrimaryButton.vue'
 import FormSection from '@/Components/FormSection.vue'
-import InputError from '@/Components/InputError.vue'
-import InputLabel from '@/Components/InputLabel.vue'
-import TextInput from '@/Components/TextInput.vue'
+import { mdiEye } from '@mdi/js/commonjs/mdi'
+import { mdiEyeOff } from '@mdi/js'
 
-const passwordInput = ref(null)
+const passwordInput = ref<VNodeRef | null>(null)
+const showPassword = ref(false)
+const showPasswordConfirmation = ref(false)
 
 const form = useForm({
   current_password: '',
@@ -42,58 +41,61 @@ const setPassword = () => {
     </template>
 
     <template #form>
-      <div class="col-span-6 sm:col-span-4">
-        <InputLabel
-          for="password"
-          value="New Password"
-        />
-        <TextInput
-          id="password"
+      <v-card-text>
+        <v-text-field
           ref="passwordInput"
           v-model="form.password"
+          variant="outlined"
+          label="Password"
+          required
           autocomplete="new-password"
-          class="mt-1 block w-full"
-          type="password"
+          :error-messages="form.errors.password"
+          :append-inner-icon="showPassword ? mdiEye : mdiEyeOff"
+          :type="showPassword ? 'text' : 'password'"
+          :disabled="form.processing"
+          hide-details="auto"
+          class="mb-4"
+          @click:append-inner="showPassword = !showPassword"
         />
-        <InputError
-          :message="form.errors.password"
-          class="mt-2"
-        />
-      </div>
 
-      <div class="col-span-6 sm:col-span-4">
-        <InputLabel
-          for="password_confirmation"
-          value="Confirm Password"
-        />
-        <TextInput
-          id="password_confirmation"
+        <v-text-field
           v-model="form.password_confirmation"
+          variant="outlined"
+          label="Confirm Password"
+          required
           autocomplete="new-password"
-          class="mt-1 block w-full"
-          type="password"
+          :error-messages="form.errors.password_confirmation"
+          :append-inner-icon="showPasswordConfirmation ? mdiEye : mdiEyeOff"
+          :type="showPasswordConfirmation ? 'text' : 'password'"
+          :disabled="form.processing"
+          hide-details="auto"
+          class="mb-4"
+          @click:append-inner="showPasswordConfirmation = !showPasswordConfirmation"
         />
-        <InputError
-          :message="form.errors.password_confirmation"
-          class="mt-2"
-        />
-      </div>
+      </v-card-text>
     </template>
 
     <template #actions>
-      <ActionMessage
-        :on="form.recentlySuccessful"
-        class="mr-3"
-      >
-        Saved.
-      </ActionMessage>
+      <v-scroll-x-transition>
+        <div v-show="form.recentlySuccessful">
+          Saved.
+        </div>
+      </v-scroll-x-transition>
 
-      <Button
-        :class="{ 'opacity-25': form.processing }"
+      <v-spacer />
+      <v-btn
         :disabled="form.processing"
+        @click="form.reset()"
+      >
+        Clear
+      </v-btn>
+      <v-btn
+        :disabled="form.processing"
+        type="submit"
+        color="primary"
       >
         Save
-      </Button>
+      </v-btn>
     </template>
   </FormSection>
 </template>

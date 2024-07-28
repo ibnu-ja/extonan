@@ -2,11 +2,8 @@
 import { ref } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import ActionSection from '@/Components/ActionSection.vue'
-import DangerButton from '@/Components/DangerButton.vue'
-import DialogModal from '@/Components/DialogModal.vue'
-import InputError from '@/Components/InputError.vue'
-import SecondaryButton from '@/Components/SecondaryButton.vue'
-import TextInput from '@/Components/TextInput.vue'
+import { mdiEye } from '@mdi/js/commonjs/mdi.js'
+import { mdiEyeOff } from '@mdi/js'
 
 const confirmingUserDeletion = ref(false)
 const passwordInput = ref(null)
@@ -14,6 +11,8 @@ const passwordInput = ref(null)
 const form = useForm({
   password: '',
 })
+
+const showP = ref(false)
 
 const confirmUserDeletion = () => {
   confirmingUserDeletion.value = true
@@ -48,61 +47,73 @@ const closeModal = () => {
     </template>
 
     <template #content>
-      <div class="max-w-xl text-sm text-gray-600">
-        Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
-      </div>
+      <v-card-text>
+        <p>
+          Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
+        </p>
+      </v-card-text>
 
-      <div class="mt-5">
-        <DangerButton @click="confirmUserDeletion">
+      <v-card-actions>
+        <v-btn
+          color="error"
+          @click="confirmUserDeletion"
+        >
           Delete Account
-        </DangerButton>
-      </div>
+        </v-btn>
+      </v-card-actions>
 
       <!-- Delete Account Confirmation Modal -->
-      <DialogModal
-        :show="confirmingUserDeletion"
-        @close="closeModal"
+      <v-dialog
+        v-model="confirmingUserDeletion"
+        max-width="600"
       >
-        <template #title>
-          Delete Account
-        </template>
-
-        <template #content>
-          Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
-
-          <div class="mt-4">
-            <TextInput
-              ref="passwordInput"
-              v-model="form.password"
-              type="password"
-              class="mt-1 block w-3/4"
-              placeholder="Password"
-              autocomplete="current-password"
-              @keyup.enter="deleteUser"
-            />
-
-            <InputError
-              :message="form.errors.password"
-              class="mt-2"
-            />
-          </div>
-        </template>
-
-        <template #footer>
-          <SecondaryButton @click="closeModal">
-            Cancel
-          </SecondaryButton>
-
-          <DangerButton
-            class="ms-3"
-            :class="{ 'opacity-25': form.processing }"
+        <v-card>
+          <v-form
             :disabled="form.processing"
-            @click="deleteUser"
+            @submit.prevent="deleteUser"
           >
-            Delete Account
-          </DangerButton>
-        </template>
-      </DialogModal>
+            <v-card-title>
+              Delete Account
+            </v-card-title>
+
+            <v-card-text>
+              <p class="mb-4">
+                Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
+              </p>
+
+              <v-text-field
+                ref="passwordInput"
+                v-model="form.password"
+                variant="outlined"
+                type="password"
+                label="Password"
+                autocomplete="current-password"
+                :error-messages="form.errors.password"
+                :append-inner-icon="showP ? mdiEye : mdiEyeOff"
+                hide-details="auto"
+                @click:append-inner="showP = !showP"
+              />
+            </v-card-text>
+
+            <v-card-actions>
+              <v-btn
+                :disabled="form.processing"
+                @click="closeModal"
+              >
+                Cancel
+              </v-btn>
+
+              <v-btn
+                :disabled="form.processing"
+                type="submit"
+                color="error"
+              >
+                Delete Account
+              </v-btn>
+            </v-card-actions>
+          </v-form>
+        </v-card>
+      </v-dialog>
     </template>
   </ActionSection>
 </template>

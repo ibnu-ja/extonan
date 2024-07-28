@@ -1,0 +1,50 @@
+@use "sass:map";
+
+$grid-breakpoints: (
+    "xs": 0,
+    "sm": 600px,
+    "md": 960px,
+    "lg": 1264px,
+    "xl": 1904px,
+);
+$gap: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 44,
+48, 52, 56, 60, 64, 72, 80, 96;
+$opacity: 0, 10, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100;
+$index: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50;
+$line-clamp: 1, 2, 3, 4, 5, 6;
+
+$bd: thin solid currentColor;
+$borders: 0, 2, 3, 4, 6, 8;
+
+$pagination-item-margin: .3rem !default;
+
+.sidebar {
+    @media screen and (min-width: map.get($grid-breakpoints, "md")) {
+        order: -1;
+    }
+}
+
+ul.column-list {
+    column-count: 3;
+    list-style: none;
+    li {
+        break-inside: avoid-column;
+    }
+}
+
+// a {
+//   text-decoration: none;
+// }
+
+// anchor hover underline
+.text-hover-underline:hover {
+    text-decoration: underline !important;
+}
+
+.color-initial {
+    color: initial !important;
+}
+
+.v--table-variant-plaint {
+    background-color: rgb(var(--v-theme-background)) !important;
+}

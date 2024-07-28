@@ -43,10 +43,26 @@ declare module 'ziggy-js' {
     'two-factor.qr-code': []
     'two-factor.secret-key': []
     'two-factor.recovery-codes': []
+    'terms.show': []
+    'policy.show': []
     'profile.show': []
     'other-browser-sessions.destroy': []
     'current-user-photo.destroy': []
     'current-user.destroy': []
+    'api-tokens.index': []
+    'api-tokens.store': []
+    'api-tokens.update': [
+      {
+        name: 'token'
+        required: true
+      },
+    ]
+    'api-tokens.destroy': [
+      {
+        name: 'token'
+        required: true
+      },
+    ]
     'sanctum.csrf-cookie': []
     'dashboard': []
   }

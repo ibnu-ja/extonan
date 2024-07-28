@@ -1,26 +1,17 @@
-<script setup>
-import { ref, reactive, nextTick } from 'vue'
-import DialogModal from './DialogModal.vue'
-import InputError from './InputError.vue'
-import PrimaryButton from './PrimaryButton.vue'
-import SecondaryButton from './SecondaryButton.vue'
-import TextInput from './TextInput.vue'
+<script setup lang="ts">
+import { nextTick, reactive, ref, VNodeRef } from 'vue'
+import { mdiEye } from '@mdi/js/commonjs/mdi'
+import { mdiEyeOff } from '@mdi/js'
 
 const emit = defineEmits(['confirmed'])
-
-defineProps({
-  title: {
-    type: String,
-    default: 'Confirm Password',
-  },
-  content: {
-    type: String,
-    default: 'For your security, please confirm your password to continue.',
-  },
-  button: {
-    type: String,
-    default: 'Confirm',
-  },
+withDefaults(defineProps<{
+  title: string
+  content: string
+  button: string
+}>(), {
+  title: 'Confirm Password',
+  content: 'For your security, please confirm your password to continue.',
+  button: 'Confirm',
 })
 
 const confirmingPassword = ref(false)
@@ -31,7 +22,7 @@ const form = reactive({
   processing: false,
 })
 
-const passwordInput = ref(null)
+const passwordInput = ref<VNodeRef | null>(null)
 
 const startConfirmingPassword = () => {
   axios.get(route('password.confirmation')).then((response) => {
@@ -44,6 +35,8 @@ const startConfirmingPassword = () => {
     }
   })
 }
+
+const showP = ref(false)
 
 const confirmPassword = () => {
   form.processing = true
@@ -75,49 +68,60 @@ const closeModal = () => {
       <slot />
     </span>
 
-    <DialogModal
-      :show="confirmingPassword"
-      @close="closeModal"
-    >
-      <template #title>
-        {{ title }}
-      </template>
+  </span>
 
-      <template #content>
-        {{ content }}
+  <v-dialog
+    v-model="confirmingPassword"
+    max-width="600"
+  >
+    <v-card>
+      <v-form
+        :disabled="form.processing"
+        @submit.prevent="confirmPassword"
+      >
+        <v-card-title>
+          {{ title }}
+        </v-card-title>
 
-        <div class="mt-4">
-          <TextInput
+        <v-card-text>
+          <p class="mb-4">
+            {{ content }}
+          </p>
+
+          <v-text-field
             ref="passwordInput"
             v-model="form.password"
-            type="password"
-            class="mt-1 block w-3/4"
-            placeholder="Password"
+            variant="outlined"
+            label="Password"
+            placeholder="************"
+            required
             autocomplete="current-password"
-            @keyup.enter="confirmPassword"
+            :error-messages="form.error"
+            :append-inner-icon="showP ? mdiEye : mdiEyeOff"
+            :type="showP ? 'text' : 'password'"
+            class="mb-4"
+            hide-details="auto"
+            @click:append-inner="showP = !showP"
           />
+        </v-card-text>
 
-          <InputError
-            :message="form.error"
-            class="mt-2"
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="form.processing"
+            @click="confirmingPassword = false"
+          >
+            Nevermind
+          </v-btn>
+
+          <v-btn
+            :disabled="form.processing"
+            color="primary"
+            type="submit"
+            :text="button"
           />
-        </div>
-      </template>
-
-      <template #footer>
-        <SecondaryButton @click="closeModal">
-          Cancel
-        </SecondaryButton>
-
-        <PrimaryButton
-          class="ms-3"
-          :class="{ 'opacity-25': form.processing }"
-          :disabled="form.processing"
-          @click="confirmPassword"
-        >
-          {{ button }}
-        </PrimaryButton>
-      </template>
-    </DialogModal>
-  </span>
+        </v-card-actions>
+      </v-form>
+    </v-card>
+  </v-dialog>
 </template>

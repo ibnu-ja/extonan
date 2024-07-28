@@ -1,19 +1,13 @@
-<script setup>
-import { ref } from 'vue'
+<script lang="ts" setup>
+import { ref, VNodeRef } from 'vue'
 import { useForm, usePage } from '@inertiajs/vue3'
-import ActionLink from '@/Components/ActionLink.vue'
 import ActionSection from '@/Components/ActionSection.vue'
 import ConnectedAccount from '@/Components/ConnectedAccount.vue'
-import DangerButton from '@/Components/DangerButton.vue'
-import DialogModal from '@/Components/DialogModal.vue'
-import InputError from '@/Components/InputError.vue'
-import PrimaryButton from '@/Components/PrimaryButton.vue'
-import SecondaryButton from '@/Components/SecondaryButton.vue'
-import TextInput from '@/Components/TextInput.vue'
+import { SocialstreamProviders } from '@/types'
 
-const accountId = ref(null)
+const accountId = ref<number | null>(null)
 const confirmingRemoveAccount = ref(false)
-const passwordInput = ref(null)
+const passwordInput = ref<VNodeRef | null>(null)
 
 const page = usePage()
 
@@ -21,29 +15,29 @@ const form = useForm({
   password: '',
 })
 
-const getAccountForProvider = provider => page.props.socialstream.connectedAccounts
+const getAccountForProvider = (provider: SocialstreamProviders) => page.props.socialstream.connectedAccounts
   .filter(account => account.provider === provider.id)
   .shift()
 
-const setProfilePhoto = (id) => {
+function setProfilePhoto(id: number | undefined) {
   form.put(route('user-profile-photo.set', { id }), {
     preserveScroll: true,
   })
 }
 
-const confirmRemoveAccount = (id) => {
-  accountId.value = id
+const confirmRemoveAccount = (id: number | undefined) => {
+  accountId.value = id!
 
   confirmingRemoveAccount.value = true
 
-  setTimeout(() => passwordInput.value.focus(), 250)
+  setTimeout(() => passwordInput.value?.focus(), 250)
 }
 
 const removeAccount = () => {
-  form.delete(route('connected-accounts.destroy', { id: accountId.value }), {
+  form.delete(route('connected-accounts.destroy', { id: accountId.value! }), {
     preserveScroll: true,
     onSuccess: () => closeModal(),
-    onError: () => passwordInput.value.focus(),
+    onError: () => passwordInput.value?.focus(),
     onFinish: () => form.reset(),
   })
 }
@@ -67,95 +61,104 @@ const closeModal = () => {
     </template>
 
     <template #content>
-      <div class="p-4 bg-red-500/10 text-red-500 border-l-4 border-red-600 rounded font-medium text-sm">
-        If you feel any of your connected accounts have been compromised, you should disconnect them
-        immediately and change your password.
-      </div>
-
-      <div class="space-y-6 mt-6">
-        <div
-          v-for="(provider) in $page.props.socialstream.providers"
-          :key="provider"
+      <v-card-text>
+        <v-alert
+          type="info"
+          variant="tonal"
         >
-          <ConnectedAccount
-            :provider="provider"
-            :created-at="getAccountForProvider(provider)?.created_at"
-          >
-            <template #action>
-              <template v-if="getAccountForProvider(provider)">
-                <div class="flex items-center space-x-6">
-                  <button
-                    v-if="$page.props.jetstream.managesProfilePhotos && getAccountForProvider(provider).avatar_path"
-                    class="cursor-pointer ms-6 text-sm text-gray-500 hover:text-gray-700 focus:outline-none"
-                    @click="setProfilePhoto(getAccountForProvider(provider).id)"
-                  >
-                    Use Avatar as Profile Photo
-                  </button>
-
-                  <DangerButton
-                    v-if="$page.props.socialstream.connectedAccounts.length > 1 || $page.props.socialstream.hasPassword"
-                    @click="confirmRemoveAccount(getAccountForProvider(provider).id)"
-                  >
-                    Remove
-                  </DangerButton>
-                </div>
-              </template>
-
-              <template v-else>
-                <ActionLink :href="route('oauth.redirect', { provider })">
-                  Connect
-                </ActionLink>
-              </template>
-            </template>
-          </ConnectedAccount>
-        </div>
-      </div>
-
-      <!-- Confirmation Modal -->
-      <DialogModal
-        :show="confirmingRemoveAccount"
-        @close="closeModal"
+          If you feel any of your connected accounts have been compromised, you should disconnect them
+          immediately and change your password.
+        </v-alert>
+      </v-card-text>
+      <ConnectedAccount
+        v-for="(provider) in page.props.socialstream.providers"
+        :key="provider.id"
+        :provider="provider"
+        :created-at="getAccountForProvider(provider)?.created_at"
       >
-        <template #title>
-          Are you sure you want to remove this account?
+        <template #action>
+          <template v-if="getAccountForProvider(provider)">
+            <v-btn
+              v-if="
+                page.props.jetstream?.managesProfilePhotos &&
+                  getAccountForProvider(provider)?.avatar_path
+              "
+              @click="setProfilePhoto(getAccountForProvider(provider)?.id)"
+            >
+              Use Avatar as Profile Photo
+            </v-btn>
+
+            <v-btn
+              v-if="
+                page.props.socialstream!.connectedAccounts.length > 1 ||
+                  page.props.socialstream!.hasPassword
+              "
+              color="error"
+              @click="confirmRemoveAccount(getAccountForProvider(provider)?.id)"
+            >
+              Remove
+            </v-btn>
+          </template>
+
+          <template v-else>
+            <v-btn
+              :href="route('oauth.redirect', { provider })"
+              outlined
+              color="primary"
+            >
+              Connect
+            </v-btn>
+          </template>
         </template>
+      </ConnectedAccount>
 
-        <template #content>
-          Please enter your password to confirm you would like to remove this account.
+      <!--Confirmation Modal-->
+      <v-dialog
+        v-model="confirmingRemoveAccount"
+        max-width="600"
+      >
+        <v-card>
+          <v-card-title>
+            Are you sure you want to remove this account?
+          </v-card-title>
 
-          <div class="mt-4">
-            <TextInput
-              ref="passwordInput"
+          <v-card-text>
+            <p class="mb-4">
+              Please enter your password to confirm you would like to remove this account.
+            </p>
+
+            <v-text-field
+              :ref="passwordInput"
               v-model="form.password"
-              type="password"
-              class="mt-1 block w-3/4"
+              variant="outlined"
+              hide-details="auto"
               placeholder="Password"
               autocomplete="current-password"
+              :error-messages="form.errors.password"
+              class="mb-4"
               @keyup.enter="removeAccount"
             />
+          </v-card-text>
 
-            <InputError
-              :message="form.errors.password"
-              class="mt-2"
-            />
-          </div>
-        </template>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn
+              color="primary"
+              @click="closeModal"
+            >
+              Cancel
+            </v-btn>
 
-        <template #footer>
-          <SecondaryButton @click="closeModal">
-            Cancel
-          </SecondaryButton>
-
-          <PrimaryButton
-            class="ml-2"
-            :class="{ 'opacity-25': form.processing }"
-            :disabled="form.processing"
-            @click="removeAccount"
-          >
-            Remove Account
-          </PrimaryButton>
-        </template>
-      </DialogModal>
+            <v-btn
+              color="error"
+              :disabled="form.processing"
+              @click="removeAccount"
+            >
+              Remove Account
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </template>
   </ActionSection>
 </template>
