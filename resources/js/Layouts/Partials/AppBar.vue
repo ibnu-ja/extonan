@@ -3,7 +3,7 @@
 import { ref } from 'vue'
 import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiHome, mdiLogin, mdiMagnify, mdiMenu } from '@mdi/js'
 import { router, usePage } from '@inertiajs/vue3'
-import { VBreadcrumbsItem, VListItem } from 'vuetify/components'
+import { VBreadcrumbsItem, VBtn, VListItem } from 'vuetify/components'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import { BreadcrumbItem } from '@/types'
@@ -15,6 +15,13 @@ const page = usePage()
 defineProps<{
   breadcrumbs?: BreadcrumbItem[]
 }>()
+
+const menu = [
+  {
+    label: 'Dashboard',
+    url: route('dashboard'),
+  },
+]
 
 function logout() {
   router.post(route('logout'))
@@ -30,16 +37,22 @@ function logout() {
       @click="drawer = !drawer"
     />
     <v-app-bar-nav-icon>
-      <v-icon :icon="mdiHome" />
+      <InertiaLink
+        :as="VBtn"
+        href="/"
+        :icon="mdiHome"
+      />
     </v-app-bar-nav-icon>
 
-    <v-btn
-      v-for="i in 5"
-      :key="i"
+    <InertiaLink
+      v-for="i in menu"
+      :key="i.url"
+      :as="VBtn"
+      :href="i.url"
       class="me-2 hidden-md-and-down"
     >
-      menu {{ i }}
-    </v-btn>
+      {{ i.label }}
+    </InertiaLink>
     <v-spacer />
     <v-text-field
       class="mr-3"

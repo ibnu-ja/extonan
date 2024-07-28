@@ -8,6 +8,7 @@ import { useUserStore } from '@/stores/userStore'
 import { usePreferredDark } from '@vueuse/core'
 import { BreadcrumbItem } from '@/types'
 import { Head } from '@inertiajs/vue3'
+import Banner from '@/Components/Banner.vue'
 
 const theme = useTheme()
 const user = useUserStore()
@@ -22,13 +23,13 @@ watchEffect(() => {
 defineProps<{
   breadcrumbs?: BreadcrumbItem[]
   title?: string
-
 }>()
 
 </script>
 <template>
   <Head :title="title" />
-  <v-layout>
+  <v-app>
+    <Banner />
     <AppBar :breadcrumbs="breadcrumbs" />
     <Drawer />
     <v-main>
@@ -44,5 +45,5 @@ defineProps<{
       </v-container>
       <slot />
     </v-main>
-  </v-layout>
+  </v-app>
 </template>

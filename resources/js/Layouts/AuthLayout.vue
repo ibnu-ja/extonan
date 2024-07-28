@@ -3,9 +3,9 @@ import { Head } from '@inertiajs/vue3'
 import { computed, watchEffect } from 'vue'
 import { useTheme } from 'vuetify'
 
-import JetstreamFlash from '@/Components/JetstreamFlashBanner.vue'
 import { useUserStore } from '@/stores/userStore'
 import { usePreferredDark } from '@vueuse/core'
+import Banner from '@/Components/Banner.vue'
 
 const theme = useTheme()
 const user = useUserStore()
@@ -34,7 +34,7 @@ defineProps({
     <meta name="color-scheme">
   </Head>
   <v-app>
-    <JetstreamFlash />
+    <Banner />
     <v-main>
       <v-container class="fill-height d-flex flex-column justify-center align-center">
         <slot />

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Welcome from '@/Components/Welcome.vue'
-import Layout from '@/Layouts/Layout.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
 import { BreadcrumbItem } from '@/types/index.js'
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -17,7 +17,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 </script>
 
 <template>
-  <Layout
+  <AppLayout
     :breadcrumbs="breadcrumbs"
     title="Dashboard"
   >
@@ -28,5 +28,5 @@ const breadcrumbs: BreadcrumbItem[] = [
     </template>
 
     <Welcome />
-  </Layout>
+  </AppLayout>
 </template>
