@@ -32,6 +32,18 @@ declare module 'ziggy-js' {
     'password.email': []
     'password.update': []
     'register': []
+    'verification.notice': []
+    'verification.verify': [
+      {
+        name: 'id'
+        required: true
+      },
+      {
+        name: 'hash'
+        required: true
+      },
+    ]
+    'verification.send': []
     'user-profile-information.update': []
     'user-password.update': []
     'password.confirmation': []
@@ -64,6 +76,38 @@ declare module 'ziggy-js' {
       },
     ]
     'sanctum.csrf-cookie': []
+    'home': []
+    'anime.index': []
+    'anime.create': []
+    'anime.store': []
+    'anime.show': [
+      {
+        name: 'anime'
+        required: true
+        binding: 'id'
+      },
+    ]
+    'anime.edit': [
+      {
+        name: 'anime'
+        required: true
+        binding: 'id'
+      },
+    ]
+    'anime.update': [
+      {
+        name: 'anime'
+        required: true
+        binding: 'id'
+      },
+    ]
+    'anime.destroy': [
+      {
+        name: 'anime'
+        required: true
+        binding: 'id'
+      },
+    ]
     'dashboard': []
   }
 }
