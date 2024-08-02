@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Welcome from '@/Components/Welcome.vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
-import { BreadcrumbItem } from '@/types/index.js'
+import { BreadcrumbItem } from '@/types'
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
