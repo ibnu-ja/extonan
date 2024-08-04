@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useUserStore } from '@/stores/userStore'
+import { useUserStore } from '@/stores'
 import { mdiPaletteSwatchVariant } from '@mdi/js'
 import DarkBg from '@/assets/theme/dark.svg'
 import LightBg from '@/assets/theme/light.svg'
