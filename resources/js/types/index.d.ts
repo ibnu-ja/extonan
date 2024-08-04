@@ -101,3 +101,9 @@ type LinkProps = {
 }
 
 type BreadcrumbItem = (string | (Partial<LinkProps> & { title: string, disabled: boolean }))
+
+// Define TypeScript types for the GraphQL response
+export type GraphQLResponse<T> = {
+  data: T
+  errors?: never[]
+}
