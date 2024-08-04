@@ -169,6 +169,7 @@ const clearAnilist = () => anilistData.value = undefined
             <v-expand-x-transition>
               <v-card
                 v-if="anilistData && anilistData.coverImage"
+                :rounded="smAndUp"
                 class="mb-4"
               >
                 <v-img
