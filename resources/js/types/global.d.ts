@@ -1,13 +1,13 @@
 import { PageProps as InertiaPageProps } from '@inertiajs/core'
-import { AxiosInstance } from 'axios'
+import { AxiosStatic } from 'axios'
 import { route as ziggyRoute } from 'ziggy-js'
 import { PageProps as AppPageProps } from './'
 
 declare global {
   const route: typeof ziggyRoute
-  const axios: AxiosInstance
+  const axios: AxiosStatic
   interface Window {
-    axios: AxiosInstance
+    axios: AxiosStatic
   }
 }
 
