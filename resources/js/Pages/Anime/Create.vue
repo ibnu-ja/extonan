@@ -4,7 +4,11 @@ import Layout from '@/Layouts/AppLayout.vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { ref } from 'vue'
 import { useDisplay } from 'vuetify'
-import { mdiClose, mdiSend } from '@mdi/js'
+import { mdiClose, mdiContentSave, mdiSend } from '@mdi/js'
+import dayjs from 'dayjs'
+
+import objectSupport from 'dayjs/plugin/objectSupport'
+import { mdiDelete } from '@mdi/js/commonjs/mdi'
 
 type Languages = 'en' | 'id' | 'romaji' | 'native'
 
@@ -33,10 +37,12 @@ const languages: LanguageItem[] = [
   },
 ]
 
+dayjs.extend(objectSupport)
 type AnimeForm = {
   title: TranslatableField
   description: TranslatableField
   anilist_id: number | null
+  is_published: boolean
 }
 
 const form = useForm<AnimeForm>({
@@ -46,6 +52,7 @@ const form = useForm<AnimeForm>({
     native: null,
     romaji: null,
   },
+  is_published: false,
   description: {
     en: null,
     id: null,
@@ -53,22 +60,22 @@ const form = useForm<AnimeForm>({
   anilist_id: null,
 },
 )
-
+const apType = ref<'MAL' | 'Anilist'>('MAL')
+const apiSearchId = ref<number | null>(null)
 const anilistData = ref()
 const show = ref(false)
 
-const { smAndUp } = useDisplay()
+const { smAndUp, mdAndUp } = useDisplay()
 const currentLang = ref<LanguageItem>(languages[0])
 //
 
 const anilistHitApi = async () => {
-  if (!form.anilist_id || form.anilist_id < 0) {
+  if (apiSearchId.value == null || apiSearchId.value < 0) {
     return
   }
-
   const query = `
-    query ($id: Int) {
-      Media (id: $id, type: ANIME) {
+    query ($id: Int, $idMal: Int) {
+      Media (id: $id, idMal: $idMal , type: ANIME) {
         id
         episodes
         coverImage {
@@ -86,6 +93,14 @@ const anilistHitApi = async () => {
           year
           month
           day
+        }
+        studios {
+          edges {
+            node {
+              id
+              name
+            }
+          }
         }
         characters {
           edges { # Array of character edges
@@ -123,7 +138,13 @@ const anilistHitApi = async () => {
         }
       }
     }`
-  const variables = { id: form.anilist_id }
+
+  let variables
+  if (apType.value == 'MAL') {
+    variables = {
+      idMal: apiSearchId.value,
+    }
+  } else variables = { id: apiSearchId.value }
 
   try {
     const response = await fetch('https://graphql.anilist.co/', {
@@ -149,6 +170,7 @@ const anilistHitApi = async () => {
       native,
     }
     show.value = !show.value
+    form.anilist_id = anime.id
   } catch (error) {
     alert(error.message)
     console.error(error)
@@ -156,15 +178,40 @@ const anilistHitApi = async () => {
 }
 
 const clearAnilist = () => anilistData.value = null
+
 </script>
 
 <template>
   <Head title="Create Anime" />
   <Layout>
     <template #header>
-      <h1 class="text-h4 text-md-h3">
-        Create Anime
-      </h1>
+      <div class="d-flex justify-space-between align-end">
+        <h1 class="text-h4 text-md-h3">
+          Create Anime
+        </h1>
+        <div class="d-flex gap-2">
+          <v-btn
+            variant="outlined"
+            color="error"
+            :icon="!mdAndUp ? mdiDelete : undefined"
+            :prepend-icon="mdAndUp ? mdiDelete : undefined"
+            :text="mdAndUp ? 'Delete' : undefined"
+          />
+          <v-btn
+            variant="outlined"
+            color="secondary"
+            :icon="!mdAndUp ? mdiContentSave : undefined"
+            :prepend-icon="mdAndUp ? mdiContentSave : undefined"
+            :text="mdAndUp ? 'Save' : undefined"
+          />
+          <v-btn
+            color="primary"
+            :icon="!mdAndUp ? mdiSend : undefined"
+            :prepend-icon="mdAndUp ? mdiSend : undefined"
+            :text="mdAndUp ? 'Publish' : undefined"
+          />
+        </div>
+      </div>
     </template>
     <v-container class="pa-0 pa-sm-4">
       <v-row>
@@ -202,89 +249,12 @@ const clearAnilist = () => anilistData.value = null
                 </v-text-field>
                 <v-textarea
                   v-model="form.description[currentLang.value]"
-                  label="Description"
+                  :label="`Description (${currentLang.value})`"
                   variant="outlined"
                   hide-details="auto"
                   class="mb-4"
                 />
               </v-card-text>
-            </v-card>
-          </section>
-          <section class="mb-6">
-            <v-card :rounded="smAndUp">
-              <v-row
-                no-gutters
-              >
-                <v-slide-x-transition>
-                  <v-col
-                    v-if="anilistData"
-                    cols="4"
-                  >
-                    <v-img
-                      :src="anilistData.coverImage.extraLarge"
-                      :lazy-src="anilistData.coverImage.medium"
-                    />
-                  </v-col>
-                </v-slide-x-transition>
-                <v-col>
-                  <v-card-item>
-                    <v-card-title class="d-flex">
-                      Anilist Metadata
-                    </v-card-title>
-                  </v-card-item>
-                  <v-divider />
-                  <v-card-text>
-                    <!-- template -->
-                    <v-text-field
-                      v-model="form.anilist_id"
-                      label="Anilist ID"
-                      type="number"
-                      :error-messages="form.errors.anilist_id"
-                      placeholder="placeholder"
-                      variant="outlined"
-                      hide-details="auto"
-                      class="mb-4"
-                    >
-                      <template #append>
-                        <v-icon
-                          v-if="anilistData == null"
-                          :icon="mdiSend"
-                          @click="anilistHitApi"
-                        />
-                        <v-icon
-                          v-else
-                          :icon="mdiClose"
-                          @click="clearAnilist"
-                        />
-                      </template>
-                    </v-text-field>
-                  </v-card-text>
-                  <v-expand-transition>
-                    <div v-if="anilistData">
-                      <v-divider />
-
-                      <v-card-text>
-                        <div class="d-flex flex-wrap gap-2">
-                          <v-chip
-                            v-for="genre in anilistData.genres"
-                            :key="genre"
-                            class="mb-4"
-                          >
-                            {{ genre }}
-                          </v-chip>
-                        </div>
-                        <ul class="mb-4 pl-6">
-                          <li><strong>Episodes</strong>: {{ anilistData.episodes }}</li>
-                          <li><strong>Season</strong>: {{ anilistData.season }} {{ anilistData.seasonYear }}</li>
-                          <li v-if="anilistData.startDate">
-                            <strong>Start date</strong>: {{ anilistData.startDate }}
-                          </li>
-                        </ul>
-                      </v-card-text>
-                    </div>
-                  </v-expand-transition>
-                </v-col>
-              </v-row>
             </v-card>
           </section>
 
@@ -294,7 +264,7 @@ const clearAnilist = () => anilistData.value = null
               class="mb-6"
             >
               casts
-              <div class="d-grid grid-cols-1 grid-cols-md-2 gap-4">
+              <div class="d-grid grid-cos-1 grid-cols-md-2 gap-4 text-body-2">
                 <v-card
                   v-for="character in anilistData.characters.edges"
                   :key="character.node.id"
@@ -313,25 +283,30 @@ const clearAnilist = () => anilistData.value = null
                         <div>
                           {{ character.node.name.full }}
                         </div>
-                        <div class="text-capitalize">
+                        <div class="text-caption font-weight-light">
                           {{ character.role }}
                         </div>
                       </div>
                     </div>
-                    <div class="d-grid grid-cols-4">
-                      <div class="px-3 py-1 col-span-3 text-right d-flex flex-column justify-space-between">
-                        <div>
-                          {{ character.voiceActors[0].name.full }}
+                    <v-slide-x-transition>
+                      <div
+                        v-if="character.voiceActors[0]?.name"
+                        class="d-grid grid-cols-4"
+                      >
+                        <div class="px-3 py-1 col-span-3 text-right d-flex flex-column justify-space-between">
+                          <div>
+                            {{ character.voiceActors[0].name.full }}
+                          </div>
+                          <div class="font-weight-light">
+                            Japanese
+                          </div>
                         </div>
-                        <div>
-                          Japanese
-                        </div>
+                        <v-img
+                          :src="character.voiceActors[0].image.large"
+                          :lazy-src="character.voiceActors[0].image.medium"
+                        />
                       </div>
-                      <v-img
-                        :src="character.voiceActors[0].image.large"
-                        :lazy-src="character.voiceActors[0].image.medium"
-                      />
-                    </div>
+                    </v-slide-x-transition>
                   </div>
                 </v-card>
               </div>
@@ -342,13 +317,126 @@ const clearAnilist = () => anilistData.value = null
           cols="12"
           md="4"
         >
-          <section class="mb-6">
+          <div>
+            <v-expand-x-transition>
+              <v-card
+                v-if="anilistData && anilistData.coverImage"
+                class="mb-4"
+              >
+                <v-img
+                  :src="anilistData.coverImage.extraLarge"
+                  :lazy-src="anilistData.coverImage.medium"
+                />
+              </v-card>
+            </v-expand-x-transition>
             <v-card :rounded="smAndUp">
-              <v-card-title class="d-flex">
-                Publication
-              </v-card-title>
+              <v-card-item>
+                <v-card-title class="d-flex">
+                  Metadata
+                </v-card-title>
+              </v-card-item>
+              <v-divider />
+              <v-card-text>
+                <!-- template -->
+                <v-select
+                  v-model="apType"
+                  label="Api Type"
+                  variant="outlined"
+                  hide-details
+                  class="mb-4"
+                  :items="['MAL', 'Anilist']"
+                />
+                <v-text-field
+                  v-model="apiSearchId"
+                  :label="apType + ' ID'"
+                  type="number"
+                  placeholder="placeholder"
+                  variant="outlined"
+                  hide-details="auto"
+                />
+              </v-card-text>
+              <v-divider />
+              <v-card-actions>
+                <v-expand-x-transition>
+                  <v-btn
+                    :append-icon="mdiClose"
+                    text="Clear"
+                    @click="clearAnilist"
+                  />
+                </v-expand-x-transition>
+                <v-spacer />
+                <v-btn
+                  text="Autofill"
+                  @click="anilistHitApi"
+                />
+              </v-card-actions>
+
+              <v-expand-transition>
+                <div v-if="anilistData">
+                  <v-divider />
+                  <v-card-text>
+                    <!-- metadata -->
+                    <div v-if="anilistData.startDate">
+                      <v-list-subheader>
+                        Airing Date
+                      </v-list-subheader>
+                      <!--dayjs is 0 indexed-->
+                      {{ dayjs({
+                        year: anilistData.startDate.year,
+                        month: anilistData.startDate.month-1,
+                        day: anilistData.startDate.day -1
+                      }).format('D MMM YYYY') }}
+                    </div>
+                    <div v-if="anilistData.episodes">
+                      <v-list-subheader>
+                        Episodes
+                      </v-list-subheader>
+                      {{ anilistData.episodes }}
+                    </div>
+                    <div v-if="anilistData.studios">
+                      <v-list-subheader>
+                        Studio
+                      </v-list-subheader>
+                      <!--dayjs is 0 indexed-->
+
+                      <div class="d-flex flex-wrap gap-1">
+                        <v-chip
+                          v-for="{node: studio} in anilistData.studios.edges"
+                          :key="studio.id"
+                        >
+                          {{ studio.name }}
+                        </v-chip>
+                      </div>
+                    </div>
+                    <div v-if="anilistData.season && anilistData.seasonYear">
+                      <v-list-subheader>
+                        Season
+                      </v-list-subheader>
+                      <v-chip>
+                        {{ anilistData.season }} {{ anilistData.seasonYear }}
+                      </v-chip>
+                    </div>
+
+                    <div
+                      v-if="anilistData.genres && anilistData.genres.length> 0"
+                    >
+                      <v-list-subheader>
+                        Genres
+                      </v-list-subheader>
+                      <div class="d-flex flex-wrap gap-1">
+                        <v-chip
+                          v-for="genre in anilistData.genres"
+                          :key="genre"
+                        >
+                          {{ genre }}
+                        </v-chip>
+                      </div>
+                    </div>
+                  </v-card-text>
+                </div>
+              </v-expand-transition>
             </v-card>
-          </section>
+          </div>
         </v-col>
       </v-row>
     </v-container>
