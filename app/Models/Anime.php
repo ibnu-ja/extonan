@@ -2,31 +2,33 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Oddvalue\LaravelDrafts\Concerns\HasDrafts;
-use Spatie\ModelStatus\HasStatuses;
-use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Translatable\HasTranslations;
 
-class Anime extends Model
+class Anime extends Post
 {
-    use HasFactory, HasDrafts, HasSlug, HasTranslations, HasStatuses;
+    use HasTranslations;
+
+    public $table = 'anime';
 
     /**
      * @var string[]
      */
-    public array $translatable = ['title'];
+    public array $translatable = ['title', 'description'];
+
+    /**
+     * @var string[]
+     */
+    public $fillable = ['title', 'description', 'anilist_id'];
 
     /**
      * Get the options for generating the slug.
      */
-    public function getSlugOptions() : SlugOptions
+    public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('name')
-            ->slugsShouldBeNoLongerThan(60)
-            ->saveSlugsTo('slug');
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug')
+            ->slugsShouldBeNoLongerThan(60);
     }
 }

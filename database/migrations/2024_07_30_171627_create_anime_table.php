@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('title');
             $table->foreignId('author_id')->references('id')->on('users');
             $table->timestamps();
+            $table->drafts();
         });
     }
 
