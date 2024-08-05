@@ -5,6 +5,7 @@ export type AnilistMedia = {
 export type Anime = {
   id: number
   episodes: number
+  description: string
   coverImage: {
     extraLarge: string
     large: string

@@ -36,6 +36,7 @@ export function useAnime() {
             }
           }
         }
+        description
         characters {
           edges { # Array of character edges
             node { # Character node
