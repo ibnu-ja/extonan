@@ -1,77 +1,104 @@
 <script lang="ts" setup>
-import { Head } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 import Layout from '@/Layouts/AppLayout.vue'
+import { mdiPlus } from '@mdi/js'
+import { useDisplay } from 'vuetify'
+import { PaginatedResponse } from '@/types'
+import { TranslatableField } from '@/types/formHelper'
+
+const { mdAndUp } = useDisplay()
+type AnimeData = {
+  id: number
+  anilist_id: number
+  description: TranslatableField
+  slug: string
+  title: TranslatableField
+  author_id: number
+  created_at: string
+  updated_at: string
+  uuid: string
+  published_at: string
+  is_published: boolean
+  is_current: boolean
+  publisher_type: string
+  publisher_id: number
+}
+
+const props = defineProps<{
+  canCreate: boolean
+  anime: PaginatedResponse<AnimeData>
+}>()
+
+const perPageChange = (e: number) => {
+  router.get(route('anime.index', {
+    page: props.anime.current_page,
+    perPage: e,
+  }), {
+    only: ['anime'],
+  })
+}
+type SortItem = { key: string, order?: boolean | 'asc' | 'desc' }
+
+const convertSort = (sortItems: SortItem[]) => {
+  return sortItems.map((sortItem) => {
+    console.log(sortItem)
+    let sort
+    if (!sortItem.order || sortItem.order === 'desc') {
+      sort = '-' + sortItem.key
+    } else sort = sortItem.key
+    return sort
+  }).join(',')
+}
+
+const sortChange = (e: unknown) => {
+  console.log(e)
+  const sort = convertSort(e as SortItem[])
+  console.log(sort)
+  router.get(route('anime.index', {
+    // ...route().params,
+    sort,
+  }), {
+    only: ['anime'],
+  })
+}
+
+const pageChange = (e: number) => {
+  router.get(
+    props.anime.links[e].url,
+  )
+}
+
 </script>
 
 <template>
   <Head title="Anime" />
   <Layout>
+    <template #header>
+      <div class="d-flex justify-space-between align-end">
+        <h1 class="text-h4 text-md-h3">
+          Anime List
+        </h1>
+
+        <v-btn
+          v-if="canCreate"
+          color="primary"
+          :icon="!mdAndUp ? mdiPlus : undefined"
+          :prepend-icon="mdAndUp ? mdiPlus : undefined"
+          :text="mdAndUp ? 'Create' : undefined"
+        />
+      </div>
+    </template>
     <v-container>
-      <v-row>
-        <v-col
-          cols="12"
-          md="8"
-        >
-          <section>
-            <v-container class="pa-md-12">
-              <h2 class="text-h4 mb-4">
-                carousel current season
-              </h2>
-              <v-carousel
-                height="200"
-                hide-delimiters
-                show-arrows="hover"
-                cycle
-              >
-                <v-carousel-item
-                  src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-                  cover
-                />
-
-                <v-carousel-item
-                  src="https://cdn.vuetifyjs.com/images/cards/hotel.jpg"
-                  cover
-                />
-
-                <v-carousel-item
-                  src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-                  cover
-                />
-              </v-carousel>
-            </v-container>
-          </section>
-          <section>
-            <v-container class="pa-md-12">
-              <h2 class="text-h4 mb-4">
-                Latest Anime
-              </h2>
-              <p>
-                anime card
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusamus ad aspernatur culpa, delectus
-                error explicabo fuga in ipsa, iusto laboriosam natus neque nisi numquam quasi recusandae repellendus,
-                sint temporibus!
-              </p>
-            </v-container>
-          </section>
-        </v-col>
-        <v-divider vertical />
-        <v-col>
-          <section>
-            <v-container class="pa-md-12">
-              <h2 class="text-h4 mb-4">
-                Section Heading
-              </h2>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. A adipisci aliquid aut cum deserunt, eaque
-                enim
-                esse et fugit id natus nisi non officiis quaerat, quia quo similique sit unde.
-              </p>
-            </v-container>
-          </section>
-        </v-col>
-      </v-row>
+      <v-data-table-server
+        :items-length="anime.total"
+        :page="anime.current_page"
+        :items="anime.data"
+        :items-per-page="anime.per_page"
+        @update:sort-by="sortChange"
+        @update:page="pageChange"
+        @update:items-per-page="perPageChange"
+      />
+      <!--      -->
     </v-container>
   </Layout>
 </template>

@@ -5,17 +5,24 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAnimeRequest;
 use App\Models\Anime;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Inertia\Inertia;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class AnimeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): \Inertia\Response
+    public function index(Request $request): \Inertia\Response | LengthAwarePaginator
     {
+        $anime = fn () => QueryBuilder::for(Anime::class)
+            ->allowedSorts('id', 'title')
+            ->paginate($request->integer('perPage'))
+            ->appends(request()->query());
         return Inertia::render("Anime/Index", [
-            'anime' => Anime::paginate(15)
+            'anime' => $anime,
+            'canCreate' => fn () => auth()->user()->can('create', Anime::class)
         ]);
     }
 
