@@ -73,7 +73,7 @@ export interface User {
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
   auth: {
-    user: User
+    user: User | null
   }
   jetstream: {
     canCreateTeams?: boolean
@@ -128,4 +128,23 @@ export type PaginatedResponse<T> = {
   prev_page_url: string | null
   to: number
   total: number
+}
+
+export type Permissions = {
+  update: boolean
+  delete: boolean
+  publish: boolean
+}
+
+export type Post = {
+  author_id: number
+  created_at: Date | string | null
+  updated_at: Date | string | null
+  published_at: Date | string | null
+  uuid: string | null
+  is_published: boolean
+  is_current: boolean
+  publisher_type: string | null
+  publisher_id: number | null
+  can: Permissions
 }

@@ -38,16 +38,6 @@ defineProps<{
     />
     <Drawer v-model="drawer" />
     <v-main>
-      <!-- Page Heading -->
-      <!-- mt-md-6-->
-      <v-container
-        v-if="$slots.header"
-        class="py-0 my-4 mt-6 mt-lg-12"
-      >
-        <header>
-          <slot name="header" />
-        </header>
-      </v-container>
       <slot />
     </v-main>
   </v-app>

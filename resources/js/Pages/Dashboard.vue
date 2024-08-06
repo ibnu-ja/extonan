@@ -1,32 +1,18 @@
+<script lang="ts">
+
+import AppLayout from '@/Layouts/AppLayout.vue'
+
+export default {
+  layout: AppLayout,
+}
+</script>
+
 <script setup lang="ts">
 import Welcome from '@/Components/Welcome.vue'
-import AppLayout from '@/Layouts/AppLayout.vue'
-import { BreadcrumbItem } from '@/types'
-
-const breadcrumbs: BreadcrumbItem[] = [
-  {
-    title: 'Home',
-    disabled: false,
-    href: '/',
-  },
-  {
-    title: 'Dashboard',
-    disabled: true,
-  },
-]
+import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 </script>
 
 <template>
-  <AppLayout
-    :breadcrumbs="breadcrumbs"
-    title="Dashboard"
-  >
-    <template #header>
-      <h1 class="text-h4 text-md-h3">
-        Dashboard
-      </h1>
-    </template>
-
-    <Welcome />
-  </AppLayout>
+  <PageHeader title="Dashboard" />
+  <Welcome />
 </template>

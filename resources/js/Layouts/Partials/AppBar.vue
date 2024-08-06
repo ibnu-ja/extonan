@@ -18,36 +18,30 @@ defineProps<{
 
 const itemList = [
   {
-    value: 'home',
+    value: '',
     link: route('home'),
     label: 'Home',
-    exactActive: true,
   },
   {
-    value: 'anime.*',
+    value: 'anime',
     link: route('anime.index'),
     label: 'Anime',
-    exactActive: false,
   },
   {
     value: 'dashboard',
     link: route('dashboard'),
     label: 'Dashboard',
-    exactActive: false,
   },
 ]
+const tab = ref(location.pathname.split('/')[1])
 
-const updateTab = () => {
-  const currentItem = itemList.find(item => route().current(item.value))
-  return currentItem ? currentItem.value : undefined
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const visit = (e: any) => {
+  const tes = itemList.find(item => item.value == e)
+  if (tes) {
+    router.visit(tes.link)
+  }
 }
-
-const tab = ref(updateTab())
-
-router.on('start', () => {
-  tab.value = updateTab()
-})
-
 function logout() {
   router.post(route('logout'))
 }
@@ -77,13 +71,13 @@ function logout() {
       class="hidden-md-and-down"
       color="primary"
       :mandatory="false"
+      @update:model-value="visit"
     >
       <v-tab
         v-for="item in itemList"
         :key="item.value"
         class="mr-2"
         :value="item.value"
-        @click="router.visit(item.link)"
       >
         {{ item.label }}
       </v-tab>

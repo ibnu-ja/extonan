@@ -14,6 +14,7 @@ import Casts from '@/Pages/Anime/Partials/Casts.vue'
 import { useAnime } from '@/composables/useAniList'
 import { Anime } from '@/types/anilist'
 import { LanguageItem, TranslatableField } from '@/types/formHelper'
+import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 
 dayjs.extend(objectSupport)
 
@@ -101,11 +102,8 @@ const saveDraft = () => {
 <template>
   <Head title="Create Anime" />
   <Layout>
-    <template #header>
-      <div class="d-flex justify-space-between align-end">
-        <h1 class="text-h4 text-md-h3">
-          Create Anime
-        </h1>
+    <PageHeader title="Create Anime">
+      <template #append>
         <div class="d-flex gap-2">
           <v-btn
             variant="outlined"
@@ -136,8 +134,8 @@ const saveDraft = () => {
             :text="mdAndUp ? 'Publish' : undefined"
           />
         </div>
-      </div>
-    </template>
+      </template>
+    </PageHeader>
     <v-container class="pa-0 pa-sm-4">
       <v-form
         id="storeAnime"

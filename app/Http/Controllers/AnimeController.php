@@ -6,11 +6,22 @@ use App\Http\Requests\StoreAnimeRequest;
 use App\Models\Anime;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class AnimeController extends Controller
+class AnimeController extends Controller implements HasMiddleware
 {
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['index','show']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */
@@ -22,7 +33,8 @@ class AnimeController extends Controller
             ->appends(request()->query());
         return Inertia::render("Anime/Index", [
             'anime' => $anime,
-            'canCreate' => fn () => auth()->check() && auth()->user()->can('create', Anime::class)
+            'canCreate' => fn () => auth()->check() && auth()->user()->can('create', Anime::class),
+            'canViewUnpublished' => fn() => auth()->check() && auth()->user()->can('viewAny')
         ]);
     }
 
@@ -54,14 +66,6 @@ class AnimeController extends Controller
         );
 
         return redirect()->route('anime.index')->banner('Anime '. ($request->boolean('is_published') ? 'published' : 'draft saved') . ' successfully.');
-    }
-
-    /**
-     * Publish resource in storage.
-     */
-    public function publish(Request $request, Anime $anime)
-    {
-        return $request;
     }
 
     /**

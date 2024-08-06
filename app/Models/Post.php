@@ -24,6 +24,13 @@ abstract class Post extends Model
 
     /*
     |
+    | Attributes that should be appended.
+    |
+    */
+    protected $appends = ['can'];
+
+    /*
+    |
     | Relationships
     |
     */

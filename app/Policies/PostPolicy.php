@@ -24,7 +24,7 @@ class PostPolicy
             return true;
         }
 
-        return $user->can('post.read.self') && $user->id === $post->author()->id;
+        return $user->can('post.read.self') && $user->id === $post->author->id;
     }
 
     /**
@@ -44,7 +44,7 @@ class PostPolicy
             return true;
         }
 
-        return $user->can('post.update.self') && $user->id === $post->author()->id;
+        return $user->can('post.update.self') && $user->id === $post->author->id;
     }
 
     /**
@@ -56,7 +56,7 @@ class PostPolicy
             return true;
         }
 
-        return $user->can('post.delete.self') && $user->id === $post->author()->id;
+        return $user->can('post.delete.self') && $user->id === $post->author->id;
     }
 
     /**
@@ -68,7 +68,7 @@ class PostPolicy
             return true;
         }
 
-        return $user->id === $post->author()->id;
+        return $user->id === $post->author->id;
     }
 
 //    /**
