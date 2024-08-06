@@ -12,7 +12,7 @@ import { Head } from '@inertiajs/vue3'
 import {
   mdiAlphabeticalVariant,
   mdiFormatListNumbered,
-  mdiPlus,
+  mdiPlus, mdiViewGrid,
 } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
@@ -66,15 +66,29 @@ const tab = ref('abc')
         value="list"
         :icon="mdiFormatListNumbered"
       />
+      <v-btn
+        value="tile"
+        :icon="mdiViewGrid"
+      />
     </v-btn-toggle>
   </v-container>
 
   <!--  </template>-->
   <v-container class="px-0">
-    <TableView
-      :can-view-unpublished
-      :can-create
-      :anime
-    />
+    <v-tabs-window v-model="tab">
+      <v-tabs-window-item value="abc">
+        abcview
+      </v-tabs-window-item>
+      <v-tabs-window-item value="list">
+        <TableView
+          :can-view-unpublished
+          :can-create
+          :anime
+        />
+      </v-tabs-window-item>
+      <v-tabs-window-item value="tile">
+        gridView
+      </v-tabs-window-item>
+    </v-tabs-window>
   </v-container>
 </template>
