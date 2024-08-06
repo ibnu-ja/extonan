@@ -17,12 +17,12 @@ class AnimeController extends Controller
     public function index(Request $request): \Inertia\Response | LengthAwarePaginator
     {
         $anime = fn () => QueryBuilder::for(Anime::class)
-            ->allowedSorts('id', 'title')
+            ->allowedSorts('id', 'title', 'created_at', 'updated_at', 'published_at')
             ->paginate($request->integer('perPage'))
             ->appends(request()->query());
         return Inertia::render("Anime/Index", [
             'anime' => $anime,
-            'canCreate' => fn () => auth()->user()->can('create', Anime::class)
+            'canCreate' => fn () => auth()->check() && auth()->user()->can('create', Anime::class)
         ]);
     }
 

@@ -37,7 +37,7 @@ export function useAnime() {
           }
         }
         description
-        characters {
+        characters (sort: [ROLE, ID]) {
           edges { # Array of character edges
             node { # Character node
               id

@@ -5,6 +5,9 @@ import { mdiPlus } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
 import { TranslatableField } from '@/types/formHelper'
+import { ref } from 'vue'
+import InertiaLink from '@/Components/InertiaLink.vue'
+import { VBtn } from 'vuetify/components'
 
 const { mdAndUp } = useDisplay()
 type AnimeData = {
@@ -24,6 +27,30 @@ type AnimeData = {
   publisher_id: number
 }
 
+const headers = [
+  {
+    key: 'id',
+    title: 'id',
+  },
+  {
+    key: 'title',
+    value: 'title.romaji',
+    title: 'Title',
+  },
+  {
+    key: 'created_at',
+    title: 'Created Date',
+  },
+  {
+    key: 'updated_at',
+    title: 'Last Updated',
+  },
+  {
+    key: 'published_at',
+    title: 'Published At',
+  },
+]
+
 const props = defineProps<{
   canCreate: boolean
   anime: PaginatedResponse<AnimeData>
@@ -39,7 +66,7 @@ const perPageChange = (e: number) => {
 }
 type SortItem = { key: string, order?: boolean | 'asc' | 'desc' }
 
-const convertSort = (sortItems: SortItem[]) => {
+const implodeSort = (sortItems: SortItem[]) => {
   return sortItems.map((sortItem) => {
     console.log(sortItem)
     let sort
@@ -50,12 +77,27 @@ const convertSort = (sortItems: SortItem[]) => {
   }).join(',')
 }
 
+const expodeSort = (sorts: string): SortItem[] => {
+  return sorts.split(',').map((sort) => {
+    const isDesc = sort.startsWith('-')
+    return {
+      key: isDesc ? sort.slice(1) : sort,
+      order: isDesc ? 'desc' : 'asc',
+    }
+  })
+}
+
+const currentSort = ref<SortItem[] | null>([])
+
+if (route().params.sort) {
+  currentSort.value = expodeSort(route().params.sort)
+}
+
 const sortChange = (e: unknown) => {
   console.log(e)
-  const sort = convertSort(e as SortItem[])
+  const sort = implodeSort(e as SortItem[])
   console.log(sort)
   router.get(route('anime.index', {
-    // ...route().params,
     sort,
   }), {
     only: ['anime'],
@@ -79,8 +121,10 @@ const pageChange = (e: number) => {
           Anime List
         </h1>
 
-        <v-btn
+        <InertiaLink
           v-if="canCreate"
+          :as="VBtn"
+          :href="route('anime.create')"
           color="primary"
           :icon="!mdAndUp ? mdiPlus : undefined"
           :prepend-icon="mdAndUp ? mdiPlus : undefined"
@@ -90,6 +134,9 @@ const pageChange = (e: number) => {
     </template>
     <v-container>
       <v-data-table-server
+        :sort-by="currentSort"
+        :headers="headers"
+        :items-per-page-options="[1,5,10]"
         :items-length="anime.total"
         :page="anime.current_page"
         :items="anime.data"
