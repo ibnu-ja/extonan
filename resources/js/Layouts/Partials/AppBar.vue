@@ -37,6 +37,9 @@ const tab = ref(location.pathname.split('/')[1])
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const visit = (e: any) => {
+  if (e == null) {
+    tab.value = location.pathname.split('/')[1]
+  }
   const tes = itemList.find(item => item.value == e)
   if (tes) {
     router.visit(tes.link)
