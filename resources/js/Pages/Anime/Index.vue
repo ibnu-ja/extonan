@@ -16,13 +16,14 @@ import {
 } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
-import { ref } from 'vue'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import { VBtn } from 'vuetify/components'
 import { AnimeData } from '@/types/anime'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import TableView from '@/Pages/Anime/Partials/TableView.vue'
+import { useUserStore } from '@/stores'
 
+import { storeToRefs } from 'pinia'
 const { mdAndUp } = useDisplay()
 
 defineProps<{
@@ -31,7 +32,7 @@ defineProps<{
   anime: PaginatedResponse<AnimeData>
 }>()
 
-const tab = ref('abc')
+const { displayMode } = storeToRefs(useUserStore())
 </script>
 
 <template>
@@ -55,7 +56,7 @@ const tab = ref('abc')
 
   <v-container class="my-0">
     <v-btn-toggle
-      v-model="tab"
+      v-model="displayMode"
       mandatory
     >
       <v-btn
@@ -75,7 +76,7 @@ const tab = ref('abc')
 
   <!--  </template>-->
   <v-container class="px-0">
-    <v-tabs-window v-model="tab">
+    <v-tabs-window v-model="displayMode">
       <v-tabs-window-item value="abc">
         abcview
       </v-tabs-window-item>

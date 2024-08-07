@@ -4,8 +4,9 @@ import { reactive, ref } from 'vue'
 
 export const useUserStore = defineStore('user', () => {
   const theme = useStorage<string>('theme', 'system')
+  const displayMode = useStorage<'abc' | 'list' | 'tile'>('displayMode', 'abc')
 
-  return { theme }
+  return { theme, displayMode }
 })
 
 export const useSnackbar = defineStore('snackbar', () => {
