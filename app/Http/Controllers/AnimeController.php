@@ -27,12 +27,17 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function index(Request $request): \Inertia\Response | LengthAwarePaginator
     {
-        $anime = fn () => QueryBuilder::for(Anime::class)
-            ->allowedSorts('id', 'title', 'created_at', 'updated_at', 'published_at')
-            ->paginate($request->integer('perPage'))
-            ->appends(request()->query());
+        $perPage = $request->integer('perPage', 15);
+        $anime = QueryBuilder::for(Anime::class);
+        if ($perPage === -1) {
+            $results = $anime->get();
+            $anime = new LengthAwarePaginator($results, $results->count(), -1);
+        } else {
+            $anime = $anime->paginate($perPage);
+        }
+        $anime->appends(request()->query());
         return Inertia::render("Anime/Index", [
-            'anime' => $anime,
+            'anime' => fn () => $anime,
             'canCreate' => fn () => auth()->check() && auth()->user()->can('create', Anime::class),
             'canViewUnpublished' => fn() => auth()->check() && auth()->user()->can('viewAny')
         ]);

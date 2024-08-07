@@ -109,7 +109,6 @@ const pageChange = (e: number) => {
   <v-data-table-server
     :sort-by="currentSort"
     :headers="filteredHeaders"
-    :items-per-page-options="[1,5,10]"
     :items-length="anime.total"
     :page="anime.current_page"
     :items="anime.data"
