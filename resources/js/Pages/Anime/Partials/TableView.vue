@@ -126,7 +126,6 @@ const pageChange = (e: number) => {
         <v-tooltip
           location="bottom"
           text="Delete"
-          activator="parent"
         >
           <template #activator="{props: propss}">
             <v-icon
@@ -141,7 +140,6 @@ const pageChange = (e: number) => {
         <v-tooltip
           location="bottom"
           text="Edit"
-          activator="parent"
         >
           <template #activator="{props: propss}">
             <v-icon
@@ -156,7 +154,6 @@ const pageChange = (e: number) => {
         <v-tooltip
           location="bottom"
           text="Publish"
-          activator="parent"
         >
           <template #activator="{props: propss}">
             <v-icon
