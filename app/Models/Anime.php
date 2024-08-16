@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Translatable\HasTranslations;
 
@@ -19,7 +20,12 @@ class Anime extends Post
     /**
      * @var string[]
      */
-    public $fillable = ['title', 'description', 'anilist_id'];
+    protected $fillable = ['title', 'description', 'anilist_id'];
+
+    /**
+     * @var string[]
+     */
+    protected $appends = ['link'];
 
     /**
      * Get the options for generating the slug.
@@ -30,5 +36,15 @@ class Anime extends Post
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug')
             ->slugsShouldBeNoLongerThan(60);
+    }
+
+    /**
+     * Get the anime link
+     */
+    protected function link(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => route('anime.show', $this->attributes['id']),
+        );
     }
 }
