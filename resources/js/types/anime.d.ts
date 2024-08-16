@@ -7,4 +7,5 @@ export type AnimeData = {
   description: TranslatableField
   slug: string
   title: TranslatableField
+  link: string
 } & Post
