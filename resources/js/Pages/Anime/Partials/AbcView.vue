@@ -15,8 +15,6 @@ const animeGrouped = computed(() => {
   let map1 = map(
     groupBy(props.anime.data, (o) => {
       const firstLetter = Array.from(o.title.en!.toString())[0].toUpperCase()
-      // Array.from('some string')[0];
-      console.log(firstLetter)
       return /^[A-Z]$/.test(firstLetter!) ? firstLetter : '#'
     }),
     (contacts, letter) => ({ letter, contacts }),
