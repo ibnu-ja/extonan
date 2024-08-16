@@ -25,7 +25,7 @@ class Anime extends Post
     /**
      * @var string[]
      */
-    protected $appends = ['link'];
+    protected $appends = ['link', 'can'];
 
     /**
      * Get the options for generating the slug.
