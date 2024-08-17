@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Anime } from '@/types/anilist'
+import { AnimeMediaAutofillResponse } from '@/types/anilist'
 import { useDisplay } from 'vuetify'
 
 defineProps<{
-  data: Anime
+  data: AnimeMediaAutofillResponse
 }>()
 
 const { smAndUp } = useDisplay()

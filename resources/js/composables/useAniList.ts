@@ -1,8 +1,34 @@
 import { AxiosResponse } from 'axios'
 import { GraphQLResponse } from '@/types'
-import { AnilistMedia } from '@/types/anilist'
+import {
+  AnimeMediaAutofillResponse,
+  AnimeMediaHomepageResponse,
+  MediaApiResponse,
+  PaginatedMediaApiResponse,
+} from '@/types/anilist'
 
 export function useAnime() {
+  const hitApi = async <T>(variables: unknown, query: string): Promise<T | undefined> => {
+    try {
+      const response: AxiosResponse<GraphQLResponse<T>> = await axios.post('https://graphql.anilist.co/',
+        { query, variables },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        })
+      if (response.data.errors) {
+        // Handle GraphQL errors
+        throw new Error('GraphQL errors: ' + JSON.stringify(response.data.errors))
+      }
+      return response.data.data
+    } catch (error) {
+      // if (axios.isAxiosError(error))
+      console.error(error)
+    }
+  }
+
   const animeApi = async (id: number, useMalId = false) => {
     // if (apiSearchId.value == null || apiSearchId.value < 0) {
     //   return
@@ -81,35 +107,34 @@ export function useAnime() {
       }
     } else variables = { id: id }
 
-    try {
-      const response: AxiosResponse<GraphQLResponse<AnilistMedia>> = await axios.post('https://graphql.anilist.co/',
-        { query, variables },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        })
-      // Access response data
-      if (response.data.errors) {
-        // Handle GraphQL errors
-        throw new Error('GraphQL errors: ' + JSON.stringify(response.data.errors))
-      }
-      return response.data.data.Media
-      // const { romaji, english: en, native } = anime.title
-      // anilistData.value = anime
-      // form.title = {
-      //   romaji,
-      //   en,
-      //   native,
-      // }
-      // show.value = !show.value
-      // form.anilist_id = anime.id
-    } catch (error) {
-      // if (axios.isAxiosError(error))
-      console.error(error)
-    }
+    const response = await hitApi<MediaApiResponse<AnimeMediaAutofillResponse>>(variables, query)
+    return response?.Media
   }
 
-  return { animeApi }
+  const homeAnimeApi = async (id: number[]) => {
+    const query = `
+    query ($id_in: [Int]) {
+      Page {
+        media(id_in: $id_in) {
+          id
+          coverImage {
+            extraLarge
+            large
+            medium
+            color
+          }
+        }
+      }
+    }
+    `
+
+    const variables = {
+      id_in: id,
+    }
+
+    const response = await hitApi<PaginatedMediaApiResponse<AnimeMediaHomepageResponse>>(variables, query)
+    return response?.Page.media
+  }
+
+  return { hitApi, animeApi, homeAnimeApi }
 }

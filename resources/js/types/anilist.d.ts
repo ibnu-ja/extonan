@@ -1,27 +1,33 @@
-export type AnilistMedia = {
-  Media: Anime
+export type MediaApiResponse<T> = {
+  Media: T
 }
 
-export type Anime = {
+export type PaginatedMediaApiResponse<T> = {
+  Page: {
+    media: T[]
+  }
+}
+
+export type CoverImage = {
+  extraLarge: string
+  large: string
+  medium: string
+  color: string
+}
+
+export type FuzzyDate = {
+  year: number | null
+  month: number | null
+  day: number | null
+}
+
+export type AnimeMediaAutofillResponse = {
   id: number
   episodes: number
   description: string
-  coverImage: {
-    extraLarge: string
-    large: string
-    medium: string
-    color: string
-  }
-  startDate: {
-    year: number
-    month: number
-    day: number
-  }
-  endDate: {
-    year: number
-    month: number
-    day: number
-  }
+  coverImage: CoverImage
+  startDate: FuzzyDate
+  endDate: FuzzyDate
   studios: {
     edges: {
       node: {
@@ -75,4 +81,9 @@ export type Anime = {
     english: string
     native: string
   }
+}
+
+export type AnimeMediaHomepageResponse = {
+  id: number
+  coverImage: CoverImage
 }

@@ -1,11 +1,15 @@
 import { TranslatableField } from '@/types/formHelper'
 import { Post } from '@/types/index'
 
-export type AnimeData = {
+export type LatestAnimeItem = {
   id: number
   anilist_id: number
-  description: TranslatableField
   slug: string
+  description: string
   title: TranslatableField
   link: string
 } & Post
+
+export type AnimeData = {
+  description: TranslatableField
+} & LatestAnimeItem & Post

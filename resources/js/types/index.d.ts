@@ -136,7 +136,20 @@ export type Permissions = {
   publish: boolean
 }
 
+export type Author = {
+  created_at: Date | null
+  current_team_id: null
+  email: string
+  email_verified_at: null | string
+  id: number
+  name: string | null
+  profile_photo_path: string | null
+  two_factor_confirmed_at: Date | null
+  updated_at: Date | null
+}
+
 export type Post = {
+  author: Author
   author_id: number
   created_at: Date | string | null
   updated_at: Date | string | null

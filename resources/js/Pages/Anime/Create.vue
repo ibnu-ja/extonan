@@ -12,7 +12,7 @@ import { mdiDelete } from '@mdi/js/commonjs/mdi'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
 import Casts from '@/Pages/Anime/Partials/Casts.vue'
 import { useAnime } from '@/composables/useAniList'
-import { Anime } from '@/types/anilist'
+import { AnimeMediaAutofillResponse } from '@/types/anilist'
 import { LanguageItem, TranslatableField } from '@/types/formHelper'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 
@@ -62,7 +62,7 @@ const form = useForm<AnimeForm>({
 )
 const apiType = ref<'MAL' | 'Anilist'>('MAL')
 const apiSearchId = ref<number | null>(null)
-const anilistData = ref<Anime>()
+const anilistData = ref<AnimeMediaAutofillResponse>()
 
 const { smAndUp, mdAndUp } = useDisplay()
 const currentLang = ref<LanguageItem>(languages[0])
@@ -214,7 +214,7 @@ const saveDraft = () => {
               </v-expand-x-transition>
               <v-card :rounded="smAndUp">
                 <v-card-item>
-                  <v-card-title class="d-flex">
+                  <v-card-title>
                     Metadata
                   </v-card-title>
                 </v-card-item>

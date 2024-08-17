@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { Anime } from '@/types/anilist'
+import { AnimeMediaAutofillResponse } from '@/types/anilist'
 import dayjs from 'dayjs'
 
 defineProps<{
-  data: Anime
+  data: AnimeMediaAutofillResponse
 }>()
 
 </script>
