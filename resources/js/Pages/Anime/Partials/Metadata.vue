@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { AnimeMediaAutofillResponse } from '@/types/anilist'
 import dayjs from 'dayjs'
+import objectSupport from 'dayjs/plugin/objectSupport'
+
+dayjs.extend(objectSupport)
 
 defineProps<{
   data: AnimeMediaAutofillResponse
