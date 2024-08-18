@@ -102,9 +102,15 @@ class AnimeController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Anime $anime)
+    public function update(StoreAnimeRequest $request, Anime $anime)
     {
-        //
+        if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class)) {
+            abort(403);
+        }
+
+        $anime->update($request->validated());
+
+        return redirect()->route('anime.index')->banner('Anime updated successfully.');
     }
 
     /**

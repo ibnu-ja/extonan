@@ -24,7 +24,8 @@ class StoreAnimeRequest extends FormRequest
         return [
             'title' => 'required|unique:anime|max:255',
             'anilist_id' => 'numeric|nullable',
-            'description' => 'required'
+            'description' => 'required',
+            'metadata' => 'required'
         ];
     }
 }

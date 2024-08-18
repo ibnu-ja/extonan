@@ -20,12 +20,14 @@ class Anime extends Post
     /**
      * @var string[]
      */
-    protected $fillable = ['title', 'description', 'anilist_id'];
+    protected $fillable = ['title', 'description', 'anilist_id', 'metadata'];
 
     /**
      * @var string[]
      */
     protected $appends = ['link', 'can'];
+
+    protected $casts = ['metadata' => 'object'];
 
     /**
      * Get the options for generating the slug.

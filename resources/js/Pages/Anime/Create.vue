@@ -44,6 +44,7 @@ type AnimeForm = {
   description: TranslatableField
   anilist_id: number | null
   is_published: boolean
+  metadata: unknown
 }
 
 const form = useForm<AnimeForm>({
@@ -59,6 +60,7 @@ const form = useForm<AnimeForm>({
     id: null,
   },
   anilist_id: null,
+  metadata: null,
 },
 )
 const apiType = ref<'MAL' | 'Anilist'>('MAL')
@@ -83,6 +85,7 @@ const fetchAnilistData = async () => {
     form.title.native = response?.title.native
     form.description.en = response?.description
     form.anilist_id = response?.id ?? null
+    form.metadata = response
   } catch (e) {
     console.error(e)
   }
@@ -92,9 +95,12 @@ const clearAnilist = () => anilistData.value = undefined
 
 const submit = () => {
   if (props.anime) {
+    console.log('update')
     form.put(route('anime.update', props.anime?.id))
-  } else
+  } else {
+    console.log('saveNew')
     form.post(route('anime.store'))
+  }
 }
 
 const save = () => {
@@ -251,7 +257,7 @@ const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create 
                     v-model="apiSearchId"
                     :label="apiType + ' ID'"
                     type="number"
-                    :error-messages="form.errors.anilist_id"
+                    :error-messages="form.errors.anilist_id! || form.errors.metadata!"
                     placeholder="placeholder"
                     variant="outlined"
                     hide-details="auto"
