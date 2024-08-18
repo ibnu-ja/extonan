@@ -118,6 +118,8 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function destroy(Anime $anime)
     {
-        //
+        $anime->delete();
+
+        return redirect()->back()->banner('Anime successfully deleted.');
     }
 }

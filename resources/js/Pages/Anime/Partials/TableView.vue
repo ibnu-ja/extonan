@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import { mdiDelete } from '@mdi/js/commonjs/mdi'
-import { mdiPencil, mdiSend } from '@mdi/js'
+import { mdiPencil } from '@mdi/js'
 import dayjs from 'dayjs'
 import { PaginatedResponse } from '@/types'
 import { router, usePage } from '@inertiajs/vue3'
@@ -74,6 +74,20 @@ const implodeSort = (sortItems: SortItem[]) => {
   }).join(',')
 }
 
+const deleting = ref(false)
+
+const selectedItem = ref<AnimeData>()
+
+const showDeletionModal = (item: AnimeData) => {
+  selectedItem.value = item
+  deleting.value = true
+}
+
+const deleteAnime = () => {
+  router.delete(route('anime.destroy', selectedItem.value))
+  deleting.value = false
+}
+
 const expodeSort = (sorts: string): SortItem[] => {
   return sorts.split(',').map((sort) => {
     const isDesc = sort.startsWith('-')
@@ -135,6 +149,7 @@ const pageChange = (e: number) => {
               :disabled="!item.can.delete"
               :icon="mdiDelete"
               color="error"
+              @click.prevent="showDeletionModal(item)"
             />
           </template>
         </v-tooltip>
@@ -155,19 +170,19 @@ const pageChange = (e: number) => {
           </template>
         </v-tooltip>
 
-        <v-tooltip
-          location="bottom"
-          text="Publish"
-        >
-          <template #activator="{props: propss}">
-            <v-icon
-              v-bind="propss"
-              :disabled="!item.can.publish"
-              :icon="mdiSend"
-              color="primary"
-            />
-          </template>
-        </v-tooltip>
+        <!--        <v-tooltip-->
+        <!--          location="bottom"-->
+        <!--          text="Publish"-->
+        <!--        >-->
+        <!--          <template #activator="{props: propss}">-->
+        <!--            <v-icon-->
+        <!--              v-bind="propss"-->
+        <!--              :disabled="!item.can.publish"-->
+        <!--              :icon="mdiSend"-->
+        <!--              color="primary"-->
+        <!--            />-->
+        <!--          </template>-->
+        <!--        </v-tooltip>-->
       </div>
     </template>
     <!--eslint-disable vue/valid-v-slot-->
@@ -198,4 +213,32 @@ const pageChange = (e: number) => {
       <!--eslint-enable-->
     </template>
   </v-data-table-server>
+  <div>
+    <v-dialog
+      v-model="deleting"
+      max-width="600"
+    >
+      <v-card>
+        <v-card-item title="Delete Anime" />
+        <v-card-text>
+          Are you sure you want to delete this item?
+        </v-card-text>
+        <v-divider />
+        <v-card-actions>
+          <v-btn
+            @click="deleting = false"
+          >
+            Cancel
+          </v-btn>
+
+          <v-btn
+            color="error"
+            @click="deleteAnime"
+          >
+            Delete
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
