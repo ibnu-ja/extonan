@@ -8,6 +8,8 @@ import { router, usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import { AnimeData } from '@/types/anime'
 import calendar from 'dayjs/plugin/calendar'
+import InertiaLink from '@/Components/InertiaLink.vue'
+import { VIcon } from 'vuetify/components'
 
 const page = usePage()
 
@@ -142,7 +144,9 @@ const pageChange = (e: number) => {
           text="Edit"
         >
           <template #activator="{props: propss}">
-            <v-icon
+            <InertiaLink
+              :as="VIcon"
+              :href="route('anime.edit', item.id)"
               v-bind="propss"
               :disabled="!item.can.update"
               :icon="mdiPencil"

@@ -18,8 +18,9 @@ import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 
 dayjs.extend(objectSupport)
 
-defineProps<{
+const props = defineProps<{
   canPublish: boolean
+  anime: AnimeForm & { id: number } | null
 }>()
 
 const languages: LanguageItem[] = [
@@ -74,7 +75,6 @@ const fetchAnilistData = async () => {
     console.error('id is not set')
     return
   }
-
   try {
     const response = await animeApi(apiSearchId.value, apiType.value === 'MAL')
     anilistData.value = response
@@ -90,19 +90,37 @@ const fetchAnilistData = async () => {
 
 const clearAnilist = () => anilistData.value = undefined
 
-const submit = () => form.post(route('anime.store'))
+const submit = () => {
+  if (props.anime) {
+    form.put(route('anime.update', props.anime?.id))
+  } else
+    form.post(route('anime.store'))
+}
 
-const saveDraft = () => {
-  form.is_published = false
+const save = () => {
+  if (props.anime?.is_published) {
+    form.is_published = props.anime.is_published
+  }
   submit()
 }
+
+if (props.anime != null) {
+  apiSearchId.value = props.anime.anilist_id!
+  fetchAnilistData()
+  form.title = props.anime.title
+  form.is_published = props.anime.is_published
+  form.description = props.anime.description
+  form.anilist_id = props.anime.anilist_id
+}
+
+const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create Anime'
 
 </script>
 
 <template>
-  <Head title="Create Anime" />
+  <Head :title />
   <Layout>
-    <PageHeader title="Create Anime">
+    <PageHeader :title>
       <template #append>
         <div class="d-flex gap-2">
           <v-btn
@@ -113,18 +131,18 @@ const saveDraft = () => {
             :text="mdAndUp ? 'Delete' : undefined"
           />
           <v-btn
-            variant="outlined"
-            :type="canPublish? undefined : 'submit'"
+            :variant="form.is_published ? undefined : 'outlined'"
+            :type="canPublish && !form.is_published? undefined : 'submit'"
             form="storeAnime"
             :disabled="form.processing"
-            color="secondary"
+            :color=" form.is_published ? 'primary' : 'secondary'"
             :icon="!mdAndUp ? mdiContentSave : undefined"
             :prepend-icon="mdAndUp ? mdiContentSave : undefined"
             :text="mdAndUp ? 'Save' : undefined"
-            @click.prevent="saveDraft"
+            @click.prevent="save"
           />
           <v-btn
-            v-if="canPublish"
+            v-if="canPublish && !form.is_published"
             form="storeAnime"
             type="submit"
             :disabled="form.processing"

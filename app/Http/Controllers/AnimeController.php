@@ -19,13 +19,14 @@ class AnimeController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('auth', except: ['index','show']),
+            new Middleware('auth', except: ['index', 'show']),
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): \Inertia\Response | LengthAwarePaginator
+    public function index(Request $request): \Inertia\Response|LengthAwarePaginator
     {
         $perPage = $request->integer('perPage', 15);
         $anime = QueryBuilder::for(Anime::class);
@@ -37,8 +38,8 @@ class AnimeController extends Controller implements HasMiddleware
         }
         $anime->appends(request()->query());
         return Inertia::render("Anime/Index", [
-            'anime' => fn () => $anime,
-            'canCreate' => fn () => auth()->check() && auth()->user()->can('create', Anime::class),
+            'anime' => fn() => $anime,
+            'canCreate' => fn() => auth()->check() && auth()->user()->can('create', Anime::class),
             'canViewUnpublished' => fn() => auth()->check() && auth()->user()->can('viewAny')
         ]);
     }
@@ -70,7 +71,7 @@ class AnimeController extends Controller implements HasMiddleware
             $request->validated()
         );
 
-        return redirect()->route('anime.index')->banner('Anime '. ($request->boolean('is_published') ? 'published' : 'draft saved') . ' successfully.');
+        return redirect()->route('anime.index')->banner('Anime ' . ($request->boolean('is_published') ? 'published' : 'draft saved') . ' successfully.');
     }
 
     /**
@@ -79,7 +80,7 @@ class AnimeController extends Controller implements HasMiddleware
     public function show(Anime $anime)
     {
         return Inertia::render('Anime/Show', [
-           'anime' => $anime
+            'anime' => $anime
         ]);
     }
 
@@ -88,7 +89,14 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function edit(Anime $anime)
     {
-        //
+        if (auth()->user()->cannot('update', $anime)) {
+            abort(403);
+        }
+
+        return Inertia::render('Anime/Create', [
+            'anime' => $anime,
+            'canPublish' => auth()->user()->can('publish', $anime)
+        ]);
     }
 
     /**
