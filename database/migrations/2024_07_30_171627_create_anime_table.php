@@ -12,11 +12,12 @@ return new class extends Migration {
     {
         Schema::create('anime', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('anilist_id')->unique();
+            $table->unsignedInteger('anilist_id');
             $table->text('description');
             $table->string('slug');
             $table->string('title');
             $table->foreignId('author_id')->references('id')->on('users');
+            $table->json('metadata');
             $table->timestamps();
             $table->drafts();
         });
