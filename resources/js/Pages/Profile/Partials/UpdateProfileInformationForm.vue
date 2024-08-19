@@ -4,6 +4,7 @@ import { router, useForm, usePage } from '@inertiajs/vue3'
 import FormSection from '@/Components/FormSection.vue'
 import { User } from '@/types'
 import { route as ziggyRoute } from 'ziggy-js'
+import axios from 'axios'
 
 const route = inject('route') as typeof ziggyRoute
 

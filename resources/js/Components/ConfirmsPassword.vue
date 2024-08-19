@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { nextTick, reactive, ref, VNodeRef } from 'vue'
+import { inject, nextTick, reactive, ref, VNodeRef } from 'vue'
 import { mdiEye } from '@mdi/js/commonjs/mdi'
 import { mdiEyeOff } from '@mdi/js'
+import { route as ziggyRoute } from 'ziggy-js'
+import axios from 'axios'
 
 const emit = defineEmits(['confirmed'])
 withDefaults(defineProps<{
@@ -13,6 +15,8 @@ withDefaults(defineProps<{
   content: 'For your security, please confirm your password to continue.',
   button: 'Confirm',
 })
+
+const route = inject('route') as typeof ziggyRoute
 
 const confirmingPassword = ref(false)
 

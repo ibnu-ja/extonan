@@ -15,6 +15,8 @@ const page = usePage()
 
 const route = inject('route') as typeof ziggyRoute
 
+const location = page.props.ziggy.location
+
 defineProps<{
   breadcrumbs?: BreadcrumbItem[]
 }>()
@@ -36,12 +38,12 @@ const itemList = [
     label: 'Dashboard',
   },
 ]
-const tab = ref(location.pathname.split('/')[1])
+const tab = ref(location.split('/')[1])
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const visit = (e: any) => {
   if (e == null) {
-    tab.value = location.pathname.split('/')[1]
+    tab.value = location.split('/')[1]
   }
   const tes = itemList.find(item => item.value == e)
   if (tes) {

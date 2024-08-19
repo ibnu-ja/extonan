@@ -6,6 +6,7 @@ import ConfirmsPassword from '@/Components/ConfirmsPassword.vue'
 import { mdiContentCopy } from '@mdi/js'
 import { UseClipboard } from '@vueuse/components'
 import { route as ziggyRoute } from 'ziggy-js'
+import axios from 'axios'
 
 const route = inject('route') as typeof ziggyRoute
 
