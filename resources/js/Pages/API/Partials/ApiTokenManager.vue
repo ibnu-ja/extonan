@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { inject, ref, watch } from 'vue'
 import { useForm, usePage } from '@inertiajs/vue3'
 import ActionSection from '@/Components/ActionSection.vue'
 import FormSection from '@/Components/FormSection.vue'
@@ -7,8 +7,11 @@ import { chunk } from 'lodash-es'
 import { ApiToken } from '@/types'
 import { mdiContentCopy } from '@mdi/js'
 import { UseClipboard } from '@vueuse/components'
+import { route as ziggyRoute } from 'ziggy-js'
 
 const page = usePage()
+
+const route = inject('route') as typeof ziggyRoute
 
 // tokens: Array,
 // availablePermissions: Array,

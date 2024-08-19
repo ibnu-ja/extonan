@@ -9,20 +9,18 @@ import Link from '@/Components/InertiaLink.vue'
 import { VBtn } from 'vuetify/components'
 import { mdiEye } from '@mdi/js/commonjs/mdi'
 import { mdiEyeOff } from '@mdi/js'
-import { ref } from 'vue'
-
-// defineProps({
-//     canResetPassword: Boolean,
-//     status: String,
-// });
-
-const inertiaProps = usePage().props
+import { inject, ref } from 'vue'
+import { route as ziggyRoute } from 'ziggy-js'
 
 defineProps<{
   canResetPassword: boolean
   status: string
   socialstream: SocialstreamType
 }>()
+
+const inertiaProps = usePage().props
+
+const route = inject('route') as typeof ziggyRoute
 
 // const route = inject(ziggySymbol)!
 
@@ -42,6 +40,8 @@ const submit = () => {
     onFinish: () => form.reset('password'),
   })
 }
+
+const registerRoute = route('register')
 
 </script>
 
@@ -83,7 +83,7 @@ const submit = () => {
           >
             Don't have an account?
             <Link
-              :href="route('register')"
+              :href="registerRoute"
               class="text-info"
             >
               Sign up

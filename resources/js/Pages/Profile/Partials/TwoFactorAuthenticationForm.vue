@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { router, useForm, usePage } from '@inertiajs/vue3'
 import ActionSection from '@/Components/ActionSection.vue'
 import ConfirmsPassword from '@/Components/ConfirmsPassword.vue'
 import { mdiContentCopy } from '@mdi/js'
 import { UseClipboard } from '@vueuse/components'
+import { route as ziggyRoute } from 'ziggy-js'
+import axios from 'axios'
+
+const route = inject('route') as typeof ziggyRoute
 
 const props = defineProps({
   requiresConfirmation: Boolean,

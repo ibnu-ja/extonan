@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/vue3'
 import { computed, watchEffect } from 'vue'
 import { useTheme } from 'vuetify'
 
-import { useUserStore } from '@/stores/userStore'
+import { useUserStore } from '@/stores'
 import { usePreferredDark } from '@vueuse/core'
 import Banner from '@/Components/Banner.vue'
 
@@ -30,7 +30,7 @@ defineProps({
       {{ title }}
     </title>
 
-    <!--      :content="colorScheme"-->
+    <!--:content="colorScheme"-->
     <meta name="color-scheme">
   </Head>
   <v-app>

@@ -18,6 +18,13 @@ export default defineConfig({
         },
       },
     }),
-    vuetify(),
+    vuetify({
+      styles: {
+        configFile: 'resources/css/settings.scss',
+      },
+    }),
   ],
+  ssr: {
+    noExternal: [/^vuetify/],
+  },
 })

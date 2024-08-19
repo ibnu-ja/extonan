@@ -1,7 +1,15 @@
+<script lang="ts">
+
+import AppLayout from '@/Layouts/AppLayout.vue'
+
+export default {
+  layout: AppLayout,
+}
+</script>
+
 <script setup lang="ts">
-import { usePage } from '@inertiajs/vue3'
+import { Head, usePage } from '@inertiajs/vue3'
 import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue'
-import Layout from '@/Layouts/AppLayout.vue'
 import SetPasswordForm from '@/Pages/Profile/Partials/SetPasswordForm.vue'
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue'
@@ -9,6 +17,7 @@ import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthe
 import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm.vue'
 import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue'
 import { UserSession } from '@/types'
+import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 
 defineProps<{
   confirmsTwoFactorAuthentication: boolean
@@ -19,63 +28,60 @@ const page = usePage()
 </script>
 
 <template>
-  <Layout title="Profile">
-    <template #header>
-      <h1 class="text-h4 text-md-h3">
-        Profile
-      </h1>
+  <Head>
+    Profile
+  </Head>
+  <PageHeader title="Profile" />
+
+  <v-container>
+    <template v-if="page.props.jetstream.canUpdateProfileInformation">
+      <UpdateProfileInformationForm :user="page.props.auth.user!" />
+
+      <v-divider class="my-8" />
     </template>
 
-    <v-container>
-      <template v-if="page.props.jetstream.canUpdateProfileInformation">
-        <UpdateProfileInformationForm :user="page.props.auth.user" />
+    <template v-if="page.props.jetstream.canUpdatePassword && page.props.socialstream.hasPassword">
+      <UpdatePasswordForm class="mt-10 mt-sm-0" />
 
-        <v-divider class="my-8" />
-      </template>
+      <v-divider class="my-8" />
+    </template>
 
-      <template v-if="page.props.jetstream.canUpdatePassword && page.props.socialstream.hasPassword">
-        <UpdatePasswordForm class="mt-10 mt-sm-0" />
+    <template v-else>
+      <SetPasswordForm class="mt-10 mt-sm-0" />
 
-        <v-divider class="my-8" />
-      </template>
+      <v-divider class="my-8" />
+    </template>
 
-      <template v-else>
-        <SetPasswordForm class="mt-10 mt-sm-0" />
+    <template
+      v-if="page.props.jetstream.canManageTwoFactorAuthentication && page.props.socialstream.hasPassword"
+    >
+      <TwoFactorAuthenticationForm
+        :requires-confirmation="confirmsTwoFactorAuthentication"
+        class="mt-10 mt-sm-0"
+      />
 
-        <v-divider class="my-8" />
-      </template>
+      <v-divider class="my-8" />
+    </template>
 
-      <template
-        v-if="page.props.jetstream.canManageTwoFactorAuthentication && page.props.socialstream.hasPassword"
-      >
-        <TwoFactorAuthenticationForm
-          :requires-confirmation="confirmsTwoFactorAuthentication"
-          class="mt-10 mt-sm-0"
-        />
+    <template v-if="page.props.socialstream.show">
+      <ConnectedAccountsForm class="mt-10 mt-sm-0" />
+    </template>
 
-        <v-divider class="my-8" />
-      </template>
+    <template v-if="page.props.socialstream.hasPassword">
+      <v-divider class="my-8" />
 
-      <template v-if="page.props.socialstream.show">
-        <ConnectedAccountsForm class="mt-10 mt-sm-0" />
-      </template>
+      <LogoutOtherBrowserSessionsForm
+        :sessions="sessions"
+        class="mt-10 mt-sm-0"
+      />
+    </template>
 
-      <template v-if="page.props.socialstream.hasPassword">
-        <v-divider class="my-8" />
+    <template
+      v-if="page.props.jetstream.hasAccountDeletionFeatures && page.props.socialstream.hasPassword"
+    >
+      <v-divider class="my-8" />
 
-        <LogoutOtherBrowserSessionsForm
-          :sessions="sessions"
-          class="mt-10 mt-sm-0"
-        />
-      </template>
-
-      <template
-        v-if="page.props.jetstream.hasAccountDeletionFeatures && page.props.socialstream.hasPassword"
-      >
-        <v-divider class="my-8" />
-
-        <DeleteUserForm class="mt-10 mt-sm-0" />
-      </template>
-    </v-container>
-  </Layout>
+      <DeleteUserForm class="mt-10 mt-sm-0" />
+    </template>
+  </v-container>
 </template>

@@ -73,7 +73,7 @@ export interface User {
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
   auth: {
-    user: User
+    user: User | null
   }
   jetstream: {
     canCreateTeams?: boolean
@@ -101,3 +101,63 @@ type LinkProps = {
 }
 
 type BreadcrumbItem = (string | (Partial<LinkProps> & { title: string, disabled: boolean }))
+
+// Define TypeScript types for the GraphQL response
+export type GraphQLResponse<T> = {
+  data: T
+  errors?: never[]
+}
+
+type Link = {
+  url: string | null
+  label: string
+  active: boolean
+}
+
+export type PaginatedResponse<T> = {
+  current_page: number
+  data: T[]
+  first_page_url: string
+  from: number
+  last_page: number
+  last_page_url: string
+  links: Link[]
+  next_page_url: string | null
+  path: string
+  per_page: number
+  prev_page_url: string | null
+  to: number
+  total: number
+}
+
+export type Permissions = {
+  update: boolean
+  delete: boolean
+  publish: boolean
+}
+
+export type Author = {
+  created_at: Date | null
+  current_team_id: null
+  email: string
+  email_verified_at: null | string
+  id: number
+  name: string | null
+  profile_photo_path: string | null
+  two_factor_confirmed_at: Date | null
+  updated_at: Date | null
+}
+
+export type Post = {
+  author: Author
+  author_id: number
+  created_at: Date | string | null
+  updated_at: Date | string | null
+  published_at: Date | string | null
+  uuid: string | null
+  is_published: boolean
+  is_current: boolean
+  publisher_type: string | null
+  publisher_id: number | null
+  can: Permissions
+}

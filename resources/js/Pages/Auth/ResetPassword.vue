@@ -5,12 +5,15 @@ import AuthLayout from '@/Layouts/AuthLayout.vue'
 import Link from '@/Components/InertiaLink.vue'
 import { mdiEye } from '@mdi/js/commonjs/mdi.js'
 import { mdiEyeOff } from '@mdi/js'
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
+import { route as ziggyRoute } from 'ziggy-js'
 
 const props = defineProps<{
   email: string
   token: string
 }>()
+
+const route = inject('route') as typeof ziggyRoute
 
 const showP = ref(true)
 const showCP = ref(true)

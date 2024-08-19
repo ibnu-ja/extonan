@@ -1,25 +1,55 @@
 <script lang="ts" setup>
 
-import { ref, watch } from 'vue'
+import { inject, ref } from 'vue'
 import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiLogin, mdiMenu } from '@mdi/js'
 import { router, usePage } from '@inertiajs/vue3'
 import { VBtn, VListItem, VTab } from 'vuetify/components'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import { BreadcrumbItem } from '@/types'
+import { route as ziggyRoute } from 'ziggy-js'
 
 const drawer = defineModel<boolean | undefined>('drawer')
 
 const page = usePage()
 
+const route = inject('route') as typeof ziggyRoute
+
+const location = page.props.ziggy.location
+
 defineProps<{
   breadcrumbs?: BreadcrumbItem[]
 }>()
 
-const test = ref(route(route().current() as string))
+const itemList = [
+  {
+    value: '',
+    link: route('home'),
+    label: 'Home',
+  },
+  {
+    value: 'anime',
+    link: route('anime.index'),
+    label: 'Anime',
+  },
+  {
+    value: 'dashboard',
+    link: route('dashboard'),
+    label: 'Dashboard',
+  },
+]
+const tab = ref(location.split('/')[1])
 
-watch(test, (e: unknown) => router.visit(e as string))
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const visit = (e: any) => {
+  if (e == null) {
+    tab.value = location.split('/')[1]
+  }
+  const tes = itemList.find(item => item.value == e)
+  if (tes) {
+    router.visit(tes.link)
+  }
+}
 function logout() {
   router.post(route('logout'))
 }
@@ -45,26 +75,20 @@ function logout() {
       >
     </InertiaLink>
     <v-tabs
-      v-model="test"
+      v-model="tab"
       class="hidden-md-and-down"
       color="primary"
+      :mandatory="false"
+      @update:model-value="visit"
     >
-      <InertiaLink
-        :as="VTab"
-        exact-active
+      <v-tab
+        v-for="item in itemList"
+        :key="item.value"
         class="mr-2"
-        :value="route('home')"
+        :value="item.value"
       >
-        Home
-      </InertiaLink>
-
-      <InertiaLink
-        v-if="page.props.auth.user"
-        :as="VTab"
-        :value="route('dashboard')"
-      >
-        Dashboard
-      </InertiaLink>
+        {{ item.label }}
+      </v-tab>
     </v-tabs>
     <v-spacer />
     <ThemeSelector />
@@ -73,22 +97,22 @@ function logout() {
       <template #activator="{ props }">
         <v-btn
           v-bind="props"
-          :icon="mdiAccount"
-          color="primary"
-        />
+          icon
+        >
+          <v-avatar v-if="page.props.auth.user">
+            <v-img
+              :alt="page.props.auth.user.name!"
+              :src="page.props.auth.user!.profile_photo_url!"
+            />
+          </v-avatar>
+          <v-icon
+            v-else
+            :icon="mdiAccount"
+          />
+        </v-btn>
       </template>
       <v-list color="primary">
         <template v-if="page.props.auth.user">
-          <v-list-item>
-            <v-avatar
-              size="60"
-            >
-              <v-img
-                :alt="page.props.auth.user.name!"
-                :src="page.props.auth.user!.profile_photo_url!"
-              />
-            </v-avatar>
-          </v-list-item>
           <v-list-item
             :title="page.props.auth.user.name!"
             :subtitle="page.props.auth.user.email"

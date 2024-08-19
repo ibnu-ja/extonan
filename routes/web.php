@@ -1,17 +1,15 @@
 <?php
 
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\AnimeController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('home');
+Route::get('/', HomeController::class)->name('home');
+
+Route::resources([
+    'anime' => AnimeController::class,
+]);
 
 Route::middleware([
     'auth:sanctum',

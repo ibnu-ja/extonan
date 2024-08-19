@@ -4,7 +4,7 @@ import { computed, ref, watchEffect } from 'vue'
 import { useTheme } from 'vuetify'
 import AppBar from '@/Layouts/Partials/AppBar.vue'
 import Drawer from '@/Layouts/Partials/Drawer.vue'
-import { useUserStore } from '@/stores/userStore'
+import { useUserStore } from '@/stores'
 import { usePreferredDark } from '@vueuse/core'
 import { BreadcrumbItem } from '@/types'
 import { Head } from '@inertiajs/vue3'
@@ -38,16 +38,6 @@ defineProps<{
     />
     <Drawer v-model="drawer" />
     <v-main>
-      <!-- Page Heading -->
-      <!-- mt-md-6-->
-      <v-container
-        v-if="$slots.header"
-        class="py-0 my-4 mt-6 mt-lg-12"
-      >
-        <header>
-          <slot name="header" />
-        </header>
-      </v-container>
       <slot />
     </v-main>
   </v-app>

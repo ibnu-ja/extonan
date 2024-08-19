@@ -1,12 +1,15 @@
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { inject, ref, VNodeRef } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import ActionSection from '@/Components/ActionSection.vue'
 import { mdiEye } from '@mdi/js/commonjs/mdi.js'
 import { mdiEyeOff } from '@mdi/js'
+import { route as ziggyRoute } from 'ziggy-js'
+
+const route = inject('route') as typeof ziggyRoute
 
 const confirmingUserDeletion = ref(false)
-const passwordInput = ref(null)
+const passwordInput = ref<VNodeRef | null>(null)
 
 const form = useForm({
   password: '',
@@ -17,14 +20,14 @@ const showP = ref(false)
 const confirmUserDeletion = () => {
   confirmingUserDeletion.value = true
 
-  setTimeout(() => passwordInput.value.focus(), 250)
+  setTimeout(() => passwordInput.value?.focus(), 250)
 }
 
 const deleteUser = () => {
   form.delete(route('current-user.destroy'), {
     preserveScroll: true,
     onSuccess: () => closeModal(),
-    onError: () => passwordInput.value.focus(),
+    onError: () => passwordInput.value?.focus(),
     onFinish: () => form.reset(),
   })
 }
@@ -49,7 +52,8 @@ const closeModal = () => {
     <template #content>
       <v-card-text>
         <p>
-          Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
+          Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your
+          account, please download any data or information that you wish to retain.
         </p>
       </v-card-text>
 
@@ -78,7 +82,9 @@ const closeModal = () => {
 
             <v-card-text>
               <p class="mb-4">
-                Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
+                Are you sure you want to delete your account? Once your account is deleted, all of its resources and
+                data will be permanently deleted. Please enter your password to confirm you would like to permanently
+                delete your account.
               </p>
 
               <v-text-field

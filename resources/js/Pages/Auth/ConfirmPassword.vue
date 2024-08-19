@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { ref, VNodeRef } from 'vue'
+import { inject, ref, VNodeRef } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { VBtn } from 'vuetify/components'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import Link from '@/Components/InertiaLink.vue'
 import { mdiEye } from '@mdi/js/commonjs/mdi.js'
 import { mdiEyeOff } from '@mdi/js'
+import { route as ziggyRoute } from 'ziggy-js'
 
 const form = useForm({
   password: '',
 })
+
+const route = inject('route') as typeof ziggyRoute
 
 const showP = ref(false)
 
