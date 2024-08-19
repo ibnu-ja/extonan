@@ -2,14 +2,17 @@
 
 use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', HomeController::class)->name('home');
 
 Route::resources([
-    'anime' => AnimeController::class,
+    'anime' => AnimeController::class
 ]);
+
+Route::resource('post', PostController::class)->except('index');
 
 Route::middleware([
     'auth:sanctum',

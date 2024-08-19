@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Translatable\HasTranslations;
 
-class Anime extends Post
+class Anime extends BasePost
 {
     use HasTranslations;
 
@@ -48,5 +49,10 @@ class Anime extends Post
         return Attribute::make(
             get: fn () => route('anime.show', $this->attributes['id']),
         );
+    }
+
+    public function posts(): MorphMany
+    {
+        return $this->morphMany(Post::class, 'postable');
     }
 }

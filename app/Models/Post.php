@@ -2,55 +2,38 @@
 
 namespace App\Models;
 
-use App\Publishable;
-use Auth;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Laravel\Scout\Searchable;
-use Oddvalue\LaravelDrafts\Concerns\HasDrafts;
-use Plank\Mediable\Mediable;
-use Spatie\Sluggable\HasSlug;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Spatie\Sluggable\SlugOptions;
 
-abstract class Post extends Model
+class Post extends BasePost
 {
-    use HasSlug,
-        HasDrafts,
-        Searchable,
-        HasFactory,
-        Mediable,
-        Publishable;
+    use HasFactory;
 
-    /*
-    |
-    | Attributes that should be appended.
-    |
-    */
-    protected $appends = ['can'];
+    /**
+     * @var string[]
+     */
+    protected $fillable = ['title', 'description', 'anilist_id', 'metadata'];
 
-    /*
-    |
-    | Relationships
-    |
-    */
-    public function author(): BelongsTo
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug')
+            ->slugsShouldBeNoLongerThan(60);
     }
 
-    /*
-    |
-    | Attributes
-    |
-    */
-
-    public function can(): Attribute
+    public function postable(): MorphTo
     {
-        return Attribute::get(fn() => [
-            'update' => Auth::check() && Auth::user()->can('update', $this),
-            'publish' => Auth::check() && Auth::user()->can('publish', $this),
-            'delete' => Auth::check() && Auth::user()->can('delete', $this),
-        ]);
+        return $this->morphTo();
+    }
+
+    public function resources(): HasMany
+    {
+        return $this->hasMany(Resource::class);
     }
 }
