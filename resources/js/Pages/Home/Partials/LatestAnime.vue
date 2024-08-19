@@ -7,6 +7,7 @@ import { useAnime } from '@/composables/useAniList'
 import { VCard } from 'vuetify/components'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import { ref } from 'vue'
+import { CoverImage } from '@/types/anilist'
 
 const props = defineProps<{
   latestAnime: LatestAnimeItem[]
@@ -25,7 +26,10 @@ const animeItems = computedAsync(async () => {
   return props.latestAnime.map((item) => {
     const match = result?.find(item2 => item2.id === item.anilist_id)
 
-    return match ? { ...item, ...match } : item
+    const newVar: LatestAnimeItem & {
+      coverImage: CoverImage | null
+    } = match ? { ...item, coverImage: match.coverImage } : { ...item, coverImage: null }
+    return newVar
   })
 })
 

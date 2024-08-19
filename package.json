@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build && vite build --ssr",
+    "build-dev": "vue-tsc && vite build --debug --mode development &&  vite build --debug --mode development --ssr",
     "lint": "eslint --fix ."
   },
   "devDependencies": {

@@ -1,9 +1,12 @@
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { inject, ref } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import ActionSection from '@/Components/ActionSection.vue'
 import { mdiEye } from '@mdi/js/commonjs/mdi.js'
 import { mdiEyeOff } from '@mdi/js'
+import { route as ziggyRoute } from 'ziggy-js'
+
+const route = inject('route') as typeof ziggyRoute
 
 const confirmingUserDeletion = ref(false)
 const passwordInput = ref(null)

@@ -4,7 +4,7 @@ import { route as ziggyRoute } from 'ziggy-js'
 import { PageProps as AppPageProps } from './'
 
 declare global {
-  const route: typeof ziggyRoute
+  // const route: typeof ziggyRoute
   const axios: AxiosStatic
   interface Window {
     axios: AxiosStatic

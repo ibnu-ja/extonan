@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { VBtn } from 'vuetify/components'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import InertiaLink from '@/Components/InertiaLink.vue'
+import { route as ziggyRoute } from 'ziggy-js'
 
 const props = defineProps<{
   status: string
 }>()
+
+const route = inject('route') as typeof ziggyRoute
 
 const form = useForm({})
 

@@ -1,15 +1,18 @@
 <script lang="ts" setup>
-import { ref, VNodeRef } from 'vue'
+import { inject, ref, VNodeRef } from 'vue'
 import { useForm, usePage } from '@inertiajs/vue3'
 import ActionSection from '@/Components/ActionSection.vue'
 import ConnectedAccount from '@/Components/ConnectedAccount.vue'
 import { SocialstreamProviders } from '@/types'
+import { route as ziggyRoute } from 'ziggy-js'
 
 const accountId = ref<number | null>(null)
 const confirmingRemoveAccount = ref(false)
 const passwordInput = ref<VNodeRef | null>(null)
 
 const page = usePage()
+
+const route = inject('route') as typeof ziggyRoute
 
 const form = useForm({
   password: '',

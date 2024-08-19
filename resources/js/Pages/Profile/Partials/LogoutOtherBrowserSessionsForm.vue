@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { ref, VNodeRef } from 'vue'
+import { inject, ref, VNodeRef } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import ActionSection from '@/Components/ActionSection.vue'
 import { UserSession } from '@/types'
 import { mdiCellphone, mdiDesktopTowerMonitor, mdiEyeOff } from '@mdi/js'
 import { mdiEye } from '@mdi/js/commonjs/mdi'
+import { route as ziggyRoute } from 'ziggy-js'
 
 defineProps<{
   sessions: UserSession[]
 }>()
+
+const route = inject('route') as typeof ziggyRoute
 
 const confirmingLogout = ref(false)
 const passwordInput = ref<VNodeRef | null>(null)

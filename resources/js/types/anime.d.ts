@@ -5,7 +5,7 @@ export type LatestAnimeItem = {
   id: number
   anilist_id: number
   slug: string
-  description: string
+  description: TranslatableField
   title: TranslatableField
   link: string
 } & Post

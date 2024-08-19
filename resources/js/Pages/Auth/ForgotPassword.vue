@@ -3,10 +3,14 @@ import { Head, useForm } from '@inertiajs/vue3'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import { VBtn } from 'vuetify/components'
 import Link from '@/Components/InertiaLink.vue'
+import { inject } from 'vue'
+import { route as ziggyRoute } from 'ziggy-js'
 
 defineProps<{
   status: string
 }>()
+
+const route = inject('route') as typeof ziggyRoute
 
 const form = useForm({
   email: '',

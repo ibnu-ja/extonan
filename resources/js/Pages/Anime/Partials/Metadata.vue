@@ -5,9 +5,15 @@ import objectSupport from 'dayjs/plugin/objectSupport'
 
 dayjs.extend(objectSupport)
 
-defineProps<{
+const props = defineProps<{
   data: AnimeMediaAutofillResponse
 }>()
+
+const airingDate = dayjs({
+  year: props.data.startDate.year ?? undefined,
+  month: props.data.startDate.month ? props.data.startDate.month - 1 : undefined,
+  day: props.data.startDate.day ? props.data.startDate.day - 1 : undefined,
+}).format('D MMM YYYY')
 
 </script>
 
@@ -21,13 +27,7 @@ defineProps<{
           Airing Date
         </v-list-subheader>
         <!--dayjs is 0 indexed-->
-        {{
-          dayjs({
-            year: data.startDate.year,
-            month: data.startDate.month - 1,
-            day: data.startDate.day - 1
-          }).format('D MMM YYYY')
-        }}
+        {{ airingDate }}
       </div>
       <div v-if="data.episodes">
         <v-list-subheader>

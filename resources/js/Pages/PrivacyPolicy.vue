@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue'
 
-defineProps({
-  policy: String,
-})
+defineProps<{
+  policy: string
+}>()
 </script>
 
 <template>
@@ -17,10 +17,12 @@ defineProps({
           <AuthenticationCardLogo />
         </div>
 
+        <!-- eslint-disable vue/no-v-html -->
         <div
           class="w-full sm:max-w-2xl mt-6 p-6 bg-white shadow-md overflow-hidden sm:rounded-lg prose"
           v-html="policy"
         />
+        <!-- eslint-enable -->
       </div>
     </div>
   </div>

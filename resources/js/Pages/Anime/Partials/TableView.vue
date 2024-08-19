@@ -5,11 +5,12 @@ import { mdiPencil } from '@mdi/js'
 import dayjs from 'dayjs'
 import { PaginatedResponse } from '@/types'
 import { router, usePage } from '@inertiajs/vue3'
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { AnimeData } from '@/types/anime'
 import calendar from 'dayjs/plugin/calendar'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import { VIcon } from 'vuetify/components'
+import { route as ziggyRoute } from 'ziggy-js'
 
 const page = usePage()
 
@@ -47,6 +48,8 @@ const filteredHeaders = computed(() => {
 })
 
 dayjs.extend(calendar)
+
+const route = inject('route') as typeof ziggyRoute
 
 const props = defineProps<{
   canCreate: boolean

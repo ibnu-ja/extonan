@@ -1,8 +1,11 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { router, useForm, usePage } from '@inertiajs/vue3'
 import FormSection from '@/Components/FormSection.vue'
 import { User } from '@/types'
+import { route as ziggyRoute } from 'ziggy-js'
+
+const route = inject('route') as typeof ziggyRoute
 
 const props = defineProps<{
   user: User

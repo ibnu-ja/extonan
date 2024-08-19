@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { nextTick, ref, VNodeRef } from 'vue'
+import { inject, nextTick, ref, VNodeRef } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import { VBtn } from 'vuetify/components'
 import Link from '@/Components/InertiaLink.vue'
+import { route as ziggyRoute } from 'ziggy-js'
 
 const recovery = ref(false)
+
+const route = inject('route') as typeof ziggyRoute
 
 const form = useForm({
   code: '',

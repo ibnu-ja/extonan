@@ -2,7 +2,7 @@
 
 import Layout from '@/Layouts/AppLayout.vue'
 import { Head, useForm } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import { mdiClose, mdiContentSave, mdiSend } from '@mdi/js'
 import dayjs from 'dayjs'
@@ -15,6 +15,7 @@ import { useAnime } from '@/composables/useAniList'
 import { AnimeMediaAutofillResponse } from '@/types/anilist'
 import { LanguageItem, TranslatableField } from '@/types/formHelper'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
+import { route as ziggyRoute } from 'ziggy-js'
 
 dayjs.extend(objectSupport)
 
@@ -22,6 +23,8 @@ const props = defineProps<{
   canPublish: boolean
   anime: AnimeForm & { id: number } | null
 }>()
+
+const route = inject('route') as typeof ziggyRoute
 
 const languages: LanguageItem[] = [
   {

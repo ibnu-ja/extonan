@@ -1,16 +1,19 @@
 <script lang="ts" setup>
 
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiLogin, mdiMenu } from '@mdi/js'
 import { router, usePage } from '@inertiajs/vue3'
 import { VBtn, VListItem, VTab } from 'vuetify/components'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import { BreadcrumbItem } from '@/types'
+import { route as ziggyRoute } from 'ziggy-js'
 
 const drawer = defineModel<boolean | undefined>('drawer')
 
 const page = usePage()
+
+const route = inject('route') as typeof ziggyRoute
 
 defineProps<{
   breadcrumbs?: BreadcrumbItem[]
