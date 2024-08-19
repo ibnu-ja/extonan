@@ -6,6 +6,7 @@ import { computedAsync } from '@vueuse/core'
 import { useAnime } from '@/composables/useAniList'
 import Banner from '@/Pages/Anime/Partials/Banner.vue'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
+import SpeedDial from '@/Pages/Anime/Partials/SpeedDial.vue'
 
 const props = defineProps<{
   anime: AnimeData
@@ -20,6 +21,7 @@ const animeBwang = computedAsync(async () => {
 
 <template>
   <AppLayout>
+    <SpeedDial />
     <Head :title="anime.title.en!" />
 
     <Banner
