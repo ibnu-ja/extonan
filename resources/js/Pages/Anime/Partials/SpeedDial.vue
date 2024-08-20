@@ -45,7 +45,7 @@ defineProps<{
         :as="VBtn"
         color="secondary"
         :icon="true"
-        :href="route('post.create', anime )"
+        :href="route('post.create', anime)"
       >
         <v-icon
           :icon="mdiMoviePlus"
