@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { mdiClose, mdiMoviePlus, mdiPlaylistPlus, mdiPlus } from '@mdi/js'
 import { ref } from 'vue'
+import InertiaLink from '@/Components/InertiaLink.vue'
+import { VBtn } from 'vuetify/components'
+import { AnimeData } from '@/types/anime'
 
 const open = ref(false)
+
+defineProps<{
+  anime: AnimeData
+}>()
 </script>
 <template>
   <v-fab
@@ -33,10 +40,12 @@ const open = ref(false)
           Add Volume
         </div>
       </v-btn>
-      <v-btn
+      <InertiaLink
         key="2"
+        :as="VBtn"
         color="secondary"
         :icon="true"
+        :href="route('post.create', anime )"
       >
         <v-icon
           :icon="mdiMoviePlus"
@@ -45,7 +54,7 @@ const open = ref(false)
         <div class="fab-text-custom text-subtitle-2 font-weight-bold text-medium-emphasis">
           Add Episode
         </div>
-      </v-btn>
+      </InertiaLink>
     </v-speed-dial>
   </v-fab>
 </template>

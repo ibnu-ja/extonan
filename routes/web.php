@@ -12,7 +12,7 @@ Route::resources([
     'anime' => AnimeController::class
 ]);
 
-Route::resource('post', PostController::class)->except('index');
+Route::resource('/anime/{anime}/post', PostController::class)->except('index');
 
 Route::middleware([
     'auth:sanctum',

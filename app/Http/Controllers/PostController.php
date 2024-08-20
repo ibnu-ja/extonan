@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Anime;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,9 +20,12 @@ class PostController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): \Inertia\Response
+    public function create(Anime $anime): \Inertia\Response
     {
-        return Inertia::render('Post/Create');
+        return Inertia::render('Anime/Post/Create', [
+            'anime' => $anime,
+            'canPublish' => request()->user()->can('publish', Post::class)
+        ]);
     }
 
     /**

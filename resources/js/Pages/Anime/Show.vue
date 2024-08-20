@@ -21,7 +21,7 @@ const animeBwang = computedAsync(async () => {
 
 <template>
   <AppLayout>
-    <SpeedDial />
+    <SpeedDial :anime />
     <Head :title="anime.title.en!" />
 
     <Banner

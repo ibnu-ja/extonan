@@ -1,6 +1,13 @@
-<script setup lang="ts">
+<script lang="ts">
 
-import Layout from '@/Layouts/AppLayout.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+
+export default {
+  layout: AppLayout,
+}
+</script>
+
+<script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3'
 import { inject, ref } from 'vue'
 import { useDisplay } from 'vuetify'
@@ -128,172 +135,170 @@ const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create 
 
 <template>
   <Head :title />
-  <Layout>
-    <PageHeader :title>
-      <template #append>
-        <div class="d-flex gap-2">
-          <v-btn
-            variant="outlined"
-            color="error"
-            :icon="!mdAndUp ? mdiDelete : undefined"
-            :prepend-icon="mdAndUp ? mdiDelete : undefined"
-            :text="mdAndUp ? 'Delete' : undefined"
-          />
-          <v-btn
-            :variant="form.is_published ? undefined : 'outlined'"
-            :type="canPublish && !form.is_published? undefined : 'submit'"
-            form="storeAnime"
-            :disabled="form.processing"
-            :color=" form.is_published ? 'primary' : 'secondary'"
-            :icon="!mdAndUp ? mdiContentSave : undefined"
-            :prepend-icon="mdAndUp ? mdiContentSave : undefined"
-            :text="mdAndUp ? 'Save' : undefined"
-            @click.prevent="save"
-          />
-          <v-btn
-            v-if="canPublish && !form.is_published"
-            form="storeAnime"
-            type="submit"
-            :disabled="form.processing"
-            color="primary"
-            :icon="!mdAndUp ? mdiSend : undefined"
-            :prepend-icon="mdAndUp ? mdiSend : undefined"
-            :text="mdAndUp ? 'Publish' : undefined"
-          />
-        </div>
-      </template>
-    </PageHeader>
-    <v-container class="pa-0 pa-sm-4">
-      <v-form
-        id="storeAnime"
-        :disabled="form.processing"
-        @submit.prevent="submit"
-      >
-        <v-row>
-          <v-col
-            cols="12"
-            md="8"
-          >
-            <section class="mb-4">
-              <v-card :rounded="smAndUp">
-                <v-card-item title="Basic Information" />
-                <v-divider />
-                <v-card-text>
-                  <v-text-field
-                    v-model="form.title[currentLang.value]"
-                    :label="`Title (${currentLang.value})`"
-                    :error-messages="form.errors.title"
-                    variant="outlined"
-                    hide-details="auto"
-                    class="mb-4"
-                  >
-                    <template
-                      #prepend
-                    >
-                      <v-select
-                        v-model="currentLang"
-                        :multiple="false"
-                        label="Title language"
-                        return-object
-                        variant="outlined"
-                        :items="languages"
-                        item-title="label"
-                        hide-details
-                        item-value="value"
-                      />
-                    </template>
-                  </v-text-field>
-                  <v-textarea
-                    v-model="form.description[currentLang.value]"
-                    :label="`Description (${currentLang.value})`"
-                    :error-messages="form.errors.description"
-                    variant="outlined"
-                    hide-details="auto"
-                    class="mb-4"
-                  />
-                </v-card-text>
-              </v-card>
-            </section>
-
-            <v-expand-transition>
-              <Casts
-                v-if="anilistData"
-                :data="anilistData"
-              />
-            </v-expand-transition>
-          </v-col>
-          <v-col
-            cols="12"
-            md="4"
-          >
-            <div>
-              <v-expand-x-transition>
-                <v-card
-                  v-if="anilistData && anilistData.coverImage"
-                  :rounded="smAndUp"
+  <PageHeader :title>
+    <template #append>
+      <div class="d-flex gap-2">
+        <v-btn
+          variant="outlined"
+          color="error"
+          :icon="!mdAndUp ? mdiDelete : undefined"
+          :prepend-icon="mdAndUp ? mdiDelete : undefined"
+          :text="mdAndUp ? 'Delete' : undefined"
+        />
+        <v-btn
+          :variant="form.is_published ? undefined : 'outlined'"
+          :type="canPublish && !form.is_published? undefined : 'submit'"
+          form="storeAnime"
+          :disabled="form.processing"
+          :color=" form.is_published ? 'primary' : 'secondary'"
+          :icon="!mdAndUp ? mdiContentSave : undefined"
+          :prepend-icon="mdAndUp ? mdiContentSave : undefined"
+          :text="mdAndUp ? 'Save' : undefined"
+          @click.prevent="save"
+        />
+        <v-btn
+          v-if="canPublish && !form.is_published"
+          form="storeAnime"
+          type="submit"
+          :disabled="form.processing"
+          color="primary"
+          :icon="!mdAndUp ? mdiSend : undefined"
+          :prepend-icon="mdAndUp ? mdiSend : undefined"
+          :text="mdAndUp ? 'Publish' : undefined"
+        />
+      </div>
+    </template>
+  </PageHeader>
+  <v-container class="pa-0 pa-sm-4">
+    <v-form
+      id="storeAnime"
+      :disabled="form.processing"
+      @submit.prevent="submit"
+    >
+      <v-row>
+        <v-col
+          cols="12"
+          md="8"
+        >
+          <section class="mb-4">
+            <v-card :rounded="smAndUp">
+              <v-card-item title="Basic Information" />
+              <v-divider />
+              <v-card-text>
+                <v-text-field
+                  v-model="form.title[currentLang.value]"
+                  :label="`Title (${currentLang.value})`"
+                  :error-messages="form.errors.title"
+                  variant="outlined"
+                  hide-details="auto"
                   class="mb-4"
                 >
-                  <v-img
-                    :src="anilistData.coverImage.extraLarge"
-                    :lazy-src="anilistData.coverImage.medium"
-                  />
-                </v-card>
-              </v-expand-x-transition>
-              <v-card :rounded="smAndUp">
-                <v-card-item>
-                  <v-card-title>
-                    Metadata
-                  </v-card-title>
-                </v-card-item>
-                <v-divider />
-                <v-card-text>
-                  <!-- template -->
-                  <v-select
-                    v-model="apiType"
-                    label="Api Type"
-                    variant="outlined"
-                    hide-details
-                    class="mb-4"
-                    :items="['MAL', 'Anilist']"
-                  />
-                  <v-text-field
-                    v-model="apiSearchId"
-                    :label="apiType + ' ID'"
-                    type="number"
-                    :error-messages="form.errors.anilist_id! || form.errors.metadata!"
-                    placeholder="placeholder"
-                    variant="outlined"
-                    hide-details="auto"
-                    @keydown.enter.prevent="fetchAnilistData"
-                  />
-                </v-card-text>
-                <v-divider />
-                <v-card-actions>
-                  <v-expand-x-transition>
-                    <v-btn
-                      :append-icon="mdiClose"
-                      text="Clear"
-                      @click="clearAnilist"
+                  <template
+                    #prepend
+                  >
+                    <v-select
+                      v-model="currentLang"
+                      :multiple="false"
+                      label="Title language"
+                      return-object
+                      variant="outlined"
+                      :items="languages"
+                      item-title="label"
+                      hide-details
+                      item-value="value"
                     />
-                  </v-expand-x-transition>
-                  <v-spacer />
-                  <v-btn
-                    text="Autofill"
-                    @click="fetchAnilistData"
-                  />
-                </v-card-actions>
+                  </template>
+                </v-text-field>
+                <v-textarea
+                  v-model="form.description[currentLang.value]"
+                  :label="`Description (${currentLang.value})`"
+                  :error-messages="form.errors.description"
+                  variant="outlined"
+                  hide-details="auto"
+                  class="mb-4"
+                />
+              </v-card-text>
+            </v-card>
+          </section>
 
-                <v-expand-transition>
-                  <Metadata
-                    v-if="anilistData"
-                    :data="anilistData"
-                  />
-                </v-expand-transition>
+          <v-expand-transition>
+            <Casts
+              v-if="anilistData"
+              :data="anilistData"
+            />
+          </v-expand-transition>
+        </v-col>
+        <v-col
+          cols="12"
+          md="4"
+        >
+          <div>
+            <v-expand-x-transition>
+              <v-card
+                v-if="anilistData && anilistData.coverImage"
+                :rounded="smAndUp"
+                class="mb-4"
+              >
+                <v-img
+                  :src="anilistData.coverImage.extraLarge"
+                  :lazy-src="anilistData.coverImage.medium"
+                />
               </v-card>
-            </div>
-          </v-col>
-        </v-row>
-      </v-form>
-    </v-container>
-  </Layout>
+            </v-expand-x-transition>
+            <v-card :rounded="smAndUp">
+              <v-card-item>
+                <v-card-title>
+                  Metadata
+                </v-card-title>
+              </v-card-item>
+              <v-divider />
+              <v-card-text>
+                <!-- template -->
+                <v-select
+                  v-model="apiType"
+                  label="Api Type"
+                  variant="outlined"
+                  hide-details
+                  class="mb-4"
+                  :items="['MAL', 'Anilist']"
+                />
+                <v-text-field
+                  v-model="apiSearchId"
+                  :label="apiType + ' ID'"
+                  type="number"
+                  :error-messages="form.errors.anilist_id! || form.errors.metadata!"
+                  placeholder="placeholder"
+                  variant="outlined"
+                  hide-details="auto"
+                  @keydown.enter.prevent="fetchAnilistData"
+                />
+              </v-card-text>
+              <v-divider />
+              <v-card-actions>
+                <v-expand-x-transition>
+                  <v-btn
+                    :append-icon="mdiClose"
+                    text="Clear"
+                    @click="clearAnilist"
+                  />
+                </v-expand-x-transition>
+                <v-spacer />
+                <v-btn
+                  text="Autofill"
+                  @click="fetchAnilistData"
+                />
+              </v-card-actions>
+
+              <v-expand-transition>
+                <Metadata
+                  v-if="anilistData"
+                  :data="anilistData"
+                />
+              </v-expand-transition>
+            </v-card>
+          </div>
+        </v-col>
+      </v-row>
+    </v-form>
+  </v-container>
 </template>
