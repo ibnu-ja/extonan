@@ -20,9 +20,10 @@ import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
 import Casts from '@/Pages/Anime/Partials/Casts.vue'
 import { useAnime } from '@/composables/useAniList'
 import { AnimeMediaAutofillResponse } from '@/types/anilist'
-import { LanguageItem, TranslatableField } from '@/types/formHelper'
+import { TranslatableField } from '@/types/formHelper'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { route as ziggyRoute } from 'ziggy-js'
+import { useLanguages } from '@/composables/useLanguages'
 
 dayjs.extend(objectSupport)
 
@@ -33,21 +34,7 @@ const props = defineProps<{
 
 const route = inject('route') as typeof ziggyRoute
 
-const languages: LanguageItem[] = [
-  {
-    label: 'English',
-    value: 'en',
-  }, {
-    label: 'Indonesia',
-    value: 'id',
-  }, {
-    label: 'Native',
-    value: 'native',
-  }, {
-    label: 'Romaji',
-    value: 'romaji',
-  },
-]
+const { selectedLanguage: currentLang, languages } = useLanguages()
 
 type AnimeForm = {
   title: TranslatableField
@@ -78,7 +65,6 @@ const apiSearchId = ref<number | null>(null)
 const anilistData = ref<AnimeMediaAutofillResponse>()
 
 const { smAndUp, mdAndUp } = useDisplay()
-const currentLang = ref<LanguageItem>(languages[0])
 
 const { animeApi } = useAnime()
 

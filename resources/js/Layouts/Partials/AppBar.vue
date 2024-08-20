@@ -8,6 +8,7 @@ import InertiaLink from '@/Components/InertiaLink.vue'
 import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import { BreadcrumbItem } from '@/types'
 import { route as ziggyRoute } from 'ziggy-js'
+import { useBrowserLocation } from '@vueuse/core'
 
 const drawer = defineModel<boolean | undefined>('drawer')
 
@@ -15,7 +16,7 @@ const page = usePage()
 
 const route = inject('route') as typeof ziggyRoute
 
-const location = page.props.ziggy.location
+const location = useBrowserLocation()
 
 defineProps<{
   breadcrumbs?: BreadcrumbItem[]
@@ -38,18 +39,35 @@ const itemList = [
     label: 'Dashboard',
   },
 ]
-const tab = ref(location.split('/')[1])
+const tab = ref(location.value.pathname?.split('/')[1])
+
+console.log(tab.value)
+
+console.log(`asd bwang ${location.value.pathname?.split('/')[1]}`)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const visit = (e: any) => {
+  console.log(e)
   if (e == null) {
-    tab.value = location.split('/')[1]
-  }
-  const tes = itemList.find(item => item.value == e)
-  if (tes) {
-    router.visit(tes.link)
+    const bwang = location.value.pathname?.split('/')[1]
+
+    let currentUrl = itemList.find((item) => {
+      const bwangUrl = new URL(item.link).pathname.split('/')[1]
+      console.log(`bwang url: ${bwangUrl}`)
+      return bwangUrl == bwang
+    })
+    if (currentUrl) {
+      console.log(currentUrl)
+      tab.value = currentUrl.value
+    }
+  } else {
+    const tes = itemList.find(item => item.value == e)
+    if (tes) {
+      router.visit(tes.link)
+    }
   }
 }
+
 function logout() {
   router.post(route('logout'))
 }

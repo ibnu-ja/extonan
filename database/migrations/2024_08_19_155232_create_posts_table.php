@@ -17,9 +17,8 @@ return new class extends Migration
             $table->string('slug');
             $table->string('title');
             $table->foreignIdFor(\App\Models\User::class, 'author_id');
-            $table->json('metadata');
-            $table->unsignedBigInteger('postable_id');
-            $table->unsignedBigInteger('postable_type');
+            $table->json('metadata')->nullable();
+            $table->morphs('postable');
             $table->timestamps();
             $table->drafts();
         });

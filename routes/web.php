@@ -8,11 +8,11 @@ use Inertia\Inertia;
 
 Route::get('/', HomeController::class)->name('home');
 
-Route::resources([
-    'anime' => AnimeController::class
-]);
-
 Route::resource('/anime/{anime}/post', PostController::class)->except('index');
+
+Route::resources([
+    '/anime' => AnimeController::class
+]);
 
 Route::middleware([
     'auth:sanctum',

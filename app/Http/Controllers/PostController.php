@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Models\Anime;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 
 class PostController extends Controller
 {
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['show', 'store']),
+        ];
+    }
 //    /**
 //     * Display a listing of the resource.
 //     */
@@ -24,24 +35,30 @@ class PostController extends Controller
     {
         return Inertia::render('Anime/Post/Create', [
             'anime' => $anime,
-            'canPublish' => request()->user()->can('publish', Post::class)
+            'canPublish' => request()->user()->can('publish', Post::class),
+            'bwang' => request()->user()->can('create', Post::class),
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Anime $anime, StorePostRequest $request)
     {
-        //
+        $post = $anime->posts()->create($request->validated());
+
+        return redirect()->route('post.show',[$anime, $post])->banner('Episode created successfully!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Anime $anime, Post $post)
     {
-        //
+        return Inertia::render('Anime/Post/Show', [
+            'anime' => $anime,
+            'post' => $post
+        ]);
     }
 
     /**
