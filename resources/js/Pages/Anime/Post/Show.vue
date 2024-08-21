@@ -1,3 +1,12 @@
+<script lang="ts">
+
+import AppLayout from '@/Layouts/AppLayout.vue'
+
+export default {
+  layout: AppLayout,
+}
+</script>
+
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
 import { AnimeData } from '@/types/anime'
