@@ -13,3 +13,9 @@ export type LatestAnimeItem = {
 export type AnimeData = {
   description: TranslatableField
 } & LatestAnimeItem & Post
+
+export type EpisodeData = Post & {
+  title: TranslatableField
+  description: TranslatableField
+  id: number
+}
