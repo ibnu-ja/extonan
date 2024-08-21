@@ -12,7 +12,7 @@ import { Head, router } from '@inertiajs/vue3'
 import {
   mdiAlphabeticalVariant,
   mdiFormatListNumbered,
-  mdiPlus, mdiViewGrid,
+  mdiPlus,
 } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
