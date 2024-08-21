@@ -9,8 +9,14 @@ export default {
 
 <script lang="ts" setup>
 import { Head } from '@inertiajs/vue3'
-import { AnimeData } from '@/types/anime'
+import { AnimeData, EpisodeData } from '@/types/anime'
 import LatestAnime from '@/Pages/Home/Partials/LatestAnime.vue'
+import VerticalEpisodeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
+import dayjs from 'dayjs'
+
+type Postable = EpisodeData & {
+  postable: AnimeData
+}
 
 defineProps<{
   canLogin?: boolean
@@ -18,6 +24,7 @@ defineProps<{
   laravelVersion: string
   phpVersion: string
   latestAnime: AnimeData[]
+  latestEpisodes: Postable[]
 }>()
 
 </script>
@@ -25,47 +32,28 @@ defineProps<{
 <template>
   <Head title="Home" />
 
-  <v-container>
+  <v-container class="px-0 px-sm-4">
     <h1 class="text-h4 text-md-h3 mb-4">
       Latest Anime
     </h1>
     <LatestAnime :latest-anime />
   </v-container>
-  <!--  <v-container>-->
-  <!--    <v-row>-->
-  <!--      <v-col-->
-  <!--        cols="12"-->
-  <!--        md="8"-->
-  <!--      >-->
-  <!--        <section-->
-  <!--          v-for="i in 3"-->
-  <!--          :key="i"-->
-  <!--        >-->
-  <!--          <v-container class="pa-md-12">-->
-  <!--            <h2 class="text-h4 mb-4">-->
-  <!--              Section Heading-->
-  <!--            </h2>-->
-  <!--            <p>-->
-  <!--              Lorem ipsum dolor sit amet, consectetur adipisicing elit. A adipisci aliquid aut cum deserunt, eaque enim-->
-  <!--              esse et fugit id natus nisi non officiis quaerat, quia quo similique sit unde.-->
-  <!--            </p>-->
-  <!--          </v-container>-->
-  <!--        </section>-->
-  <!--      </v-col>-->
-  <!--      <v-divider vertical />-->
-  <!--      <v-col>-->
-  <!--        <section>-->
-  <!--          <v-container class="pa-md-12">-->
-  <!--            <h2 class="text-h4 mb-4">-->
-  <!--              Section Heading-->
-  <!--            </h2>-->
-  <!--            <p>-->
-  <!--              Lorem ipsum dolor sit amet, consectetur adipisicing elit. A adipisci aliquid aut cum deserunt, eaque enim-->
-  <!--              esse et fugit id natus nisi non officiis quaerat, quia quo similique sit unde.-->
-  <!--            </p>-->
-  <!--          </v-container>-->
-  <!--        </section>-->
-  <!--      </v-col>-->
-  <!--    </v-row>-->
-  <!--  </v-container>-->
+  <v-container class="px-0 px-sm-4">
+    <v-row dense>
+      <v-col
+        v-for="episode in latestEpisodes"
+        :key="episode.id"
+        cols="12"
+        md="6"
+      >
+        <VerticalEpisodeCard
+          :image="episode.postable.metadata.coverImage.extraLarge"
+          :lazy-img="episode.postable.metadata.coverImage.medium"
+          :href="route('post.show', [episode.postable, episode])"
+          :title="`${episode.postable.title.en} - ${episode.title.en}`"
+          :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
+        />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>

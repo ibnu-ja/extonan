@@ -1,15 +1,18 @@
 <script lang="ts" setup>
 import ItemListTitle from '@/Pages/Anime/Partials/ItemListTitle.vue'
 import { useDisplay } from 'vuetify'
-import { AnimeData, EpisodeData } from '@/types/anime'
 import { mdiPlay } from '@mdi/js'
-import { AnimeMediaAutofillResponse } from '@/types/anilist'
+import InertiaLink from '@/Components/InertiaLink.vue'
+import { VCard } from 'vuetify/components'
 
 defineProps<{
-  episode: EpisodeData
-  anime: AnimeData & {
-    metadata: AnimeMediaAutofillResponse
-  }
+  // episode: EpisodeData
+  href?: string
+  title: string
+  subtitle?: string
+  overhead?: string
+  image?: string
+  lazyImg?: string
 }>()
 
 const { smAndUp } = useDisplay()
@@ -17,19 +20,20 @@ const { smAndUp } = useDisplay()
 
 <template>
   <v-hover v-slot="{isHovering, props}">
-    <v-card
-      href="#"
+    <InertiaLink
+      :href
+      :as="VCard"
       :rounded="smAndUp ? 'lg' : false"
       class="d-flex gap-2 pa-2"
       variant="text"
       v-bind="props"
     >
       <v-img
-        v-if="anime.metadata.coverImage"
+        v-if="image"
         width="150"
         class="rounded align-self-center flex-0-0 cursor-pointer"
-        :src="anime.metadata.coverImage.extraLarge"
-        :lazy-src="anime.metadata.coverImage.medium"
+        :src="image"
+        :lazy-src="lazyImg"
         :aspect-ratio="16/9"
         cover
       >
@@ -48,10 +52,11 @@ const { smAndUp } = useDisplay()
         style="flex: 1; line-clamp: 2"
       >
         <ItemListTitle
-          :title="episode.title"
+          :subtitle
+          :title
         />
       </div>
-    </v-card>
+    </InertiaLink>
   </v-hover>
 </template>
 

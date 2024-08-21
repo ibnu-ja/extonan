@@ -15,7 +15,8 @@ import { useAnime } from '@/composables/useAniList'
 import Banner from '@/Pages/Anime/Partials/Banner.vue'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
 import SpeedDial from '@/Pages/Anime/Partials/SpeedDial.vue'
-import HorizontalAnimeCard from '@/Pages/Anime/Partials/HorizontalAnimeCard.vue'
+import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
+import dayjs from 'dayjs'
 
 const props = defineProps<{
   anime: AnimeData & {
@@ -66,11 +67,16 @@ const animeBwang = computedAsync(async () => {
             v-for="episode in anime.posts"
             :key="episode.id"
             cols="12"
-            md="4"
+            sm="6"
+            md="6"
           >
-            <HorizontalAnimeCard
-              :episode
-              :anime
+            <HorizontalEpisodeCard
+              :image="anime.metadata.coverImage.extraLarge"
+              :lazy-img="anime.metadata.coverImage.medium!"
+              :href="route('post.show', [anime, episode])"
+              :title="episode.title.en!"
+              :permission="episode.can"
+              :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
             />
           </v-col>
         </v-row>

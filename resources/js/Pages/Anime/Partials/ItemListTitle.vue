@@ -2,13 +2,12 @@
 import { mdiDotsVertical, mdiPencil, mdiSend } from '@mdi/js'
 import { mdiDelete } from '@mdi/js/commonjs/mdi'
 import { Permissions } from '@/types'
-import { TranslatableField } from '@/types/formHelper'
 
 defineProps<{
   permissions?: Permissions
   overhead?: string | null
   subtitle?: string | null
-  title: TranslatableField
+  title: string
 }>()
 </script>
 
@@ -22,7 +21,7 @@ defineProps<{
         {{ overhead }}
       </div>
       <div class="text-subtitle-1 list-title">
-        {{ title.en }}
+        {{ title }}
       </div>
       <div
         v-if="subtitle"

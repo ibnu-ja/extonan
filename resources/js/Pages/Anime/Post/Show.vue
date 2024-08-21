@@ -11,14 +11,11 @@ export default {
 import { Head } from '@inertiajs/vue3'
 import { AnimeData, EpisodeData } from '@/types/anime'
 import dayjs from 'dayjs'
-import { AnimeMediaAutofillResponse } from '@/types/anilist'
 import InertiaLink from '@/Components/InertiaLink.vue'
-import VerticalAnimeCard from '@/Pages/Anime/Partials/VerticalAnimeCard.vue'
+import VerticalAnimeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
 
 defineProps<{
-  anime: AnimeData & {
-    metadata: AnimeMediaAutofillResponse
-  }
+  anime: AnimeData
   post: EpisodeData
 }>()
 
@@ -65,8 +62,10 @@ defineProps<{
           Next episode
         </v-list-item-subtitle>
         <VerticalAnimeCard
-          :anime
-          :episode="post"
+          :image="anime.metadata.coverImage.extraLarge"
+          :lazy-img="anime.metadata.coverImage.medium"
+          :href="route('post.show', [anime, post])"
+          :title="post.title.en!"
         />
       </v-col>
     </v-row>

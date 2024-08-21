@@ -18,14 +18,11 @@ import { useDisplay } from 'vuetify'
 import { TranslatableField } from '@/types/formHelper'
 import { useLanguages } from '@/composables/useLanguages'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
-import { AnimeMediaAutofillResponse } from '@/types/anilist'
 import { inject } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
 
 const props = defineProps<{
-  anime: AnimeData & {
-    metadata: AnimeMediaAutofillResponse
-  }
+  anime: AnimeData
   canPublish: boolean
 }>()
 const route = inject('route') as typeof ziggyRoute

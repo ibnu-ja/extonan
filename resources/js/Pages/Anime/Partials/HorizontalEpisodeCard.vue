@@ -3,17 +3,27 @@
 import { useDisplay } from 'vuetify'
 import { VCard } from 'vuetify/components'
 import { mdiPlay } from '@mdi/js'
-import dayjs from 'dayjs'
-import { AnimeData, EpisodeData } from '@/types/anime'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import ItemListTitle from '@/Pages/Anime/Partials/ItemListTitle.vue'
+import { Permissions } from '@/types'
+import { MaybeElement, useElementSize } from '@vueuse/core'
+import { ref } from 'vue'
 
 defineProps<{
-  episode: EpisodeData
-  anime: AnimeData
+  href?: string
+  permission?: Permissions
+  title: string
+  subtitle?: string
+  overhead?: string
+  image?: string
+  lazyImg?: string
 }>()
 
 const { smAndUp } = useDisplay()
+
+const imageRef = ref<MaybeElement>()
+
+const { width } = useElementSize(imageRef)
 
 </script>
 
@@ -21,17 +31,19 @@ const { smAndUp } = useDisplay()
   <v-hover v-slot="{isHovering, props: propsss}">
     <InertiaLink
       v-bind="propsss"
-      :href="route('post.show', [anime, episode])"
+      :href
       :as="VCard"
       variant="text"
       class="pa-2"
       :rounded="smAndUp ? 'lg' : false"
     >
       <v-img
-        rounded="lg"
-        aspect-ratio="16/9"
+        ref="imageRef"
+        :height="(width / 16) * 9"
         cover
-        src="https://images.unsplash.com/photo-1617233082866-9d9c58674778?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        rounded="lg"
+        :src="image"
+        :lazy-src="lazyImg"
       >
         <v-fade-transition>
           <div
@@ -43,11 +55,13 @@ const { smAndUp } = useDisplay()
           </div>
         </v-fade-transition>
       </v-img>
+
       <ItemListTitle
         class="mt-2"
-        :permissions="episode.can"
-        :overhead="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
-        :title="episode.title"
+        :permissions="permission"
+        :overhead
+        :title
+        :subtitle
       />
     </InertiaLink>
   </v-hover>
