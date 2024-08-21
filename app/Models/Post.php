@@ -29,7 +29,7 @@ class Post extends BasePost
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('title')
+            ->generateSlugsFrom(['postable.title', 'title'])
             ->saveSlugsTo('slug')
             ->slugsShouldBeNoLongerThan(60);
     }
