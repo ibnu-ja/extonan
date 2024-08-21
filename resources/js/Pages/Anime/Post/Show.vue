@@ -111,7 +111,7 @@ defineProps<{
   </v-container>
 </template>
 
-<style>
+<style scoped>
 .v-card--reveal {
   align-items: center;
   bottom: 0;

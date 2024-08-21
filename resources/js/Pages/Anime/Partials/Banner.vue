@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 
-import { usePreferredColorScheme } from '@vueuse/core'
 import { computed } from 'vue'
 import { CoverImage } from '@/types/anilist'
+import { useTheme } from 'vuetify'
 
-const preferredColorScheme = usePreferredColorScheme()
+const theme = useTheme()
 
 const gradient = computed(() => {
-  if (preferredColorScheme.value === 'dark') {
+  console.log('preferredColorScheme.value: ', theme.global.name.value)
+  if (theme.global.name.value === 'dark') {
     return '0deg, rgb(18,18,18) 10%, rgba(18,18,18,0.7) 70%, rgba(18,18,18,0.3) 100%'
-  }
-  return '0deg, rgba(238,238,238,1) 10%, rgba(238,238,238,0.7) 70%, rgba(238,238,238,0.2) 100%'
+  } else return '0deg, rgba(255,255,255,1) 10%, rgba(255,255,255,0.7) 70%, rgba(255,255,255,0.2) 100%'
 })
 
 defineProps<{

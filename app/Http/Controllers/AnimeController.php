@@ -80,7 +80,7 @@ class AnimeController extends Controller implements HasMiddleware
     public function show(Anime $anime)
     {
         return Inertia::render('Anime/Show', [
-            'anime' => $anime
+            'anime' => $anime->load(['posts' => fn ($query) => $query->orderBy('title')])
         ]);
     }
 
