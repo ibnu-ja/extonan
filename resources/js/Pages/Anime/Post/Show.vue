@@ -15,6 +15,7 @@ import { TranslatableField } from '@/types/formHelper'
 import dayjs from 'dayjs'
 import { AnimeMediaAutofillResponse } from '@/types/anilist'
 import { mdiPlay } from '@mdi/js'
+import InertiaLink from '@/Components/InertiaLink.vue'
 
 defineProps<{
   anime: AnimeData & {
@@ -33,9 +34,12 @@ defineProps<{
 
   <v-container>
     <div>
-      <div class="mb-2 text-h6">
-        bwang
-      </div>
+      <InertiaLink
+        :href="anime.link"
+        class="text-decoration-none mb-2 text-h6"
+      >
+        {{ anime.title.en }}
+      </InertiaLink>
       <h1 class="text-h4">
         {{ post.title.en }}
       </h1>
