@@ -1,7 +1,6 @@
 @use 'vuetify';
 
-@import './variables.scss';
-@import './grid.scss';
+@import "tailwindcss/utilities";
 
 [x-cloak] {
     display: none;
