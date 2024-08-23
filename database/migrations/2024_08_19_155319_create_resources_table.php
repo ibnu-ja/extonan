@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('resources', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->longText('value');
             $table->enum('type', ['embed', 'link']);
             $table->foreignIdFor(\App\Models\Post::class);
             $table->timestamps();

@@ -43,4 +43,14 @@ class Post extends BasePost
     {
         return $this->hasMany(Resource::class);
     }
+
+    public function links(): HasMany
+    {
+        return $this->resources()->where('type', '=','link')->orderBy('name');
+    }
+
+    public function embeds(): HasMany
+    {
+        return $this->resources()->where('type', '=','embed')->orderBy('name');
+    }
 }

@@ -10,6 +10,10 @@ class Resource extends Model
 {
     use HasFactory;
 
+    protected $casts = ['metadata' => 'object', 'value' => 'array'];
+
+    protected $fillable = ['name', 'value', 'type'];
+
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);

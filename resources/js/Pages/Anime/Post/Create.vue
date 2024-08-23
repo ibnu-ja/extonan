@@ -9,10 +9,10 @@ export default {
 
 <script lang="ts" setup>
 
-import { AnimeData } from '@/types/anime'
+import { AnimeData, Resource } from '@/types/anime'
 import { Head, useForm } from '@inertiajs/vue3'
 import { mdiDelete } from '@mdi/js/commonjs/mdi'
-import { mdiContentSave, mdiSend } from '@mdi/js'
+import { mdiContentSave, mdiPlus, mdiSend } from '@mdi/js'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { useDisplay } from 'vuetify'
 import { TranslatableField } from '@/types/formHelper'
@@ -20,7 +20,7 @@ import { useLanguages } from '@/composables/useLanguages'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
 import { inject } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
-
+import { openFormDialog } from '@/composables/useDialog'
 const props = defineProps<{
   anime: AnimeData
   canPublish: boolean
@@ -34,6 +34,7 @@ type PostForm = {
   description: TranslatableField
   is_published: boolean
   metadata: unknown
+  resources: Resource[]
 }
 
 const form = useForm<PostForm>({
@@ -49,6 +50,7 @@ const form = useForm<PostForm>({
     id: null,
   },
   metadata: null,
+  resources: [],
 },
 )
 
@@ -71,6 +73,33 @@ const save = () => {
 const { smAndUp } = useDisplay()
 
 const { languages, selectedLanguage: currentLang } = useLanguages()
+
+const addFilename = async () => {
+  const result = await openFormDialog('Tambahkan File')
+  form.resources.push({
+    name: result,
+    value: [{
+      name: '',
+      value: '',
+    }],
+    type: 'link',
+  })
+}
+
+const addLink = (index) => {
+  form.resources[index].value.push({
+    name: '',
+    value: '',
+  })
+}
+
+const editFilename = async (index) => {
+  form.resources[index].name = await openFormDialog('Edit filename', undefined, {
+    label: 'Filename',
+    variant: 'outlined',
+    placeholder: form.resources[index].name,
+  })
+}
 </script>
 
 <template>
@@ -160,7 +189,102 @@ const { languages, selectedLanguage: currentLang } = useLanguages()
               </v-card-text>
             </v-card>
           </section>
-          <!--      -->
+          <section class="mb-4">
+            <v-card :rounded="smAndUp">
+              <v-card-item>
+                <v-card-title>
+                  Links
+                </v-card-title>
+                <template #append>
+                  <v-btn
+                    color="primary"
+                    :prepend-icon="mdiPlus"
+                    @click.prevent="addFilename"
+                  >
+                    Add
+                  </v-btn>
+                </template>
+              </v-card-item>
+              <v-divider />
+              <v-card-text class="flex gap-4 flex-col">
+                <v-card
+                  v-for="(resource, i) in form.resources"
+                  :key="i"
+                  variant="outlined"
+                >
+                  <v-card-item>
+                    <v-card-title>
+                      {{ resource.name }}
+                    </v-card-title>
+                    <template #append>
+                      <div class="flex flex-wrap gap-2">
+                        <v-btn
+                          color="secondary"
+                          @click="editFilename(i)"
+                        >
+                          Edit
+                        </v-btn>
+                        <v-btn color="error">
+                          Delete
+                        </v-btn>
+                        <v-btn
+                          color="primary"
+                          @click.prevent="addLink(i)"
+                        >
+                          Add
+                        </v-btn>
+                      </div>
+                    </template>
+                  </v-card-item>
+                  <template
+                    v-for="(links, j) in resource.value"
+                    :key="j"
+                  >
+                    <v-card-text>
+                      <v-row no-gutters>
+                        <v-col cols="3">
+                          <div class="text-medium-emphasis mt-2">
+                            Name
+                          </div>
+                        </v-col>
+                        <v-col cols="9">
+                          <v-text-field
+                            v-model="form.resources[i].value[j].name"
+                            placeholder="Gudang"
+                            variant="outlined"
+                            hide-details="auto"
+                            class="mb-4"
+                          />
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col cols="3">
+                          <div class="text-medium-emphasis mt-2">
+                            Link/Embed code
+                          </div>
+                        </v-col>
+                        <v-col cols="9">
+                          <v-textarea
+                            v-model="form.resources[i].value[j].value"
+                            placeholder="https://gudang.extonan.id/"
+                            rows="2"
+                            variant="outlined"
+                            hide-details="auto"
+                          />
+
+                          <v-btn color="error mt-4">
+                            Delete
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                    <v-divider v-if="j < resource.value.length" />
+                  </template>
+                </v-card>
+              <!--  -->
+              </v-card-text>
+            </v-card>
+          </section>
         </v-col>
         <v-col
           cols="12"

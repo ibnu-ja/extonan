@@ -6,10 +6,11 @@ use App\Http\Requests\StorePostRequest;
 use App\Models\Anime;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 
-class PostController extends Controller
+class PostController extends Controller implements HasMiddleware
 {
     /**
      * Get the middleware that should be assigned to the controller.
@@ -47,6 +48,8 @@ class PostController extends Controller
     {
         $post = $anime->posts()->create($request->validated());
 
+        $post->resources()->createMany($request->validated()['resources']);
+
         return redirect()->route('post.show',[$anime, $post])->banner('Episode created successfully!');
     }
 
@@ -57,7 +60,7 @@ class PostController extends Controller
     {
         return Inertia::render('Anime/Post/Show', [
             'anime' => $anime,
-            'post' => $post->load('author')
+            'post' => $post->load('author', 'links')
         ]);
     }
 
