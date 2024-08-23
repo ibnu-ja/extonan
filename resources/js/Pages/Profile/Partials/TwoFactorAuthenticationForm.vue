@@ -158,7 +158,7 @@ const disableTwoFactorAuthentication = () => {
 
             <!--eslint-disable vue/no-v-html-->
             <div
-              class="d-inline-block rounded-lg mt-4 pa-4 bg-white"
+              class="d-inline-block rounded-lg mt-4 p-4 bg-white"
               v-html="qrCode"
             />
             <!--eslint-enable-->
@@ -198,7 +198,7 @@ const disableTwoFactorAuthentication = () => {
             </div>
             <template v-if="recoveryCodes.length > 0 && !confirming">
               <v-sheet
-                class="mt-4 pa-4"
+                class="mt-4 p-4"
                 rounded="lg"
                 style="position: relative; background-color: rgba(0, 0, 0, 0.1);"
               >

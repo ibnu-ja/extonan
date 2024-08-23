@@ -6,6 +6,7 @@ export default {
     './resources/**/*.ts',
     './resources/**/*.vue',
   ],
+  important: true,
   theme: {
     screens: {
       'sm': '600px',

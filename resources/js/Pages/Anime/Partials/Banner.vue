@@ -1,17 +1,9 @@
 <script lang="ts" setup>
 
-import { computed } from 'vue'
 import { CoverImage } from '@/types/anilist'
-import { useTheme } from 'vuetify'
+import { useGradient } from '@/composables/useGradient'
 
-const theme = useTheme()
-
-const gradient = computed(() => {
-  console.log('preferredColorScheme.value: ', theme.global.name.value)
-  if (theme.global.name.value === 'dark') {
-    return '0deg, rgb(18,18,18) 10%, rgba(18,18,18,0.7) 70%, rgba(18,18,18,0.3) 100%'
-  } else return '0deg, rgba(255,255,255,1) 10%, rgba(255,255,255,0.7) 70%, rgba(255,255,255,0.2) 100%'
-})
+const { gradient } = useGradient()
 
 defineProps<{
   bg: string
@@ -48,7 +40,7 @@ defineProps<{
               <v-img
                 style="cursor: pointer;"
                 cover
-                class="mx-16 mx-sm-0"
+                class="mx-16 sm:mx-0"
                 :src="coverImage.extraLarge"
                 :lazy-src="coverImage.medium"
               >
@@ -65,7 +57,7 @@ defineProps<{
                 </v-dialog>
               </v-img>
             </v-col>
-            <v-col class="d-flex flex-column gap-sm-0 gap-2">
+            <v-col class="flex flex-column sm:gap-0 gap-2">
               <v-list-item>
                 <v-list-item-title>
                   <h1 class="text-h4 text-md-h3">

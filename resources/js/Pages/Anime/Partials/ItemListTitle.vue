@@ -12,7 +12,7 @@ defineProps<{
 </script>
 
 <template>
-  <v-list-item class="pa-0">
+  <v-list-item class="p-0">
     <div class="mx-2">
       <div
         v-if="overhead"

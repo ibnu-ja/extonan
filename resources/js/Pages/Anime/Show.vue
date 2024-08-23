@@ -47,7 +47,7 @@ const animeBwang = computedAsync(async () => {
     :cover-image="animeBwang?.coverImage!"
   />
 
-  <v-container class="px-0 px-sm-4">
+  <v-container class="px-0 sm:px-4">
     <v-row>
       <v-col
         cols="12"

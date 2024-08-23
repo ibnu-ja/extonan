@@ -75,7 +75,7 @@ const submit = () => {
             autocomplete="username"
           />
           <div
-            class="d-flex align-center gap-4"
+            class="flex align-center gap-4"
           >
             <v-spacer />
             <v-btn

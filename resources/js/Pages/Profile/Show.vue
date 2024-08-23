@@ -41,13 +41,13 @@ const page = usePage()
     </template>
 
     <template v-if="page.props.jetstream.canUpdatePassword && page.props.socialstream.hasPassword">
-      <UpdatePasswordForm class="mt-10 mt-sm-0" />
+      <UpdatePasswordForm class="mt-10 sm:mt-0" />
 
       <v-divider class="my-8" />
     </template>
 
     <template v-else>
-      <SetPasswordForm class="mt-10 mt-sm-0" />
+      <SetPasswordForm class="mt-10 sm:mt-0" />
 
       <v-divider class="my-8" />
     </template>
@@ -57,14 +57,14 @@ const page = usePage()
     >
       <TwoFactorAuthenticationForm
         :requires-confirmation="confirmsTwoFactorAuthentication"
-        class="mt-10 mt-sm-0"
+        class="mt-10 sm:mt-0"
       />
 
       <v-divider class="my-8" />
     </template>
 
     <template v-if="page.props.socialstream.show">
-      <ConnectedAccountsForm class="mt-10 mt-sm-0" />
+      <ConnectedAccountsForm class="mt-10 sm:mt-0" />
     </template>
 
     <template v-if="page.props.socialstream.hasPassword">
@@ -72,7 +72,7 @@ const page = usePage()
 
       <LogoutOtherBrowserSessionsForm
         :sessions="sessions"
-        class="mt-10 mt-sm-0"
+        class="mt-10 sm:mt-0"
       />
     </template>
 
@@ -81,7 +81,7 @@ const page = usePage()
     >
       <v-divider class="my-8" />
 
-      <DeleteUserForm class="mt-10 mt-sm-0" />
+      <DeleteUserForm class="mt-10 sm:mt-0" />
     </template>
   </v-container>
 </template>

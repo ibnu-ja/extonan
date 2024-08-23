@@ -30,7 +30,7 @@ const { smAndUp } = useDisplay()
               :lazy-src="character.node.image.medium"
             />
 
-            <div class="px-3 py-1 col-span-3 d-flex flex-column justify-space-between">
+            <div class="px-3 py-1 col-span-3 flex flex-column justify-space-between">
               <div>
                 {{ character.node.name.full }}
               </div>
@@ -44,7 +44,7 @@ const { smAndUp } = useDisplay()
               v-if="character.voiceActors[0]?.name"
               class="d-grid grid-cols-4"
             >
-              <div class="px-3 py-1 col-span-3 text-right d-flex flex-column justify-space-between">
+              <div class="px-3 py-1 col-span-3 text-right flex flex-column justify-space-between">
                 <div>
                   {{ character.voiceActors[0].name.full }}
                 </div>

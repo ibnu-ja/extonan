@@ -34,7 +34,7 @@ const { width } = useElementSize(imageRef)
       :href
       :as="VCard"
       variant="text"
-      class="pa-2"
+      class="p-2"
       :rounded="smAndUp ? 'lg' : false"
     >
       <v-img
@@ -48,7 +48,7 @@ const { width } = useElementSize(imageRef)
         <v-fade-transition>
           <div
             v-if="isHovering"
-            class="d-flex transition-fast-in-fast-out bg-grey-darken-4 v-card--reveal"
+            class="!flex transition-fast-in-fast-out bg-grey-darken-4 v-card--reveal"
             style="height: 100%;"
           >
             <v-icon :icon="mdiPlay" />

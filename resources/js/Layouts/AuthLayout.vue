@@ -36,7 +36,7 @@ defineProps({
   <v-app>
     <Banner />
     <v-main>
-      <v-container class="fill-height d-flex flex-column justify-center align-center">
+      <v-container class="fill-height flex flex-column justify-center align-center">
         <slot />
       </v-container>
     </v-main>

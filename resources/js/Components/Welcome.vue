@@ -7,7 +7,7 @@ const { xs } = useDisplay()
 </script>
 
 <template>
-  <v-container class="px-0 px-sm-4 pt-0 pt-sm-4">
+  <v-container class="px-0 sm:px-4 pt-0 sm:pt-4">
     <v-card :rounded="!xs">
       <v-card-text>
         <ApplicationLogo
@@ -25,7 +25,7 @@ const { xs } = useDisplay()
         carefully crafting the Laravel ecosystem to be a breath of fresh air. We hope you love it.
       </v-card-text>
       <v-divider />
-      <v-row class="pa-0">
+      <v-row class="p-0">
         <v-col
           cols="auto"
           md="6"

@@ -46,7 +46,7 @@ defineProps<{
 
   <v-divider />
 
-  <v-container class="px-sm-4 px-0">
+  <v-container class="sm:px-4 px-0">
     <v-row>
       <v-col
         cols="12"

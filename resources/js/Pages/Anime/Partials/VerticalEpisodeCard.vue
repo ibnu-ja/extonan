@@ -24,7 +24,7 @@ const { smAndUp } = useDisplay()
       :href
       :as="VCard"
       :rounded="smAndUp ? 'lg' : false"
-      class="d-flex gap-2 pa-2"
+      class="flex gap-2 p-2"
       variant="text"
       v-bind="props"
     >
@@ -40,7 +40,7 @@ const { smAndUp } = useDisplay()
         <v-fade-transition>
           <div
             v-if="isHovering"
-            class="d-flex transition-fast-in-fast-out bg-grey-darken-4 v-card--reveal"
+            class="!flex transition-fast-in-fast-out bg-grey-darken-4 v-card--reveal"
             style="height: 100%;"
           >
             <v-icon :icon="mdiPlay" />

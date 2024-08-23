@@ -57,7 +57,7 @@ class PostController extends Controller
     {
         return Inertia::render('Anime/Post/Show', [
             'anime' => $anime,
-            'post' => $post
+            'post' => $post->load('author')
         ]);
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAnimeRequest;
 use App\Models\Anime;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -80,7 +81,7 @@ class AnimeController extends Controller implements HasMiddleware
     public function show(Anime $anime)
     {
         return Inertia::render('Anime/Show', [
-            'anime' => fn() => $anime->load(['posts' => fn ($query) => $query->orderBy('title')]),
+            'anime' => fn() => $anime->load(['posts' => fn (MorphMany $query) => $query->orderBy('title')->with('author')->get()]),
             'canCreate' => fn() => auth()->check() && auth()->user()->can('create', Anime::class),
         ]);
     }

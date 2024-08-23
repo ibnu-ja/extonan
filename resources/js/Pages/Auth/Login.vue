@@ -132,7 +132,7 @@ const registerRoute = route('register')
             label="Remember me"
           />
           <div
-            class="d-flex align-center gap-4"
+            class="flex align-center gap-4"
           >
             <Link
               v-if="canResetPassword"

@@ -123,11 +123,11 @@ const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create 
   <Head :title />
   <PageHeader :title>
     <template #append>
-      <div class="d-flex gap-2">
+      <div class="flex gap-2">
         <v-btn
           variant="outlined"
           color="error"
-          :icon="!mdAndUp ? mdiDelete : undefined"
+          :icon="mdAndUp ? mdiDelete : undefined"
           :prepend-icon="mdAndUp ? mdiDelete : undefined"
           :text="mdAndUp ? 'Delete' : undefined"
         />
@@ -137,7 +137,7 @@ const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create 
           form="storeAnime"
           :disabled="form.processing"
           :color=" form.is_published ? 'primary' : 'secondary'"
-          :icon="!mdAndUp ? mdiContentSave : undefined"
+          :icon="mdAndUp ? mdiContentSave : undefined"
           :prepend-icon="mdAndUp ? mdiContentSave : undefined"
           :text="mdAndUp ? 'Save' : undefined"
           @click.prevent="save"
@@ -148,14 +148,14 @@ const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create 
           type="submit"
           :disabled="form.processing"
           color="primary"
-          :icon="!mdAndUp ? mdiSend : undefined"
+          :icon="mdAndUp ? mdiSend : undefined"
           :prepend-icon="mdAndUp ? mdiSend : undefined"
           :text="mdAndUp ? 'Publish' : undefined"
         />
       </div>
     </template>
   </PageHeader>
-  <v-container class="pa-0 pa-sm-4">
+  <v-container class="p-0 sm:p-4">
     <v-form
       id="storeAnime"
       :disabled="form.processing"

@@ -60,7 +60,7 @@ const selectNewPhoto = () => {
 const updatePhotoPreview = () => {
   const photo = photoInput.value?.files?.[0]
 
-  if (!photo) return
+  if (photo) return
 
   const reader = new FileReader()
 

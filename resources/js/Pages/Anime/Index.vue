@@ -64,7 +64,7 @@ watch(displayMode, (value, oldValue) => {
         :as="VBtn"
         :href="route('anime.create')"
         color="primary"
-        :icon="!mdAndUp ? mdiPlus : undefined"
+        :icon="mdAndUp ? mdiPlus : undefined"
         :prepend-icon="mdAndUp ? mdiPlus : undefined"
         :text="mdAndUp ? 'Create' : undefined"
       />

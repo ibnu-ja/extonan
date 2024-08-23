@@ -1,83 +1,96 @@
 <script lang="ts" setup>
-import { LatestAnimeItem } from '@/types/anime'
+import { AnimeData } from '@/types/anime'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
-import { computedAsync } from '@vueuse/core'
 import { useAnime } from '@/composables/useAniList'
-import { VCard } from 'vuetify/components'
-import InertiaLink from '@/Components/InertiaLink.vue'
 import { ref } from 'vue'
-import { CoverImage } from '@/types/anilist'
+
+import { register } from 'swiper/element/bundle'
+import { useGradient } from '@/composables/useGradient'
+import InertiaLink from '@/Components/InertiaLink.vue'
+import { VCard } from 'vuetify/components'
+
+register()
 
 const props = defineProps<{
-  latestAnime: LatestAnimeItem[]
+  latestAnime: AnimeData[]
 }>()
 
 dayjs.extend(calendar)
 
 const { homeAnimeApi } = useAnime()
 
-const animeItems = computedAsync(async () => {
-  const idJoined = props.latestAnime.map(item => item.anilist_id)
-
-  // Wait for all promises to resolve
-  const result = await homeAnimeApi(idJoined)
-
-  return props.latestAnime.map((item) => {
-    const match = result?.find(item2 => item2.id === item.anilist_id)
-
-    const newVar: LatestAnimeItem & {
-      coverImage: CoverImage | null
-    } = match ? { ...item, coverImage: match.coverImage } : { ...item, coverImage: null }
-    return newVar
-  })
-})
-
 const carousel = ref(0)
+
+const { gradient } = useGradient()
 </script>
 
 <template>
-  <v-carousel
-    v-model="carousel"
-    continuous
-    height="auto"
-    hide-delimiters
-    show-arrows="hover"
+  <swiper-container
+    :loop="true"
   >
-    <v-carousel-item
-      v-for="anime in animeItems"
+    <swiper-slide
+      v-for="anime in latestAnime"
       :key="anime.id"
-      height="auto"
     >
       <InertiaLink
-        :href="anime.link"
-        variant="text"
         :as="VCard"
+        :link="false"
+        :href="route('anime.show', anime)"
+        :rounded="false"
+        class="flex relative elevation-0 border-0 cursor-pointer"
+        :elevation="0"
+        height="500"
+        variant="text plain"
       >
-        <v-row>
-          <v-col
-            v-if="anime.coverImage"
-            cols="3"
-          >
-            <v-img
-              aspect-ratio="4/3"
-              rounded
-              :src="anime.coverImage.large"
-              :lazy-src="anime.coverImage.medium"
-            />
-          </v-col>
-          <v-col cols="9">
-            <div class="px-0 pt-0">
-              <h3 class="text-h4">
-                {{ anime.title.en }}
-              </h3>
+        <template #image>
+          <v-img
+            :gradient
+            class="bg-blur"
+            cover
+            :src="anime.metadata.coverImage.extraLarge"
+            :lazy-src="anime.metadata.coverImage.medium"
+          />
+        </template>
+        <v-container
+          class="flex gap-4 mt-auto p-4 mb-6 md:mb-0 md:py-4 md:px-4 sm:h-[65%] h-[70%] xl:max-w-[1440px] w-full"
+        >
+          <v-img
+            cover
+            rounded
+            width="200"
+            class="flex-0-0"
+            :src="anime.metadata.coverImage.extraLarge"
+            :lazy-src="anime.metadata.coverImage.medium"
+          />
+
+          <div>
+            <h3 class="text-h4 mb-2">
+              {{ anime.title.en }}
+            </h3>
+            <div class="flex flex-wrap gap-2 mb-4 ">
+              <v-chip
+                v-for="genre in anime.metadata.genres"
+                :key="genre"
+              >
+                {{ genre }}
+              </v-chip>
             </div>
-            <v-card-text class="px-0 pt-0 text-medium-emphasis">
+            <p class="text-medium-emphasis text-subtitle-1 d-none d-md-block">
               {{ anime.description.en }}
-            </v-card-text>
-          </v-col>
-        </v-row>
-      </Inertialink>
-    </v-carousel-item>
-  </v-carousel>
+            </p>
+          </div>
+        </v-container>
+      </InertiaLink>
+    </swiper-slide>
+  </swiper-container>
 </template>
+
+<style lang="scss">
+.bg-blur {
+  .v-img__img.v-img__img--cover  {
+    filter: blur(5px);
+    transform: scale(1.05); //remove edge
+  }
+}
+</style>

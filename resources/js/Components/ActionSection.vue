@@ -21,7 +21,7 @@ const hasStatus = computed(() => !!slots.status)
       <v-card class="elevation-2">
         <v-card-title
           v-if="hasStatus"
-          class="d-flex"
+          class="flex"
         >
           <slot name="status" />
         </v-card-title>

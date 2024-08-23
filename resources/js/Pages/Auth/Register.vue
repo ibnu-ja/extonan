@@ -156,7 +156,7 @@ const inertiaProps = usePage().props
             </v-checkbox>
           </div>
 
-          <div class="d-flex mb-4">
+          <div class="flex mb-4">
             <v-spacer />
             <v-btn
               color="primary"

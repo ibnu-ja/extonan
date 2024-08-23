@@ -141,7 +141,7 @@ const pageChange = (e: number) => {
       #item.action="{ item }"
     >
       <!--eslint-enable-->
-      <div class="d-flex gap-1">
+      <div class="flex gap-1">
         <v-tooltip
           location="bottom"
           text="Delete"

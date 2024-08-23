@@ -77,11 +77,11 @@ const { languages, selectedLanguage: currentLang } = useLanguages()
   <Head title="Add Episode" />
   <PageHeader title="Add Episode">
     <template #append>
-      <div class="d-flex gap-2">
+      <div class="flex gap-2">
         <v-btn
           variant="outlined"
           color="error"
-          :icon="!mdAndUp ? mdiDelete : undefined"
+          :icon="mdAndUp ? mdiDelete : undefined"
           :prepend-icon="mdAndUp ? mdiDelete : undefined"
           :text="mdAndUp ? 'Delete' : undefined"
         />
@@ -91,7 +91,7 @@ const { languages, selectedLanguage: currentLang } = useLanguages()
           form="storePost"
           :disabled="form.processing"
           :color=" form.is_published ? 'primary' : 'secondary'"
-          :icon="!mdAndUp ? mdiContentSave : undefined"
+          :icon="mdAndUp ? mdiContentSave : undefined"
           :prepend-icon="mdAndUp ? mdiContentSave : undefined"
           :text="mdAndUp ? 'Save' : undefined"
           @click.prevent="save"
@@ -102,14 +102,14 @@ const { languages, selectedLanguage: currentLang } = useLanguages()
           type="submit"
           :disabled="form.processing"
           color="primary"
-          :icon="!mdAndUp ? mdiSend : undefined"
+          :icon="mdAndUp ? mdiSend : undefined"
           :prepend-icon="mdAndUp ? mdiSend : undefined"
           :text="mdAndUp ? 'Publish' : undefined"
         />
       </div>
     </template>
   </PageHeader>
-  <v-container class="pa-0 pa-sm-4">
+  <v-container class="p-0 p-sm-4">
     <v-form
       id="storePost"
       :disabled="form.processing"
@@ -199,7 +199,7 @@ const { languages, selectedLanguage: currentLang } = useLanguages()
                   <v-list-subheader>
                     Links
                   </v-list-subheader>
-                  <div class="d-flex gap-1">
+                  <div class="flex gap-1">
                     <v-chip
                       prepend-avatar="https://upload.wikimedia.org/wikipedia/commons/6/61/AniList_logo.svg"
                       :href="`https://anilist.co/anime/${anime.anilist_id}`"
