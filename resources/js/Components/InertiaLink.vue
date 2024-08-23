@@ -77,7 +77,7 @@ const computedActive = computed(() => {
     return false
   }
   const currentUrl = browserLocation.value.origin + browserLocation.value.pathname.replace(/\/$/, '')
-  const hrefWithoutTrailingSlash = props.href.replace(/\/$/, '')
+  const hrefWithoutTrailingSlash = props.href!.replace(/\/$/, '')
   if (props.active) {
     return true
   }
@@ -86,7 +86,7 @@ const computedActive = computed(() => {
     // return `${browserLocation.value.origin}${browserLocation.value.pathname}` === props.href
     return currentUrl === hrefWithoutTrailingSlash
   }
-  return currentUrl.startsWith(props.href)
+  return currentUrl.startsWith(props.href!)
 })
 
 // vuetify-specific props

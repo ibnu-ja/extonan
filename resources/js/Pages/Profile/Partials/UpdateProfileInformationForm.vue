@@ -68,7 +68,7 @@ const updatePhotoPreview = () => {
     photoPreview.value = e.target?.result
   }
 
-  reader.readAsDataURL(photo)
+  reader.readAsDataURL(photo!)
 }
 
 const deletePhoto = () => {

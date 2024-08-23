@@ -26,7 +26,7 @@ export const dialogModel = ref(false)
  * Closes the currently opened dialog, resolving the promise with the return value of the dialog, or with the given
  * data if any.
  */
-export function closeDialog(data?: boolean | string) {
+export function closeDialog(data?: boolean | string | null) {
   dialogModel.value = false
   if (!data) {
     dialogRef.value!.reject('cancelled')
