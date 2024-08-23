@@ -3,7 +3,7 @@ name: Testing Laravel with PostgreSQL
 on:
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   laravel:
