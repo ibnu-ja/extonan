@@ -31,37 +31,41 @@ defineProps<{
 
 <template>
   <Head title="Home" />
-  <div style="position: relative">
+  <section style="position: relative">
     <LatestAnime :latest-anime />
     <div
       class="absolute top-4 md:top-16 left-0 w-full z-[5]"
     >
-      <v-container>
-        <h1 class="text-h4 text-md-h3 mb-4">
-          Latest Anime
+      <v-container class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4">
+        <h1 class="text-h4 text-md-h3">
+          Latest Episode
         </h1>
       </v-container>
     </div>
-  </div>
-  <v-container class="px-0 sm:px-4 mt-8">
-    <h1 class="text-h4 text-md-h3 mb-4">
-      Latest Episode
-    </h1>
-    <v-row dense>
-      <v-col
-        v-for="episode in latestEpisodes"
-        :key="episode.id"
-        cols="12"
-        md="6"
-      >
-        <VerticalEpisodeCard
-          :image="episode.postable.metadata.coverImage.extraLarge"
-          :lazy-img="episode.postable.metadata.coverImage.medium"
-          :href="route('post.show', [episode.postable, episode])"
-          :title="`${episode.postable.title.en} - ${episode.title.en}`"
-          :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull;`"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
+  </section>
+  <section class="mt-4 sm:mt-8">
+    <v-container class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4">
+      <h1 class="text-h4 text-md-h3">
+        Latest Episode
+      </h1>
+    </v-container>
+    <v-container class="px-0 sm:px-4 pt-0">
+      <v-row dense>
+        <v-col
+          v-for="episode in latestEpisodes"
+          :key="episode.id"
+          cols="12"
+          md="6"
+        >
+          <VerticalEpisodeCard
+            :image="episode.postable.metadata.coverImage.extraLarge"
+            :lazy-img="episode.postable.metadata.coverImage.medium"
+            :href="route('post.show', [episode.postable, episode])"
+            :title="`${episode.postable.title.en} - ${episode.title.en}`"
+            :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull;`"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
+  </section>
 </template>
