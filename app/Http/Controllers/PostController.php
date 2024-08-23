@@ -65,19 +65,10 @@ class PostController extends Controller implements HasMiddleware
      */
     public function show(Anime $anime, Post $post)
     {
-        $media =  $post->getMedia('thumbnail')->first();
-            $props = [
-                'anime' => $anime,
-                'post' => $post->load('author', 'links'),
-            ];
-
-        if (!is_null($media)) {
-            $props = [
-                ...$props,
-                'thumbnail' => $media->getUrl()
-            ];
-        }
-        return Inertia::render('Anime/Post/Show', $props);
+        return Inertia::render('Anime/Post/Show', [
+            'anime' => $anime,
+            'post' => $post->load('author', 'links', 'media')->append('thumbnail'),
+        ]);
     }
 
     /**

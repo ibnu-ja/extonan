@@ -13,9 +13,10 @@ import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import dayjs from 'dayjs'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import VerticalAnimeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
-import { Media, Post } from '@/types'
+import { Post } from '@/types'
 import { mdiCircleSmall, mdiOpenInNew } from '@mdi/js'
 import { useDisplay } from 'vuetify'
+import { CoverImage } from '@/types/anilist'
 
 type ResourceModel = Post & Resource & {
   id: number
@@ -26,9 +27,7 @@ defineProps<{
   post: EpisodeData & {
     links: ResourceModel[]
     embeds: ResourceModel[]
-  }
-  thumbnail?: {
-    extraLarge: string
+    thumbnail: CoverImage | null
   }
 }>()
 
@@ -67,15 +66,15 @@ const { smAndUp } = useDisplay()
         cols="12"
         md="8"
       >
+        <v-img
+          v-if="post.thumbnail"
+          class="w-full sm:w-[75%] mx-auto mb-4"
+          :src="post.thumbnail.extraLarge"
+        />
+
         <p class="mb-4">
           {{ post.description.en }}
         </p>
-
-        <v-img
-          v-if="thumbnail?.extraLarge"
-          class="w-[75%] mx-auto mb-4"
-          :src="thumbnail.extraLarge"
-        />
 
         <h3 class="text-h6 mb-4">
           Download Links

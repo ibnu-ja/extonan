@@ -57,13 +57,20 @@ class Post extends BasePost
         return $this->resources()->where('type', '=','embed')->orderBy('name');
     }
 
-    public function thumbnail() {
+    public function thumbnail(): Attribute {
         return Attribute::make(
-            get: fn () => [
-                'medium' => $this->getMedia('thumbnail')->findVariant('medium')->getUrl(),
-                'large' => $this->getMedia('thumbnail')->findVariant('large')->getUrl(),
-                'extraLarge' => $this->getMedia('thumbnail')->first()->getUrl(),
-            ]
+            function () {
+                if ($this->hasMedia('thumbnail')) {
+                    $this->loadMediaWithVariants('thumbnail');
+                    $media = $this->firstMedia('thumbnail');
+                    return [
+                        'medium' => $media->findVariant('medium')->getUrl(),
+                        'large' => $media->findVariant('large')->getUrl(),
+                        'extraLarge' => $media->getUrl(),
+                    ];
+                }
+                else return null;
+            }
         );
     }
 }
