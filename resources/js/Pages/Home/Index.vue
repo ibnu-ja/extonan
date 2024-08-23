@@ -43,7 +43,10 @@ defineProps<{
       </v-container>
     </div>
   </div>
-  <v-container class="px-0 sm:px-4">
+  <v-container class="px-0 sm:px-4 mt-8">
+    <h1 class="text-h4 text-md-h3 mb-4">
+      Latest Episode
+    </h1>
     <v-row dense>
       <v-col
         v-for="episode in latestEpisodes"
