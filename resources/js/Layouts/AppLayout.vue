@@ -10,6 +10,7 @@ import { BreadcrumbItem } from '@/types'
 import { Head } from '@inertiajs/vue3'
 import Banner from '@/Components/Banner.vue'
 import Dialog from '@/Components/Dialog.vue'
+import Footer from '@/Layouts/Partials/Footer.vue'
 
 const theme = useTheme()
 const user = useUserStore()
@@ -19,8 +20,8 @@ watchEffect(() => {
   theme.global.name.value = (
     user.theme === 'system' ? systemTheme.value : user.theme
   )
+  console.log('asdw')
 })
-
 const drawer = ref<boolean | undefined>()
 
 defineProps<{
@@ -41,6 +42,7 @@ defineProps<{
     <Drawer v-model="drawer" />
     <v-main>
       <slot />
+      <Footer />
     </v-main>
   </v-app>
 </template>

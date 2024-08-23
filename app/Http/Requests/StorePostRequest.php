@@ -25,7 +25,8 @@ class StorePostRequest extends FormRequest
             'title' => 'required|max:255',
             'description' => 'required',
             'metadata' => 'nullable',
-            'resources' => 'array|nullable'
+            'resources' => 'array|nullable',
+            'thumbnail' => 'nullable',
         ];
     }
 }

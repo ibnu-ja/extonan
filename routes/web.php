@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,6 +14,16 @@ Route::resource('/anime/{anime}/post', PostController::class)->except('index');
 Route::resources([
     '/anime' => AnimeController::class
 ]);
+
+Route::middleware('auth')->group(function () {
+    Route::get('media', [MediaController::class, 'index'])->name('media.index');
+    Route::get('media-months',
+        [MediaController::class, 'getMonths'])->name('media.months');
+    Route::post('media',
+        [MediaController::class, 'store'])->name('media.store');
+    Route::delete('media/{media}',
+        [MediaController::class, 'destroy'])->name('media.destroy');
+});
 
 Route::middleware([
     'auth:sanctum',

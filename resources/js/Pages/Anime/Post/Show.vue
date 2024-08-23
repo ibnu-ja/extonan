@@ -13,7 +13,7 @@ import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import dayjs from 'dayjs'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import VerticalAnimeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
-import { Post } from '@/types'
+import { Media, Post } from '@/types'
 import { mdiCircleSmall, mdiOpenInNew } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 
@@ -26,6 +26,9 @@ defineProps<{
   post: EpisodeData & {
     links: ResourceModel[]
     embeds: ResourceModel[]
+  }
+  thumbnail?: {
+    extraLarge: string
   }
 }>()
 
@@ -64,13 +67,22 @@ const { smAndUp } = useDisplay()
         cols="12"
         md="8"
       >
-        <p>{{ post.description.en }}</p>
+        <p class="mb-4">
+          {{ post.description.en }}
+        </p>
+
+        <v-img
+          v-if="thumbnail?.extraLarge"
+          class="w-[75%] mx-auto mb-4"
+          :src="thumbnail.extraLarge"
+        />
 
         <h3 class="text-h6 mb-4">
           Download Links
         </h3>
 
         <v-expansion-panels
+          v-if="post.links.length > 0"
           :rounded="smAndUp ? 'lg' : 0"
           multiple
           variant="accordion"
@@ -84,8 +96,8 @@ const { smAndUp } = useDisplay()
             <v-expansion-panel-text>
               <v-list density="compact">
                 <v-list-item
-                  v-for="link in postItem.value"
-                  :key="link.id"
+                  v-for="(link, i) in postItem.value"
+                  :key="i"
                   :prepend-icon="mdiCircleSmall"
                 >
                   <a
@@ -97,6 +109,9 @@ const { smAndUp } = useDisplay()
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
+        <div v-else>
+          No download links available.
+        </div>
       </v-col>
       <v-col
         cols="12"

@@ -21,6 +21,9 @@ import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
 import { inject } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
 import { openFormDialog } from '@/composables/useDialog'
+import MediaManager from '@/Components/MediaManager/Index.vue'
+import { Media } from '@/types'
+
 const props = defineProps<{
   anime: AnimeData
   canPublish: boolean
@@ -35,6 +38,7 @@ type PostForm = {
   is_published: boolean
   metadata: unknown
   resources: Resource[]
+  thumbnail: Media | number | null
 }
 
 const form = useForm<PostForm>({
@@ -51,6 +55,7 @@ const form = useForm<PostForm>({
   },
   metadata: null,
   resources: [],
+  thumbnail: null,
 },
 )
 
@@ -86,14 +91,14 @@ const addFilename = async () => {
   })
 }
 
-const addLink = (index) => {
+const addLink = (index: number) => {
   form.resources[index].value.push({
     name: '',
     value: '',
   })
 }
 
-const editFilename = async (index) => {
+const editFilename = async (index: number) => {
   form.resources[index].name = await openFormDialog('Edit filename', undefined, {
     label: 'Filename',
     variant: 'outlined',
@@ -292,7 +297,18 @@ const editFilename = async (index) => {
         >
           <div>
             <!--TODO-->
-            todo: input gambar thumbnail
+            <MediaManager
+              v-model="form.thumbnail"
+              class="mb-4"
+              title="Media Thumbnail"
+              :multiple="false"
+            />
+            <!--<v-expand-x-transition>-->
+            <!--  <MediaGridView-->
+            <!--    v-if="images"-->
+            <!--    :images-->
+            <!--  />-->
+            <!--</v-expand-x-transition>-->
             <v-expand-x-transition>
               <v-card
                 :rounded="smAndUp"

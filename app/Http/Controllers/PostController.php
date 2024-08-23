@@ -46,9 +46,16 @@ class PostController extends Controller implements HasMiddleware
      */
     public function store(Anime $anime, StorePostRequest $request)
     {
+//        return $request->all();
         $post = $anime->posts()->create($request->validated());
 
         $post->resources()->createMany($request->validated()['resources']);
+
+        if (!is_null($request->validated()['thumbnail'])) {
+            $post->syncMedia($request->validated()['thumbnail']['id'], 'thumbnail');
+        } else {
+            $post->detachMediaTags('thumbnail');
+        }
 
         return redirect()->route('post.show',[$anime, $post])->banner('Episode created successfully!');
     }
@@ -58,10 +65,19 @@ class PostController extends Controller implements HasMiddleware
      */
     public function show(Anime $anime, Post $post)
     {
-        return Inertia::render('Anime/Post/Show', [
-            'anime' => $anime,
-            'post' => $post->load('author', 'links')
-        ]);
+        $media =  $post->getMedia('thumbnail')->first();
+            $props = [
+                'anime' => $anime,
+                'post' => $post->load('author', 'links'),
+            ];
+
+        if (!is_null($media)) {
+            $props = [
+                ...$props,
+                'thumbnail' => $media->getUrl()
+            ];
+        }
+        return Inertia::render('Anime/Post/Show', $props);
     }
 
     /**

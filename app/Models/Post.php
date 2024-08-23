@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Plank\Mediable\Mediable;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Translatable\HasTranslations;
 
 class Post extends BasePost
 {
-    use HasTranslations;
+    use HasTranslations,
+        Mediable;
 
     /**
      * @var string[]
@@ -52,5 +55,15 @@ class Post extends BasePost
     public function embeds(): HasMany
     {
         return $this->resources()->where('type', '=','embed')->orderBy('name');
+    }
+
+    public function thumbnail() {
+        return Attribute::make(
+            get: fn () => [
+                'medium' => $this->getMedia('thumbnail')->findVariant('medium')->getUrl(),
+                'large' => $this->getMedia('thumbnail')->findVariant('large')->getUrl(),
+                'extraLarge' => $this->getMedia('thumbnail')->first()->getUrl(),
+            ]
+        );
     }
 }

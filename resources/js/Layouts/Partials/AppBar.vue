@@ -9,6 +9,7 @@ import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import { BreadcrumbItem } from '@/types'
 import { route as ziggyRoute } from 'ziggy-js'
 import { useBrowserLocation } from '@vueuse/core'
+import logo from '@/assets/logo/inline color.svg'
 
 const drawer = defineModel<boolean | undefined>('drawer')
 
@@ -40,10 +41,6 @@ const itemList = [
   },
 ]
 const tab = ref(location.value.pathname?.split('/')[1])
-
-console.log(tab.value)
-
-console.log(`asd bwang ${location.value.pathname?.split('/')[1]}`)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const visit = (e: any) => {
@@ -86,11 +83,11 @@ function logout() {
       href="/"
       class="mx-4"
     >
-      <img
+      <v-img
         width="200"
-        src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Google_Play_2022_logo.svg"
+        :src="logo"
         alt="application logo"
-      >
+      />
     </InertiaLink>
     <v-tabs
       v-model="tab"
