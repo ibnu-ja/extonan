@@ -93,7 +93,7 @@ const submit = () => {
           <!--&gt;-->
           <!--  <v-otp-input-->
           <!--    v-model="form.code"-->
-          <!--    class="pa-0"-->
+          <!--    class="p-0"-->
           <!--    :error="form.errors.code != null"-->
           <!--  />-->
           <!--  <div-->
@@ -129,7 +129,7 @@ const submit = () => {
           />
 
           <div
-            class="d-flex align-center gap-4"
+            class="flex align-center gap-4"
           >
             <v-spacer />
             <a

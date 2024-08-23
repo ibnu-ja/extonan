@@ -1,5 +1,6 @@
 import { TranslatableField } from '@/types/formHelper'
 import { Post } from '@/types/index'
+import { AnimeMediaAutofillResponse } from '@/types/anilist'
 
 export type LatestAnimeItem = {
   id: number
@@ -12,4 +13,11 @@ export type LatestAnimeItem = {
 
 export type AnimeData = {
   description: TranslatableField
+  metadata: AnimeMediaAutofillResponse
 } & LatestAnimeItem & Post
+
+export type EpisodeData = Post & {
+  title: TranslatableField
+  description: TranslatableField
+  id: number
+}

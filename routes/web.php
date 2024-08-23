@@ -2,13 +2,16 @@
 
 use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', HomeController::class)->name('home');
 
+Route::resource('/anime/{anime}/post', PostController::class)->except('index');
+
 Route::resources([
-    'anime' => AnimeController::class,
+    '/anime' => AnimeController::class
 ]);
 
 Route::middleware([

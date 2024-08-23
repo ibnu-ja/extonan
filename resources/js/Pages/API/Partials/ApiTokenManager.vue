@@ -210,7 +210,7 @@ watch(apiTokenBeingManaged, async (newValue) => {
           </p>
           <v-sheet
             v-if="page.props.jetstream.flash.token"
-            class="mt-4 pa-4"
+            class="mt-4 p-4"
             rounded="lg"
             style="position: relative; background-color: rgba(0, 0, 0, 0.1);"
           >

@@ -73,7 +73,7 @@ const submit = () => {
             @click:append-inner="showP = !showP"
           />
           <div
-            class="d-flex align-center gap-4"
+            class="flex align-center gap-4"
           >
             <v-spacer />
             <v-btn

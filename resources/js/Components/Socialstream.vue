@@ -17,7 +17,7 @@ withDefaults(
 </script>
 
 <template>
-  <div class="d-flex justify-center align-center my-4">
+  <div class="flex justify-center align-center my-4">
     <v-divider />
     <div
       class="mx-2"
@@ -28,7 +28,7 @@ withDefaults(
     <v-divider />
   </div>
 
-  <div class="d-flex flex-column flex-warp justify-center gap-4">
+  <div class="flex flex-column flex-warp justify-center gap-4">
     <v-btn
       v-for="provider in providers"
       :key="provider.id"

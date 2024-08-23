@@ -12,7 +12,7 @@ import { Head, router } from '@inertiajs/vue3'
 import {
   mdiAlphabeticalVariant,
   mdiFormatListNumbered,
-  mdiPlus, mdiViewGrid,
+  mdiPlus,
 } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
@@ -64,7 +64,7 @@ watch(displayMode, (value, oldValue) => {
         :as="VBtn"
         :href="route('anime.create')"
         color="primary"
-        :icon="!mdAndUp ? mdiPlus : undefined"
+        :icon="mdAndUp ? mdiPlus : undefined"
         :prepend-icon="mdAndUp ? mdiPlus : undefined"
         :text="mdAndUp ? 'Create' : undefined"
       />

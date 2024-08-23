@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Post;
+use App\Models\BasePost;
 use App\Models\User;
 
 class PostPolicy
@@ -18,7 +18,7 @@ class PostPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Post $post): bool
+    public function view(User $user, BasePost $post): bool
     {
         if ($user->can('post.read.any') || $post->isPublished()) {
             return true;
@@ -38,7 +38,7 @@ class PostPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Post $post): bool
+    public function update(User $user, BasePost $post): bool
     {
         if ($user->can('post.update.any')) {
             return true;
@@ -50,7 +50,7 @@ class PostPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Post $post): bool
+    public function delete(User $user, BasePost $post): bool
     {
         if ($user->can('post.delete.any')) {
             return true;
@@ -62,7 +62,7 @@ class PostPolicy
     /**
      * Determine whether the user can publish the model.
      */
-    public function publish(User $user, Post $post = null): bool
+    public function publish(User $user, BasePost $post = null): bool
     {
         if ($post == null && $user->can('post.publish.self') || $user->can('post.publish.any')) {
             return true;

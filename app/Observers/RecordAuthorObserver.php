@@ -2,14 +2,14 @@
 
 namespace App\Observers;
 
-use App\Models\Post;
+use App\Models\BasePost;
 
 class RecordAuthorObserver
 {
     /**
      * Sets author when record is created
      */
-    public function creating(Post $post): void
+    public function creating(BasePost $post): void
     {
         $post->author_id = auth()->id();
     }
@@ -17,7 +17,7 @@ class RecordAuthorObserver
     /**
      * Sets the publisher when record is published
      */
-    public function updating(Post $post): void
+    public function updating(BasePost $post): void
     {
         if (request()->has('is_published') && request()->get('is_published') === true && $post->getOriginal('is_published') === false) {
             $post->publisher_id = auth()->id();

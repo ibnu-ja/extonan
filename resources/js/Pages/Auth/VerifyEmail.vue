@@ -60,7 +60,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
           </v-scroll-x-transition>
 
           <div
-            class="d-flex align-center gap-4"
+            class="flex align-center gap-4"
           >
             <v-btn
               color="primary"

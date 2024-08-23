@@ -108,6 +108,63 @@ declare module 'ziggy-js' {
         binding: 'id'
       },
     ]
+    'post.create': [
+      {
+        name: 'anime'
+        required: true
+        binding: 'id'
+      },
+    ]
+    'post.store': [
+      {
+        name: 'anime'
+        required: true
+      },
+    ]
+    'post.show': [
+      {
+        name: 'anime'
+        required: true
+      },
+      {
+        name: 'post'
+        required: true
+        binding: 'id'
+      },
+    ]
+    'post.edit': [
+      {
+        name: 'anime'
+        required: true
+      },
+      {
+        name: 'post'
+        required: true
+        binding: 'id'
+      },
+    ]
+    'post.update': [
+      {
+        name: 'anime'
+        required: true
+      },
+      {
+        name: 'post'
+        required: true
+        binding: 'id'
+      },
+    ]
+    'post.destroy': [
+      {
+        name: 'anime'
+        required: true
+      },
+      {
+        name: 'post'
+        required: true
+        binding: 'id'
+      },
+    ]
     'dashboard': []
   }
 }

@@ -20,7 +20,7 @@ const hasActions = computed(() => !!useSlots().actions)
         <v-form @submit.prevent="$emit('submitted')">
           <v-card-title
             v-if="$slots.formTitle"
-            class="d-flex"
+            class="flex"
           >
             <slot name="formTitle" />
           </v-card-title>

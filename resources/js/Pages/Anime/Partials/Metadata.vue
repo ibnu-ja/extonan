@@ -41,7 +41,7 @@ const airingDate = dayjs({
         </v-list-subheader>
         <!--dayjs is 0 indexed-->
 
-        <div class="d-flex flex-wrap gap-1">
+        <div class="flex flex-wrap gap-1">
           <v-chip
             v-for="{node: studio} in data.studios.edges"
             :key="studio.id"
@@ -65,7 +65,7 @@ const airingDate = dayjs({
         <v-list-subheader>
           Genres
         </v-list-subheader>
-        <div class="d-flex flex-wrap gap-1">
+        <div class="flex flex-wrap gap-1">
           <v-chip
             v-for="genre in data.genres"
             :key="genre"
