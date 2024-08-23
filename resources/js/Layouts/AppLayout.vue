@@ -9,6 +9,7 @@ import { usePreferredDark } from '@vueuse/core'
 import { BreadcrumbItem } from '@/types'
 import { Head } from '@inertiajs/vue3'
 import Banner from '@/Components/Banner.vue'
+import Dialog from '@/Components/Dialog.vue'
 
 const theme = useTheme()
 const user = useUserStore()
@@ -32,6 +33,7 @@ defineProps<{
   <Head :title="title" />
   <v-app>
     <Banner />
+    <Dialog />
     <AppBar
       v-model:drawer="drawer"
       :breadcrumbs="breadcrumbs"
