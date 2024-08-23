@@ -24,7 +24,7 @@ class HomeController extends Controller
             'latestAnime' => Anime::with('author')->take(5)->orderBy('published_at')->get(),
             'latestEpisodes' => Post::whereHasMorph('postable', [Anime::class], function (Builder $query) {
                 $query->take(10);
-            })->with(['postable'])->orderByDesc('published_at')->get(),
+            })->with(['postable'])->orderByDesc('published_at')->get()->append('thumbnail'),
         ]);
     }
 }

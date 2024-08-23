@@ -13,9 +13,11 @@ import { AnimeData, EpisodeData } from '@/types/anime'
 import LatestAnime from '@/Pages/Home/Partials/LatestAnime.vue'
 import VerticalEpisodeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
 import dayjs from 'dayjs'
+import { CoverImage } from '@/types/anilist'
 
 type Postable = EpisodeData & {
   postable: AnimeData
+  thumbnail: CoverImage | null
 }
 
 defineProps<{
@@ -58,8 +60,8 @@ defineProps<{
           md="6"
         >
           <VerticalEpisodeCard
-            :image="episode.postable.metadata.coverImage.extraLarge"
-            :lazy-img="episode.postable.metadata.coverImage.medium"
+            :image="episode.thumbnail? episode.thumbnail.extraLarge : undefined"
+            :lazy-img="episode.thumbnail? episode.thumbnail.medium : undefined"
             :href="route('post.show', [episode.postable, episode])"
             :title="`${episode.postable.title.en} - ${episode.title.en}`"
             :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull;`"
