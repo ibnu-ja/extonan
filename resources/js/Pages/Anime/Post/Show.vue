@@ -9,15 +9,27 @@ export default {
 
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
-import { AnimeData, EpisodeData } from '@/types/anime'
+import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import dayjs from 'dayjs'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import VerticalAnimeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
+import { Post } from '@/types'
+import { mdiCircleSmall, mdiOpenInNew } from '@mdi/js'
+import { useDisplay } from 'vuetify'
+
+type ResourceModel = Post & Resource & {
+  id: number
+}
 
 defineProps<{
   anime: AnimeData
-  post: EpisodeData
+  post: EpisodeData & {
+    links: ResourceModel[]
+    embeds: ResourceModel[]
+  }
 }>()
+
+const { smAndUp } = useDisplay()
 
 </script>
 
@@ -53,6 +65,38 @@ defineProps<{
         md="8"
       >
         <p>{{ post.description.en }}</p>
+
+        <h3 class="text-h6 mb-4">
+          Download Links
+        </h3>
+
+        <v-expansion-panels
+          :rounded="smAndUp ? 'lg' : 0"
+          multiple
+          variant="accordion"
+        >
+          <v-expansion-panel
+            v-for="postItem in post.links"
+            :key="postItem.id"
+            static
+          >
+            <v-expansion-panel-title>{{ postItem.name }}</v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-list density="compact">
+                <v-list-item
+                  v-for="link in postItem.value"
+                  :key="link.id"
+                  :prepend-icon="mdiCircleSmall"
+                >
+                  <a
+                    :href="link.value"
+                    target="_blank"
+                  >{{ link.name }} <v-icon :icon="mdiOpenInNew" /></a>
+                </v-list-item>
+              </v-list>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-col>
       <v-col
         cols="12"
