@@ -21,3 +21,14 @@ export type EpisodeData = Post & {
   description: TranslatableField
   id: number
 }
+
+export type ResourceItem = {
+  name: string
+  value: string
+}
+
+export type Resource = {
+  name: string
+  value: ResourceItem[]
+  type: 'link' | 'embed'
+}
