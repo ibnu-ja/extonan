@@ -17,6 +17,7 @@ import { Post } from '@/types'
 import { mdiCircleSmall, mdiOpenInNew } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { CoverImage } from '@/types/anilist'
+import { onMounted } from 'vue'
 
 type ResourceModel = Post & Resource & {
   id: number
@@ -24,9 +25,10 @@ type ResourceModel = Post & Resource & {
 
 type Episode = EpisodeData & {
   thumbnail: CoverImage | null
+  slug: string
 }
 
-defineProps<{
+const props = defineProps<{
   anime: AnimeData & {
     posts: Episode[]
   }
@@ -34,11 +36,17 @@ defineProps<{
     links: ResourceModel[]
     embeds: ResourceModel[]
     thumbnail: CoverImage | null
+    slug: string
   }
 }>()
 
 const { smAndUp } = useDisplay()
 
+onMounted(() => {
+  const activeEpisode = document.getElementById(props.post.slug)
+  if (activeEpisode) activeEpisode.scrollIntoView()
+})
+// console.log(props.post.slug)
 </script>
 
 <template>
@@ -125,15 +133,16 @@ const { smAndUp } = useDisplay()
         cols="12"
         md="4"
       >
-        <v-list-item-subtitle class="mb-4 px-2 sm:px-0">
+        <h3 class="text-h6 mb-4 px-2 sm:px-0">
           Other Episodes
-        </v-list-item-subtitle>
-        <div class="flex flex-col gap-2">
+        </h3>
+        <div class="overflow-auto h-128">
           <VerticalAnimeCard
             v-for="episode in anime.posts"
+            :id="episode.slug"
             :key="episode.id"
             :active="episode.id == post.id"
-            class="mb-4"
+            class="mb-2"
             :image="episode.thumbnail?.extraLarge"
             :lazy-img="episode.thumbnail?.medium"
             :href="route('post.show', [anime, episode])"
