@@ -78,11 +78,11 @@ const { smAndUp } = useDisplay()
           :src="post.thumbnail.extraLarge"
         />
 
-        <p class="mb-4">
+        <p class="mb-4 px-2 sm:px-0">
           {{ post.description.en }}
         </p>
 
-        <h3 class="text-h6 mb-4">
+        <h3 class="text-h6 mb-4 px-2 sm:px-0">
           Download Links
         </h3>
 
@@ -114,7 +114,10 @@ const { smAndUp } = useDisplay()
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
-        <div v-else>
+        <div
+          v-else
+          class="px-2 sm:px-0"
+        >
           No download links available.
         </div>
       </v-col>
@@ -122,7 +125,7 @@ const { smAndUp } = useDisplay()
         cols="12"
         md="4"
       >
-        <v-list-item-subtitle class="mb-4">
+        <v-list-item-subtitle class="mb-4 px-2 sm:px-0">
           Other Episodes
         </v-list-item-subtitle>
         <div class="flex flex-col gap-2">
