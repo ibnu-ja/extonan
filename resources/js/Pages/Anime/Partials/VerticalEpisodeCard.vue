@@ -14,8 +14,8 @@ const propss = defineProps<{
   image?: string
   lazyImg?: string
   active?: boolean
-  id: string
-  class: string
+  id?: string
+  class?: string
 }>()
 
 const { smAndUp } = useDisplay()
