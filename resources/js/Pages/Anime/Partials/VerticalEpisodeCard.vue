@@ -13,6 +13,7 @@ defineProps<{
   overhead?: string
   image?: string
   lazyImg?: string
+  active?: boolean
 }>()
 
 const { smAndUp } = useDisplay()
@@ -21,11 +22,12 @@ const { smAndUp } = useDisplay()
 <template>
   <v-hover v-slot="{isHovering, props}">
     <InertiaLink
+      :color="active ? 'primary' : undefined"
       :href
       :as="VCard"
       :rounded="smAndUp ? 'lg' : false"
       class="flex gap-2 p-2"
-      variant="text"
+      :variant="active ? 'tonal' : 'text'"
       v-bind="props"
     >
       <v-img

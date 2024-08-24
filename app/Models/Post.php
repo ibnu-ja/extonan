@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -51,15 +52,16 @@ class Post extends BasePost
 
     public function links(): HasMany
     {
-        return $this->resources()->where('type', '=','link')->orderBy('name');
+        return $this->resources()->where('type', '=', 'link')->orderBy('name');
     }
 
     public function embeds(): HasMany
     {
-        return $this->resources()->where('type', '=','embed')->orderBy('name');
+        return $this->resources()->where('type', '=', 'embed')->orderBy('name');
     }
 
-    public function thumbnail(): Attribute {
+    public function thumbnail(): Attribute
+    {
         return Attribute::make(
             function () {
                 if ($this->hasMedia('thumbnail')) {
@@ -70,9 +72,22 @@ class Post extends BasePost
                         'large' => $media->findVariant('large')->getUrl(),
                         'extraLarge' => $media->getUrl(),
                     ];
-                }
-                else return null;
+                } else return null;
             }
         );
+    }
+
+    public function scopePrev(Builder $query, BasePost $basePost, Post $post): void
+    {
+        $query->whereHasMorph('postable', [Anime::class], function (Builder $query) use ($basePost) {
+            $query->select('id')->where('id', '=', $basePost->id)->with('author');
+        })->with(['author'])->where('title', '<', $post->title)->orderBy('title');
+    }
+
+    public function scopeNext(Builder $query, BasePost $basePost, Post $post): void
+    {
+        $query->whereHasMorph('postable', [Anime::class], function (Builder $query) use ($basePost) {
+            $query->select('id')->where('id', '=', $basePost->id)->with('author');
+        })->with(['author'])->where('title', '>', $post->title)->orderBy('title');
     }
 }

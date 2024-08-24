@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Anime;
 use App\Models\Post;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -66,7 +67,7 @@ class PostController extends Controller implements HasMiddleware
     public function show(Anime $anime, Post $post)
     {
         return Inertia::render('Anime/Post/Show', [
-            'anime' => $anime,
+            'anime' => $anime->load(['posts' => fn (MorphMany $query) => $query->orderByDesc('title') ]),
             'post' => $post->load('author', 'links', 'media')->append('thumbnail'),
         ]);
     }

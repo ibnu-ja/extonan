@@ -22,8 +22,14 @@ type ResourceModel = Post & Resource & {
   id: number
 }
 
+type Episode = EpisodeData & {
+  thumbnail: CoverImage | null
+}
+
 defineProps<{
-  anime: AnimeData
+  anime: AnimeData & {
+    posts: Episode[]
+  }
   post: EpisodeData & {
     links: ResourceModel[]
     embeds: ResourceModel[]
@@ -116,15 +122,21 @@ const { smAndUp } = useDisplay()
         cols="12"
         md="4"
       >
-        <v-list-item-subtitle>
-          Next episode
+        <v-list-item-subtitle class="mb-4">
+          Other Episodes
         </v-list-item-subtitle>
-        <VerticalAnimeCard
-          :image="anime.metadata.coverImage.extraLarge"
-          :lazy-img="anime.metadata.coverImage.medium"
-          :href="route('post.show', [anime, post])"
-          :title="post.title.en!"
-        />
+        <div class="flex flex-col gap-2">
+          <VerticalAnimeCard
+            v-for="episode in anime.posts"
+            :key="episode.id"
+            :active="episode.id == post.id"
+            class="mb-4"
+            :image="episode.thumbnail?.extraLarge"
+            :lazy-img="episode.thumbnail?.medium"
+            :href="route('post.show', [anime, episode])"
+            :title="episode.title.en!"
+          />
+        </div>
       </v-col>
     </v-row>
   </v-container>
