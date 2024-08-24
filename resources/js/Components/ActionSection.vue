@@ -9,7 +9,7 @@ const hasStatus = computed(() => !!slots.status)
 </script>
 
 <template>
-  <div class="d-grid grid-cols-1 gap-4 grid-cols-md-3">
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
     <div>
       <slot name="title" />
 
