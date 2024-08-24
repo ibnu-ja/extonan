@@ -17,10 +17,15 @@ import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
 import SpeedDial from '@/Pages/Anime/Partials/SpeedDial.vue'
 import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
 import dayjs from 'dayjs'
+import { CoverImage } from '@/types/anilist'
+
+type Post = EpisodeData & {
+  thumbnail: CoverImage | null
+}
 
 const props = defineProps<{
   anime: AnimeData & {
-    posts: EpisodeData[]
+    posts: Post[]
   }
   canCreate: boolean
 }>()
@@ -71,8 +76,8 @@ const animeBwang = computedAsync(async () => {
             md="6"
           >
             <HorizontalEpisodeCard
-              :image="anime.metadata.coverImage.extraLarge"
-              :lazy-img="anime.metadata.coverImage.medium!"
+              :image="episode.thumbnail?.extraLarge"
+              :lazy-img="episode.thumbnail?.medium"
               :href="route('post.show', [anime, episode])"
               :title="episode.title.en!"
               :permission="episode.can"

@@ -26,6 +26,8 @@ class Post extends BasePost
 
     protected $casts = ['metadata' => 'object'];
 
+    protected $appends = ['thumbnail'];
+
     /**
      * Get the options for generating the slug.
      */
