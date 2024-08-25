@@ -71,6 +71,7 @@ defineProps<{
               :href="route('post.show', [episode.postable, episode])"
               :title="`${episode.postable.title.en} - ${episode.title.en}`"
               :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
+              :is-published="episode.is_published"
             />
           </v-col>
         </v-row>
