@@ -1,48 +1,17 @@
 <script lang="ts" setup>
-import { mdiDotsVertical, mdiPencil, mdiSend } from '@mdi/js'
-import { mdiDelete } from '@mdi/js/commonjs/mdi'
 import { Permissions } from '@/types'
-import InertiaLink from '@/Components/InertiaLink.vue'
 import { VListItem } from 'vuetify/components'
-import { computed, inject } from 'vue'
-import { route as ziggyRoute } from 'ziggy-js'
-import { openConfirmationDialog } from '@/composables/useDialog'
-import { router } from '@inertiajs/vue3'
+import ActionDropdown from '@/Pages/Anime/Partials/ActionDropdown.vue'
 
-const props = defineProps<{
+defineProps<{
   permissions?: Permissions
   overhead?: string | null
   subtitle?: string | null
   title: string
-  postableId?: number
-  postId?: number
   isPublished: boolean
+  deleteUrl?: string
+  editUrl?: string
 }>()
-
-const route = inject('route') as typeof ziggyRoute
-
-const edit = computed(() => {
-  if (!props.permissions?.update || !props.postableId || !props.postId)
-    return undefined
-  return route('post.edit', [props.postableId, props.postId])
-})
-
-// const publish = computed(() => {
-//   if (!props.permissions?.publish || props.postableId || props.postId)
-//     return undefined
-//   return route('post.publish', [props.postableId, props.postId])
-// })
-
-const deletePost = async () => {
-  try {
-    const confirmed = await openConfirmationDialog('Are you sure want to delete this item?')
-    if (confirmed && props.postId && props.postableId) {
-      router.delete(route('post.destroy', [props.postableId, props.postId]))
-    }
-  } catch {
-  //
-  }
-}
 
 </script>
 
@@ -65,62 +34,12 @@ const deletePost = async () => {
         {{ subtitle }}
       </div>
     </div>
-    <template
-      v-if="permissions?.publish || permissions?.update || permissions?.delete"
-      #append
-    >
-      <v-menu>
-        <template #activator="{ props: propss }">
-          <v-btn
-            density="comfortable"
-            variant="plain"
-            :icon="mdiDotsVertical"
-            v-bind="propss"
-            @click.prevent
-          />
-        </template>
-        <v-list density="comfortable">
-          <v-list-item
-            v-if="!isPublished"
-            :prepend-icon="mdiSend"
-            title="Publish"
-            :disabled="!permissions?.publish"
-          >
-            <template #prepend>
-              <v-icon
-                :icon="mdiSend"
-                color="primary"
-              />
-            </template>
-          </v-list-item>
-          <InertiaLink
-            :as="VListItem"
-            :disabled="!permissions?.update"
-            :href="edit"
-            title="Edit"
-          >
-            <template #prepend>
-              <v-icon
-                :icon="mdiPencil"
-                color="secondary"
-              />
-            </template>
-          </InertiaLink>
-          <v-list-item
-            :disabled="!permissions?.delete"
-            title="Delete"
-            @click.prevent="deletePost"
-          >
-            <template #prepend>
-              <v-icon
-                :icon="mdiDelete"
-                color="error"
-              />
-            </template>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </template>
+    <ActionDropdown
+      :edit-url
+      :delete-url
+      :permissions
+      :is-published
+    />
   </v-list-item>
 </template>
 

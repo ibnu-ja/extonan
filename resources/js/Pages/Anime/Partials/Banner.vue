@@ -2,10 +2,16 @@
 
 import { CoverImage } from '@/types/anilist'
 import { useGradient } from '@/composables/useGradient'
+import ActionDropdown from '@/Pages/Anime/Partials/ActionDropdown.vue'
+import { Permissions } from '@/types'
 
 const { gradient } = useGradient()
 
 defineProps<{
+  permissions?: Permissions
+  isPublished: boolean
+  deleteUrl?: string
+  editUrl?: string
   bg: string
   coverImage: CoverImage
   title: string
@@ -64,6 +70,14 @@ defineProps<{
                     {{ title }}
                   </h1>
                 </v-list-item-title>
+                <template #append>
+                  <ActionDropdown
+                    :edit-url
+                    :delete-url
+                    :permissions
+                    :is-published
+                  />
+                </template>
               </v-list-item>
               <slot name="description" />
             </v-col>

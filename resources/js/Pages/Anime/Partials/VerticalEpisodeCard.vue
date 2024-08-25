@@ -16,6 +16,10 @@ const propss = defineProps<{
   active?: boolean
   id?: string
   class?: string
+  permissions?: Permissions
+  isPublished: boolean
+  deleteUrl?: string
+  editUrl?: string
 }>()
 
 const { smAndUp } = useDisplay()
@@ -58,6 +62,9 @@ const { smAndUp } = useDisplay()
         style="flex: 1; line-clamp: 2"
       >
         <ItemListTitle
+          :edit-url
+          :delete-url
+          :is-published
           :subtitle
           :title
         />

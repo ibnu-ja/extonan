@@ -42,7 +42,7 @@ type AnimeForm = {
   description: TranslatableField
   anilist_id: number | null
   is_published: boolean
-  metadata: AnimeMediaAutofillResponse
+  metadata: AnimeMediaAutofillResponse | null
 }
 
 const form = useForm<AnimeForm>({
@@ -108,7 +108,7 @@ const save = () => {
 }
 
 if (props.anime) {
-  apiSearchId.value = props.anime.metadata.idMal
+  apiSearchId.value = props.anime.metadata!.idMal
   fetchAnilistData()
   form.title = props.anime.title
   form.is_published = props.anime.is_published
@@ -139,7 +139,7 @@ const deletePost = async () => {
         <v-btn
           variant="outlined"
           color="error"
-          :icon="mdAndUp ? mdiDelete : undefined"
+          :icon="!mdAndUp ? mdiDelete : undefined"
           :prepend-icon="mdAndUp ? mdiDelete : undefined"
           :text="mdAndUp ? 'Delete' : undefined"
           @click="deletePost"
@@ -149,8 +149,8 @@ const deletePost = async () => {
           :type="canPublish && !form.is_published? undefined : 'submit'"
           form="storeAnime"
           :disabled="form.processing"
-          :color=" form.is_published ? 'primary' : 'secondary'"
-          :icon="mdAndUp ? mdiContentSave : undefined"
+          :color="form.is_published ? 'primary' : 'secondary'"
+          :icon="!mdAndUp ? mdiContentSave : undefined"
           :prepend-icon="mdAndUp ? mdiContentSave : undefined"
           :text="mdAndUp ? 'Save' : undefined"
           @click.prevent="save"
@@ -161,7 +161,7 @@ const deletePost = async () => {
           type="submit"
           :disabled="form.processing"
           color="primary"
-          :icon="mdAndUp ? mdiSend : undefined"
+          :icon="!mdAndUp ? mdiSend : undefined"
           :prepend-icon="mdAndUp ? mdiSend : undefined"
           :text="mdAndUp ? 'Publish' : undefined"
         />
@@ -291,6 +291,7 @@ const deletePost = async () => {
               <v-expand-transition>
                 <Metadata
                   v-if="anilistData"
+                  divider
                   :data="anilistData"
                 />
               </v-expand-transition>

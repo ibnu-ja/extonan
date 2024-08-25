@@ -14,7 +14,7 @@ import dayjs from 'dayjs'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import VerticalAnimeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
 import { Post } from '@/types'
-import { mdiCircleSmall, mdiOpenInNew } from '@mdi/js'
+import { mdiOpenInNew } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { CoverImage } from '@/types/anilist'
 import { onMounted } from 'vue'
@@ -145,6 +145,7 @@ onMounted(() => {
             :lazy-img="episode.thumbnail?.medium"
             :href="route('post.show', [anime, episode])"
             :title="episode.title.en!"
+            :is-published="anime.is_published"
           />
         </div>
       </v-col>

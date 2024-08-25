@@ -14,7 +14,7 @@ import { computedAsync } from '@vueuse/core'
 import { useAnime } from '@/composables/useAniList'
 import Banner from '@/Pages/Anime/Partials/Banner.vue'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
-import SpeedDial from '@/Pages/Anime/Partials/SpeedDial.vue'
+// import SpeedDial from '@/Pages/Anime/Partials/SpeedDial.vue'
 import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
 import dayjs from 'dayjs'
 import { CoverImage } from '@/types/anilist'
@@ -39,10 +39,10 @@ const animeBwang = computedAsync(async () => {
 </script>
 
 <template>
-  <SpeedDial
-    v-if="canCreate"
-    :anime
-  />
+  <!--<SpeedDial-->
+  <!--  v-if="canCreate"-->
+  <!--  :anime-->
+  <!--/>-->
   <Head :title="anime.title.en!" />
 
   <Banner
@@ -50,6 +50,10 @@ const animeBwang = computedAsync(async () => {
     :title="anime.title.en!"
     :bg="animeBwang?.coverImage.extraLarge!"
     :cover-image="animeBwang?.coverImage!"
+    :is-published="anime.is_published"
+    :edit-url="route('anime.edit', anime)"
+    :delete-url="route('anime.destroy', anime)"
+    :permissions="anime.can"
   />
 
   <v-container class="px-0 sm:px-4">
@@ -82,8 +86,8 @@ const animeBwang = computedAsync(async () => {
               :title="episode.title.en!"
               :permissions="episode.can"
               :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
-              :postable-id="anime.id"
-              :post-id="episode.id"
+              :delete-url="route('post.destroy', [anime, episode])"
+              :edit-url-url="route('post.edit', [anime, episode])"
               :is-published="episode.is_published"
             />
           </v-col>

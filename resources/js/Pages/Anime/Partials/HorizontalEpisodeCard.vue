@@ -17,8 +17,8 @@ defineProps<{
   overhead?: string
   image?: string
   lazyImg?: string
-  postableId?: number
-  postId?: number
+  editUrl?: string
+  deleteUrl?: string
   isPublished: boolean
 }>()
 
@@ -65,8 +65,8 @@ const { width } = useElementSize(imageRef)
         :overhead
         :title
         :subtitle
-        :postable-id
-        :post-id
+        :edit-url
+        :delete-url
         :is-published
       />
     </InertiaLink>
