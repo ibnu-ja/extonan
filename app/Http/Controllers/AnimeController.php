@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAnimeRequest;
 use App\Models\Anime;
+use App\Models\Post;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -84,7 +85,7 @@ class AnimeController extends Controller implements HasMiddleware
             'anime' => fn() => $anime->load([
                     'posts' => fn (MorphMany $query) => $query->orderByDesc('title')->with(['author'])->get()
                 ]),
-            'canCreate' => fn() => auth()->check() && auth()->user()->can('create', Anime::class),
+            'canCreateEpisode' => fn() => auth()->check() && auth()->user()->can('create', Post::class),
         ]);
     }
 
@@ -110,7 +111,7 @@ class AnimeController extends Controller implements HasMiddleware
 
         $anime->update($request->validated());
 
-        return redirect()->route('anime.index')->banner('Anime updated successfully.');
+        return redirect()->route('anime.show', $anime)->banner('Anime updated successfully.');
     }
 
     /**

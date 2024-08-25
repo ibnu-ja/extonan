@@ -431,10 +431,16 @@ const deletePost = async () => {
               </v-card-text>
 
               <v-expand-transition>
-                <Metadata
+                <template
                   v-if="anime.metadata"
-                  :data="anime.metadata"
-                />
+                >
+                  <v-divider />
+                  <v-card-text>
+                    <Metadata
+                      :data="anime.metadata"
+                    />
+                  </v-card-text>
+                </template>
               </v-expand-transition>
             </v-card>
           </div>

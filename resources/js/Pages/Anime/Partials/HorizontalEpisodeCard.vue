@@ -42,6 +42,7 @@ const { width } = useElementSize(imageRef)
     >
       <v-img
         ref="imageRef"
+        color="surface"
         :height="(width / 16) * 9"
         cover
         rounded="lg"
@@ -50,7 +51,7 @@ const { width } = useElementSize(imageRef)
       >
         <v-fade-transition>
           <div
-            v-if="isHovering"
+            v-if="isHovering || !image"
             class="!flex transition-fast-in-fast-out bg-grey-darken-4 v-card--reveal"
             style="height: 100%;"
           >

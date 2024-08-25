@@ -34,12 +34,14 @@ defineProps<{
         {{ subtitle }}
       </div>
     </div>
-    <ActionDropdown
-      :edit-url
-      :delete-url
-      :permissions
-      :is-published
-    />
+    <template #append>
+      <ActionDropdown
+        :edit-url
+        :delete-url
+        :permissions
+        :is-published
+      />
+    </template>
   </v-list-item>
 </template>
 

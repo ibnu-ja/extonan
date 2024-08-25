@@ -14,10 +14,10 @@ import { computedAsync } from '@vueuse/core'
 import { useAnime } from '@/composables/useAniList'
 import Banner from '@/Pages/Anime/Partials/Banner.vue'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
-// import SpeedDial from '@/Pages/Anime/Partials/SpeedDial.vue'
 import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
 import dayjs from 'dayjs'
 import { CoverImage } from '@/types/anilist'
+import SpeedDial from '@/Pages/Anime/Partials/SpeedDial.vue'
 
 type Post = EpisodeData & {
   thumbnail: CoverImage | null
@@ -27,7 +27,7 @@ const props = defineProps<{
   anime: AnimeData & {
     posts: Post[]
   }
-  canCreate: boolean
+  canCreateEpisode: boolean
 }>()
 
 const { animeApi } = useAnime()
@@ -39,15 +39,17 @@ const animeBwang = computedAsync(async () => {
 </script>
 
 <template>
-  <!--<SpeedDial-->
-  <!--  v-if="canCreate"-->
-  <!--  :anime-->
-  <!--/>-->
+  <SpeedDial
+    :can-create-episode
+    :anime-id="anime.id"
+  />
   <Head :title="anime.title.en!" />
 
   <Banner
     v-if="animeBwang"
-    :title="anime.title.en!"
+    :genres="anime.metadata.genres"
+    :title="anime.title"
+    :description="anime.description"
     :bg="animeBwang?.coverImage.extraLarge!"
     :cover-image="animeBwang?.coverImage!"
     :is-published="anime.is_published"
@@ -60,7 +62,7 @@ const animeBwang = computedAsync(async () => {
     <v-row>
       <v-col
         cols="12"
-        md="4"
+        sm="4"
       >
         <Metadata
           v-if="animeBwang"
@@ -69,15 +71,18 @@ const animeBwang = computedAsync(async () => {
       </v-col>
       <v-col
         cols="12"
-        md="8"
+        sm="8"
       >
-        <v-row dense>
+        <v-row
+          v-if="anime.posts.length > 0"
+          dense
+        >
           <v-col
             v-for="episode in anime.posts"
             :key="episode.id"
             cols="12"
             sm="6"
-            md="6"
+            md="4"
           >
             <HorizontalEpisodeCard
               :image="episode.thumbnail?.extraLarge"
@@ -87,11 +92,14 @@ const animeBwang = computedAsync(async () => {
               :permissions="episode.can"
               :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
               :delete-url="route('post.destroy', [anime, episode])"
-              :edit-url-url="route('post.edit', [anime, episode])"
+              :edit-url="route('post.edit', [anime, episode])"
               :is-published="episode.is_published"
             />
           </v-col>
         </v-row>
+        <p v-else>
+          No post.
+        </p>
       </v-col>
     </v-row>
   </v-container>

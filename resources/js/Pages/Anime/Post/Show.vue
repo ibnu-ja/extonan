@@ -18,6 +18,7 @@ import { mdiOpenInNew } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { CoverImage } from '@/types/anilist'
 import { onMounted } from 'vue'
+import SpeedDial from '@/Pages/Anime/Post/Partials/SpeedDial.vue'
 
 type ResourceModel = Post & Resource & {
   id: number
@@ -50,9 +51,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <Head title="Bwang" />
+  <Head :title="anime.title.en!" />
 
   <v-container>
+    <SpeedDial
+      :anime-id="anime.id"
+      :post-id="post.id"
+    />
     <div>
       <InertiaLink
         :href="anime.link"
@@ -145,6 +150,8 @@ onMounted(() => {
             :lazy-img="episode.thumbnail?.medium"
             :href="route('post.show', [anime, episode])"
             :title="episode.title.en!"
+            :edit-url="route('post.edit', [anime, episode])"
+            :delete-url="route('post.destroy', [anime, episode])"
             :is-published="anime.is_published"
           />
         </div>
