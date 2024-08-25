@@ -44,7 +44,7 @@ defineProps<{
           cover
           rounded
           width="200"
-          class="flex-0-0 self-center"
+          class="flex-0-0 self-center sm:self-start"
           :src="coverImage.extraLarge"
           :lazy-src="coverImage.medium"
         >

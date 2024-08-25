@@ -82,7 +82,6 @@ const animeBwang = computedAsync(async () => {
             :key="episode.id"
             cols="12"
             sm="6"
-            md="4"
           >
             <HorizontalEpisodeCard
               :image="episode.thumbnail?.extraLarge"
