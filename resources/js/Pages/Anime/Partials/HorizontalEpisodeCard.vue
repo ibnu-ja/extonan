@@ -11,12 +11,15 @@ import { ref } from 'vue'
 
 defineProps<{
   href?: string
-  permission?: Permissions
+  permissions?: Permissions
   title: string
   subtitle?: string
   overhead?: string
   image?: string
   lazyImg?: string
+  postableId?: number
+  postId?: number
+  isPublished: boolean
 }>()
 
 const { smAndUp } = useDisplay()
@@ -58,10 +61,13 @@ const { width } = useElementSize(imageRef)
 
       <ItemListTitle
         class="mt-2"
-        :permissions="permission"
+        :permissions
         :overhead
         :title
         :subtitle
+        :postable-id
+        :post-id
+        :is-published
       />
     </InertiaLink>
   </v-hover>

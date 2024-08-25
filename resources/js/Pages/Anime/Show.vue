@@ -80,8 +80,11 @@ const animeBwang = computedAsync(async () => {
               :lazy-img="episode.thumbnail?.medium"
               :href="route('post.show', [anime, episode])"
               :title="episode.title.en!"
-              :permission="episode.can"
+              :permissions="episode.can"
               :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
+              :postable-id="anime.id"
+              :post-id="episode.id"
+              :is-published="episode.is_published"
             />
           </v-col>
         </v-row>

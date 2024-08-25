@@ -2,13 +2,34 @@
 import { mdiDotsVertical, mdiPencil, mdiSend } from '@mdi/js'
 import { mdiDelete } from '@mdi/js/commonjs/mdi'
 import { Permissions } from '@/types'
+import InertiaLink from '@/Components/InertiaLink.vue'
+import { VListItem } from 'vuetify/components'
+import { computed, inject } from 'vue'
+import { route as ziggyRoute } from 'ziggy-js'
 
-defineProps<{
+const props = defineProps<{
   permissions?: Permissions
   overhead?: string | null
   subtitle?: string | null
   title: string
+  postableId?: number
+  postId?: number
+  isPublished: boolean
 }>()
+
+const route = inject('route') as typeof ziggyRoute
+
+const edit = computed(() => {
+  if (!props.permissions?.update || !props.postableId || !props.postId)
+    return undefined
+  return route('post.edit', [props.postableId, props.postId])
+})
+
+// const publish = computed(() => {
+//   if (!props.permissions?.publish || props.postableId || props.postId)
+//     return undefined
+//   return route('post.publish', [props.postableId, props.postId])
+// })
 </script>
 
 <template>
@@ -46,8 +67,10 @@ defineProps<{
         </template>
         <v-list density="comfortable">
           <v-list-item
+            v-if="!isPublished"
             :prepend-icon="mdiSend"
             title="Publish"
+            :disabled="!permissions?.publish"
           >
             <template #prepend>
               <v-icon
@@ -56,7 +79,10 @@ defineProps<{
               />
             </template>
           </v-list-item>
-          <v-list-item
+          <InertiaLink
+            :as="VListItem"
+            :disabled="!permissions?.update"
+            :href="edit"
             title="Edit"
           >
             <template #prepend>
@@ -65,8 +91,9 @@ defineProps<{
                 color="secondary"
               />
             </template>
-          </v-list-item>
+          </InertiaLink>
           <v-list-item
+            :disabled="!permissions?.delete"
             title="Delete"
           >
             <template #prepend>
