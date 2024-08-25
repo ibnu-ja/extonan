@@ -107,8 +107,6 @@ function isItemSelected(item: Media): boolean {
 }
 
 watch(() => props.media, (value) => {
-  console.log(value)
-  console.log('bwang')
   currentMedia.value = value!
   loaded.value = value!.data
 })
