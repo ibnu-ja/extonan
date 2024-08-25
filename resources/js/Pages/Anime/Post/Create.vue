@@ -12,7 +12,7 @@ export default {
 import { AnimeData, Resource } from '@/types/anime'
 import { Head, useForm } from '@inertiajs/vue3'
 import { mdiDelete } from '@mdi/js/commonjs/mdi'
-import { mdiContentSave, mdiPlus, mdiSend } from '@mdi/js'
+import { mdiContentSave, mdiPencil, mdiPlus, mdiSend } from '@mdi/js'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { useDisplay } from 'vuetify'
 import { TranslatableField } from '@/types/formHelper'
@@ -104,6 +104,14 @@ const editFilename = async (index: number) => {
     variant: 'outlined',
     placeholder: form.resources[index].name,
   })
+}
+
+const deleteFilename = (index: number) => {
+  form.resources.splice(index, 1)
+}
+
+const deleteLink = (i: number, j: number) => {
+  form.resources[i].value.splice(j, 1)
 }
 </script>
 
@@ -218,32 +226,55 @@ const editFilename = async (index: number) => {
                   variant="outlined"
                 >
                   <v-card-item>
+                    <template #prepend>
+                      <v-btn
+                        variant="plain"
+                        :icon="true"
+                        density="comfortable"
+                        color="secondary"
+                        @click="editFilename(i)"
+                      >
+                        <v-icon
+                          :icon="mdiPencil"
+                          size="20"
+                        />
+                      </v-btn>
+
+                      <v-btn
+                        variant="plain"
+                        :icon="true"
+                        density="comfortable"
+                        color="error"
+                        @click="deleteFilename(i)"
+                      >
+                        <v-icon
+                          :icon="mdiDelete"
+                          size="20"
+                        />
+                      </v-btn>
+                    </template>
                     <v-card-title>
                       {{ resource.name }}
                     </v-card-title>
                     <template #append>
-                      <div class="flex flex-wrap gap-2">
-                        <v-btn
-                          color="secondary"
-                          @click="editFilename(i)"
-                        >
-                          Edit
-                        </v-btn>
-                        <v-btn color="error">
-                          Delete
-                        </v-btn>
-                        <v-btn
-                          color="primary"
-                          @click.prevent="addLink(i)"
-                        >
-                          Add
-                        </v-btn>
-                      </div>
+                      <v-btn
+                        variant="plain"
+                        :icon="true"
+                        density="comfortable"
+                        :prepend-icon="mdiPlus"
+                        color="primary"
+                        @click.prevent="addLink(i)"
+                      >
+                        <v-icon
+                          :icon="mdiPlus"
+                          size="20"
+                        />
+                      </v-btn>
                     </template>
                   </v-card-item>
                   <template
                     v-for="(links, j) in resource.value"
-                    :key="j"
+                    :key="`link-${i}-${j}`"
                   >
                     <v-card-text>
                       <v-row no-gutters>
@@ -277,7 +308,10 @@ const editFilename = async (index: number) => {
                             hide-details="auto"
                           />
 
-                          <v-btn color="error mt-4">
+                          <v-btn
+                            color="error mt-4"
+                            @click.prevent="deleteLink(i,j)"
+                          >
                             Delete
                           </v-btn>
                         </v-col>
@@ -285,8 +319,14 @@ const editFilename = async (index: number) => {
                     </v-card-text>
                     <v-divider v-if="j < resource.value.length" />
                   </template>
+                  <v-card-text v-if="resource.value.length < 1">
+                    No data.
+                  </v-card-text>
                 </v-card>
-              <!--  -->
+                <!--  -->
+                <template v-if="form.resources.length < 1">
+                  No data.
+                </template>
               </v-card-text>
             </v-card>
           </section>
