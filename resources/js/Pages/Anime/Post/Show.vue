@@ -108,16 +108,14 @@ onMounted(() => {
             <v-expansion-panel-title>{{ postItem.name }}</v-expansion-panel-title>
             <v-expansion-panel-text>
               <v-list density="compact">
-                <v-list-item
+                <v-chip
                   v-for="(link, i) in postItem.value"
                   :key="i"
-                  :prepend-icon="mdiCircleSmall"
+                  :href="link.value"
+                  target="_blank"
                 >
-                  <a
-                    :href="link.value"
-                    target="_blank"
-                  >{{ link.name }} <v-icon :icon="mdiOpenInNew" /></a>
-                </v-list-item>
+                  {{ link.name }} <v-icon :icon="mdiOpenInNew" />
+                </v-chip>
               </v-list>
             </v-expansion-panel-text>
           </v-expansion-panel>
