@@ -23,6 +23,7 @@ const { gradient } = useGradient()
 <template>
   <div class="relative">
     <swiper-container
+      :autoplay="true"
       :loop="true"
     >
       <swiper-slide
