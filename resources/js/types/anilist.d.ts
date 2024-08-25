@@ -23,6 +23,7 @@ export type FuzzyDate = {
 
 export type AnimeMediaAutofillResponse = {
   id: number
+  idMal: number
   episodes: number
   description: string
   coverImage: CoverImage

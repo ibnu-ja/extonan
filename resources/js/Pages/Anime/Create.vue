@@ -42,7 +42,7 @@ type AnimeForm = {
   description: TranslatableField
   anilist_id: number | null
   is_published: boolean
-  metadata: unknown
+  metadata: AnimeMediaAutofillResponse
 }
 
 const form = useForm<AnimeForm>({
@@ -82,7 +82,7 @@ const fetchAnilistData = async () => {
     form.title.native = response?.title.native
     form.description.en = response?.description
     form.anilist_id = response?.id ?? null
-    form.metadata = response
+    form.metadata = response!
   } catch (e) {
     console.error(e)
   }
@@ -108,12 +108,13 @@ const save = () => {
 }
 
 if (props.anime) {
-  apiSearchId.value = props.anime.anilist_id!
+  apiSearchId.value = props.anime.metadata.idMal
   fetchAnilistData()
   form.title = props.anime.title
   form.is_published = props.anime.is_published
   form.description = props.anime.description
   form.anilist_id = props.anime.anilist_id
+  form.metadata = props.anime.metadata
 }
 
 const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create Anime'

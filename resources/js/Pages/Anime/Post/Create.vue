@@ -12,7 +12,7 @@ export default {
 import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import { Head, router, useForm } from '@inertiajs/vue3'
 import { mdiDelete } from '@mdi/js/commonjs/mdi'
-import { mdiContentSave, mdiPencil, mdiPlus, mdiSend } from '@mdi/js'
+import { mdiContentSave, mdiOpenInNew, mdiPencil, mdiPlus, mdiSend } from '@mdi/js'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { useDisplay } from 'vuetify'
 import { TranslatableField } from '@/types/formHelper'
@@ -414,17 +414,17 @@ const deletePost = async () => {
                   <div class="flex gap-1">
                     <v-chip
                       prepend-avatar="https://upload.wikimedia.org/wikipedia/commons/6/61/AniList_logo.svg"
-                      :href="`https://anilist.co/anime/${anime.anilist_id}`"
+                      :href="`https://anilist.co/anime/${anime.metadata.id}`"
                       target="_blank"
                     >
-                      Anilist
+                      Anilist <v-icon :icon="mdiOpenInNew" />
                     </v-chip>
                     <v-chip
                       prepend-avatar="https://upload.wikimedia.org/wikipedia/commons/9/9b/MyAnimeList_favicon.svg"
-                      :href="`https://myanimelist.net/anime/${anime.anilist_id}`"
+                      :href="`https://myanimelist.net/anime/${anime.metadata.idMal}`"
                       target="_blank"
                     >
-                      MyAnimelist
+                      MyAnimelist <v-icon :icon="mdiOpenInNew" />
                     </v-chip>
                   </div>
                 </div>
