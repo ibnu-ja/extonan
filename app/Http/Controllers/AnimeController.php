@@ -93,10 +93,6 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function edit(Anime $anime)
     {
-        if (auth()->user()->cannot('update', $anime)) {
-            abort(403);
-        }
-
         return Inertia::render('Anime/Create', [
             'anime' => $anime,
             'canPublish' => auth()->user()->can('publish', $anime)

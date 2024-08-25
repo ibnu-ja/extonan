@@ -20,7 +20,6 @@ watchEffect(() => {
   theme.global.name.value = (
     user.theme === 'system' ? systemTheme.value : user.theme
   )
-  console.log('asdw')
 })
 const drawer = ref<boolean | undefined>()
 

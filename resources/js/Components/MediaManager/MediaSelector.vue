@@ -127,7 +127,6 @@ const selectedIndex = (item: Media) => {
     <h3 class="text-h4">
       Recent Media
     </h3>
-    asd
     <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       <v-img
         v-for="item in loaded"

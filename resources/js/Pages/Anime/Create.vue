@@ -8,7 +8,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3'
+import { Head, router, useForm } from '@inertiajs/vue3'
 import { inject, ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import { mdiClose, mdiContentSave, mdiSend } from '@mdi/js'
@@ -24,12 +24,13 @@ import { TranslatableField } from '@/types/formHelper'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { route as ziggyRoute } from 'ziggy-js'
 import { useLanguages } from '@/composables/useLanguages'
+import { openConfirmationDialog } from '@/composables/useDialog'
 
 dayjs.extend(objectSupport)
 
 const props = defineProps<{
   canPublish: boolean
-  anime: AnimeForm & { id: number } | null
+  anime?: AnimeForm & { id: number }
 }>()
 
 const route = inject('route') as typeof ziggyRoute
@@ -106,7 +107,7 @@ const save = () => {
   submit()
 }
 
-if (props.anime != null) {
+if (props.anime) {
   apiSearchId.value = props.anime.anilist_id!
   fetchAnilistData()
   form.title = props.anime.title
@@ -117,6 +118,16 @@ if (props.anime != null) {
 
 const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create Anime'
 
+const deletePost = async () => {
+  try {
+    const confirmed = await openConfirmationDialog('Are you sure want to delete this item?')
+    if (confirmed && props.anime?.id) {
+      router.delete(route('post.destroy', props.anime.id))
+    }
+  } catch {
+    //
+  }
+}
 </script>
 
 <template>
@@ -130,6 +141,7 @@ const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create 
           :icon="mdAndUp ? mdiDelete : undefined"
           :prepend-icon="mdAndUp ? mdiDelete : undefined"
           :text="mdAndUp ? 'Delete' : undefined"
+          @click="deletePost"
         />
         <v-btn
           :variant="form.is_published ? undefined : 'outlined'"

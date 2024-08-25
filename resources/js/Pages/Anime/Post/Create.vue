@@ -9,8 +9,8 @@ export default {
 
 <script lang="ts" setup>
 
-import { AnimeData, Resource } from '@/types/anime'
-import { Head, useForm } from '@inertiajs/vue3'
+import { AnimeData, EpisodeData, Resource } from '@/types/anime'
+import { Head, router, useForm } from '@inertiajs/vue3'
 import { mdiDelete } from '@mdi/js/commonjs/mdi'
 import { mdiContentSave, mdiPencil, mdiPlus, mdiSend } from '@mdi/js'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
@@ -20,13 +20,17 @@ import { useLanguages } from '@/composables/useLanguages'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
 import { inject } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
-import { openFormDialog } from '@/composables/useDialog'
+import { openConfirmationDialog, openFormDialog } from '@/composables/useDialog'
 import MediaManager from '@/Components/MediaManager/Index.vue'
 import { Media } from '@/types'
 
 const props = defineProps<{
   anime: AnimeData
   canPublish: boolean
+  post?: EpisodeData & {
+    links: Resource[]
+    metadata: unknown
+  }
 }>()
 const route = inject('route') as typeof ziggyRoute
 
@@ -37,7 +41,7 @@ type PostForm = {
   description: TranslatableField
   is_published: boolean
   metadata: unknown
-  resources: Resource[]
+  links: Resource[]
   thumbnail: Media | number | null
 }
 
@@ -54,24 +58,32 @@ const form = useForm<PostForm>({
     id: null,
   },
   metadata: null,
-  resources: [],
+  links: [],
   thumbnail: null,
 },
 )
 
+if (props.post) {
+  form.title = props.post.title
+  form.is_published = props.post.is_published
+  form.description = props.post.description
+  form.links = props.post.links
+  form.metadata = props.post.metadata
+}
+
 const submit = () => {
-  // if (props.anime) {
-  //   console.log('update')
-  //   form.put(route('post.update', props.anime, props))
-  // } else {
-  //   console.log('saveNew')
-  form.post(route('post.store', props.anime))
-  // }
+  if (props.post) {
+    console.log('update')
+    form.put(route('post.update', [props.anime, props.post]))
+  } else {
+    console.log('saveNew')
+    form.post(route('post.store', props.anime))
+  }
 }
 const save = () => {
-  // if (props.anime?.is_published) {
-  //   form.is_published = props.anime.is_published
-  // }
+  if (props.anime?.is_published) {
+    form.is_published = props.anime.is_published
+  }
   submit()
 }
 
@@ -80,60 +92,80 @@ const { smAndUp } = useDisplay()
 const { languages, selectedLanguage: currentLang } = useLanguages()
 
 const addFilename = async () => {
-  const result = await openFormDialog('Tambahkan File')
-  form.resources.push({
-    name: result,
-    value: [{
-      name: '',
-      value: '',
-    }],
-    type: 'link',
-  })
+  try {
+    const result = await openFormDialog('Tambahkan File')
+    form.links.push({
+      name: result,
+      value: [{
+        name: '',
+        value: '',
+      }],
+      type: 'link',
+    })
+  } catch {
+  //
+  }
 }
 
 const addLink = (index: number) => {
-  form.resources[index].value.push({
+  form.links[index].value.push({
     name: '',
     value: '',
   })
 }
 
 const editFilename = async (index: number) => {
-  form.resources[index].name = await openFormDialog('Edit filename', undefined, {
-    label: 'Filename',
-    variant: 'outlined',
-    placeholder: form.resources[index].name,
-  })
+  try {
+    form.links[index].name = await openFormDialog('Edit filename', undefined, {
+      label: 'Filename',
+      variant: 'outlined',
+      placeholder: form.links[index].name,
+    })
+  } catch (e) { /* empty */ }
 }
 
 const deleteFilename = (index: number) => {
-  form.resources.splice(index, 1)
+  form.links.splice(index, 1)
 }
 
 const deleteLink = (i: number, j: number) => {
-  form.resources[i].value.splice(j, 1)
+  form.links[i].value.splice(j, 1)
+}
+
+const title = props.post ? 'Editing ' + props.post?.title.en : 'Create Episode'
+
+const deletePost = async () => {
+  try {
+    const confirmed = await openConfirmationDialog('Are you sure want to delete this item?')
+    if (confirmed && props.post?.id && props.anime.id) {
+      router.delete(route('post.destroy', [props.anime.id, props.post.id]))
+    }
+  } catch {
+    //
+  }
 }
 </script>
 
 <template>
-  <Head title="Add Episode" />
-  <PageHeader title="Add Episode">
+  <Head :title />
+  <PageHeader :title>
     <template #append>
       <div class="flex gap-2">
         <v-btn
           variant="outlined"
           color="error"
-          :icon="mdAndUp ? mdiDelete : undefined"
+          :icon="!mdAndUp ? mdiDelete : undefined"
           :prepend-icon="mdAndUp ? mdiDelete : undefined"
           :text="mdAndUp ? 'Delete' : undefined"
+          @click="deletePost"
         />
         <v-btn
           :variant="form.is_published ? undefined : 'outlined'"
           :type="canPublish && !form.is_published? undefined : 'submit'"
           form="storePost"
           :disabled="form.processing"
-          :color=" form.is_published ? 'primary' : 'secondary'"
-          :icon="mdAndUp ? mdiContentSave : undefined"
+          :color="form.is_published ? 'primary' : 'secondary'"
+          :icon="!mdAndUp ? mdiContentSave : undefined"
           :prepend-icon="mdAndUp ? mdiContentSave : undefined"
           :text="mdAndUp ? 'Save' : undefined"
           @click.prevent="save"
@@ -144,7 +176,7 @@ const deleteLink = (i: number, j: number) => {
           type="submit"
           :disabled="form.processing"
           color="primary"
-          :icon="mdAndUp ? mdiSend : undefined"
+          :icon="!mdAndUp ? mdiSend : undefined"
           :prepend-icon="mdAndUp ? mdiSend : undefined"
           :text="mdAndUp ? 'Publish' : undefined"
         />
@@ -221,7 +253,7 @@ const deleteLink = (i: number, j: number) => {
               <v-divider />
               <v-card-text class="flex gap-4 flex-col">
                 <v-card
-                  v-for="(resource, i) in form.resources"
+                  v-for="(resource, i) in form.links"
                   :key="i"
                   variant="outlined"
                 >
@@ -285,7 +317,7 @@ const deleteLink = (i: number, j: number) => {
                         </v-col>
                         <v-col cols="9">
                           <v-text-field
-                            v-model="form.resources[i].value[j].name"
+                            v-model="form.links[i].value[j].name"
                             placeholder="Gudang"
                             variant="outlined"
                             hide-details="auto"
@@ -301,7 +333,7 @@ const deleteLink = (i: number, j: number) => {
                         </v-col>
                         <v-col cols="9">
                           <v-textarea
-                            v-model="form.resources[i].value[j].value"
+                            v-model="form.links[i].value[j].value"
                             placeholder="https://gudang.extonan.id/"
                             rows="2"
                             variant="outlined"
@@ -324,7 +356,7 @@ const deleteLink = (i: number, j: number) => {
                   </v-card-text>
                 </v-card>
                 <!--  -->
-                <template v-if="form.resources.length < 1">
+                <template v-if="form.links.length < 1">
                   No data.
                 </template>
               </v-card-text>

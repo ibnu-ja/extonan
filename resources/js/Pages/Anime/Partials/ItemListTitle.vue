@@ -6,6 +6,8 @@ import InertiaLink from '@/Components/InertiaLink.vue'
 import { VListItem } from 'vuetify/components'
 import { computed, inject } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
+import { openConfirmationDialog } from '@/composables/useDialog'
+import { router } from '@inertiajs/vue3'
 
 const props = defineProps<{
   permissions?: Permissions
@@ -30,6 +32,18 @@ const edit = computed(() => {
 //     return undefined
 //   return route('post.publish', [props.postableId, props.postId])
 // })
+
+const deletePost = async () => {
+  try {
+    const confirmed = await openConfirmationDialog('Are you sure want to delete this item?')
+    if (confirmed && props.postId && props.postableId) {
+      router.delete(route('post.destroy', [props.postableId, props.postId]))
+    }
+  } catch {
+  //
+  }
+}
+
 </script>
 
 <template>
@@ -95,6 +109,7 @@ const edit = computed(() => {
           <v-list-item
             :disabled="!permissions?.delete"
             title="Delete"
+            @click.prevent="deletePost"
           >
             <template #prepend>
               <v-icon

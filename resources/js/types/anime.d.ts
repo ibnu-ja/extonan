@@ -28,6 +28,7 @@ export type ResourceItem = {
 }
 
 export type Resource = {
+  id?: number
   name: string
   value: ResourceItem[]
   type: 'link' | 'embed'

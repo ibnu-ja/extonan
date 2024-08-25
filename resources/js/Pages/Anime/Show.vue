@@ -10,7 +10,7 @@ export default {
 <script lang="ts" setup>
 import { Head } from '@inertiajs/vue3'
 import { AnimeData, EpisodeData } from '@/types/anime'
-import { computedAsync } from '@vueuse/core'
+import { computedAsync, useConfirmDialog } from '@vueuse/core'
 import { useAnime } from '@/composables/useAniList'
 import Banner from '@/Pages/Anime/Partials/Banner.vue'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
