@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<{
   isPublished: boolean
   deleteUrl?: string
   editUrl?: string
-  variant: 'flat' | 'text' | 'elevated' | 'tonal' | 'outlined' | 'plain'
+  variant?: 'flat' | 'text' | 'elevated' | 'tonal' | 'outlined' | 'plain'
   color?: string
 }>(), {
   variant: 'plain',

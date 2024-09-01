@@ -16,6 +16,9 @@ export default defineConfig({
           base: null,
           includeAbsolute: false,
         },
+        compilerOptions: {
+          isCustomElement: (tag: string) => ['swiper-container', 'swiper-slide'].includes(tag),
+        },
       },
     }),
     vuetify({

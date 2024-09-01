@@ -21,7 +21,7 @@ const propss = withDefaults(
     isPublished: boolean
     deleteUrl?: string
     editUrl?: string
-    noThumbnail: boolean
+    noThumbnail?: boolean
   }>(),
   {
     noThumbnail: false,
