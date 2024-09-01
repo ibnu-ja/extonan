@@ -289,17 +289,16 @@ const deletePost = async () => {
               </v-card-actions>
 
               <v-expand-transition>
-                <template
+                <div
                   v-if="anilistData"
                 >
                   <v-divider />
                   <v-card-text>
                     <Metadata
-                      divider
                       :data="anilistData"
                     />
                   </v-card-text>
-                </template>
+                </div>
               </v-expand-transition>
             </v-card>
           </div>

@@ -14,7 +14,7 @@ import { route as ziggyRoute } from 'ziggy-js'
 
 defineProps<{
   canResetPassword: boolean
-  status: string
+  status?: string
   socialstream: SocialstreamType
 }>()
 
