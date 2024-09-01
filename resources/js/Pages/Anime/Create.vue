@@ -123,7 +123,7 @@ const deletePost = async () => {
   try {
     const confirmed = await openConfirmationDialog('Are you sure want to delete this item?')
     if (confirmed && props.anime?.id) {
-      router.delete(route('post.destroy', props.anime.id))
+      router.delete(route('anime.destroy', props.anime.id))
     }
   } catch {
     //
@@ -289,17 +289,16 @@ const deletePost = async () => {
               </v-card-actions>
 
               <v-expand-transition>
-                <template
+                <div
                   v-if="anilistData"
                 >
                   <v-divider />
                   <v-card-text>
                     <Metadata
-                      divider
                       :data="anilistData"
                     />
                   </v-card-text>
-                </template>
+                </div>
               </v-expand-transition>
             </v-card>
           </div>

@@ -23,12 +23,7 @@ const page = usePage()
     temporary
     location="top"
   >
-    <v-list>
-      <!--<v-list-item-->
-      <!--  title="My Application"-->
-      <!--  subtitle="Vuetify"-->
-      <!--/>-->
-      <!--<v-divider />-->
+    <v-list active-color="primary">
       <InertiaLink
         :as="VListItem"
         exact-active
@@ -36,6 +31,13 @@ const page = usePage()
         :href="route('home')"
       >
         Home
+      </InertiaLink>
+
+      <InertiaLink
+        :as="VListItem"
+        :href="route('anime.index')"
+      >
+        Anime
       </InertiaLink>
 
       <InertiaLink

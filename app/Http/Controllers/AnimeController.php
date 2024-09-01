@@ -121,6 +121,6 @@ class AnimeController extends Controller implements HasMiddleware
     {
         $anime->delete();
 
-        return redirect()->back()->banner('Anime successfully deleted.');
+        return redirect()->route('anime.index')->banner('Anime successfully deleted.');
     }
 }

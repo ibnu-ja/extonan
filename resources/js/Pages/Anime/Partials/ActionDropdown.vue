@@ -45,6 +45,7 @@ const deletePost = async () => {
       />
     </template>
     <v-list density="comfortable">
+      <!--TODO publish action-->
       <v-list-item
         v-if="!isPublished"
         :prepend-icon="mdiSend"

@@ -11,6 +11,7 @@ defineProps<{
   isPublished: boolean
   deleteUrl?: string
   editUrl?: string
+  showAction: boolean
 }>()
 
 </script>
@@ -35,7 +36,7 @@ defineProps<{
       </div>
     </div>
     <template
-      v-if="$page.props.auth.user"
+      v-if="showAction"
       #append
     >
       <ActionDropdown

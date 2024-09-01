@@ -66,12 +66,18 @@ defineProps<{
             md="6"
           >
             <VerticalEpisodeCard
-              :image="episode.thumbnail? episode.thumbnail.extraLarge : undefined"
-              :lazy-img="episode.thumbnail? episode.thumbnail.medium : undefined"
+              :key="episode.id"
+              :permissions="episode.can"
+              :show-action="!!$page.props.auth.user"
+              class="mb-2"
+              :image="episode.thumbnail?.extraLarge"
+              :lazy-img="episode.thumbnail?.medium"
+              :title="episode.title.en!"
               :href="route('post.show', [episode.postable, episode])"
-              :title="`${episode.postable.title.en} - ${episode.title.en}`"
-              :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
+              :edit-url="route('post.edit', [episode.postable, episode])"
+              :delete-url="route('post.destroy', [episode.postable, episode])"
               :is-published="episode.is_published"
+              :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
             />
           </v-col>
         </v-row>
