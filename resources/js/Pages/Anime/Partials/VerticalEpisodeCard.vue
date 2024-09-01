@@ -18,7 +18,7 @@ const propss = withDefaults(
     id?: string
     class?: string
     permissions?: Permissions
-    isPublished: boolean
+    isPublished?: boolean
     deleteUrl?: string
     editUrl?: string
     noThumbnail?: boolean
@@ -34,7 +34,7 @@ const propss = withDefaults(
     id: undefined,
     class: undefined,
     permissions: undefined,
-    isPublished: undefined,
+    isPublished: false,
     deleteUrl: undefined,
     editUrl: undefined,
   },
