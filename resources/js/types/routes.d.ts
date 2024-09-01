@@ -50,7 +50,6 @@ declare module 'ziggy-js' {
     ]
     'password.email': []
     'password.update': []
-    'register': []
     'verification.notice': []
     'verification.verify': [
       {
@@ -126,6 +125,7 @@ declare module 'ziggy-js' {
       {
         name: 'anime'
         required: true
+        binding: 'id'
       },
       {
         name: 'post'
@@ -137,6 +137,7 @@ declare module 'ziggy-js' {
       {
         name: 'anime'
         required: true
+        binding: 'id'
       },
       {
         name: 'post'
@@ -148,6 +149,7 @@ declare module 'ziggy-js' {
       {
         name: 'anime'
         required: true
+        binding: 'id'
       },
       {
         name: 'post'
