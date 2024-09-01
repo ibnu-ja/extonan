@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 
-import { inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiLogin, mdiMenu } from '@mdi/js'
 import { router, usePage } from '@inertiajs/vue3'
-import { VBtn, VListItem } from 'vuetify/components'
+import { VBtn, VListItem, VTab } from 'vuetify/components'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import { BreadcrumbItem } from '@/types'
 import { route as ziggyRoute } from 'ziggy-js'
 import logo from '@/assets/logo/inline color.svg'
+import { useBrowserLocation } from '@vueuse/core'
 
 const drawer = defineModel<boolean | undefined>('drawer')
 
@@ -16,13 +17,13 @@ const page = usePage()
 
 const route = inject('route') as typeof ziggyRoute
 
-// const location = useBrowserLocation()
+const location = useBrowserLocation()
 
 defineProps<{
   breadcrumbs?: BreadcrumbItem[]
 }>()
 
-const itemList = [
+const itemList = computed(() => [
   {
     value: '',
     link: route('home'),
@@ -40,31 +41,32 @@ const itemList = [
     link: route('dashboard'),
     label: 'Dashboard',
     exactActive: false,
+    hide: !page.props.auth.user,
   },
-]
-// const tab = ref(location.value.pathname?.split('/')[1])
+])
+const tab = ref(location.value.pathname?.split('/')[1])
 
-// const visit = (e: any) => {
-//   console.log(e)
-//   if (e == null) {
-//     const bwang = location.value.pathname?.split('/')[1]
-//
-//     let currentUrl = itemList.find((item) => {
-//       const bwangUrl = new URL(item.link).pathname.split('/')[1]
-//       console.log(`bwang url: ${bwangUrl}`)
-//       return bwangUrl == bwang
-//     })
-//     if (currentUrl) {
-//       console.log(currentUrl)
-//       tab.value = currentUrl.value
-//     }
-//   } else {
-//     const tes = itemList.find(item => item.value == e)
-//     if (tes) {
-//       router.visit(tes.link)
-//     }
-//   }
-// }
+const visit = (e: unknown) => {
+  if (e !== undefined) {
+    const tes = itemList.value.find(item => item.value === e)
+    if (tes) {
+      router.visit(tes.link)
+    }
+    return
+  }
+
+  const bwang = window.location.pathname
+    ? window.location.pathname.split('/')[1]
+    : location.value.pathname?.split('/')[1]
+
+  const currentUrl = itemList.value.find(item => new URL(item.link).pathname.split('/')[1] === bwang)
+
+  if (currentUrl) {
+    tab.value = currentUrl.value
+  }
+}
+
+// const tab = ref()
 
 function logout() {
   router.post(route('logout'))
@@ -90,45 +92,26 @@ function logout() {
         alt="application logo"
       />
     </InertiaLink>
-    <div class="hidden-md-and-down">
-      <InertiaLink
+    <v-tabs
+      v-model="tab"
+      class="hidden-md-and-down"
+      color="primary"
+      :mandatory="false"
+      @update:model-value="visit"
+    >
+      <template
         v-for="item in itemList"
-        :key="item.link"
-        :exact-active="item.exactActive"
-        :as="VBtn"
-        class="mr-2"
-        :href="item.link"
+        :key="item.value"
       >
-        {{ item.label }}
-      </InertiaLink>
-    </div>
-    <!--TODO use tab, assign class text-primary to active route-->
-    <!--<v-tabs>-->
-    <!--  <InertiaLink-->
-    <!--    v-for="item in itemList"-->
-    <!--    :key="item.link"-->
-    <!--    :as="VTab"-->
-    <!--    :href="item.link"-->
-    <!--  >-->
-    <!--    {{ item.label }}-->
-    <!--  </InertiaLink>-->
-    <!--</v-tabs>-->
-    <!--<v-tabs-->
-    <!--  v-model="tab"-->
-    <!--  class="hidden-md-and-down"-->
-    <!--  color="primary"-->
-    <!--  :mandatory="false"-->
-    <!--  @update:model-value="visit"-->
-    <!--&gt;-->
-    <!--  <v-tab-->
-    <!--    v-for="item in itemList"-->
-    <!--    :key="item.value"-->
-    <!--    class="mr-2"-->
-    <!--    :value="item.value"-->
-    <!--  >-->
-    <!--    {{ item.label }}-->
-    <!--  </v-tab>-->
-    <!--</v-tabs>-->
+        <v-tab
+          v-if="!item!.hide"
+          class="mr-2"
+          :value="item.value"
+        >
+          {{ item.label }}
+        </v-tab>
+      </template>
+    </v-tabs>
     <v-spacer />
     <ThemeSelector />
     <!--user menu-->
