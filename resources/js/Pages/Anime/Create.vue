@@ -257,6 +257,7 @@ const deletePost = async () => {
                   v-model="apiType"
                   label="Api Type"
                   variant="outlined"
+                  type="numeric"
                   hide-details
                   class="mb-4"
                   :items="['MAL', 'Anilist']"
