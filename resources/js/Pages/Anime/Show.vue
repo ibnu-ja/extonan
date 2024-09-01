@@ -64,10 +64,14 @@ const animeBwang = computedAsync(async () => {
         cols="12"
         sm="4"
       >
-        <Metadata
-          v-if="animeBwang"
-          :data="animeBwang"
-        />
+        <div
+          class="px-4 sm:px-0"
+        >
+          <Metadata
+            v-if="animeBwang"
+            :data="animeBwang"
+          />
+        </div>
       </v-col>
       <v-col
         cols="12"
