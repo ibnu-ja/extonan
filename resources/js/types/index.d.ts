@@ -88,6 +88,8 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     hasTermsAndPrivacyPolicyFeature?: boolean
     managesProfilePhotos?: boolean
   }
+  canLogin: boolean
+  canRegister: boolean
   appVersion: string
   appCommitHash: string
   appBranch: string

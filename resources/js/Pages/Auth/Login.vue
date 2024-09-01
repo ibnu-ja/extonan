@@ -41,8 +41,6 @@ const submit = () => {
   })
 }
 
-const registerRoute = route('register')
-
 </script>
 
 <template>
@@ -76,6 +74,7 @@ const registerRoute = route('register')
             Welcome Back!
           </h2>
           <v-alert
+            v-if="$page.props.canRegister"
             density="comfortable"
             type="info"
             variant="tonal"
@@ -83,7 +82,7 @@ const registerRoute = route('register')
           >
             Don't have an account?
             <Link
-              :href="registerRoute"
+              :href="route('register')"
               class="text-info"
             >
               Sign up

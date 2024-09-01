@@ -178,14 +178,16 @@ function logout() {
             @click="logout"
           />
         </template>
-        <template v-else>
+        <template v-else-if="page.props.canLogin || page.props.canRegister">
           <InertiaLink
+            v-if="page.props.canLogin"
             :as="VListItem"
             :prepend-icon="mdiLogin"
             title="Login"
             :href="route('login')"
           />
           <InertiaLink
+            v-if="page.props.canRegister"
             :as="VListItem"
             :prepend-icon="mdiAccountPlus"
             title="Register"
