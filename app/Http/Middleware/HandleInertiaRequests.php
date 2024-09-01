@@ -36,7 +36,7 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'appVersion' => exec('git describe --tags --abbrev=0'),
+            'appVersion' => exec('git describe --tags --always'),
             'appCommitHash' => exec('git rev-parse --short HEAD'),
             'appBranch' => exec('git rev-parse --abbrev-ref HEAD'),
             'appGitOriginRepo' => $this->printRepoUrl(exec('git remote get-url origin')),
