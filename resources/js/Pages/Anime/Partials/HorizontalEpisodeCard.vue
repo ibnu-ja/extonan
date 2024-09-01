@@ -11,12 +11,15 @@ import { ref } from 'vue'
 
 defineProps<{
   href?: string
-  permission?: Permissions
+  permissions?: Permissions
   title: string
   subtitle?: string
   overhead?: string
   image?: string
   lazyImg?: string
+  editUrl?: string
+  deleteUrl?: string
+  isPublished: boolean
 }>()
 
 const { smAndUp } = useDisplay()
@@ -39,6 +42,7 @@ const { width } = useElementSize(imageRef)
     >
       <v-img
         ref="imageRef"
+        color="surface"
         :height="(width / 16) * 9"
         cover
         rounded="lg"
@@ -47,7 +51,7 @@ const { width } = useElementSize(imageRef)
       >
         <v-fade-transition>
           <div
-            v-if="isHovering"
+            v-if="isHovering || !image"
             class="!flex transition-fast-in-fast-out bg-grey-darken-4 v-card--reveal"
             style="height: 100%;"
           >
@@ -58,10 +62,13 @@ const { width } = useElementSize(imageRef)
 
       <ItemListTitle
         class="mt-2"
-        :permissions="permission"
+        :permissions
         :overhead
         :title
         :subtitle
+        :edit-url
+        :delete-url
+        :is-published
       />
     </InertiaLink>
   </v-hover>

@@ -15,16 +15,16 @@ const { smAndUp } = useDisplay()
     class="mb-6"
   >
     <v-card-title>Casts</v-card-title>
-    <div class="d-grid grid-cos-1 grid-cols-md-2 gap-4 text-body-2">
+    <div class="grid grid-cos-1 md:grid-cols-2 gap-4 text-body-2">
       <v-card
         v-for="character in data.characters.edges"
         :key="character.node.id"
         :rounded="smAndUp"
       >
         <div
-          class="d-grid grid-cols-2"
+          class="grid grid-cols-2"
         >
-          <div class="d-grid grid-cols-4">
+          <div class="grid grid-cols-4">
             <v-img
               :src="character.node.image.large"
               :lazy-src="character.node.image.medium"
@@ -42,7 +42,7 @@ const { smAndUp } = useDisplay()
           <v-slide-x-transition>
             <div
               v-if="character.voiceActors[0]?.name"
-              class="d-grid grid-cols-4"
+              class="grid grid-cols-4"
             >
               <div class="px-3 py-1 col-span-3 text-right flex flex-column justify-space-between">
                 <div>

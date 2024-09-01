@@ -37,6 +37,7 @@ export function useAnime() {
     query ($id: Int, $idMal: Int) {
       Media (id: $id, idMal: $idMal , type: ANIME) {
         id
+        idMal
         episodes
         coverImage {
           extraLarge

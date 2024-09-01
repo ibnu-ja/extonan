@@ -13,9 +13,11 @@ import { AnimeData, EpisodeData } from '@/types/anime'
 import LatestAnime from '@/Pages/Home/Partials/LatestAnime.vue'
 import VerticalEpisodeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
 import dayjs from 'dayjs'
+import { CoverImage } from '@/types/anilist'
 
 type Postable = EpisodeData & {
   postable: AnimeData
+  thumbnail: CoverImage | null
 }
 
 defineProps<{
@@ -32,40 +34,51 @@ defineProps<{
 <template>
   <Head title="Home" />
   <section style="position: relative">
-    <LatestAnime :latest-anime />
-    <div
-      class="absolute top-4 md:top-16 left-0 w-full z-[5]"
-    >
+    <template v-if="latestAnime.length > 0">
+      <LatestAnime :latest-anime />
+      <div
+        class="absolute top-4 md:top-16 left-0 w-full z-[5]"
+      >
+        <v-container class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4">
+          <h1 class="text-h4 text-md-h3">
+            Latest Anime
+          </h1>
+        </v-container>
+      </div>
+    </template>
+    <v-container v-else>
+      Add anime to show latest anime slider.
+    </v-container>
+  </section>
+  <section class="mt-4 sm:mt-8">
+    <template v-if="latestEpisodes.length > 0">
       <v-container class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4">
         <h1 class="text-h4 text-md-h3">
           Latest Episode
         </h1>
       </v-container>
-    </div>
-  </section>
-  <section class="mt-4 sm:mt-8">
-    <v-container class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4">
-      <h1 class="text-h4 text-md-h3">
-        Latest Episode
-      </h1>
-    </v-container>
-    <v-container class="px-0 sm:px-4 pt-0">
-      <v-row dense>
-        <v-col
-          v-for="episode in latestEpisodes"
-          :key="episode.id"
-          cols="12"
-          md="6"
-        >
-          <VerticalEpisodeCard
-            :image="episode.postable.metadata.coverImage.extraLarge"
-            :lazy-img="episode.postable.metadata.coverImage.medium"
-            :href="route('post.show', [episode.postable, episode])"
-            :title="`${episode.postable.title.en} - ${episode.title.en}`"
-            :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull;`"
-          />
-        </v-col>
-      </v-row>
+      <v-container class="px-0 sm:px-4 pt-0">
+        <v-row dense>
+          <v-col
+            v-for="episode in latestEpisodes"
+            :key="episode.id"
+            cols="12"
+            md="6"
+          >
+            <VerticalEpisodeCard
+              :image="episode.thumbnail? episode.thumbnail.extraLarge : undefined"
+              :lazy-img="episode.thumbnail? episode.thumbnail.medium : undefined"
+              :href="route('post.show', [episode.postable, episode])"
+              :title="`${episode.postable.title.en} - ${episode.title.en}`"
+              :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
+              :is-published="episode.is_published"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
+    </template>
+    <v-container v-else>
+      Add anime post to show latest episode data.
     </v-container>
   </section>
 </template>

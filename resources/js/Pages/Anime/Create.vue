@@ -8,7 +8,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3'
+import { Head, router, useForm } from '@inertiajs/vue3'
 import { inject, ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import { mdiClose, mdiContentSave, mdiSend } from '@mdi/js'
@@ -24,12 +24,13 @@ import { TranslatableField } from '@/types/formHelper'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { route as ziggyRoute } from 'ziggy-js'
 import { useLanguages } from '@/composables/useLanguages'
+import { openConfirmationDialog } from '@/composables/useDialog'
 
 dayjs.extend(objectSupport)
 
 const props = defineProps<{
   canPublish: boolean
-  anime: AnimeForm & { id: number } | null
+  anime?: AnimeForm & { id: number }
 }>()
 
 const route = inject('route') as typeof ziggyRoute
@@ -41,7 +42,7 @@ type AnimeForm = {
   description: TranslatableField
   anilist_id: number | null
   is_published: boolean
-  metadata: unknown
+  metadata: AnimeMediaAutofillResponse | null
 }
 
 const form = useForm<AnimeForm>({
@@ -81,7 +82,7 @@ const fetchAnilistData = async () => {
     form.title.native = response?.title.native
     form.description.en = response?.description
     form.anilist_id = response?.id ?? null
-    form.metadata = response
+    form.metadata = response!
   } catch (e) {
     console.error(e)
   }
@@ -106,17 +107,28 @@ const save = () => {
   submit()
 }
 
-if (props.anime != null) {
-  apiSearchId.value = props.anime.anilist_id!
+if (props.anime) {
+  apiSearchId.value = props.anime.metadata!.idMal
   fetchAnilistData()
   form.title = props.anime.title
   form.is_published = props.anime.is_published
   form.description = props.anime.description
   form.anilist_id = props.anime.anilist_id
+  form.metadata = props.anime.metadata
 }
 
 const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create Anime'
 
+const deletePost = async () => {
+  try {
+    const confirmed = await openConfirmationDialog('Are you sure want to delete this item?')
+    if (confirmed && props.anime?.id) {
+      router.delete(route('post.destroy', props.anime.id))
+    }
+  } catch {
+    //
+  }
+}
 </script>
 
 <template>
@@ -127,17 +139,18 @@ const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create 
         <v-btn
           variant="outlined"
           color="error"
-          :icon="mdAndUp ? mdiDelete : undefined"
+          :icon="!mdAndUp ? mdiDelete : undefined"
           :prepend-icon="mdAndUp ? mdiDelete : undefined"
           :text="mdAndUp ? 'Delete' : undefined"
+          @click="deletePost"
         />
         <v-btn
           :variant="form.is_published ? undefined : 'outlined'"
           :type="canPublish && !form.is_published? undefined : 'submit'"
           form="storeAnime"
           :disabled="form.processing"
-          :color=" form.is_published ? 'primary' : 'secondary'"
-          :icon="mdAndUp ? mdiContentSave : undefined"
+          :color="form.is_published ? 'primary' : 'secondary'"
+          :icon="!mdAndUp ? mdiContentSave : undefined"
           :prepend-icon="mdAndUp ? mdiContentSave : undefined"
           :text="mdAndUp ? 'Save' : undefined"
           @click.prevent="save"
@@ -148,7 +161,7 @@ const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create 
           type="submit"
           :disabled="form.processing"
           color="primary"
-          :icon="mdAndUp ? mdiSend : undefined"
+          :icon="!mdAndUp ? mdiSend : undefined"
           :prepend-icon="mdAndUp ? mdiSend : undefined"
           :text="mdAndUp ? 'Publish' : undefined"
         />
@@ -276,10 +289,17 @@ const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create 
               </v-card-actions>
 
               <v-expand-transition>
-                <Metadata
+                <template
                   v-if="anilistData"
-                  :data="anilistData"
-                />
+                >
+                  <v-divider />
+                  <v-card-text>
+                    <Metadata
+                      divider
+                      :data="anilistData"
+                    />
+                  </v-card-text>
+                </template>
               </v-expand-transition>
             </v-card>
           </div>

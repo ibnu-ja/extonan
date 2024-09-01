@@ -9,6 +9,8 @@ import { usePreferredDark } from '@vueuse/core'
 import { BreadcrumbItem } from '@/types'
 import { Head } from '@inertiajs/vue3'
 import Banner from '@/Components/Banner.vue'
+import Dialog from '@/Components/Dialog.vue'
+import Footer from '@/Layouts/Partials/Footer.vue'
 
 const theme = useTheme()
 const user = useUserStore()
@@ -19,7 +21,6 @@ watchEffect(() => {
     user.theme === 'system' ? systemTheme.value : user.theme
   )
 })
-
 const drawer = ref<boolean | undefined>()
 
 defineProps<{
@@ -32,6 +33,7 @@ defineProps<{
   <Head :title="title" />
   <v-app>
     <Banner />
+    <Dialog />
     <AppBar
       v-model:drawer="drawer"
       :breadcrumbs="breadcrumbs"
@@ -39,6 +41,7 @@ defineProps<{
     <Drawer v-model="drawer" />
     <v-main>
       <slot />
+      <Footer />
     </v-main>
   </v-app>
 </template>

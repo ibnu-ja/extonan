@@ -88,6 +88,10 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     hasTermsAndPrivacyPolicyFeature?: boolean
     managesProfilePhotos?: boolean
   }
+  appVersion: string
+  appCommitHash: string
+  appBranch: string
+  appGitOriginRepo
   ziggy: Config & { location: string }
   socialstream: Socialstream
   sessions: UserSession[]
@@ -112,6 +116,22 @@ type Link = {
   url: string | null
   label: string
   active: boolean
+}
+
+export type Media = {
+  id: number
+  disk: string
+  directory: string
+  filename: string
+  extension: string
+  mime_type: string
+  aggregate_type: string
+  size: number
+  created_at: Date
+  updated_at: Date
+  variant_name: null | number
+  original_media_id: null | number
+  alt: string | null
 }
 
 export type PaginatedResponse<T> = {

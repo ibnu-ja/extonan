@@ -9,22 +9,55 @@ export default {
 
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
-import { AnimeData, EpisodeData } from '@/types/anime'
+import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import dayjs from 'dayjs'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import VerticalAnimeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
+import { Post } from '@/types'
+import { mdiOpenInNew } from '@mdi/js'
+import { useDisplay } from 'vuetify'
+import { CoverImage } from '@/types/anilist'
+import { onMounted } from 'vue'
+import SpeedDial from '@/Pages/Anime/Post/Partials/SpeedDial.vue'
 
-defineProps<{
-  anime: AnimeData
-  post: EpisodeData
+type ResourceModel = Post & Resource & {
+  id: number
+}
+
+type Episode = EpisodeData & {
+  thumbnail: CoverImage | null
+  slug: string
+}
+
+const props = defineProps<{
+  anime: AnimeData & {
+    posts: Episode[]
+  }
+  post: EpisodeData & {
+    links: ResourceModel[]
+    embeds: ResourceModel[]
+    thumbnail: CoverImage | null
+    slug: string
+  }
 }>()
 
+const { smAndUp } = useDisplay()
+
+onMounted(() => {
+  const activeEpisode = document.getElementById(props.post.slug)
+  if (activeEpisode) activeEpisode.scrollIntoView()
+})
+// console.log(props.post.slug)
 </script>
 
 <template>
-  <Head title="Bwang" />
+  <Head :title="anime.title.en!" />
 
   <v-container>
+    <SpeedDial
+      :anime-id="anime.id"
+      :post-id="post.id"
+    />
     <div>
       <InertiaLink
         :href="anime.link"
@@ -52,21 +85,76 @@ defineProps<{
         cols="12"
         md="8"
       >
-        <p>{{ post.description.en }}</p>
+        <v-img
+          v-if="post.thumbnail"
+          class="w-full sm:w-[75%] mx-auto mb-4"
+          :src="post.thumbnail.extraLarge"
+        />
+
+        <p class="mb-4 px-2 sm:px-0">
+          {{ post.description.en }}
+        </p>
+
+        <h3 class="text-h6 mb-4 px-2 sm:px-0">
+          Download Links
+        </h3>
+
+        <v-expansion-panels
+          v-if="post.links.length > 0"
+          :rounded="smAndUp ? 'lg' : 0"
+          multiple
+          variant="accordion"
+        >
+          <v-expansion-panel
+            v-for="postItem in post.links"
+            :key="postItem.id"
+            static
+          >
+            <v-expansion-panel-title>{{ postItem.name }}</v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-list density="compact">
+                <v-chip
+                  v-for="(link, i) in postItem.value"
+                  :key="i"
+                  :href="link.value"
+                  target="_blank"
+                >
+                  {{ link.name }} <v-icon :icon="mdiOpenInNew" />
+                </v-chip>
+              </v-list>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+        <div
+          v-else
+          class="px-2 sm:px-0"
+        >
+          No download links available.
+        </div>
       </v-col>
       <v-col
         cols="12"
         md="4"
       >
-        <v-list-item-subtitle>
-          Next episode
-        </v-list-item-subtitle>
-        <VerticalAnimeCard
-          :image="anime.metadata.coverImage.extraLarge"
-          :lazy-img="anime.metadata.coverImage.medium"
-          :href="route('post.show', [anime, post])"
-          :title="post.title.en!"
-        />
+        <h3 class="text-h6 mb-4 px-2 sm:px-0">
+          Other Episodes
+        </h3>
+        <div class="overflow-auto h-128">
+          <VerticalAnimeCard
+            v-for="episode in anime.posts"
+            :id="episode.slug"
+            :key="episode.id"
+            :active="episode.id == post.id"
+            class="mb-2"
+            :image="episode.thumbnail?.extraLarge"
+            :lazy-img="episode.thumbnail?.medium"
+            :href="route('post.show', [anime, episode])"
+            :title="episode.title.en!"
+            :edit-url="route('post.edit', [anime, episode])"
+            :delete-url="route('post.destroy', [anime, episode])"
+            :is-published="anime.is_published"
+          />
+        </div>
       </v-col>
     </v-row>
   </v-container>

@@ -1,14 +1,18 @@
 <script lang="ts" setup>
-import { mdiDotsVertical, mdiPencil, mdiSend } from '@mdi/js'
-import { mdiDelete } from '@mdi/js/commonjs/mdi'
 import { Permissions } from '@/types'
+import { VListItem } from 'vuetify/components'
+import ActionDropdown from '@/Pages/Anime/Partials/ActionDropdown.vue'
 
 defineProps<{
   permissions?: Permissions
   overhead?: string | null
   subtitle?: string | null
   title: string
+  isPublished: boolean
+  deleteUrl?: string
+  editUrl?: string
 }>()
+
 </script>
 
 <template>
@@ -31,53 +35,15 @@ defineProps<{
       </div>
     </div>
     <template
-      v-if="permissions?.publish || permissions?.update || permissions?.delete"
+      v-if="$page.props.auth.user"
       #append
     >
-      <v-menu>
-        <template #activator="{ props: propss }">
-          <v-btn
-            density="comfortable"
-            variant="plain"
-            :icon="mdiDotsVertical"
-            v-bind="propss"
-            @click.prevent
-          />
-        </template>
-        <v-list density="comfortable">
-          <v-list-item
-            :prepend-icon="mdiSend"
-            title="Publish"
-          >
-            <template #prepend>
-              <v-icon
-                :icon="mdiSend"
-                color="primary"
-              />
-            </template>
-          </v-list-item>
-          <v-list-item
-            title="Edit"
-          >
-            <template #prepend>
-              <v-icon
-                :icon="mdiPencil"
-                color="secondary"
-              />
-            </template>
-          </v-list-item>
-          <v-list-item
-            title="Delete"
-          >
-            <template #prepend>
-              <v-icon
-                :icon="mdiDelete"
-                color="error"
-              />
-            </template>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+      <ActionDropdown
+        :edit-url
+        :delete-url
+        :permissions
+        :is-published
+      />
     </template>
   </v-list-item>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiClose, mdiDelete, mdiMoviePlus, mdiPencil } from '@mdi/js'
+import { mdiClose, mdiDelete, mdiPencil } from '@mdi/js'
 import { inject, ref } from 'vue'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import { VBtn } from 'vuetify/components'
@@ -11,7 +11,7 @@ const open = ref(false)
 
 const props = defineProps<{
   animeId: number
-  canCreateEpisode: boolean
+  postId: number
 }>()
 
 const route = inject('route') as typeof ziggyRoute
@@ -19,7 +19,7 @@ const deleteAnime = async () => {
   try {
     const confirmed = await openConfirmationDialog('Are you sure want to delete this item?')
     if (confirmed && props.animeId) {
-      router.delete(route('anime.destroy', props.animeId))
+      router.delete(route('anime.destroy', [props.animeId, props.postId]))
     }
   } catch {
     //
@@ -53,12 +53,12 @@ const deleteAnime = async () => {
         />
 
         <div class="fab-text-custom text-subtitle-2 font-weight-bold text-medium-emphasis">
-          Delete Anime
+          Delete Post
         </div>
       </v-btn>
       <InertiaLink
         key="2"
-        :href="route('anime.edit', animeId)"
+        :href="route('post.edit', [animeId, postId])"
         :as="VBtn"
         color="success"
         :icon="true"
@@ -68,23 +68,7 @@ const deleteAnime = async () => {
         />
 
         <div class="fab-text-custom text-subtitle-2 font-weight-bold text-medium-emphasis">
-          Edit Anime
-        </div>
-      </InertiaLink>
-      <InertiaLink
-        v-if="canCreateEpisode"
-        key="3"
-        :as="VBtn"
-        color="secondary"
-        :icon="true"
-        :href="route('post.create', animeId)"
-      >
-        <v-icon
-          :icon="mdiMoviePlus"
-        />
-
-        <div class="fab-text-custom text-subtitle-2 font-weight-bold text-medium-emphasis">
-          Add Episode
+          Edit Post
         </div>
       </InertiaLink>
     </v-speed-dial>

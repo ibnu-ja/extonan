@@ -5,7 +5,7 @@ import { mdiPlay } from '@mdi/js'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import { VCard } from 'vuetify/components'
 
-defineProps<{
+const propss = defineProps<{
   // episode: EpisodeData
   href?: string
   title: string
@@ -13,6 +13,13 @@ defineProps<{
   overhead?: string
   image?: string
   lazyImg?: string
+  active?: boolean
+  id?: string
+  class?: string
+  permissions?: Permissions
+  isPublished: boolean
+  deleteUrl?: string
+  editUrl?: string
 }>()
 
 const { smAndUp } = useDisplay()
@@ -21,11 +28,14 @@ const { smAndUp } = useDisplay()
 <template>
   <v-hover v-slot="{isHovering, props}">
     <InertiaLink
+      :id
+      :class="propss.class"
+      :color="active ? 'primary' : undefined"
       :href
       :as="VCard"
       :rounded="smAndUp ? 'lg' : false"
       class="flex gap-2 p-2"
-      variant="text"
+      :variant="active ? 'tonal' : 'text'"
       v-bind="props"
     >
       <v-img
@@ -52,6 +62,9 @@ const { smAndUp } = useDisplay()
         style="flex: 1; line-clamp: 2"
       >
         <ItemListTitle
+          :edit-url
+          :delete-url
+          :is-published
           :subtitle
           :title
         />

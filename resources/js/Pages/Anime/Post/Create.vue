@@ -9,10 +9,10 @@ export default {
 
 <script lang="ts" setup>
 
-import { AnimeData } from '@/types/anime'
-import { Head, useForm } from '@inertiajs/vue3'
+import { AnimeData, EpisodeData, Resource } from '@/types/anime'
+import { Head, router, useForm } from '@inertiajs/vue3'
 import { mdiDelete } from '@mdi/js/commonjs/mdi'
-import { mdiContentSave, mdiSend } from '@mdi/js'
+import { mdiContentSave, mdiOpenInNew, mdiPencil, mdiPlus, mdiSend } from '@mdi/js'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { useDisplay } from 'vuetify'
 import { TranslatableField } from '@/types/formHelper'
@@ -20,10 +20,17 @@ import { useLanguages } from '@/composables/useLanguages'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
 import { inject } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
+import { openConfirmationDialog, openFormDialog } from '@/composables/useDialog'
+import MediaManager from '@/Components/MediaManager/Index.vue'
+import { Media } from '@/types'
 
 const props = defineProps<{
   anime: AnimeData
   canPublish: boolean
+  post?: EpisodeData & {
+    links: Resource[]
+    metadata: unknown
+  }
 }>()
 const route = inject('route') as typeof ziggyRoute
 
@@ -34,6 +41,8 @@ type PostForm = {
   description: TranslatableField
   is_published: boolean
   metadata: unknown
+  links: Resource[]
+  thumbnail: Media | number | null
 }
 
 const form = useForm<PostForm>({
@@ -49,49 +58,114 @@ const form = useForm<PostForm>({
     id: null,
   },
   metadata: null,
+  links: [],
+  thumbnail: null,
 },
 )
 
+if (props.post) {
+  form.title = props.post.title
+  form.is_published = props.post.is_published
+  form.description = props.post.description
+  form.links = props.post.links
+  form.metadata = props.post.metadata
+}
+
 const submit = () => {
-  // if (props.anime) {
-  //   console.log('update')
-  //   form.put(route('post.update', props.anime, props))
-  // } else {
-  //   console.log('saveNew')
-  form.post(route('post.store', props.anime))
-  // }
+  if (props.post) {
+    console.log('update')
+    form.put(route('post.update', [props.anime, props.post]))
+  } else {
+    console.log('saveNew')
+    form.post(route('post.store', props.anime))
+  }
 }
 const save = () => {
-  // if (props.anime?.is_published) {
-  //   form.is_published = props.anime.is_published
-  // }
+  if (props.anime?.is_published) {
+    form.is_published = props.anime.is_published
+  }
   submit()
 }
 
 const { smAndUp } = useDisplay()
 
 const { languages, selectedLanguage: currentLang } = useLanguages()
+
+const addFilename = async () => {
+  try {
+    const result = await openFormDialog('Tambahkan File')
+    form.links.push({
+      name: result,
+      value: [{
+        name: '',
+        value: '',
+      }],
+      type: 'link',
+    })
+  } catch {
+  //
+  }
+}
+
+const addLink = (index: number) => {
+  form.links[index].value.push({
+    name: '',
+    value: '',
+  })
+}
+
+const editFilename = async (index: number) => {
+  try {
+    form.links[index].name = await openFormDialog('Edit filename', undefined, {
+      label: 'Filename',
+      variant: 'outlined',
+      placeholder: form.links[index].name,
+    })
+  } catch (e) { /* empty */ }
+}
+
+const deleteFilename = (index: number) => {
+  form.links.splice(index, 1)
+}
+
+const deleteLink = (i: number, j: number) => {
+  form.links[i].value.splice(j, 1)
+}
+
+const title = props.post ? 'Editing ' + props.post?.title.en : 'Create Episode'
+
+const deletePost = async () => {
+  try {
+    const confirmed = await openConfirmationDialog('Are you sure want to delete this item?')
+    if (confirmed && props.post?.id && props.anime.id) {
+      router.delete(route('post.destroy', [props.anime.id, props.post.id]))
+    }
+  } catch {
+    //
+  }
+}
 </script>
 
 <template>
-  <Head title="Add Episode" />
-  <PageHeader title="Add Episode">
+  <Head :title />
+  <PageHeader :title>
     <template #append>
       <div class="flex gap-2">
         <v-btn
           variant="outlined"
           color="error"
-          :icon="mdAndUp ? mdiDelete : undefined"
+          :icon="!mdAndUp ? mdiDelete : undefined"
           :prepend-icon="mdAndUp ? mdiDelete : undefined"
           :text="mdAndUp ? 'Delete' : undefined"
+          @click="deletePost"
         />
         <v-btn
           :variant="form.is_published ? undefined : 'outlined'"
           :type="canPublish && !form.is_published? undefined : 'submit'"
           form="storePost"
           :disabled="form.processing"
-          :color=" form.is_published ? 'primary' : 'secondary'"
-          :icon="mdAndUp ? mdiContentSave : undefined"
+          :color="form.is_published ? 'primary' : 'secondary'"
+          :icon="!mdAndUp ? mdiContentSave : undefined"
           :prepend-icon="mdAndUp ? mdiContentSave : undefined"
           :text="mdAndUp ? 'Save' : undefined"
           @click.prevent="save"
@@ -102,7 +176,7 @@ const { languages, selectedLanguage: currentLang } = useLanguages()
           type="submit"
           :disabled="form.processing"
           color="primary"
-          :icon="mdAndUp ? mdiSend : undefined"
+          :icon="!mdAndUp ? mdiSend : undefined"
           :prepend-icon="mdAndUp ? mdiSend : undefined"
           :text="mdAndUp ? 'Publish' : undefined"
         />
@@ -160,7 +234,134 @@ const { languages, selectedLanguage: currentLang } = useLanguages()
               </v-card-text>
             </v-card>
           </section>
-          <!--      -->
+          <section class="mb-4">
+            <v-card :rounded="smAndUp">
+              <v-card-item>
+                <v-card-title>
+                  Links
+                </v-card-title>
+                <template #append>
+                  <v-btn
+                    color="primary"
+                    :prepend-icon="mdiPlus"
+                    @click.prevent="addFilename"
+                  >
+                    Add
+                  </v-btn>
+                </template>
+              </v-card-item>
+              <v-divider />
+              <v-card-text class="flex gap-4 flex-col">
+                <v-card
+                  v-for="(resource, i) in form.links"
+                  :key="i"
+                  variant="outlined"
+                >
+                  <v-card-item>
+                    <template #prepend>
+                      <v-btn
+                        variant="plain"
+                        :icon="true"
+                        density="comfortable"
+                        color="secondary"
+                        @click="editFilename(i)"
+                      >
+                        <v-icon
+                          :icon="mdiPencil"
+                          size="20"
+                        />
+                      </v-btn>
+
+                      <v-btn
+                        variant="plain"
+                        :icon="true"
+                        density="comfortable"
+                        color="error"
+                        @click="deleteFilename(i)"
+                      >
+                        <v-icon
+                          :icon="mdiDelete"
+                          size="20"
+                        />
+                      </v-btn>
+                    </template>
+                    <v-card-title>
+                      {{ resource.name }}
+                    </v-card-title>
+                    <template #append>
+                      <v-btn
+                        variant="plain"
+                        :icon="true"
+                        density="comfortable"
+                        :prepend-icon="mdiPlus"
+                        color="primary"
+                        @click.prevent="addLink(i)"
+                      >
+                        <v-icon
+                          :icon="mdiPlus"
+                          size="20"
+                        />
+                      </v-btn>
+                    </template>
+                  </v-card-item>
+                  <template
+                    v-for="(links, j) in resource.value"
+                    :key="`link-${i}-${j}`"
+                  >
+                    <v-card-text>
+                      <v-row no-gutters>
+                        <v-col cols="3">
+                          <div class="text-medium-emphasis mt-2">
+                            Name
+                          </div>
+                        </v-col>
+                        <v-col cols="9">
+                          <v-text-field
+                            v-model="form.links[i].value[j].name"
+                            placeholder="Gudang"
+                            variant="outlined"
+                            hide-details="auto"
+                            class="mb-4"
+                          />
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters>
+                        <v-col cols="3">
+                          <div class="text-medium-emphasis mt-2">
+                            Link/Embed code
+                          </div>
+                        </v-col>
+                        <v-col cols="9">
+                          <v-textarea
+                            v-model="form.links[i].value[j].value"
+                            placeholder="https://gudang.extonan.id/"
+                            rows="2"
+                            variant="outlined"
+                            hide-details="auto"
+                          />
+
+                          <v-btn
+                            color="error mt-4"
+                            @click.prevent="deleteLink(i,j)"
+                          >
+                            Delete
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                    <v-divider v-if="j < resource.value.length" />
+                  </template>
+                  <v-card-text v-if="resource.value.length < 1">
+                    No data.
+                  </v-card-text>
+                </v-card>
+                <!--  -->
+                <template v-if="form.links.length < 1">
+                  No data.
+                </template>
+              </v-card-text>
+            </v-card>
+          </section>
         </v-col>
         <v-col
           cols="12"
@@ -168,7 +369,18 @@ const { languages, selectedLanguage: currentLang } = useLanguages()
         >
           <div>
             <!--TODO-->
-            todo: input gambar thumbnail
+            <MediaManager
+              v-model="form.thumbnail"
+              class="mb-4"
+              title="Media Thumbnail"
+              :multiple="false"
+            />
+            <!--<v-expand-x-transition>-->
+            <!--  <MediaGridView-->
+            <!--    v-if="images"-->
+            <!--    :images-->
+            <!--  />-->
+            <!--</v-expand-x-transition>-->
             <v-expand-x-transition>
               <v-card
                 :rounded="smAndUp"
@@ -202,27 +414,33 @@ const { languages, selectedLanguage: currentLang } = useLanguages()
                   <div class="flex gap-1">
                     <v-chip
                       prepend-avatar="https://upload.wikimedia.org/wikipedia/commons/6/61/AniList_logo.svg"
-                      :href="`https://anilist.co/anime/${anime.anilist_id}`"
+                      :href="`https://anilist.co/anime/${anime.metadata.id}`"
                       target="_blank"
                     >
-                      Anilist
+                      Anilist <v-icon :icon="mdiOpenInNew" />
                     </v-chip>
                     <v-chip
                       prepend-avatar="https://upload.wikimedia.org/wikipedia/commons/9/9b/MyAnimeList_favicon.svg"
-                      :href="`https://myanimelist.net/anime/${anime.anilist_id}`"
+                      :href="`https://myanimelist.net/anime/${anime.metadata.idMal}`"
                       target="_blank"
                     >
-                      MyAnimelist
+                      MyAnimelist <v-icon :icon="mdiOpenInNew" />
                     </v-chip>
                   </div>
                 </div>
               </v-card-text>
 
               <v-expand-transition>
-                <Metadata
+                <template
                   v-if="anime.metadata"
-                  :data="anime.metadata"
-                />
+                >
+                  <v-divider />
+                  <v-card-text>
+                    <Metadata
+                      :data="anime.metadata"
+                    />
+                  </v-card-text>
+                </template>
               </v-expand-transition>
             </v-card>
           </div>

@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Plank\Mediable\Mediable;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Translatable\HasTranslations;
 
 class Post extends BasePost
 {
-    use HasTranslations;
+    use HasTranslations,
+        Mediable;
 
     /**
      * @var string[]
@@ -22,6 +26,8 @@ class Post extends BasePost
     protected $fillable = ['title', 'description', 'metadata'];
 
     protected $casts = ['metadata' => 'object'];
+
+    protected $appends = ['thumbnail', 'can'];
 
     /**
      * Get the options for generating the slug.
@@ -42,5 +48,47 @@ class Post extends BasePost
     public function resources(): HasMany
     {
         return $this->hasMany(Resource::class);
+    }
+
+    public function links(): HasMany
+    {
+//        natural sorting ->orderBy(DB::raw('LENGTH(name), name'))
+        return $this->resources()->where('type', '=', 'link');
+    }
+
+    public function embeds(): HasMany
+    {
+        return $this->resources()->where('type', '=', 'embed');
+    }
+
+    public function thumbnail(): Attribute
+    {
+        return Attribute::make(
+            function () {
+                if ($this->hasMedia('thumbnail')) {
+                    $this->loadMediaWithVariants('thumbnail');
+                    $media = $this->firstMedia('thumbnail');
+                    return [
+                        'medium' => $media->findVariant('medium')->getUrl(),
+                        'large' => $media->findVariant('large')->getUrl(),
+                        'extraLarge' => $media->getUrl(),
+                    ];
+                } else return null;
+            }
+        );
+    }
+
+    public function scopePrev(Builder $query, BasePost $basePost, Post $post): void
+    {
+        $query->whereHasMorph('postable', [Anime::class], function (Builder $query) use ($basePost) {
+            $query->select('id')->where('id', '=', $basePost->id)->with('author');
+        })->with(['author'])->where('title', '<', $post->title)->orderBy('title');
+    }
+
+    public function scopeNext(Builder $query, BasePost $basePost, Post $post): void
+    {
+        $query->whereHasMorph('postable', [Anime::class], function (Builder $query) use ($basePost) {
+            $query->select('id')->where('id', '=', $basePost->id)->with('author');
+        })->with(['author'])->where('title', '>', $post->title)->orderBy('title');
     }
 }

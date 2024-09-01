@@ -2,8 +2,6 @@
 import { AnimeData } from '@/types/anime'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
-import { useAnime } from '@/composables/useAniList'
-import { ref } from 'vue'
 
 import { register } from 'swiper/element/bundle'
 import { useGradient } from '@/composables/useGradient'
@@ -12,15 +10,11 @@ import InertiaLink from '@/Components/InertiaLink.vue'
 
 register()
 
-const props = defineProps<{
+defineProps<{
   latestAnime: AnimeData[]
 }>()
 
 dayjs.extend(calendar)
-
-const { homeAnimeApi } = useAnime()
-
-const carousel = ref(0)
 
 const { gradient } = useGradient()
 
@@ -29,6 +23,7 @@ const { gradient } = useGradient()
 <template>
   <div class="relative">
     <swiper-container
+      :autoplay="true"
       :loop="true"
     >
       <swiper-slide
@@ -43,7 +38,7 @@ const { gradient } = useGradient()
           class="flex relative elevation-0 border-0 cursor-pointer"
           :elevation="0"
           height="440"
-          variant="text plain"
+          variant="text"
         >
           <template #image>
             <v-img
@@ -57,7 +52,7 @@ const { gradient } = useGradient()
           <v-container
             class="p-2 p:sm-4 mt-auto h-[80%] md:h-[70%] w-full"
           >
-            <div class="sm:p-4 gap-4 flex">
+            <div class="sm:p-4 gap-4 flex items-start">
               <v-img
                 cover
                 rounded
