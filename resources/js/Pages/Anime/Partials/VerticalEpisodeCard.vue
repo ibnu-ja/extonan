@@ -84,6 +84,7 @@ const { smAndUp } = useDisplay()
       >
         <ItemListTitle
           :show-action
+          :permissions
           :edit-url
           :delete-url
           :is-published
