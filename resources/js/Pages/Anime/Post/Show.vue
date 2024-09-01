@@ -12,7 +12,7 @@ import { Head } from '@inertiajs/vue3'
 import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import dayjs from 'dayjs'
 import InertiaLink from '@/Components/InertiaLink.vue'
-import VerticalAnimeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
+import VerticalEpisodeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
 import { Post } from '@/types'
 import { mdiOpenInNew } from '@mdi/js'
 import { useDisplay } from 'vuetify'
@@ -140,10 +140,11 @@ onMounted(() => {
           Other Episodes
         </h3>
         <div class="overflow-auto h-128">
-          <VerticalAnimeCard
+          <VerticalEpisodeCard
             v-for="episode in anime.posts"
             :id="episode.slug"
             :key="episode.id"
+            :show-action="$page.props.auth.user"
             :active="episode.id == post.id"
             class="mb-2"
             :image="episode.thumbnail?.extraLarge"

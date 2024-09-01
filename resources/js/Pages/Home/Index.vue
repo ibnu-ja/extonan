@@ -66,6 +66,9 @@ defineProps<{
             md="6"
           >
             <VerticalEpisodeCard
+              :show-action="!!$page.props.auth.user"
+              :delete-url="route('post.destroy', [episode.postable, episode])"
+              :edit-url="route('post.edit', [episode.postable, episode])"
               :image="episode.thumbnail? episode.thumbnail.extraLarge : undefined"
               :lazy-img="episode.thumbnail? episode.thumbnail.medium : undefined"
               :href="route('post.show', [episode.postable, episode])"

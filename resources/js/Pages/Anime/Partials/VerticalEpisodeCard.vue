@@ -22,6 +22,7 @@ const propss = withDefaults(
     deleteUrl?: string
     editUrl?: string
     noThumbnail?: boolean
+    showAction?: boolean
   }>(),
   {
     noThumbnail: false,
@@ -37,6 +38,7 @@ const propss = withDefaults(
     isPublished: false,
     deleteUrl: undefined,
     editUrl: undefined,
+    showAction: false,
   },
 )
 
@@ -81,6 +83,7 @@ const { smAndUp } = useDisplay()
         style="flex: 1; line-clamp: 2"
       >
         <ItemListTitle
+          :show-action
           :edit-url
           :delete-url
           :is-published

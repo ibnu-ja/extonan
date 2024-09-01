@@ -20,6 +20,7 @@ defineProps<{
   editUrl?: string
   deleteUrl?: string
   isPublished: boolean
+  showAction?: boolean
 }>()
 
 const { smAndUp } = useDisplay()
@@ -61,6 +62,7 @@ const { width } = useElementSize(imageRef)
       </v-img>
 
       <ItemListTitle
+        :show-action
         class="mt-2"
         :permissions
         :overhead

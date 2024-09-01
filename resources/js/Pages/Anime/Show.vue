@@ -84,6 +84,7 @@ const animeBwang = computedAsync(async () => {
             sm="6"
           >
             <HorizontalEpisodeCard
+              :show-action="!!$page.props.auth.user"
               :image="episode.thumbnail?.extraLarge"
               :lazy-img="episode.thumbnail?.medium"
               :href="route('post.show', [anime, episode])"
