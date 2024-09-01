@@ -4,6 +4,7 @@ import { useDisplay } from 'vuetify'
 import { mdiPlay } from '@mdi/js'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import { VCard } from 'vuetify/components'
+import { Permissions } from '@/types'
 
 const propss = withDefaults(
   defineProps<{

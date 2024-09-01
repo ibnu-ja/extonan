@@ -144,7 +144,7 @@ onMounted(() => {
             v-for="episode in anime.posts"
             :id="episode.slug"
             :key="episode.id"
-            :show-action="$page.props.auth.user"
+            :show-action="!!$page.props.auth.user"
             :active="episode.id == post.id"
             class="mb-2"
             :image="episode.thumbnail?.extraLarge"

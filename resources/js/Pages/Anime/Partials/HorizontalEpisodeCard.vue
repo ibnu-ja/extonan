@@ -9,7 +9,7 @@ import { Permissions } from '@/types'
 import { MaybeElement, useElementSize } from '@vueuse/core'
 import { ref } from 'vue'
 
-defineProps<{
+withDefaults(defineProps<{
   href?: string
   permissions?: Permissions
   title: string
@@ -21,7 +21,17 @@ defineProps<{
   deleteUrl?: string
   isPublished: boolean
   showAction?: boolean
-}>()
+}>(), {
+  showAction: false,
+  subtitle: undefined,
+  overhead: undefined,
+  image: undefined,
+  lazyImg: undefined,
+  editUrl: undefined,
+  deleteUrl: undefined,
+  href: undefined,
+  permissions: undefined,
+})
 
 const { smAndUp } = useDisplay()
 
