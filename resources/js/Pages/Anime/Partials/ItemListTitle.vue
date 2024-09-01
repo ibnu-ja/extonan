@@ -34,7 +34,10 @@ defineProps<{
         {{ subtitle }}
       </div>
     </div>
-    <template #append>
+    <template
+      v-if="$page.props.auth.user"
+      #append
+    >
       <ActionDropdown
         :edit-url
         :delete-url
