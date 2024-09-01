@@ -5,22 +5,40 @@ import { mdiPlay } from '@mdi/js'
 import InertiaLink from '@/Components/InertiaLink.vue'
 import { VCard } from 'vuetify/components'
 
-const propss = defineProps<{
-  // episode: EpisodeData
-  href?: string
-  title: string
-  subtitle?: string
-  overhead?: string
-  image?: string
-  lazyImg?: string
-  active?: boolean
-  id?: string
-  class?: string
-  permissions?: Permissions
-  isPublished: boolean
-  deleteUrl?: string
-  editUrl?: string
-}>()
+const propss = withDefaults(
+  defineProps<{
+    // episode: EpisodeData
+    href?: string
+    title: string
+    subtitle?: string
+    overhead?: string
+    image?: string
+    lazyImg?: string
+    active?: boolean
+    id?: string
+    class?: string
+    permissions?: Permissions
+    isPublished: boolean
+    deleteUrl?: string
+    editUrl?: string
+    noThumbnail: boolean
+  }>(),
+  {
+    noThumbnail: false,
+    href: undefined,
+    subtitle: undefined,
+    overhead: undefined,
+    image: undefined,
+    lazyImg: undefined,
+    active: undefined,
+    id: undefined,
+    class: undefined,
+    permissions: undefined,
+    isPublished: undefined,
+    deleteUrl: undefined,
+    editUrl: undefined,
+  },
+)
 
 const { smAndUp } = useDisplay()
 </script>
@@ -39,7 +57,8 @@ const { smAndUp } = useDisplay()
       v-bind="props"
     >
       <v-img
-        v-if="image"
+        v-if="!noThumbnail"
+        color="surface"
         width="150"
         class="rounded align-self-center flex-0-0 cursor-pointer"
         :src="image"
