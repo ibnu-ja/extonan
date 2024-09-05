@@ -6,7 +6,6 @@ use App\Models\Anime;
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -17,8 +16,6 @@ class HomeController extends Controller
     public function __invoke(): \Inertia\Response
     {
         return Inertia::render('Home/Index', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
             'laravelVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
             'latestAnime' => Anime::with('author')->take(5)->orderBy('published_at')->get(),

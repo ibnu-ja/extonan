@@ -4,12 +4,14 @@ import { computed, inject, ref } from 'vue'
 import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiLogin, mdiMenu } from '@mdi/js'
 import { router, usePage } from '@inertiajs/vue3'
 import { VBtn, VListItem, VTab } from 'vuetify/components'
-import InertiaLink from '@/Components/InertiaLink.vue'
+import InertiaLink from '@/Components/InertiaLink.ts'
 import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import { BreadcrumbItem } from '@/types'
 import { route as ziggyRoute } from 'ziggy-js'
+import logoIcon from '@/assets/logo/logo color.svg'
 import logo from '@/assets/logo/inline color.svg'
 import { useBrowserLocation } from '@vueuse/core'
+import { useDisplay } from 'vuetify'
 
 const drawer = defineModel<boolean | undefined>('drawer')
 
@@ -55,9 +57,7 @@ const visit = (e: unknown) => {
     return
   }
 
-  const bwang = window.location.pathname
-    ? window.location.pathname.split('/')[1]
-    : location.value.pathname?.split('/')[1]
+  const bwang = location.value.pathname?.split('/')[1]
 
   const currentUrl = itemList.value.find(item => new URL(item.link).pathname.split('/')[1] === bwang)
 
@@ -68,33 +68,47 @@ const visit = (e: unknown) => {
 
 // const tab = ref()
 
+const { lgAndUp } = useDisplay()
+
 function logout() {
   router.post(route('logout'))
 }
+
 </script>
 
 <template>
   <v-app-bar extension-height="34">
-    <v-app-bar-nav-icon class="hidden-lg-and-up">
+    <v-app-bar-nav-icon v-if="!lgAndUp">
       <v-btn
         v-model="drawer"
         :icon="mdiMenu"
         @click="drawer = !drawer"
       />
     </v-app-bar-nav-icon>
+
+    <!--<UseBrowserLocation v-slot="{ location }">-->
+    <!--  Browser Location: {{ location }}-->
+    <!--</UseBrowserLocation>-->
+    <!--<LogoIcon style="width: 50px" />-->
     <InertiaLink
       href="/"
-      class="mx-4"
     >
-      <v-img
-        width="200"
-        :src="logo"
-        alt="application logo"
-      />
+      <picture>
+        <source
+          :srcset="logo"
+          media="(min-width: 960px)"
+        >
+        <img
+          class="w-[50px] md:w-[200px] md:mx-4"
+          style="vertical-align: middle"
+          :src="logoIcon"
+          alt="application logo"
+        >
+      </picture>
     </InertiaLink>
     <v-tabs
+      v-if="lgAndUp"
       v-model="tab"
-      class="hidden-md-and-down"
       color="primary"
       :mandatory="false"
       @update:model-value="visit"
