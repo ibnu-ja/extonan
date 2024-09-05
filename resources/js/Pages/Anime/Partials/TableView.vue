@@ -8,7 +8,7 @@ import { router, usePage } from '@inertiajs/vue3'
 import { computed, inject, ref } from 'vue'
 import { AnimeData } from '@/types/anime'
 import calendar from 'dayjs/plugin/calendar'
-import InertiaLink from '@/Components/InertiaLink.vue'
+import InertiaLink from '@/Components/InertiaLink.ts'
 import { VIcon } from 'vuetify/components'
 import { route as ziggyRoute } from 'ziggy-js'
 

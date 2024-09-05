@@ -2,7 +2,7 @@
 import { Head, useForm } from '@inertiajs/vue3'
 import { VBtn } from 'vuetify/components'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
-import Link from '@/Components/InertiaLink.vue'
+import Link from '@/Components/InertiaLink.ts'
 import { mdiEye } from '@mdi/js/commonjs/mdi.js'
 import { mdiEyeOff } from '@mdi/js'
 import { inject, ref } from 'vue'

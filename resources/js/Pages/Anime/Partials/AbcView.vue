@@ -3,7 +3,7 @@ import { PaginatedResponse } from '@/types'
 import { AnimeData } from '@/types/anime'
 import { groupBy, map, sortBy } from 'lodash-es'
 import { computed } from 'vue'
-import InertiaLink from '@/Components/InertiaLink.vue'
+import InertiaLink from '@/Components/InertiaLink.ts'
 
 const props = defineProps<{
   canCreate: boolean

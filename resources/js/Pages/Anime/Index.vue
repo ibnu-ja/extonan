@@ -16,7 +16,7 @@ import {
 } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
-import InertiaLink from '@/Components/InertiaLink.vue'
+import InertiaLink from '@/Components/InertiaLink.ts'
 import { VBtn } from 'vuetify/components'
 import { AnimeData } from '@/types/anime'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'

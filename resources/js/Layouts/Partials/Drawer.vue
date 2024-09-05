@@ -2,7 +2,7 @@
 
 import { VListItem } from 'vuetify/components'
 import { usePage } from '@inertiajs/vue3'
-import InertiaLink from '@/Components/InertiaLink.vue'
+import InertiaLink from '@/Components/InertiaLink.ts'
 import { watch } from 'vue'
 import { useDisplay } from 'vuetify'
 
@@ -23,7 +23,7 @@ const page = usePage()
     temporary
     location="top"
   >
-    <v-list active-color="primary">
+    <v-list color="primary">
       <InertiaLink
         :as="VListItem"
         exact-active

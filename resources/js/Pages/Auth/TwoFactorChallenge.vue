@@ -3,7 +3,7 @@ import { inject, nextTick, ref, VNodeRef } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import { VBtn } from 'vuetify/components'
-import Link from '@/Components/InertiaLink.vue'
+import Link from '@/Components/InertiaLink.ts'
 import { route as ziggyRoute } from 'ziggy-js'
 
 const recovery = ref(false)

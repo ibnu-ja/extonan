@@ -6,7 +6,7 @@ import calendar from 'dayjs/plugin/calendar'
 import { register } from 'swiper/element/bundle'
 import { useGradient } from '@/composables/useGradient'
 import { VCard } from 'vuetify/components'
-import InertiaLink from '@/Components/InertiaLink.vue'
+import InertiaLink from '@/Components/InertiaLink.ts'
 
 register()
 
