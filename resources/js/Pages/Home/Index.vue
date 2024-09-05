@@ -21,8 +21,6 @@ type Postable = EpisodeData & {
 }
 
 defineProps<{
-  canLogin?: boolean
-  canRegister?: boolean
   laravelVersion: string
   phpVersion: string
   latestAnime: AnimeData[]
