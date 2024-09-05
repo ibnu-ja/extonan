@@ -7,10 +7,11 @@ const { getIcon } = useProvider()
 withDefaults(
   defineProps<{
     prompt: string
-    error: string
+    error?: string
     providers: SocialstreamProviders[]
   }>(), {
     prompt: 'Or Login Via',
+    error: undefined,
   },
 )
 
