@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 
-import { mdiDelete } from '@mdi/js/commonjs/mdi'
-import { mdiPencil } from '@mdi/js'
+import { mdiDelete, mdiPencil } from '@mdi/js'
 import dayjs from 'dayjs'
 import { PaginatedResponse } from '@/types'
 import { router, usePage } from '@inertiajs/vue3'

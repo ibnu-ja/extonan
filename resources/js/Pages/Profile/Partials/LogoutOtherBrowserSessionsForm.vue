@@ -3,8 +3,7 @@ import { inject, ref, VNodeRef } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import ActionSection from '@/Components/ActionSection.vue'
 import { UserSession } from '@/types'
-import { mdiCellphone, mdiDesktopTowerMonitor, mdiEyeOff } from '@mdi/js'
-import { mdiEye } from '@mdi/js/commonjs/mdi'
+import { mdiCellphone, mdiDesktopTowerMonitor, mdiEye, mdiEyeOff } from '@mdi/js'
 import { route as ziggyRoute } from 'ziggy-js'
 
 defineProps<{
@@ -123,7 +122,8 @@ const closeModal = () => {
             </v-card-title>
             <v-card-text>
               <p class="mb-4">
-                Please enter your password to confirm you would like to log out of your other browser sessions across all of
+                Please enter your password to confirm you would like to log out of your other browser sessions across
+                all of
                 your devices.
               </p>
 

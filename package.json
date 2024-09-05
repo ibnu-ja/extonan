@@ -10,7 +10,7 @@
   "devDependencies": {
     "@eslint/js": "^9.6.0",
     "@inertiajs/vue3": "^1.0.14",
-    "@mdi/js": "^7.4.47",
+    "@mdi/js": "https://github.com/susnux/MaterialDesign-JS",
     "@stylistic/eslint-plugin": "^2.3.0",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.5.1",

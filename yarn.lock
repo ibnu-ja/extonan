@@ -251,10 +251,9 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@mdi/js@^7.4.47":
+"@mdi/js@https://github.com/susnux/MaterialDesign-JS":
   version "7.4.47"
-  resolved "https://registry.yarnpkg.com/@mdi/js/-/js-7.4.47.tgz#7d8a4edc9631bffeed80d1ec784f9beae559a76a"
-  integrity sha512-KPnNOtm5i2pMabqZxpUz7iQf+mfrYZyKCZ8QNz85czgEt7cuHcGorWfdzUMWYA0SD+a6Hn4FmJ+YhzzzjkTZrQ==
+  resolved "https://github.com/susnux/MaterialDesign-JS#93ed3b552bf8764cb1e0395c56fc4e4101eeb804"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"

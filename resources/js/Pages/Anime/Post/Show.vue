@@ -119,7 +119,8 @@ onMounted(() => {
                   :href="link.value"
                   target="_blank"
                 >
-                  {{ link.name }} <v-icon :icon="mdiOpenInNew" />
+                  {{ link.name }}
+                  <v-icon :icon="mdiOpenInNew" />
                 </v-chip>
               </v-list>
             </v-expansion-panel-text>

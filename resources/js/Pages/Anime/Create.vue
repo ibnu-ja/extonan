@@ -15,7 +15,7 @@ import { mdiClose, mdiContentSave, mdiSend } from '@mdi/js'
 import dayjs from 'dayjs'
 
 import objectSupport from 'dayjs/plugin/objectSupport'
-import { mdiDelete } from '@mdi/js/commonjs/mdi'
+import { mdiDelete } from '@mdi/js'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
 import Casts from '@/Pages/Anime/Partials/Casts.vue'
 import { useAnime } from '@/composables/useAniList'

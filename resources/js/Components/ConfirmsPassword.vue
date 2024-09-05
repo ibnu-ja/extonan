@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { inject, nextTick, reactive, ref, VNodeRef } from 'vue'
-import { mdiEye } from '@mdi/js/commonjs/mdi'
-import { mdiEyeOff } from '@mdi/js'
+import { mdiEye, mdiEyeOff } from '@mdi/js'
 import { route as ziggyRoute } from 'ziggy-js'
 import axios from 'axios'
 

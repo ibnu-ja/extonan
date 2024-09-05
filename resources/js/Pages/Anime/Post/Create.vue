@@ -11,7 +11,7 @@ export default {
 
 import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import { Head, router, useForm } from '@inertiajs/vue3'
-import { mdiDelete } from '@mdi/js/commonjs/mdi'
+import { mdiDelete } from '@mdi/js'
 import { mdiContentSave, mdiOpenInNew, mdiPencil, mdiPlus, mdiSend } from '@mdi/js'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { useDisplay } from 'vuetify'
@@ -103,7 +103,7 @@ const addFilename = async () => {
       type: 'link',
     })
   } catch {
-  //
+    //
   }
 }
 
@@ -121,7 +121,8 @@ const editFilename = async (index: number) => {
       variant: 'outlined',
       placeholder: form.links[index].name,
     })
-  } catch (e) { /* empty */ }
+  } catch (e) { /* empty */
+  }
 }
 
 const deleteFilename = (index: number) => {
@@ -417,14 +418,16 @@ const deletePost = async () => {
                       :href="`https://anilist.co/anime/${anime.metadata.id}`"
                       target="_blank"
                     >
-                      Anilist <v-icon :icon="mdiOpenInNew" />
+                      Anilist
+                      <v-icon :icon="mdiOpenInNew" />
                     </v-chip>
                     <v-chip
                       prepend-avatar="https://upload.wikimedia.org/wikipedia/commons/9/9b/MyAnimeList_favicon.svg"
                       :href="`https://myanimelist.net/anime/${anime.metadata.idMal}`"
                       target="_blank"
                     >
-                      MyAnimelist <v-icon :icon="mdiOpenInNew" />
+                      MyAnimelist
+                      <v-icon :icon="mdiOpenInNew" />
                     </v-chip>
                   </div>
                 </div>

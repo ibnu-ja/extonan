@@ -27,6 +27,7 @@ import { storeToRefs } from 'pinia'
 import { inject, watch } from 'vue'
 import AbcView from '@/Pages/Anime/Partials/AbcView.vue'
 import { route as ziggyRoute } from 'ziggy-js'
+
 const { mdAndUp } = useDisplay()
 
 const route = inject('route') as typeof ziggyRoute

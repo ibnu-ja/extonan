@@ -88,7 +88,7 @@ const { gradient } = useGradient()
 
 <style lang="scss">
 .bg-blur {
-  .v-img__img.v-img__img--cover  {
+  .v-img__img.v-img__img--cover {
     filter: blur(5px);
     transform: scale(1.05); //remove edge
   }
