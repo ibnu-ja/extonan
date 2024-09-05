@@ -140,9 +140,6 @@ export default defineComponent({
           // @ts-expect-error TODO: Fix this
           onError: attrs.onError || (() => ({})),
         })
-        console.log('routechange')
-
-        // console.log('browserLocation', window.location.href)
       }
     }
 

@@ -22,7 +22,6 @@ const emit = defineEmits(['uploaded'])
 async function upload() {
   try {
     processing.value = true
-    console.log(processing)
     splitted.value = urls.value.split(/\r?\n|\r|\n/g).filter(url => (url.trim()))
     // check if each splitted array is valid url
     const validated = splitted.value.filter(url => isValidImageLink(url))

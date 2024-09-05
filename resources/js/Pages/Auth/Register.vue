@@ -22,7 +22,6 @@ const showP = ref(false)
 const showCP = ref(false)
 
 const submit = () => {
-  console.log('submitting')
   form.post(route('register'), {
     onFinish: () => form.reset('password', 'password_confirmation'),
   })

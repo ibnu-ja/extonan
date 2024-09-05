@@ -73,10 +73,8 @@ if (props.post) {
 
 const submit = () => {
   if (props.post) {
-    console.log('update')
     form.put(route('post.update', [props.anime, props.post]))
   } else {
-    console.log('saveNew')
     form.post(route('post.store', props.anime))
   }
 }

@@ -32,7 +32,6 @@ async function loadMore(url: string | undefined) {
   // }
   const { data } = await axios.get<PaginatedResponse<Media>>(`${url}`)
   currentMedia.value = data
-  console.log(data)
   loaded.value = [...loaded.value, ...data.data]
 }
 

@@ -74,7 +74,8 @@ async function deleteMedia(media: Media) {
     // inertia delete item
     await axios.delete(route('media.destroy', media.id))
     await getMedia()
-    console.log('item berhasil dihapus')
+    // TODO open snackbar toast
+    alert('item berhasil dihapus')
     // openErrorToast('Item Berhasil Dihapus', 'success')
   }
 }

@@ -92,10 +92,8 @@ const clearAnilist = () => anilistData.value = undefined
 
 const submit = () => {
   if (props.anime) {
-    console.log('update')
     form.put(route('anime.update', props.anime?.id))
   } else {
-    console.log('saveNew')
     form.post(route('anime.store'))
   }
 }
