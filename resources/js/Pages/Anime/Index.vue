@@ -16,7 +16,7 @@ import {
 } from '@mdi/js'
 import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
-import InertiaLink from '@/Components/InertiaLink.ts'
+import InertiaLink from '@/Components/InertiaLink'
 import { VBtn } from 'vuetify/components'
 import { AnimeData } from '@/types/anime'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
@@ -39,7 +39,7 @@ defineProps<{
 
 const { displayMode } = storeToRefs(useUserStore())
 
-watch(displayMode, (value, oldValue) => {
+watch(displayMode, (value) => {
   if (value != 'abc') {
     return
   }

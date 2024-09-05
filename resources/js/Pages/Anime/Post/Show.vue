@@ -11,7 +11,7 @@ export default {
 import { Head } from '@inertiajs/vue3'
 import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import dayjs from 'dayjs'
-import InertiaLink from '@/Components/InertiaLink.ts'
+import InertiaLink from '@/Components/InertiaLink'
 import VerticalEpisodeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
 import { Post } from '@/types'
 import { mdiOpenInNew } from '@mdi/js'

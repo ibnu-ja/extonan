@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { mdiClose, mdiDelete, mdiMoviePlus, mdiPencil } from '@mdi/js'
 import { inject, ref } from 'vue'
-import InertiaLink from '@/Components/InertiaLink.ts'
+import InertiaLink from '@/Components/InertiaLink'
 import { VBtn } from 'vuetify/components'
 import { openConfirmationDialog } from '@/composables/useDialog'
 import { router } from '@inertiajs/vue3'

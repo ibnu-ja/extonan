@@ -2,7 +2,7 @@
 
 import { VListItem } from 'vuetify/components'
 import { usePage } from '@inertiajs/vue3'
-import InertiaLink from '@/Components/InertiaLink.ts'
+import InertiaLink from '@/Components/InertiaLink'
 import { watch } from 'vue'
 import { useDisplay } from 'vuetify'
 

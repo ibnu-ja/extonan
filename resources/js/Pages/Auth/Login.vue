@@ -5,7 +5,7 @@ import Socialstream from '@/Components/Socialstream.vue'
 import { Socialstream as SocialstreamType } from '@/types'
 
 import AuthLayout from '@/Layouts/AuthLayout.vue'
-import Link from '@/Components/InertiaLink.ts'
+import Link from '@/Components/InertiaLink'
 import { VBtn } from 'vuetify/components'
 import { mdiEye } from '@mdi/js/commonjs/mdi'
 import { mdiEyeOff } from '@mdi/js'

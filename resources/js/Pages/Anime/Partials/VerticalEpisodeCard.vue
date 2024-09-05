@@ -2,7 +2,7 @@
 import ItemListTitle from '@/Pages/Anime/Partials/ItemListTitle.vue'
 import { useDisplay } from 'vuetify'
 import { mdiPlay } from '@mdi/js'
-import InertiaLink from '@/Components/InertiaLink.ts'
+import InertiaLink from '@/Components/InertiaLink'
 import { VCard } from 'vuetify/components'
 import { Permissions } from '@/types'
 

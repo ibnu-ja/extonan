@@ -2,7 +2,7 @@
 import { Head, useForm } from '@inertiajs/vue3'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import { VBtn } from 'vuetify/components'
-import Link from '@/Components/InertiaLink.ts'
+import Link from '@/Components/InertiaLink'
 import { inject } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
 
