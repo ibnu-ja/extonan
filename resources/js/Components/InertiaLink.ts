@@ -1,31 +1,54 @@
-import { computed, defineComponent, h, useAttrs, useSlots } from 'vue'
-import { mergeDataIntoQueryString, router, shouldIntercept } from '@inertiajs/core'
+import {
+  ComponentOptionsBase,
+  computed,
+  ComputedOptions,
+  CreateComponentPublicInstance,
+  defineComponent,
+  FunctionalComponent,
+  h,
+  MethodOptions,
+  PropType,
+  useAttrs,
+  useSlots,
+} from 'vue'
+import {
+  FormDataConvertible,
+  mergeDataIntoQueryString,
+  Method,
+  PreserveStateOption,
+  router,
+  shouldIntercept,
+} from '@inertiajs/core'
 import { useBrowserLocation } from '@vueuse/core'
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+type CustomComponentType =
+  (ComponentOptionsBase<any, any, any, ComputedOptions, MethodOptions, any, any, any, string, any> & ThisType<CreateComponentPublicInstance<any, any, any, ComputedOptions, MethodOptions, any, any, any, Readonly<any>>>)
+  | FunctionalComponent<any, any>
+/* eslint-enable */
 export default defineComponent({
   props: {
-    method: {
-      type: String,
-      default: 'get',
-    },
     href: {
-      type: String,
+      type: String as PropType<string | null>,
       default: null,
     },
+    method: {
+      type: String as PropType<Method>,
+      default: 'get',
+    },
     data: {
-      type: Object,
+      type: Object as PropType<Record<string, FormDataConvertible>>,
       default: () => ({}),
     },
     as: {
-      type: [String, Object],
+      type: [String, Object] as PropType<string | CustomComponentType>,
       default: 'a',
     },
     preserveScroll: {
-      type: Boolean,
+      type: [Boolean, String] as PropType<PreserveStateOption>,
       default: false,
     },
     preserveState: {
-      type: [Boolean, Function],
+      type: [Boolean, String] as PropType<PreserveStateOption>,
       default: false,
     },
     replace: {
@@ -33,15 +56,15 @@ export default defineComponent({
       default: false,
     },
     headers: {
-      type: Object,
+      type: Object as PropType<Record<string, string>>,
       default: () => ({}),
     },
     errorBag: {
-      type: [String, null],
+      type: String as PropType<string | null>,
       default: null,
     },
     queryStringArrayFormat: {
-      type: String,
+      type: String as PropType<'indices' | 'brackets'>,
       default: 'brackets',
     },
     active: {
@@ -53,7 +76,7 @@ export default defineComponent({
       default: false,
     },
     only: {
-      type: Array,
+      type: Array as PropType<string[]>,
       default: () => ([]),
     },
   },
@@ -100,13 +123,21 @@ export default defineComponent({
           preserveState: props.preserveState ?? props.method !== 'get',
           only: props.only,
           headers: props.headers,
+          // @ts-expect-error TODO: Fix this
           onCancelToken: attrs.onCancelToken || (() => ({})),
+          // @ts-expect-error TODO: Fix this
           onBefore: attrs.onBefore || (() => ({})),
+          // @ts-expect-error TODO: Fix this
           onStart: attrs.onStart || (() => ({})),
+          // @ts-expect-error TODO: Fix this
           onProgress: attrs.onProgress || (() => ({})),
+          // @ts-expect-error TODO: Fix this
           onFinish: attrs.onFinish || (() => ({})),
+          // @ts-expect-error TODO: Fix this
           onCancel: attrs.onCancel || (() => ({})),
+          // @ts-expect-error TODO: Fix this
           onSuccess: attrs.onSuccess || (() => ({})),
+          // @ts-expect-error TODO: Fix this
           onError: attrs.onError || (() => ({})),
         })
         console.log('routechange')
