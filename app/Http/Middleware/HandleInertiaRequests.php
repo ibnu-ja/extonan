@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Git;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -39,44 +41,10 @@ class HandleInertiaRequests extends Middleware
             ],
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'appVersion' => exec('git describe --tags --always'),
-            'appCommitHash' => exec('git rev-parse --short HEAD'),
-            'appBranch' => exec('git rev-parse --abbrev-ref HEAD'),
-            'appGitOriginRepo' => $this->printRepoUrl(exec('git remote get-url origin')),
+            'appVersion' => Cache::remember('git-latest-tag', 3600, fn () => app(Git::class)->getLatestTag()),
+            'appCommitHash' => Cache::remember('git-commit-hash', 3600, fn () => app(Git::class)->getAppCommitHash()),
+            'appBranch' => Cache::remember('git-branch', 3600, fn () => app(Git::class)->getAppBranch()),
+            'appGitOriginRepo' => Cache::remember('git-origin-repo', 3600, fn () => app(Git::class)->getRepoUrl()),
         ];
-    }
-
-
-    private function printRepoUrl(string $url): ?string
-    {
-        if (
-            (str_contains($url, '@') && str_contains($url, ':')) &&
-            (str_contains($url, 'github.com') || str_contains($url, 'gitlab.com'))
-        ) {
-            // SSH URL for GitHub or GitLab
-            return $this->sshToHttps($url);
-        } elseif (str_starts_with($url, 'https://github.com') || str_starts_with($url, 'https://gitlab.com')) {
-            // HTTPS URL from GitHub or GitLab, return as it is
-            return $url;
-        } else {
-            // Unsupported or invalid URL format
-            return null;
-        }
-    }
-
-    private function sshToHttps(string $sshUrl): string
-    {
-        $parts = explode(':', $sshUrl);
-
-        // Extract username and repository name
-        $usernameAndRepo = explode('/', $parts[1]);
-        $username = $usernameAndRepo[0];
-        $repo = $usernameAndRepo[1];
-
-        // Determine the host (GitHub, GitLab, etc.)
-        $host = substr($parts[0], strpos($parts[0], '@') + 1);
-
-        // Construct the HTTPS URL
-        return "https://$host/$username/$repo";
     }
 }
