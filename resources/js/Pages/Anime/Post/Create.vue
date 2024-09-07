@@ -188,12 +188,9 @@ const deletePost = async () => {
       :disabled="form.processing"
       @submit.prevent="submit"
     >
-      <v-row>
-        <v-col
-          cols="12"
-          md="8"
-        >
-          <section class="mb-4">
+      <div class="grid gap-4 grid-cols-1 md:grid-cols-12">
+        <div class="md:col-span-8">
+          <section>
             <v-card :rounded="smAndUp">
               <v-card-item title="Basic Information" />
               <v-divider />
@@ -233,7 +230,7 @@ const deletePost = async () => {
               </v-card-text>
             </v-card>
           </section>
-          <section class="mb-4">
+          <section>
             <v-card :rounded="smAndUp">
               <v-card-item>
                 <v-card-title>
@@ -361,11 +358,8 @@ const deletePost = async () => {
               </v-card-text>
             </v-card>
           </section>
-        </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
+        </div>
+        <div class="md:col-span-4">
           <div>
             <!--TODO-->
             <MediaManager
@@ -445,8 +439,8 @@ const deletePost = async () => {
               </v-expand-transition>
             </v-card>
           </div>
-        </v-col>
-      </v-row>
+        </div>
+      </div>
     </v-form>
   </v-container>
 </template>
