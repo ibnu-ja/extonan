@@ -66,8 +66,6 @@ const visit = (e: unknown) => {
   }
 }
 
-// const tab = ref()
-
 const { lgAndUp } = useDisplay()
 
 function logout() {
@@ -85,11 +83,6 @@ function logout() {
         @click="drawer = !drawer"
       />
     </v-app-bar-nav-icon>
-
-    <!--<UseBrowserLocation v-slot="{ location }">-->
-    <!--  Browser Location: {{ location }}-->
-    <!--</UseBrowserLocation>-->
-    <!--<LogoIcon style="width: 50px" />-->
     <InertiaLink
       href="/"
     >
@@ -193,27 +186,5 @@ function logout() {
         </template>
       </v-list>
     </v-menu>
-    <!--<template-->
-    <!--  v-if="breadcrumbs"-->
-    <!--  #extension-->
-    <!--&gt;-->
-    <!--  <v-breadcrumbs-->
-    <!--    :items="breadcrumbs"-->
-    <!--    bg-color="surface-light"-->
-    <!--    density="compact"-->
-    <!--    class="flex-grow-1"-->
-    <!--  >-->
-    <!--    <template #item="{item}">-->
-    <!--      <InertiaLink-->
-    <!--        :as="VBreadcrumbsItem"-->
-    <!--        :disabled="item.disabled"-->
-    <!--        :exact-active="item.exact"-->
-    <!--        :href="item.href"-->
-    <!--      >-->
-    <!--        {{ item.title }}-->
-    <!--      </InertiaLink>-->
-    <!--    </template>-->
-    <!--  </v-breadcrumbs>-->
-    <!--</template>-->
   </v-app-bar>
 </template>
