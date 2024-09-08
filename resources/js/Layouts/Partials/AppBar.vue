@@ -110,13 +110,17 @@ function logout() {
         v-for="item in itemList"
         :key="item.value"
       >
-        <v-tab
+        <InertiaLink
           v-if="!item!.hide"
+          :exact-active="item.exactActive"
+          :as="VTab"
+          :class="{'text-primary': item.value === tab}"
+          :href="item.link"
           class="mr-2"
           :value="item.value"
         >
           {{ item.label }}
-        </v-tab>
+        </InertiaLink>
       </template>
     </v-tabs>
     <v-spacer />
