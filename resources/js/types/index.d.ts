@@ -1,3 +1,5 @@
+import { Language } from '@/types/formHelper'
+
 type SocialstreamProviders = {
   id: string
   name: string
@@ -97,6 +99,9 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
   ziggy: Config & { location: string }
   socialstream: Socialstream
   sessions: UserSession[]
+  locale: Language
+  locales: Language[]
+  fallbackLocale: Language
 }
 
 type LinkProps = {

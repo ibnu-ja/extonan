@@ -45,6 +45,9 @@ class HandleInertiaRequests extends Middleware
             'appCommitHash' => Cache::remember('git-commit-hash', 3600, fn () => app(Git::class)->getAppCommitHash()),
             'appBranch' => Cache::remember('git-branch', 3600, fn () => app(Git::class)->getAppBranch()),
             'appGitOriginRepo' => Cache::remember('git-origin-repo', 3600, fn () => app(Git::class)->getRepoUrl()),
+            'locale' => \App::currentLocale(),
+            'fallbackLocale' => \App::getFallbackLocale(),
+            'locales' => config( 'app.available_locales' ),
         ];
     }
 }

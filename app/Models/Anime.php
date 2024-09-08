@@ -4,19 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Spatie\Sluggable\HasTranslatableSlug;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Translatable\HasTranslations;
 
 class Anime extends BasePost
 {
-    use HasTranslations;
+    use HasTranslations, HasTranslatableSlug;
 
     public $table = 'anime';
 
     /**
      * @var string[]
      */
-    public array $translatable = ['title', 'description'];
+    public array $translatable = ['title', 'description', 'slug'];
 
     /**
      * @var string[]
@@ -47,7 +48,7 @@ class Anime extends BasePost
     protected function link(): Attribute
     {
         return Attribute::make(
-            get: fn () => route('anime.show', $this->attributes['id']),
+            get: fn() => route('anime.show', $this->attributes['id']),
         );
     }
 

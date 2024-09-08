@@ -131,7 +131,9 @@ const deleteLink = (i: number, j: number) => {
   form.links[i].value.splice(j, 1)
 }
 
-const title = props.post ? 'Editing ' + props.post?.title.en : 'Create Episode'
+const { translate } = useLanguages()
+
+const title = props.post ? 'Editing ' + translate(props.post?.title) : 'Create Episode'
 
 const deletePost = async () => {
   try {
@@ -190,7 +192,7 @@ const deletePost = async () => {
     >
       <div class="grid gap-4 grid-cols-1 md:grid-cols-12">
         <div class="md:col-span-8">
-          <section>
+          <section class="mb-4">
             <v-card :rounded="smAndUp">
               <v-card-item title="Basic Information" />
               <v-divider />
@@ -198,7 +200,7 @@ const deletePost = async () => {
                 <v-text-field
                   v-model="form.title[currentLang.value]"
                   :label="`Title (${currentLang.value})`"
-                  :error-messages="form.errors.title"
+                  :error-messages="form.errors['title' + currentLang]"
                   variant="outlined"
                   hide-details="auto"
                   class="mb-4"
@@ -219,6 +221,22 @@ const deletePost = async () => {
                     />
                   </template>
                 </v-text-field>
+                <v-text-field
+                  v-model="form.title.romaji"
+                  label="Title Romaji"
+                  :error-messages="form.errors['title.romaji']"
+                  variant="outlined"
+                  hide-details="auto"
+                  class="mb-4"
+                />
+                <v-text-field
+                  v-model="form.title.native"
+                  label="Title Native"
+                  :error-messages="form.errors['title.native']"
+                  variant="outlined"
+                  hide-details="auto"
+                  class="mb-4"
+                />
                 <v-textarea
                   v-model="form.description[currentLang.value]"
                   :label="`Description (${currentLang.value})`"

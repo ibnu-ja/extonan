@@ -14,6 +14,7 @@ import LatestAnime from '@/Pages/Home/Partials/LatestAnime.vue'
 import VerticalEpisodeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
 import dayjs from 'dayjs'
 import { CoverImage } from '@/types/anilist'
+import { useLanguages } from '@/composables/useLanguages'
 
 type Postable = EpisodeData & {
   postable: AnimeData
@@ -26,6 +27,8 @@ defineProps<{
   latestAnime: AnimeData[]
   latestEpisodes: Postable[]
 }>()
+
+const { translate } = useLanguages()
 
 </script>
 
@@ -70,7 +73,7 @@ defineProps<{
               class="mb-2"
               :image="episode.thumbnail?.extraLarge"
               :lazy-img="episode.thumbnail?.medium"
-              :title="episode.title.en!"
+              :title="translate(episode.title)"
               :href="route('post.show', [episode.postable, episode])"
               :edit-url="route('post.edit', [episode.postable, episode])"
               :delete-url="route('post.destroy', [episode.postable, episode])"

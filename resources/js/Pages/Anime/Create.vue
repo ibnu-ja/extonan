@@ -61,6 +61,8 @@ const form = useForm<AnimeForm>({
   metadata: null,
 },
 )
+
+const { translate } = useLanguages()
 const apiType = ref<'MAL' | 'Anilist'>('MAL')
 const apiSearchId = ref<number | null>(null)
 const anilistData = ref<AnimeMediaAutofillResponse>()
@@ -115,7 +117,7 @@ if (props.anime) {
   form.metadata = props.anime.metadata
 }
 
-const title = props.anime?.title ? 'Editing ' + props.anime?.title.en : 'Create Anime'
+const title = props.anime?.title ? 'Editing ' + translate(props.anime?.title) : 'Create Anime'
 
 const deletePost = async () => {
   try {
@@ -182,7 +184,7 @@ const deletePost = async () => {
                 <v-text-field
                   v-model="form.title[currentLang.value]"
                   :label="`Title (${currentLang.value})`"
-                  :error-messages="form.errors.title"
+                  :error-messages="form.errors['title' + currentLang]"
                   variant="outlined"
                   hide-details="auto"
                   class="mb-4"
@@ -203,6 +205,22 @@ const deletePost = async () => {
                     />
                   </template>
                 </v-text-field>
+                <v-text-field
+                  v-model="form.title.romaji"
+                  label="Title Romaji"
+                  :error-messages="form.errors['title.romaji']"
+                  variant="outlined"
+                  hide-details="auto"
+                  class="mb-4"
+                />
+                <v-text-field
+                  v-model="form.title.native"
+                  label="Title Native"
+                  :error-messages="form.errors['title.native']"
+                  variant="outlined"
+                  hide-details="auto"
+                  class="mb-4"
+                />
                 <v-textarea
                   v-model="form.description[currentLang.value]"
                   :label="`Description (${currentLang.value})`"

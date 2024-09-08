@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->text('description');
-            $table->string('slug');
-            $table->string('title');
+            $table->json('description');
+            $table->json('slug');
+            $table->json('title');
             $table->foreignIdFor(\App\Models\User::class, 'author_id');
             $table->json('metadata')->nullable();
             $table->morphs('postable');

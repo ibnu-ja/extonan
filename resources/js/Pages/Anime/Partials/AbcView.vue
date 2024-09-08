@@ -4,6 +4,7 @@ import { AnimeData } from '@/types/anime'
 import { groupBy, map, sortBy } from 'lodash-es'
 import { computed } from 'vue'
 import InertiaLink from '@/Components/InertiaLink'
+import { useLanguages } from '@/composables/useLanguages'
 
 const props = defineProps<{
   canCreate: boolean
@@ -14,13 +15,19 @@ const props = defineProps<{
 const animeGrouped = computed(() => {
   let map1 = map(
     groupBy(props.anime.data, (o) => {
-      const firstLetter = Array.from(o.title.en!.toString())[0].toUpperCase()
+      let title
+      if (o.title.en)
+        title = o.title.en
+      else title = o.title.romaji
+      const firstLetter = Array.from(title.toString())[0].toUpperCase()
       return /^[A-Z]$/.test(firstLetter!) ? firstLetter : '#'
     }),
     (contacts, letter) => ({ letter, contacts }),
   )
   return sortBy(map1, 'letter')
 })
+
+const { translate } = useLanguages()
 </script>
 
 <template>
@@ -41,11 +48,10 @@ const animeGrouped = computed(() => {
             :href="singleAnime.link"
             class="text-decoration-none"
           >
-            {{ singleAnime.title.en }}
+            {{ translate(singleAnime.title) }}
           </InertiaLink>
         </li>
       </ul>
     </template>
-    <!--    -->
   </v-container>
 </template>

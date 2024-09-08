@@ -1,10 +1,10 @@
-export type Languages = 'en' | 'id' | 'romaji' | 'native'
+export type Language = 'en' | 'id' | 'romaji' | 'native'
 
 export type LanguageItem = {
   label: string
-  value: Languages
+  value: Language
 }
 
 export type TranslatableField = {
-  [key in Languages]?: string | null;
+  [key in Language]?: string | null;
 }

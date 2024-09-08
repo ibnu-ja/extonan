@@ -7,18 +7,20 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Plank\Mediable\Mediable;
+use Spatie\Sluggable\HasTranslatableSlug;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Translatable\HasTranslations;
 
 class Post extends BasePost
 {
     use HasTranslations,
+        HasTranslatableSlug,
         Mediable;
 
     /**
      * @var string[]
      */
-    public array $translatable = ['title', 'description'];
+    public array $translatable = ['title', 'description', 'slug'];
 
     /**
      * @var string[]

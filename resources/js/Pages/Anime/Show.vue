@@ -18,6 +18,7 @@ import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.
 import dayjs from 'dayjs'
 import { CoverImage } from '@/types/anilist'
 import SpeedDial from '@/Pages/Anime/Partials/SpeedDial.vue'
+import { useLanguages } from '@/composables/useLanguages'
 
 type Post = EpisodeData & {
   thumbnail: CoverImage | null
@@ -35,6 +36,8 @@ const { animeApi } = useAnime()
 const animeBwang = computedAsync(async () => {
   return await animeApi(props.anime.anilist_id, false)
 })
+
+const { translate } = useLanguages()
 
 </script>
 
@@ -92,7 +95,7 @@ const animeBwang = computedAsync(async () => {
               :image="episode.thumbnail?.extraLarge"
               :lazy-img="episode.thumbnail?.medium"
               :href="route('post.show', [anime, episode])"
-              :title="episode.title.en!"
+              :title="translate(episode.title)"
               :permissions="episode.can"
               :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
               :delete-url="route('post.destroy', [anime, episode])"

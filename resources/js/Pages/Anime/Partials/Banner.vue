@@ -5,6 +5,7 @@ import { useGradient } from '@/composables/useGradient'
 import { Permissions } from '@/types'
 import { TranslatableField } from '@/types/formHelper'
 import { VCard } from 'vuetify/components'
+import { useLanguages } from '@/composables/useLanguages'
 
 const { gradient } = useGradient()
 
@@ -19,6 +20,8 @@ defineProps<{
   genres: string[]
   description: TranslatableField
 }>()
+
+const { translate, hasTranslation } = useLanguages()
 </script>
 
 <template>
@@ -63,12 +66,15 @@ defineProps<{
 
         <div>
           <h3 class="text-h4 mb-2">
-            {{ title.en }}
+            {{ translate(title) }}
           </h3>
           <h3 class="text-h5 mb-2 text-medium-emphasis">
             {{ title.native }}
           </h3>
-          <h3 class="text-h5 mb-2 text-medium-emphasis">
+          <h3
+            v-if="hasTranslation(title, false)"
+            class="text-h5 mb-2 text-medium-emphasis"
+          >
             {{ title.romaji }}
           </h3>
           <div class="gap-2 mb-4 hidden sm:flex flex-wrap">
@@ -80,7 +86,7 @@ defineProps<{
             </v-chip>
           </div>
           <p class="text-medium-emphasis text-subtitle-1 hidden sm:block">
-            {{ description.en }}
+            {{ translate(description) }}
           </p>
         </div>
       </div>

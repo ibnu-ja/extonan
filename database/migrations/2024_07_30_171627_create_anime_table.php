@@ -13,9 +13,9 @@ return new class extends Migration {
         Schema::create('anime', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('anilist_id');
-            $table->text('description');
-            $table->string('slug');
-            $table->string('title');
+            $table->json('description');
+            $table->json('slug');
+            $table->json('title');
             $table->foreignId('author_id')->references('id')->on('users');
             $table->json('metadata');
             $table->timestamps();

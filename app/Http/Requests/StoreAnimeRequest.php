@@ -22,7 +22,9 @@ class StoreAnimeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|unique:anime|max:255',
+            'title' => 'required',
+            'title.romaji' => 'required|string',
+            'title.native' => 'required|string',
             'anilist_id' => 'numeric|nullable',
             'description' => 'required',
             'metadata' => 'required'

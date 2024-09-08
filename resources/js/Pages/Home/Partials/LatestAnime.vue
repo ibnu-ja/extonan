@@ -7,6 +7,7 @@ import { register } from 'swiper/element/bundle'
 import { useGradient } from '@/composables/useGradient'
 import { VCard } from 'vuetify/components'
 import InertiaLink from '@/Components/InertiaLink'
+import { useLanguages } from '@/composables/useLanguages'
 
 register()
 
@@ -17,6 +18,8 @@ defineProps<{
 dayjs.extend(calendar)
 
 const { gradient } = useGradient()
+
+const { translate } = useLanguages()
 
 </script>
 
@@ -64,7 +67,7 @@ const { gradient } = useGradient()
 
               <div>
                 <h3 class="text-h4 mb-2">
-                  {{ anime.title.en }}
+                  {{ translate(anime.title) }}
                 </h3>
                 <div class="flex flex-wrap gap-2 mb-4 ">
                   <v-chip
@@ -75,7 +78,7 @@ const { gradient } = useGradient()
                   </v-chip>
                 </div>
                 <p class="text-medium-emphasis text-subtitle-1 d-none d-md-block">
-                  {{ anime.description.en }}
+                  {{ translate(anime.description) }}
                 </p>
               </div>
             </div>
