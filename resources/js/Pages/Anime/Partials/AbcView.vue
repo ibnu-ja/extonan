@@ -12,13 +12,12 @@ const props = defineProps<{
   anime: PaginatedResponse<AnimeData>
 }>()
 
+const { translate } = useLanguages()
+
 const animeGrouped = computed(() => {
   let map1 = map(
     groupBy(props.anime.data, (o) => {
-      let title
-      if (o.title.en)
-        title = o.title.en
-      else title = o.title.romaji
+      const title = translate(o.title)
       const firstLetter = Array.from(title.toString())[0].toUpperCase()
       return /^[A-Z]$/.test(firstLetter!) ? firstLetter : '#'
     }),
@@ -26,8 +25,6 @@ const animeGrouped = computed(() => {
   )
   return sortBy(map1, 'letter')
 })
-
-const { translate } = useLanguages()
 </script>
 
 <template>

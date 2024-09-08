@@ -9,7 +9,7 @@ export default {
 
 <script setup lang="ts">
 import { Head, router, useForm } from '@inertiajs/vue3'
-import { inject, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import { mdiClose, mdiContentSave, mdiSend } from '@mdi/js'
 import dayjs from 'dayjs'
@@ -129,6 +129,8 @@ const deletePost = async () => {
     //
   }
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const formErrors = computed(() => form.errors as any)
 </script>
 
 <template>
@@ -184,7 +186,7 @@ const deletePost = async () => {
                 <v-text-field
                   v-model="form.title[currentLang.value]"
                   :label="`Title (${currentLang.value})`"
-                  :error-messages="form.errors['title' + currentLang]"
+                  :error-messages="formErrors['title' + currentLang]"
                   variant="outlined"
                   hide-details="auto"
                   class="mb-4"
@@ -208,7 +210,7 @@ const deletePost = async () => {
                 <v-text-field
                   v-model="form.title.romaji"
                   label="Title Romaji"
-                  :error-messages="form.errors['title.romaji']"
+                  :error-messages="formErrors['title.romaji']"
                   variant="outlined"
                   hide-details="auto"
                   class="mb-4"
@@ -216,7 +218,7 @@ const deletePost = async () => {
                 <v-text-field
                   v-model="form.title.native"
                   label="Title Native"
-                  :error-messages="form.errors['title.native']"
+                  :error-messages="formErrors['title.native'] as string"
                   variant="outlined"
                   hide-details="auto"
                   class="mb-4"

@@ -22,16 +22,21 @@ export function useLanguages() {
     //   value: 'romaji',
     // },
   ]
-  const selectedLanguage = ref<LanguageItem>(languages.find(i => i.value === usePage().props.locale))
+  const selectedLanguage = ref<LanguageItem>(languages.find(i => i.value === usePage().props.locale)!)
 
   function translate(value: TranslatableField, useFallback: boolean = true, locale?: Language): string {
     const page = usePage().props
 
-    return (
-      (locale && value[locale])
-      || value[page.locale]
-      || (useFallback && value[page.fallbackLocale])
-    )
+    // FIXME type
+    if (locale && value[locale])
+      return value[locale] as string
+    else if (value[page.locale])
+      return value[page.locale] as string
+
+    else if (useFallback && value[page.fallbackLocale])
+      return value[page.fallbackLocale] as string
+
+    return ''
   }
 
   function hasTranslation(value: TranslatableField, useFallback: boolean = true, locale?: Language): boolean {

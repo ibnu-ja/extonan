@@ -18,7 +18,7 @@ import { useDisplay } from 'vuetify'
 import { TranslatableField } from '@/types/formHelper'
 import { useLanguages } from '@/composables/useLanguages'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
 import { openConfirmationDialog, openFormDialog } from '@/composables/useDialog'
 import MediaManager from '@/Components/MediaManager/Index.vue'
@@ -145,6 +145,8 @@ const deletePost = async () => {
     //
   }
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const formErrors = computed(() => form.errors as any)
 </script>
 
 <template>
@@ -200,7 +202,7 @@ const deletePost = async () => {
                 <v-text-field
                   v-model="form.title[currentLang.value]"
                   :label="`Title (${currentLang.value})`"
-                  :error-messages="form.errors['title' + currentLang]"
+                  :error-messages="formErrors['title' + currentLang]"
                   variant="outlined"
                   hide-details="auto"
                   class="mb-4"
@@ -224,7 +226,7 @@ const deletePost = async () => {
                 <v-text-field
                   v-model="form.title.romaji"
                   label="Title Romaji"
-                  :error-messages="form.errors['title.romaji']"
+                  :error-messages="formErrors['title.romaji']"
                   variant="outlined"
                   hide-details="auto"
                   class="mb-4"
@@ -232,7 +234,7 @@ const deletePost = async () => {
                 <v-text-field
                   v-model="form.title.native"
                   label="Title Native"
-                  :error-messages="form.errors['title.native']"
+                  :error-messages="formErrors['title.native']"
                   variant="outlined"
                   hide-details="auto"
                   class="mb-4"
