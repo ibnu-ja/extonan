@@ -7,7 +7,7 @@ defineProps<{
   permissions?: Permissions
   overhead?: string | null
   subtitle?: string | null
-  title: string
+  title?: string
   isPublished: boolean
   deleteUrl?: string
   editUrl?: string
@@ -19,21 +19,27 @@ defineProps<{
 <template>
   <v-list-item class="p-0">
     <div class="mx-2">
-      <div
-        v-if="overhead"
-        class="text-subtitle-2 text-medium-emphasis"
-      >
-        {{ overhead }}
-      </div>
-      <div class="text-subtitle-1 list-title">
-        {{ title }}
-      </div>
-      <div
-        v-if="subtitle"
-        class="text-subtitle-2 text-medium-emphasis"
-      >
-        {{ subtitle }}
-      </div>
+      <slot
+        v-if="$slots.content"
+        name="content"
+      />
+      <template v-else>
+        <div
+          v-if="overhead"
+          class="text-subtitle-2 text-medium-emphasis"
+        >
+          {{ overhead }}
+        </div>
+        <div class="text-subtitle-1 list-title">
+          {{ title }}
+        </div>
+        <div
+          v-if="subtitle || $slots.subtitle"
+          class="text-subtitle-2 text-medium-emphasis"
+        >
+          {{ subtitle }}
+        </div>
+      </template>
     </div>
     <template
       v-if="showAction"

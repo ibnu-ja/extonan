@@ -12,7 +12,7 @@ import { ref } from 'vue'
 withDefaults(defineProps<{
   href?: string
   permissions?: Permissions
-  title: string
+  title?: string
   subtitle?: string
   overhead?: string
   image?: string
@@ -31,6 +31,7 @@ withDefaults(defineProps<{
   deleteUrl: undefined,
   href: undefined,
   permissions: undefined,
+  title: undefined,
 })
 
 const { smAndUp } = useDisplay()
@@ -81,7 +82,14 @@ const { width } = useElementSize(imageRef)
         :edit-url
         :delete-url
         :is-published
-      />
+      >
+        <template
+          v-if="$slots.content"
+          #content
+        >
+          <slot name="content" />
+        </template>
+      </ItemListTitle>
     </InertiaLink>
   </v-hover>
 </template>

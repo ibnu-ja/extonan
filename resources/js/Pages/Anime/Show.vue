@@ -43,6 +43,8 @@ const { translate } = useLanguages()
 
 <template>
   <SpeedDial
+    :can-delete="anime.can.delete"
+    :can-edit="anime.can.update"
     :can-create-episode
     :anime-id="anime.id"
   />
@@ -95,13 +97,34 @@ const { translate } = useLanguages()
               :image="episode.thumbnail?.extraLarge"
               :lazy-img="episode.thumbnail?.medium"
               :href="route('post.show', [anime, episode])"
-              :title="translate(episode.title)"
               :permissions="episode.can"
-              :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
               :delete-url="route('post.destroy', [anime, episode])"
               :edit-url="route('post.edit', [anime, episode])"
               :is-published="episode.is_published"
-            />
+            >
+              <template #content>
+                <div class="text-subtitle-1 list-title">
+                  {{ translate(episode.title) }}
+                </div>
+                <div
+                  class="text-subtitle-2 text-medium-emphasis"
+                >
+                  <template
+                    v-if="!episode.is_published"
+                  >
+                    <span
+                      class="text-success"
+                    >
+                      Draft
+                    </span> by
+                  </template>
+                  <template v-else>
+                    {{ dayjs(episode.published_at).format('D MMM YYYY') }} &bull;
+                  </template>
+                  {{ episode.author.name }}
+                </div>
+              </template>
+            </HorizontalEpisodeCard>
           </v-col>
         </v-row>
         <p v-else>

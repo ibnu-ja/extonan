@@ -12,6 +12,8 @@ const open = ref(false)
 const props = defineProps<{
   animeId: number
   canCreateEpisode: boolean
+  canDelete: boolean
+  canEdit: boolean
 }>()
 
 const route = inject('route') as typeof ziggyRoute
@@ -44,6 +46,7 @@ const deleteAnime = async () => {
     >
       <v-btn
         key="1"
+        :disabled="!canDelete"
         color="error"
         :icon="true"
         @click.prevent="deleteAnime"
@@ -58,6 +61,7 @@ const deleteAnime = async () => {
       </v-btn>
       <InertiaLink
         key="2"
+        :disabled="!canEdit"
         :href="route('anime.edit', animeId)"
         :as="VBtn"
         color="success"
