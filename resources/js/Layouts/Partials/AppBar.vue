@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiLogin, mdiMenu } from '@mdi/js'
 import { router, usePage } from '@inertiajs/vue3'
 import { VBtn, VListItem, VTab } from 'vuetify/components'
@@ -48,23 +48,13 @@ const itemList = computed(() => [
 ])
 const tab = ref(location.value.pathname?.split('/')[1])
 
-const visit = (e: unknown) => {
-  if (e !== undefined) {
-    const tes = itemList.value.find(item => item.value === e)
-    if (tes) {
-      router.visit(tes.link)
-    }
-    return
-  }
-
-  const bwang = location.value.pathname?.split('/')[1]
-
+watch(location, (newVal) => {
+  const bwang = newVal.pathname?.split('/')[1]
   const currentUrl = itemList.value.find(item => new URL(item.link).pathname.split('/')[1] === bwang)
-
   if (currentUrl) {
     tab.value = currentUrl.value
-  }
-}
+  } else tab.value = undefined
+})
 
 const { lgAndUp } = useDisplay()
 
@@ -104,7 +94,6 @@ function logout() {
       v-model="tab"
       color="primary"
       :mandatory="false"
-      @update:model-value="visit"
     >
       <template
         v-for="item in itemList"
