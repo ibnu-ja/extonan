@@ -22,7 +22,7 @@ class RolesPermissionsSeeder extends Seeder
 //        ];
 
         $permissions = [
-            'post.create' => ['editor', 'author'],
+            'post.create' => ['editor', 'author', 'contributor'],
             'post.read.any' => ['editor'], // unpublished
             'post.read.self' => ['editor', 'author', 'contributor'], // unpublished
             'post.update.any' => ['editor'],

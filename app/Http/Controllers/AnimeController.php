@@ -11,6 +11,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
+use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class AnimeController extends Controller implements HasMiddleware
@@ -22,16 +23,18 @@ class AnimeController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', except: ['index', 'show']),
+            WithDraftsMiddleware::class
         ];
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): \Inertia\Response|LengthAwarePaginator
+    public function index(Request $request)//: \Inertia\Response|LengthAwarePaginator
     {
         $perPage = $request->integer('perPage', 15);
-        $anime = QueryBuilder::for(Anime::class);
+
+        $anime = QueryBuilder::for(Anime::visible());
         if ($perPage === -1) {
             $results = $anime->get();
             $anime = new LengthAwarePaginator($results, $results->count(), -1);
@@ -41,7 +44,7 @@ class AnimeController extends Controller implements HasMiddleware
         $anime->appends(request()->query());
         return Inertia::render("Anime/Index", [
             'anime' => fn() => $anime,
-            'canCreate' => fn() => auth()->check() && auth()->user()->can('create', Anime::class),
+            'canCreate' => fn() => auth()->check() && auth()->user()->can('create', Post::class),
             'canViewUnpublished' => fn() => auth()->check() && auth()->user()->can('viewAny')
         ]);
     }
@@ -65,7 +68,9 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function store(StoreAnimeRequest $request)
     {
-        if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class)) {
+        // if user wants to publish but does not have capability to publish
+        // or user cannot create
+        if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class) || $request->user()->cannot('create', Anime::class)) {
             abort(403);
         }
 
@@ -81,10 +86,13 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function show(Anime $anime)
     {
+        if (auth()->user()->cannot('view', $anime)) {
+            abort(403);
+        }
         return Inertia::render('Anime/Show', [
             'anime' => fn() => $anime->load([
-                    'posts' => fn (MorphMany $query) => $query->orderByDesc('title->native')->with(['author'])->get()
-                ]),
+                'posts' => fn(MorphMany $query) => $query->visible()->orderByDesc('title->native')->with(['author'])->get()
+            ]),
             'canCreateEpisode' => fn() => auth()->check() && auth()->user()->can('create', Post::class),
         ]);
     }
@@ -94,6 +102,9 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function edit(Anime $anime)
     {
+        if (auth()->user()->cannot('update', $anime)) {
+            abort(403);
+        }
         return Inertia::render('Anime/Create', [
             'anime' => $anime,
             'canPublish' => auth()->user()->can('publish', $anime)
@@ -119,6 +130,9 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function destroy(Anime $anime)
     {
+        if (auth()->user()->cannot('delete', $anime)) {
+            abort(403);
+        }
         $anime->delete();
 
         return redirect()->route('anime.index')->banner('Anime successfully deleted.');

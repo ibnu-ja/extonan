@@ -18,28 +18,34 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RolesPermissionsSeeder::class);
 
-        $editor = User::factory()->create([
+        User::factory()->create([
             'name' => 'editor',
             'password' => bcrypt('password'),
             'email' => 'editor@test.test',
-        ]);
+        ])->assignRole('editor');
 
-        $editor->assignRole('editor');
+        User::factory()->create([
+            'name' => 'editor2',
+            'password' => bcrypt('password'),
+            'email' => 'editor2@test.test',
+        ])->assignRole('editor');
 
-        $author = User::factory()->create([
+        User::factory()->create([
             'name' => 'author',
             'password' => bcrypt('password'),
             'email' => 'author@test.test',
-        ]);
+        ])->assignRole('author');
 
-        $author->assignRole('author');
+        User::factory()->create([
+            'name' => 'author2',
+            'password' => bcrypt('password'),
+            'email' => 'author2@test.test',
+        ])->assignRole('author');
 
-        $contributor = User::factory()->create([
+        User::factory()->create([
             'name' => 'author',
             'password' => bcrypt('password'),
             'email' => 'contributor@test.test',
-        ]);
-
-        $contributor->assignRole('contributor');
+        ])->assignRole('contributor');
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
+use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
 
 class PostController extends Controller implements HasMiddleware
 {
@@ -19,6 +20,7 @@ class PostController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', except: ['show', 'store']),
+            WithDraftsMiddleware::class
         ];
     }
 //    /**
@@ -34,6 +36,10 @@ class PostController extends Controller implements HasMiddleware
      */
     public function create(Anime $anime): \Inertia\Response
     {
+        if (auth()->user()->cannot('create', Post::class)) {
+            abort(403);
+        }
+
         return Inertia::render('Anime/Post/Create', [
             'anime' => $anime,
             'canPublish' => request()->user()->can('publish', Post::class),
@@ -45,6 +51,11 @@ class PostController extends Controller implements HasMiddleware
      */
     public function store(Anime $anime, StorePostRequest $request)
     {
+        // if user wants to publish but does not have capability to publish
+        // or user cannot create
+        if ($request->boolean('is_published') && $request->user()->cannot('publish', Post::class) || $request->user()->cannot('create', Post::class)) {
+            abort(403);
+        }
 //        return $request->all();
         $post = $anime->posts()->create($request->validated());
 
@@ -64,6 +75,9 @@ class PostController extends Controller implements HasMiddleware
      */
     public function show(Anime $anime, Post $post)
     {
+        if (auth()->user()->cannot('view', $post)) {
+            abort(403);
+        }
         return Inertia::render('Anime/Post/Show', [
             'anime' => $anime->load(['posts' => fn(MorphMany $query) => $query->orderByDesc('title->native')]),
             'post' => $post->load(['author', 'links', 'media']),
@@ -75,6 +89,9 @@ class PostController extends Controller implements HasMiddleware
      */
     public function edit(Anime $anime, Post $post)
     {
+        if (auth()->user()->cannot('update', $post)) {
+            abort(403);
+        }
         return Inertia::render('Anime/Post/Create', [
             'anime' => $anime,
             'post' => $post->load(['author', 'links', 'media']),
@@ -87,6 +104,9 @@ class PostController extends Controller implements HasMiddleware
      */
     public function update(Anime $anime, Post $post, StorePostRequest $request)
     {
+        if ($request->boolean('is_published') && $request->user()->cannot('publish', Post::class)) {
+            abort(403);
+        }
         $validated = $request->validated();
 
         $linksss = collect($validated['links'])->map(function ($item) {
@@ -116,6 +136,9 @@ class PostController extends Controller implements HasMiddleware
      */
     public function destroy(Anime $anime, Post $post)
     {
+        if (auth()->user()->cannot('delete', $post)) {
+            abort(403);
+        }
         $post->delete();
 
         return redirect()->route('anime.show', $anime)->banner('Episode deleted successfully!');

@@ -24,7 +24,11 @@ class PostPolicy
             return true;
         }
 
-        return $user->can('post.read.self') && $user->id === $post->author->id;
+        if ($user->can('post.read.self') && $user->id === $post->author->id && $post->isPublished() === false) {
+            return true;
+        }
+
+        return $post->isPublished();
     }
 
     /**
@@ -64,10 +68,11 @@ class PostPolicy
      */
     public function publish(User $user, BasePost $post = null): bool
     {
+        //if post is null means it's creating and self-publish
         if ($post == null && $user->can('post.publish.self') || $user->can('post.publish.any')) {
             return true;
         }
-
+        //when editing user should only able to publish its own post
         return $user->id === $post->author->id;
     }
 

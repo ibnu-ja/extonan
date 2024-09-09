@@ -10,6 +10,7 @@ import calendar from 'dayjs/plugin/calendar'
 import InertiaLink from '@/Components/InertiaLink'
 import { VIcon } from 'vuetify/components'
 import { route as ziggyRoute } from 'ziggy-js'
+import { useLanguages } from '@/composables/useLanguages'
 
 const page = usePage()
 
@@ -90,7 +91,7 @@ const deleteAnime = () => {
   deleting.value = false
 }
 
-const expodeSort = (sorts: string): SortItem[] => {
+const explodeSort = (sorts: string): SortItem[] => {
   return sorts.split(',').map((sort) => {
     const isDesc = sort.startsWith('-')
     return {
@@ -103,7 +104,7 @@ const expodeSort = (sorts: string): SortItem[] => {
 const currentSort = ref<readonly SortItem[] | undefined>()
 
 if (route().params.sort) {
-  currentSort.value = expodeSort(route().params.sort)
+  currentSort.value = explodeSort(route().params.sort)
 }
 
 const sortChange = (e: unknown) => {
@@ -121,6 +122,8 @@ const pageChange = (e: number) => {
     router.get(url)
   }
 }
+
+const { translate } = useLanguages()
 </script>
 
 <template>
@@ -137,9 +140,8 @@ const pageChange = (e: number) => {
   >
     <!--eslint-disable vue/valid-v-slot-->
     <template
-      #item.action="{ item }"
+      #item.action="{ item } : { item: AnimeData }"
     >
-      <!--eslint-enable-->
       <div class="flex gap-1">
         <v-tooltip
           location="bottom"
@@ -187,33 +189,45 @@ const pageChange = (e: number) => {
         <!--        </v-tooltip>-->
       </div>
     </template>
-    <!--eslint-disable vue/valid-v-slot-->
     <template
-      #item.created_at="{ item }"
+      #item.title="{ item } : { item: AnimeData }"
+    >
+      <InertiaLink
+        :href="item.link"
+        class="no-underline hover:underline"
+      >
+        {{ translate(item.title) }}
+      </InertiaLink>
+      <v-chip
+        v-if="!item.is_published"
+        class="ml-2"
+        color="success"
+      >
+        Draft
+      </v-chip>
+    </template>
+    <template
+      #item.created_at="{ item } : { item: AnimeData }"
     >
       <span :title="dayjs(item.created_at).toString()">
         {{ item.created_at != null ? dayjs(item.created_at).calendar() : '-' }}
       </span>
-      <!--eslint-enable-->
     </template>
-    <!--eslint-disable vue/valid-v-slot-->
     <template
-      #item.updated_at="{ item }"
+      #item.updated_at="{ item } : { item: AnimeData }"
     >
       <span :title="dayjs(item.updated_at).toString()">
         {{ item.updated_at != null ? dayjs(item.updated_at).calendar() : '-' }}
       </span>
-      <!--eslint-enable-->
     </template>
-    <!--eslint-disable vue/valid-v-slot-->
     <template
-      #item.published_at="{ item }"
+      #item.published_at="{ item } : { item: AnimeData }"
     >
       <span :title="dayjs(item.published_at).toString()">
         {{ item.published_at != null ? dayjs(item.published_at).calendar() : '-' }}
       </span>
-      <!--eslint-enable-->
     </template>
+    <!--eslint-enable-->
   </v-data-table-server>
   <div>
     <v-dialog

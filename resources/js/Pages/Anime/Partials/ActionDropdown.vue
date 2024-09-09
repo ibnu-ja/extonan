@@ -49,7 +49,7 @@ const deletePost = async () => {
       <v-list-item
         v-if="!isPublished"
         :prepend-icon="mdiSend"
-        title="Publish"
+        title="Publish (TODO)"
         :disabled="!permissions?.publish"
       >
         <template #prepend>

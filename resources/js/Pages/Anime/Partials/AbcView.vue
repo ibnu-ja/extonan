@@ -34,21 +34,52 @@ const animeGrouped = computed(() => {
       :key="letters.letter"
     >
       <h2 class="text-h4">
-        {{ letters.letter }}
+        <a
+          :href="`#${letters.letter}`"
+          class="text-primary no-underline hover:underline cursor-pointer"
+        >
+          {{ letters.letter }}
+        </a>
       </h2>
+      <v-divider class="my-2" />
       <ul
-        v-for="singleAnime in letters.contacts"
-        :key="singleAnime.id"
+        class="ps-5 mb-6"
       >
-        <li>
+        <li
+          v-for="singleAnime in letters.contacts"
+          :key="singleAnime.id"
+          class="py-2"
+        >
           <InertiaLink
             :href="singleAnime.link"
-            class="text-decoration-none"
+            class="no-underline hover:underline"
           >
             {{ translate(singleAnime.title) }}
           </InertiaLink>
+          <v-chip
+            v-if="!singleAnime.is_published"
+            class="ml-2"
+            color="success"
+          >
+            Draft
+          </v-chip>
         </li>
       </ul>
+      <!--<div-->
+      <!--  v-for="singleAnime in letters.contacts"-->
+      <!--  :key="singleAnime.id"-->
+      <!--  class="mb-4"-->
+      <!--&gt;-->
+      <!--  <InertiaLink-->
+      <!--    :link="false"-->
+      <!--    :as="VListItem"-->
+      <!--    :href="singleAnime.link"-->
+      <!--    class="hover:underline cursor-pointer px-0"-->
+      <!--  >-->
+      <!--    <v-icon :icon="mdiCircleSmall" />-->
+      <!--    {{ translate(singleAnime.title) }}-->
+      <!--  </InertiaLink>-->
+      <!--</div>-->
     </template>
   </v-container>
 </template>

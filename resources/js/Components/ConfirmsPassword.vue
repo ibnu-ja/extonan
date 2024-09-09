@@ -6,9 +6,9 @@ import axios from 'axios'
 
 const emit = defineEmits(['confirmed'])
 withDefaults(defineProps<{
-  title: string
-  content: string
-  button: string
+  title?: string
+  content?: string
+  button?: string
 }>(), {
   title: 'Confirm Password',
   content: 'For your security, please confirm your password to continue.',

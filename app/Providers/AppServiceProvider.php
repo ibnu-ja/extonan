@@ -28,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(BasePost::class, PostPolicy::class);
+        //Gate::policy(Anime::class, PostPolicy::class);
+        //Gate::policy(Post::class, PostPolicy::class);
+
 
         ImageManipulator::defineVariant(
             'medium',

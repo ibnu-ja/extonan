@@ -27,6 +27,7 @@ class StorePostRequest extends FormRequest
             'metadata' => 'nullable',
             'links' => 'array|nullable',
             'thumbnail' => 'nullable',
+            'is_published' => 'required|boolean'
         ];
     }
 }

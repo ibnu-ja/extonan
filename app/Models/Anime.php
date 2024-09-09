@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Oddvalue\LaravelDrafts\Concerns\HasDrafts;
 use Spatie\Sluggable\HasTranslatableSlug;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Translatable\HasTranslations;
 
 class Anime extends BasePost
 {
-    use HasTranslations, HasTranslatableSlug;
+    use HasTranslations, HasTranslatableSlug, HasDrafts;
 
     public $table = 'anime';
 
@@ -22,7 +23,7 @@ class Anime extends BasePost
     /**
      * @var string[]
      */
-    protected $fillable = ['title', 'description', 'anilist_id', 'metadata'];
+    protected $fillable = ['title', 'description', 'anilist_id', 'metadata', 'is_published'];
 
     /**
      * @var string[]

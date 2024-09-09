@@ -90,7 +90,10 @@ const fetchAnilistData = async () => {
   }
 }
 
-const clearAnilist = () => anilistData.value = undefined
+const clearAnilist = () => {
+  anilistData.value = undefined
+  form.metadata = null
+}
 
 const submit = () => {
   if (props.anime) {
@@ -101,9 +104,7 @@ const submit = () => {
 }
 
 const save = () => {
-  if (props.anime?.is_published) {
-    form.is_published = props.anime.is_published
-  }
+  form.is_published = false
   submit()
 }
 
@@ -111,7 +112,6 @@ if (props.anime) {
   apiSearchId.value = props.anime.metadata!.idMal
   fetchAnilistData()
   form.title = props.anime.title
-  form.is_published = props.anime.is_published
   form.description = props.anime.description
   form.anilist_id = props.anime.anilist_id
   form.metadata = props.anime.metadata
@@ -147,18 +147,18 @@ const formErrors = computed(() => form.errors as any)
           @click="deletePost"
         />
         <v-btn
-          :variant="form.is_published ? undefined : 'outlined'"
+          :variant="anime?.is_published ? undefined : 'outlined'"
           :type="canPublish && !form.is_published? undefined : 'submit'"
           form="storeAnime"
           :disabled="form.processing"
-          :color="form.is_published ? 'primary' : 'secondary'"
+          :color="anime?.is_published ? 'primary' : 'secondary'"
           :icon="!mdAndUp ? mdiContentSave : undefined"
           :prepend-icon="mdAndUp ? mdiContentSave : undefined"
           :text="mdAndUp ? 'Save' : undefined"
           @click.prevent="save"
         />
         <v-btn
-          v-if="canPublish && !form.is_published"
+          v-if="canPublish && !anime?.is_published"
           form="storeAnime"
           type="submit"
           :disabled="form.processing"
@@ -289,6 +289,7 @@ const formErrors = computed(() => form.errors as any)
               <v-card-actions>
                 <v-expand-x-transition>
                   <v-btn
+                    v-if="form.metadata"
                     :append-icon="mdiClose"
                     text="Clear"
                     @click="clearAnilist"

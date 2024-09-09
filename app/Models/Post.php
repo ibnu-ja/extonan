@@ -13,9 +13,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Post extends BasePost
 {
-    use HasTranslations,
-        HasTranslatableSlug,
-        Mediable;
+    use HasTranslations, HasTranslatableSlug, Mediable;
 
     /**
      * @var string[]
@@ -25,7 +23,7 @@ class Post extends BasePost
     /**
      * @var string[]
      */
-    protected $fillable = ['title', 'description', 'metadata'];
+    protected $fillable = ['title', 'description', 'metadata', 'is_published'];
 
     protected $casts = ['metadata' => 'object'];
 

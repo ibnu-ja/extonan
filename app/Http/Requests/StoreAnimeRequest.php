@@ -27,7 +27,8 @@ class StoreAnimeRequest extends FormRequest
             'title.native' => 'required|string',
             'anilist_id' => 'numeric|nullable',
             'description' => 'required',
-            'metadata' => 'required'
+            'metadata' => 'required',
+            'is_published' => 'required|boolean'
         ];
     }
 }
