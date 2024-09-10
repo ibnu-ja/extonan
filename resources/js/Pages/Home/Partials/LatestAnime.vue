@@ -39,6 +39,7 @@ const onTransitionEnd = () => {
 const slide = ref(0)
 
 const pressButton = (value: number) => {
+  console.log(value)
   swiper.value?.swiper.slideTo(value)
 }
 </script>
@@ -71,7 +72,7 @@ const pressButton = (value: number) => {
               variant="text"
               class="v-carousel__controls__item swiper-pagination"
               :icon="mdiCircle"
-              @click="pressButton(n-1)"
+              @click="pressButton(n)"
             />
           </v-item>
         </v-item-group>
