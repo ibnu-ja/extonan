@@ -30,7 +30,9 @@ const { translate } = useLanguages()
 const swiper = ref<SwiperContainer>()
 
 const onTransitionEnd = () => {
-  console.log('slide changed', swiper.value?.swiper.realIndex)
+  if (!swiper.value) {
+    return
+  }
   slide.value = swiper.value!.swiper.realIndex
 }
 
