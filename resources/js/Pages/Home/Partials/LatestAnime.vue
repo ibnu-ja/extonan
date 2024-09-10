@@ -6,8 +6,12 @@ import calendar from 'dayjs/plugin/calendar'
 import { register } from 'swiper/element/bundle'
 import { useGradient } from '@/composables/useGradient'
 import { VCard } from 'vuetify/components'
-import InertiaLink from '@/Components/InertiaLink'
 import { useLanguages } from '@/composables/useLanguages'
+import { mdiCircle } from '@mdi/js'
+import { SwiperContainer } from 'swiper/element'
+import { ref } from 'vue'
+import { useDisplay } from 'vuetify'
+import InertiaLink from '@/Components/InertiaLink'
 
 register()
 
@@ -19,16 +23,58 @@ dayjs.extend(calendar)
 
 const { gradient } = useGradient()
 
+const { mdAndUp } = useDisplay()
+
 const { translate } = useLanguages()
 
+const swiper = ref<SwiperContainer>()
+
+const onTransitionEnd = () => {
+  console.log('slide changed', swiper.value?.swiper.realIndex)
+  slide.value = swiper.value?.swiper.realIndex
+}
+
+const slide = ref(0)
+
+const pressButton = (value) => {
+  swiper.value?.swiper.slideTo(value)
+}
 </script>
 
 <template>
   <div class="relative">
     <swiper-container
-      :autoplay="true"
+      ref="swiper"
       :loop="true"
+      @swiperslidechange="onTransitionEnd"
     >
+      <!--eslint-disable vue/no-deprecated-slot-attribute-->
+      <div
+        v-if="latestAnime.length > 1"
+        slot="container-end"
+        class="text-center bg-transparent"
+      >
+        <v-item-group
+          v-model="slide"
+          mandatory
+        >
+          <v-item
+            v-for="(anime, n) in latestAnime"
+            :key="anime.id"
+            v-slot="{isSelected}"
+          >
+            <v-btn
+              :active="isSelected"
+              size="small"
+              variant="text"
+              class="v-carousel__controls__item swiper-pagination"
+              :icon="mdiCircle"
+              @click="pressButton(n-1)"
+            />
+          </v-item>
+        </v-item-group>
+      </div>
+      <!--eslint-enable-->
       <swiper-slide
         v-for="anime in latestAnime"
         :key="anime.id"
@@ -38,9 +84,8 @@ const { translate } = useLanguages()
           :link="false"
           :href="route('anime.show', anime)"
           :rounded="false"
-          class="flex relative elevation-0 border-0 cursor-pointer"
+          class="h-[330px] md:h-[400px] flex relative elevation-0 border-0 cursor-pointer"
           :elevation="0"
-          height="440"
           variant="text"
         >
           <template #image>
@@ -53,23 +98,31 @@ const { translate } = useLanguages()
             />
           </template>
           <v-container
-            class="p-2 p:sm-4 mt-auto h-[80%] md:h-[70%] w-full"
+            class="mt-auto h-[70%] md:h-[65%] w-full"
           >
-            <div class="sm:p-4 gap-4 flex items-start">
+            <div class="md:p-4 gap-4 flex items-start">
               <v-img
                 cover
                 rounded
-                width="200"
-                class="flex-0-0"
+                class="flex-0-0 w-[30vw] sm:w-[20vw] md:w-[170px]"
                 :src="anime.metadata.coverImage.extraLarge"
                 :lazy-src="anime.metadata.coverImage.medium"
               />
 
-              <div>
-                <h3 class="text-h4 mb-2">
-                  {{ translate(anime.title) }}
+              <div class="h-[330px]">
+                <h3 class="text-h4 mb-4">
+                  {{ translate(anime.title) }} {{ i }}
                 </h3>
-                <div class="flex flex-wrap gap-2 mb-4 ">
+
+                <div
+                  v-if="mdAndUp"
+                  class="line-clamp-3 mb-4"
+                >
+                  <p class="text-medium-emphasis text-subtitle-1">
+                    {{ translate(anime.description) }}
+                  </p>
+                </div>
+                <div class="flex flex-wrap gap-2">
                   <v-chip
                     v-for="genre in anime.metadata.genres"
                     :key="genre"
@@ -77,9 +130,6 @@ const { translate } = useLanguages()
                     {{ genre }}
                   </v-chip>
                 </div>
-                <p class="text-medium-emphasis text-subtitle-1 d-none d-md-block">
-                  {{ translate(anime.description) }}
-                </p>
               </div>
             </div>
           </v-container>

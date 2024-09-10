@@ -40,7 +40,7 @@ const { translate } = useLanguages()
       <div
         class="absolute top-4 md:top-16 left-0 w-full z-[5]"
       >
-        <v-container class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4">
+        <v-container class="pb-0 mb-2 sm:mb-4">
           <h1 class="text-h4 text-md-h3">
             Latest Anime
           </h1>
