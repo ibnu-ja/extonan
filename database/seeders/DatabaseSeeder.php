@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
         ])->assignRole('author');
 
         User::factory()->create([
-            'name' => 'author',
+            'name' => 'contributor',
             'password' => bcrypt('password'),
             'email' => 'contributor@test.test',
         ])->assignRole('contributor');

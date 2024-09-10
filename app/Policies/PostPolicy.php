@@ -66,14 +66,14 @@ class PostPolicy
     /**
      * Determine whether the user can publish the model.
      */
-    public function publish(User $user, BasePost $post = null): bool
+    public function publish(User $user, ?BasePost $post = null): bool
     {
         //if post is null means it's creating and self-publish
         if ($post == null && $user->can('post.publish.self') || $user->can('post.publish.any')) {
             return true;
         }
         //when editing user should only able to publish its own post
-        return $user->id === $post->author_id;
+        return $user->id === $post?->author_id;
     }
 
     ///**
