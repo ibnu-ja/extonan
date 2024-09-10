@@ -36,9 +36,7 @@ class PostController extends Controller implements HasMiddleware
      */
     public function create(Anime $anime): \Inertia\Response
     {
-        if (auth()->user()->cannot('create', Post::class)) {
-            abort(403);
-        }
+        \Gate::authorize('create', Post::class);
 
         return Inertia::render('Anime/Post/Create', [
             'anime' => $anime,
@@ -53,7 +51,8 @@ class PostController extends Controller implements HasMiddleware
     {
         // if user wants to publish but does not have capability to publish
         // or user cannot create
-        if ($request->boolean('is_published') && $request->user()->cannot('publish', Post::class) || $request->user()->cannot('create', Post::class)) {
+        \Gate::authorize('create', Post::class);
+        if ($request->boolean('is_published') && $request->user()->cannot('publish', Post::class)) {
             abort(403);
         }
 //        return $request->all();
@@ -88,9 +87,8 @@ class PostController extends Controller implements HasMiddleware
      */
     public function edit(Anime $anime, Post $post)
     {
-        if (auth()->user()->cannot('update', $post)) {
-            abort(403);
-        }
+        \Gate::authorize('update', $post);
+
         return Inertia::render('Anime/Post/Create', [
             'anime' => $anime,
             'post' => $post->load(['author', 'links', 'media']),
@@ -103,6 +101,7 @@ class PostController extends Controller implements HasMiddleware
      */
     public function update(Anime $anime, Post $post, StorePostRequest $request)
     {
+        \Gate::authorize('update', $post);
         if ($request->boolean('is_published') && $request->user()->cannot('publish', Post::class)) {
             abort(403);
         }
@@ -135,9 +134,7 @@ class PostController extends Controller implements HasMiddleware
      */
     public function destroy(Anime $anime, Post $post)
     {
-        if (auth()->user()->cannot('delete', $post)) {
-            abort(403);
-        }
+        \Gate::authorize('delete', $post);
         $post->delete();
 
         return redirect()->route('anime.show', $anime)->banner('Episode deleted successfully!');

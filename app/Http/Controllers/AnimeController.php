@@ -54,9 +54,7 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function create(Request $request): \Inertia\Response
     {
-        if ($request->user()->cannot('create', Anime::class)) {
-            abort(403);
-        }
+        \Gate::authorize('create', Anime::class);
 
         return Inertia::render("Anime/Create", [
             'canPublish' => $request->user()->can('publish', Anime::class)
@@ -70,7 +68,8 @@ class AnimeController extends Controller implements HasMiddleware
     {
         // if user wants to publish but does not have capability to publish
         // or user cannot create
-        if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class) || $request->user()->cannot('create', Anime::class)) {
+        \Gate::authorize('create', Anime::class);
+        if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class)) {
             abort(403);
         }
 
@@ -101,6 +100,7 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function edit(Anime $anime)
     {
+        \Gate::authorize('update', $anime);
         if (auth()->user()->cannot('update', $anime)) {
             abort(403);
         }
@@ -115,6 +115,7 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function update(StoreAnimeRequest $request, Anime $anime)
     {
+        \Gate::authorize('update', $anime);
         if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class)) {
             abort(403);
         }
@@ -129,9 +130,7 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function destroy(Anime $anime)
     {
-        if (auth()->user()->cannot('delete', $anime)) {
-            abort(403);
-        }
+        \Gate::authorize('delete', $anime);
         $anime->delete();
 
         return redirect()->route('anime.index')->banner('Anime successfully deleted.');
