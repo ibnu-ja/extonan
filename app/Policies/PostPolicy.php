@@ -24,7 +24,7 @@ class PostPolicy
             return true;
         }
 
-        if ($user?->can('post.read.self') && $user?->id === $post->author->id && $post->isPublished() === false) {
+        if ($user?->can('post.read.self') && $user?->id === $post->author_id && $post->isPublished() === false) {
             return true;
         }
 
@@ -48,7 +48,7 @@ class PostPolicy
             return true;
         }
 
-        return $user->can('post.update.self') && $user->id === $post->author->id;
+        return $user->can('post.update.self') && $user->id === $post->author_id;
     }
 
     /**
@@ -60,7 +60,7 @@ class PostPolicy
             return true;
         }
 
-        return $user->can('post.delete.self') && $user->id === $post->author->id;
+        return $user->can('post.delete.self') && $user->id === $post->author_id;
     }
 
     /**
@@ -73,7 +73,7 @@ class PostPolicy
             return true;
         }
         //when editing user should only able to publish its own post
-        return $user->id === $post->author->id;
+        return $user->id === $post->author_id;
     }
 
     ///**
