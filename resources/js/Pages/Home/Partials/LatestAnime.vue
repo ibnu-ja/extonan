@@ -31,12 +31,12 @@ const swiper = ref<SwiperContainer>()
 
 const onTransitionEnd = () => {
   console.log('slide changed', swiper.value?.swiper.realIndex)
-  slide.value = swiper.value?.swiper.realIndex
+  slide.value = swiper.value!.swiper.realIndex
 }
 
 const slide = ref(0)
 
-const pressButton = (value) => {
+const pressButton = (value: number) => {
   swiper.value?.swiper.slideTo(value)
 }
 </script>
@@ -111,7 +111,7 @@ const pressButton = (value) => {
 
               <div class="h-[330px]">
                 <h3 class="text-h4 mb-4">
-                  {{ translate(anime.title) }} {{ i }}
+                  {{ translate(anime.title) }}
                 </h3>
 
                 <div
