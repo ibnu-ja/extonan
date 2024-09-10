@@ -10,7 +10,7 @@ class PostPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
         return true;
     }
@@ -18,13 +18,13 @@ class PostPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, BasePost $post): bool
+    public function view(?User $user, BasePost $post): bool
     {
-        if ($user->can('post.read.any') || $post->isPublished()) {
+        if ($user?->can('post.read.any') || $post->isPublished()) {
             return true;
         }
 
-        if ($user->can('post.read.self') && $user->id === $post->author->id && $post->isPublished() === false) {
+        if ($user?->can('post.read.self') && $user?->id === $post->author->id && $post->isPublished() === false) {
             return true;
         }
 
@@ -76,19 +76,19 @@ class PostPolicy
         return $user->id === $post->author->id;
     }
 
-//    /**
-//     * Determine whether the user can restore the model.
-//     */
-//    public function restore(User $user, Post $post): bool
-//    {
-//        //
-//    }
-//
-//    /**
-//     * Determine whether the user can permanently delete the model.
-//     */
-//    public function forceDelete(User $user, Post $post): bool
-//    {
-//        //
-//    }
+    ///**
+    // * Determine whether the user can restore the model.
+    // */
+    //public function restore(User $user, BasePost $post): bool
+    //{
+    //    //
+    //}
+    //
+    ///**
+    // * Determine whether the user can permanently delete the model.
+    // */
+    //public function forceDelete(User $user, BasePost $post): bool
+    //{
+    //    //
+    //}
 }

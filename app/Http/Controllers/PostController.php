@@ -75,9 +75,8 @@ class PostController extends Controller implements HasMiddleware
      */
     public function show(Anime $anime, Post $post)
     {
-        if (auth()->user()->cannot('view', $post)) {
-            abort(403);
-        }
+        \Gate::authorize('view', $post);
+
         return Inertia::render('Anime/Post/Show', [
             'anime' => $anime->load(['posts' => fn(MorphMany $query) => $query->orderByDesc('title->native')]),
             'post' => $post->load(['author', 'links', 'media']),

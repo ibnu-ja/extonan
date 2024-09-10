@@ -86,9 +86,8 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function show(Anime $anime)
     {
-        if (auth()->user()->cannot('view', $anime)) {
-            abort(403);
-        }
+        \Gate::authorize('view', $anime);
+
         return Inertia::render('Anime/Show', [
             'anime' => fn() => $anime->load([
                 'posts' => fn(MorphMany $query) => $query->visible()->orderByDesc('title->native')->with(['author'])->get()
