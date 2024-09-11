@@ -1,7 +1,5 @@
 <script lang="ts" setup>
 import { AnimeData } from '@/types/anime'
-import dayjs from 'dayjs'
-import calendar from 'dayjs/plugin/calendar'
 
 import { register } from 'swiper/element/bundle'
 import { useGradient } from '@/composables/useGradient'
@@ -18,8 +16,6 @@ register()
 defineProps<{
   latestAnime: AnimeData[]
 }>()
-
-dayjs.extend(calendar)
 
 const { gradient } = useGradient()
 

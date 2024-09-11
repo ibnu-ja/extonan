@@ -137,9 +137,9 @@ onMounted(() => {
         cols="12"
         md="4"
       >
-        <h3 class="text-h6 mb-4 px-2 sm:px-0">
+        <h4 class="text-h5 mb-4 px-2 sm:px-0">
           Other Episodes
-        </h3>
+        </h4>
         <div class="overflow-auto h-128">
           <VerticalEpisodeCard
             v-for="episode in anime.posts"
@@ -147,7 +147,6 @@ onMounted(() => {
             :key="episode.id"
             :show-action="!!$page.props.auth.user"
             :active="episode.id == post.id"
-            class="mb-2"
             :image="episode.thumbnail?.extraLarge"
             :lazy-img="episode.thumbnail?.medium"
             :href="route('post.show', [anime, episode])"

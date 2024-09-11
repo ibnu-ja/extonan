@@ -10,15 +10,15 @@ export default {
 <script lang="ts" setup>
 import { Head } from '@inertiajs/vue3'
 import { AnimeData, EpisodeData } from '@/types/anime'
-import { computedAsync } from '@vueuse/core'
-import { useAnime } from '@/composables/useAniList'
 import Banner from '@/Pages/Anime/Partials/Banner.vue'
-import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
 import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
 import dayjs from 'dayjs'
 import { CoverImage } from '@/types/anilist'
 import SpeedDial from '@/Pages/Anime/Partials/SpeedDial.vue'
 import { useLanguages } from '@/composables/useLanguages'
+import calendar from 'dayjs/plugin/calendar'
+
+dayjs.extend(calendar)
 
 type Post = EpisodeData & {
   thumbnail: CoverImage | null
@@ -31,13 +31,13 @@ const props = defineProps<{
   canCreateEpisode: boolean
 }>()
 
-const { animeApi } = useAnime()
-
-const animeBwang = computedAsync(async () => {
-  return await animeApi(props.anime.anilist_id, false)
-})
-
 const { translate } = useLanguages()
+
+const airingDate = dayjs({
+  year: props.anime.metadata.startDate.year ?? undefined,
+  month: props.anime.metadata.startDate.month ? props.anime.metadata.startDate.month - 1 : undefined,
+  day: props.anime.metadata.startDate.day ? props.anime.metadata.startDate.day - 1 : undefined,
+}).format('D MMM YYYY')
 
 </script>
 
@@ -51,12 +51,10 @@ const { translate } = useLanguages()
   <Head :title="anime.title.en!" />
 
   <Banner
-    v-if="animeBwang"
-    :genres="anime.metadata.genres"
     :title="anime.title"
     :description="anime.description"
-    :bg="animeBwang?.coverImage.extraLarge!"
-    :cover-image="animeBwang?.coverImage!"
+    :bg="anime.metadata.coverImage.extraLarge!"
+    :cover-image="anime.metadata.coverImage!"
     :is-published="anime.is_published"
     :edit-url="route('anime.edit', anime)"
     :delete-url="route('anime.destroy', anime)"
@@ -64,73 +62,134 @@ const { translate } = useLanguages()
   />
 
   <v-container class="px-0 sm:px-4">
-    <v-row>
-      <v-col
-        cols="12"
-        sm="4"
-      >
-        <div
-          class="px-4 sm:px-0"
-        >
-          <Metadata
-            v-if="animeBwang"
-            :data="animeBwang"
-          />
+    <div class="grid sm:grid-cols-12 gap-4 items-start">
+      <div class="sm:col-span-8 md:col-span-9">
+        <div class="px-4 sm:px-0 flex gap-2 mb-4 flex-wrap">
+          <v-chip
+            v-for="genre in anime.metadata.genres"
+            :key="genre"
+          >
+            {{ genre }}
+          </v-chip>
         </div>
-      </v-col>
-      <v-col
-        cols="12"
-        sm="8"
-      >
-        <v-row
+        <h4 class="px-4 sm:px-0 text-h5">
+          Episodes
+        </h4>
+        <div
           v-if="anime.posts.length > 0"
-          dense
+          class="grid md:grid-cols-2 lg:grid-cols-3"
         >
-          <v-col
+          <HorizontalEpisodeCard
             v-for="episode in anime.posts"
             :key="episode.id"
-            cols="12"
-            sm="6"
+            :show-action="!!$page.props.auth.user"
+            :image="episode.thumbnail?.extraLarge"
+            :lazy-img="episode.thumbnail?.medium"
+            :href="route('post.show', [anime, episode])"
+            :permissions="episode.can"
+            :delete-url="route('post.destroy', [anime, episode])"
+            :edit-url="route('post.edit', [anime, episode])"
+            :is-published="episode.is_published"
           >
-            <HorizontalEpisodeCard
-              :show-action="!!$page.props.auth.user"
-              :image="episode.thumbnail?.extraLarge"
-              :lazy-img="episode.thumbnail?.medium"
-              :href="route('post.show', [anime, episode])"
-              :permissions="episode.can"
-              :delete-url="route('post.destroy', [anime, episode])"
-              :edit-url="route('post.edit', [anime, episode])"
-              :is-published="episode.is_published"
-            >
-              <template #content>
-                <div class="text-subtitle-1 list-title">
-                  {{ translate(episode.title) }}
-                </div>
-                <div
-                  class="text-subtitle-2 text-medium-emphasis"
+            <template #content>
+              <div class="text-subtitle-1 list-title">
+                {{ translate(episode.title) }}
+              </div>
+              <div
+                class="text-subtitle-2 text-medium-emphasis"
+              >
+                <template
+                  v-if="!episode.is_published"
                 >
-                  <template
-                    v-if="!episode.is_published"
+                  <span
+                    class="text-success"
                   >
-                    <span
-                      class="text-success"
-                    >
-                      Draft
-                    </span> by
-                  </template>
-                  <template v-else>
-                    {{ dayjs(episode.published_at).format('D MMM YYYY') }} &bull;
-                  </template>
-                  {{ episode.author.name }}
-                </div>
-              </template>
-            </HorizontalEpisodeCard>
-          </v-col>
-        </v-row>
+                    Draft
+                  </span> by
+                </template>
+                <template v-else>
+                  {{ dayjs(episode.published_at).format('D MMM YYYY') }} &bull;
+                </template>
+                {{ episode.author.name }}
+              </div>
+            </template>
+          </HorizontalEpisodeCard>
+        </div>
         <p v-else>
           No post.
         </p>
-      </v-col>
-    </v-row>
+      </div>
+      <div
+        class="px-4 sm:px-0 sm:col-span-4 md:col-span-3"
+      >
+        <v-theme-provider theme="dark">
+          <v-card
+            variant="tonal"
+            rounded="xl"
+            class="bg-surface mb-4"
+          >
+            <v-card-item>
+              <template #title />
+            </v-card-item>
+            <v-card-text>
+              <!-- metadata -->
+              <div v-if="anime.metadata.startDate">
+                <v-list-subheader>
+                  Airing Date
+                </v-list-subheader>
+                <!--dayjs is 0 indexed-->
+                {{ airingDate }}
+              </div>
+              <div v-if="anime.metadata.episodes">
+                <v-list-subheader>
+                  Episodes
+                </v-list-subheader>
+                {{ anime.metadata.episodes }}
+              </div>
+              <div v-if="anime.metadata.studios">
+                <v-list-subheader>
+                  Studio
+                </v-list-subheader>
+                <!--dayjs is 0 indexed-->
+
+                <div class="flex flex-wrap gap-1">
+                  <v-chip
+                    v-for="{node: studio} in anime.metadata.studios.edges"
+                    :key="studio.id"
+                  >
+                    {{ studio.name }}
+                  </v-chip>
+                </div>
+              </div>
+              <div v-if="anime.metadata.season && anime.metadata.seasonYear">
+                <v-list-subheader>
+                  Season
+                </v-list-subheader>
+                <v-chip>
+                  {{ anime.metadata.season }} {{ anime.metadata.seasonYear }}
+                </v-chip>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-theme-provider>
+        <div>
+          <h4 class="text-h5">
+            Post Info
+          </h4>
+
+          <ul class="ms-5">
+            <li>
+              <b>Created: </b> {{ dayjs(anime.created_at).calendar() }}
+            </li>
+            <li>
+              <b>Last modified: </b> {{ dayjs(anime.updated_at).calendar() }}
+            </li>
+            <li>
+              <b>Author: </b> {{ anime.author.name }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </v-container>
 </template>

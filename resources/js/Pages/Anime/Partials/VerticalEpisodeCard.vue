@@ -71,7 +71,7 @@ const { smAndUp } = useDisplay()
       >
         <v-fade-transition>
           <div
-            v-if="isHovering"
+            v-if="isHovering || !image"
             class="!flex transition-fast-in-fast-out bg-grey-darken-4 v-card--reveal"
             style="height: 100%;"
           >
