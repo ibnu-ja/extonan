@@ -163,7 +163,7 @@ export type Permissions = {
   publish: boolean
 }
 
-export type Author = {
+export type UserRelation = {
   created_at: Date | null
   current_team_id: null
   email: string
@@ -171,12 +171,13 @@ export type Author = {
   id: number
   name: string | null
   profile_photo_path: string | null
+  profile_photo_url: string | null
   two_factor_confirmed_at: Date | null
   updated_at: Date | null
 }
 
 export type Post = {
-  author: Author
+  author: UserRelation
   author_id: number
   created_at: Date | string | null
   updated_at: Date | string | null
@@ -184,6 +185,7 @@ export type Post = {
   uuid: string | null
   is_published: boolean
   is_current: boolean
+  publisher?: UserRelation
   publisher_type: string | null
   publisher_id: number | null
   can: Permissions

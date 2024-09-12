@@ -128,9 +128,6 @@ const airingDate = dayjs({
             rounded="xl"
             class="bg-surface mb-4"
           >
-            <v-card-item>
-              <template #title />
-            </v-card-item>
             <v-card-text>
               <!-- metadata -->
               <div v-if="anime.metadata.startDate">
@@ -170,25 +167,56 @@ const airingDate = dayjs({
                 </v-chip>
               </div>
             </v-card-text>
+            <v-divider />
+            <v-card-item title="Post Info" />
+            <v-card-text>
+              <div>
+                <v-list-subheader>Created at</v-list-subheader>
+                <span :title="dayjs(anime.created_at).toString()">
+                  {{ dayjs(anime.created_at).calendar() }}</span>
+              </div>
+              <div>
+                <v-list-subheader>
+                  Last modified
+                </v-list-subheader>
+                <span :title="dayjs(anime.updated_at).toString()">
+                  {{ dayjs(anime.updated_at).calendar() }}</span>
+              </div>
+              <div>
+                <v-list-subheader>
+                  Author
+                </v-list-subheader>
+                {{ anime.author.name }}
+              </div>
+              <div>
+                <v-list-subheader>
+                  Published at
+                </v-list-subheader>
+                <v-chip
+                  v-if="!anime.is_published"
+                  color="success"
+                  variant="flat"
+                >
+                  Draft
+                </v-chip>
+                <span
+                  v-else
+                  :title="dayjs(anime.published_at).toString()"
+                >
+                  {{ dayjs(anime.published_at).calendar() }}
+                </span>
+              </div>
+              <div
+                v-if="anime.is_published"
+              >
+                <v-list-subheader>
+                  Published by
+                </v-list-subheader>
+                {{ anime.publisher!.name }}
+              </div>
+            </v-card-text>
           </v-card>
         </v-theme-provider>
-        <div>
-          <h4 class="text-h5">
-            Post Info
-          </h4>
-
-          <ul class="ms-5">
-            <li>
-              <b>Created: </b> {{ dayjs(anime.created_at).calendar() }}
-            </li>
-            <li>
-              <b>Last modified: </b> {{ dayjs(anime.updated_at).calendar() }}
-            </li>
-            <li>
-              <b>Author: </b> {{ anime.author.name }}
-            </li>
-          </ul>
-        </div>
       </div>
     </div>
   </v-container>
