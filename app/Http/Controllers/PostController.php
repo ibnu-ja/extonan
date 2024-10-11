@@ -74,6 +74,7 @@ class PostController extends Controller implements HasMiddleware
      */
     public function show(Anime $anime, Post $post)
     {
+        \Gate::authorize('view', $anime);
         \Gate::authorize('view', $post);
 
         return Inertia::render('Anime/Post/Show', [

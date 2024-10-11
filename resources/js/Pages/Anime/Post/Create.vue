@@ -11,14 +11,14 @@ export default {
 
 import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import { Head, router, useForm } from '@inertiajs/vue3'
-import { mdiDelete } from '@mdi/js'
+import { mdiChevronDown, mdiChevronUp, mdiDelete } from '@mdi/js'
 import { mdiContentSave, mdiOpenInNew, mdiPencil, mdiPlus, mdiSend } from '@mdi/js'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { useDisplay } from 'vuetify'
 import { TranslatableField } from '@/types/formHelper'
 import { useLanguages } from '@/composables/useLanguages'
 import Metadata from '@/Pages/Anime/Partials/Metadata.vue'
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
 import { openConfirmationDialog, openFormDialog } from '@/composables/useDialog'
 import MediaManager from '@/Components/MediaManager/Index.vue'
@@ -29,7 +29,7 @@ const props = defineProps<{
   canPublish: boolean
   post?: EpisodeData & {
     links: Resource[]
-    metadata: unknown
+    metadata: Record<string, unknown>
   }
 }>()
 const route = inject('route') as typeof ziggyRoute
@@ -40,7 +40,7 @@ type PostForm = {
   title: TranslatableField
   description: TranslatableField
   is_published: boolean
-  metadata: unknown
+  metadata: Record<string, unknown>
   links: Resource[]
   thumbnail: Media | number | null
 }
@@ -57,7 +57,7 @@ const form = useForm<PostForm>({
     en: null,
     id: null,
   },
-  metadata: null,
+  metadata: {},
   links: [],
   thumbnail: null,
 },
@@ -144,6 +144,9 @@ const deletePost = async () => {
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formErrors = computed(() => form.errors as any)
+
+const showAnimeImage = ref(false)
+
 </script>
 
 <template>
@@ -196,30 +199,35 @@ const formErrors = computed(() => form.errors as any)
               <v-card-item title="Basic Information" />
               <v-divider />
               <v-card-text>
+                <div class="flex mb-4 gap-4">
+                  <v-text-field
+                    v-model="form.metadata.epNo"
+                    variant="outlined"
+                    :hide-details="true"
+                    label="Ep No."
+                    class="flex-none w-32"
+                  />
+                  <v-select
+                    v-model="currentLang"
+                    :multiple="false"
+                    label="Title language"
+                    return-object
+                    variant="outlined"
+                    :items="languages"
+                    item-title="label"
+                    :hide-details="true"
+                    item-value="value"
+                    class="flex-none w-36"
+                  />
+                </div>
                 <v-text-field
                   v-model="form.title[currentLang.value]"
                   :label="`Title (${currentLang.value})`"
-                  :error-messages="formErrors['title' + currentLang]"
+                  :error-messages="formErrors['title.' + currentLang]"
                   variant="outlined"
                   hide-details="auto"
                   class="mb-4"
-                >
-                  <template
-                    #prepend
-                  >
-                    <v-select
-                      v-model="currentLang"
-                      :multiple="false"
-                      label="Title language"
-                      return-object
-                      variant="outlined"
-                      :items="languages"
-                      item-title="label"
-                      hide-details
-                      item-value="value"
-                    />
-                  </template>
-                </v-text-field>
+                />
                 <v-text-field
                   v-model="form.title.romaji"
                   label="Title Romaji"
@@ -385,28 +393,30 @@ const formErrors = computed(() => form.errors as any)
               title="Media Thumbnail"
               :multiple="false"
             />
-            <!--<v-expand-x-transition>-->
-            <!--  <MediaGridView-->
-            <!--    v-if="images"-->
-            <!--    :images-->
-            <!--  />-->
-            <!--</v-expand-x-transition>-->
-            <v-expand-x-transition>
-              <v-card
-                :rounded="smAndUp"
-                class="mb-4"
-              >
+            <v-card :rounded="smAndUp">
+              <v-expand-transition>
                 <v-img
+                  v-if="showAnimeImage"
                   :src="anime.metadata.coverImage.extraLarge"
                   :lazy-src="anime.metadata.coverImage.medium"
                 />
-              </v-card>
-            </v-expand-x-transition>
-            <v-card :rounded="smAndUp">
+              </v-expand-transition>
               <v-card-item>
                 <v-card-title>
                   Anime
                 </v-card-title>
+                <template #append>
+                  <v-tooltip text="Show image">
+                    <template #activator="{props: propss}">
+                      <v-btn
+                        v-bind="propss"
+                        variant="text"
+                        :icon="showAnimeImage ? mdiChevronUp : mdiChevronDown"
+                        @click="showAnimeImage = !showAnimeImage"
+                      />
+                    </template>
+                  </v-tooltip>
+                </template>
               </v-card-item>
               <v-divider />
               <v-card-text>
@@ -443,16 +453,14 @@ const formErrors = computed(() => form.errors as any)
               </v-card-text>
 
               <v-expand-transition>
-                <template
-                  v-if="anime.metadata"
-                >
+                <div v-if="anime.metadata">
                   <v-divider />
                   <v-card-text>
                     <Metadata
                       :data="anime.metadata"
                     />
                   </v-card-text>
-                </template>
+                </div>
               </v-expand-transition>
             </v-card>
           </div>

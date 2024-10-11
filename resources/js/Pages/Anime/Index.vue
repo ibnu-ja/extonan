@@ -75,7 +75,7 @@ watch(displayMode, (value) => {
   <v-container class="my-0">
     <v-btn-toggle
       v-model="displayMode"
-      mandatory
+      :mandatory="true"
     >
       <v-btn
         value="abc"

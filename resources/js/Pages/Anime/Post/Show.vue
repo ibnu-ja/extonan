@@ -19,6 +19,7 @@ import { useDisplay } from 'vuetify'
 import { CoverImage } from '@/types/anilist'
 import { onMounted } from 'vue'
 import SpeedDial from '@/Pages/Anime/Post/Partials/SpeedDial.vue'
+import { useLanguages } from '@/composables/useLanguages'
 
 type ResourceModel = Post & Resource & {
   id: number
@@ -37,6 +38,7 @@ const props = defineProps<{
     links: ResourceModel[]
     embeds: ResourceModel[]
     thumbnail: CoverImage | null
+    metadata: Record<string, unknown>
     slug: string
   }
 }>()
@@ -48,10 +50,17 @@ onMounted(() => {
   if (activeEpisode) activeEpisode.scrollIntoView()
 })
 // console.log(props.post.slug)
+const { translate } = useLanguages()
+let title: string
+if (props.post.metadata.epNo) {
+  title = `${translate(props.anime.title)} - ${props.post.metadata.epNo}`
+} else {
+  title = translate(props.post.title)
+}
 </script>
 
 <template>
-  <Head :title="anime.title.en!" />
+  <Head :title />
 
   <v-container>
     <SpeedDial
@@ -59,14 +68,16 @@ onMounted(() => {
       :post-id="post.id"
     />
     <div>
-      <InertiaLink
-        :href="anime.link"
-        class="text-decoration-none mb-2 text-h6"
-      >
-        {{ anime.title.en }}
-      </InertiaLink>
+      <div>
+        <InertiaLink
+          :href="anime.link"
+          class="text-decoration-none mb-2 text-h6"
+        >
+          {{ translate(props.anime.title) }}
+        </InertiaLink> <span v-if="post.metadata.epNo">- {{ post.metadata.epNo }}</span>
+      </div>
       <h1 class="text-h4">
-        {{ post.title.en }}
+        {{ translate(props.post.title) }}
       </h1>
       <div
         v-if="post.is_published"
