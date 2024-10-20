@@ -79,7 +79,7 @@ class PostController extends Controller implements HasMiddleware
         \Gate::authorize('view', $post);
 
         return Inertia::render('Anime/Post/Show', [
-            'anime' => $anime->load(['posts' => fn(MorphMany $query) => $query->orderByDesc('title->native')]),
+            'anime' => $anime->load(['posts' => fn(MorphMany $query) => $query->current()->orderByDesc('title->native')]),
             'post' => $post->load(['author', 'links' => fn(HasMany $query) => $query->orderBy('name'), 'media']),
         ]);
     }
