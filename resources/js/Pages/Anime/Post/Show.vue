@@ -57,6 +57,43 @@ if (props.post.metadata.epNo) {
 } else {
   title = translate(props.post.title)
 }
+
+// Define a static type for known resolutions with their associated colors
+type Resolution = '4K' | '1080p' | '720p' | '480p'
+
+// Map resolution tokens to their corresponding standard resolution
+const resolutionMap: { [key: string]: Resolution } = {
+  '3840x2160': '4K',
+  '1920x1080': '1080p',
+  '1440x1080': '1080p',
+  '1280x720': '720p',
+  '960x720': '720p',
+  '848x480': '480p',
+}
+
+// Color mapping for each resolution
+const colorMap: { [key in Resolution]: string } = {
+  '4K': 'none',
+  '1080p': 'teal',
+  '720p': 'indigo',
+  '480p': 'deep-purple',
+}
+
+// Function to get the resolution string and corresponding color from the filename
+function getResolutionTag(filename: string): { resolution: Resolution, color: string } | null {
+  // Regex to match both "WIDTHxHEIGHT" or just "RESOLUTIONp" patterns
+  const resolutionPattern = /(\d{3,4}x\d{3,4}|\d{3,4}p)/
+
+  const match = filename.match(resolutionPattern)
+  if (match) {
+    const res = match[0]
+    const standardResolution = res.includes('x') ? resolutionMap[res] : (res.toLowerCase() as Resolution)
+
+    return standardResolution ? { resolution: standardResolution, color: colorMap[standardResolution] } : null
+  }
+
+  return null // Return null if no resolution is found
+}
 </script>
 
 <template>
@@ -121,7 +158,17 @@ if (props.post.metadata.epNo) {
             :key="postItem.id"
             static
           >
-            <v-expansion-panel-title>{{ postItem.name }}</v-expansion-panel-title>
+            <v-expansion-panel-title>
+              {{ postItem.name }}
+              <v-chip
+                v-if="getResolutionTag(postItem.name)"
+                class="ml-2"
+                density="compact"
+                :color="getResolutionTag(postItem.name)?.color"
+              >
+                {{ getResolutionTag(postItem.name)?.resolution }}
+              </v-chip>
+            </v-expansion-panel-title>
             <v-expansion-panel-text>
               <v-list density="compact">
                 <v-chip
