@@ -61,8 +61,8 @@ class PostController extends Controller implements HasMiddleware
 
         $post->resources()->createMany($request->validated()['links']);
 
-        if (!is_null($request->validated()['thumbnail'])) {
-            $post->syncMedia($request->validated()['thumbnail']['id'], 'thumbnail');
+        if (!is_null($request->validated()['thumbnail_item'])) {
+            $post->syncMedia($request->validated()['thumbnail_item']['id'], 'thumbnail');
         } else {
             $post->detachMediaTags('thumbnail');
         }
