@@ -222,7 +222,7 @@ const showAnimeImage = ref(false)
               <v-card-text>
                 <div class="flex items-start mb-4 gap-4">
                   <v-text-field
-                    v-model="form.metadata.epNo"
+                    v-model="form.metadata.ep_no"
                     variant="outlined"
                     :hide-details="true"
                     label="Ep No."

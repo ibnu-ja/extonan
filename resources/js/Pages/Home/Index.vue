@@ -32,7 +32,7 @@ defineProps<{
 
 const getTitle = (post: Postable): string => {
   if (post.metadata.post_type == 'tv') {
-    return `${translate(post.postable.title)} - ${post.metadata.epNo}`
+    return `${translate(post.postable.title)} - ${post.metadata.ep_no}`
   }
   return translate(post.title)
 }

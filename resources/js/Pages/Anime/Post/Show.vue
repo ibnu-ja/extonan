@@ -52,8 +52,8 @@ onMounted(() => {
 // console.log(props.post.slug)
 const { translate } = useLanguages()
 let title: string
-if (props.post.metadata.epNo) {
-  title = `${translate(props.anime.title)} - ${props.post.metadata.epNo}`
+if (props.post.metadata.ep_no) {
+  title = `${translate(props.anime.title)} - ${props.post.metadata.ep_no}`
 } else {
   title = translate(props.post.title)
 }
@@ -111,7 +111,7 @@ function getResolutionTag(filename: string): { resolution: Resolution, color: st
           class="text-decoration-none mb-2 text-h6"
         >
           {{ translate(props.anime.title) }}
-        </InertiaLink> <span v-if="post.metadata.epNo">- {{ post.metadata.epNo }}</span>
+        </InertiaLink> <span v-if="post.metadata.ep_no">- {{ post.metadata.ep_no }}</span>
       </div>
       <h1 class="text-h4">
         {{ translate(props.post.title) }}

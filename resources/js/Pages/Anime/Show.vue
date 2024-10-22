@@ -42,9 +42,9 @@ const airingDate = dayjs({
 }).format('D MMM YYYY')
 
 const episodeTitle = (post: Post): string => {
-  if (post.metadata.epNo != null) {
-    if (post.metadata.post_type === 'tv') return `Ep. ${post.metadata.epNo}: ${translate(post.title)}`
-    if (post.metadata.post_type === 'bd') return `${translate(post.title)} (Ep. ${post.metadata.epNo})`
+  if (post.metadata.ep_no != null) {
+    if (post.metadata.post_type === 'tv') return `Ep. ${post.metadata.ep_no}: ${translate(post.title)}`
+    if (post.metadata.post_type === 'bd') return `${translate(post.title)} (Ep. ${post.metadata.ep_no})`
   }
 
   return translate(post.title)

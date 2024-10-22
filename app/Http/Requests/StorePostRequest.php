@@ -26,7 +26,7 @@ class StorePostRequest extends FormRequest
             'title' => 'required|max:255',
             'description' => 'required',
             'metadata.post_type' => [Rule::enum(PostType::class), 'required'],
-            'metadata.epNo' => 'string',
+            'metadata.ep_no' => 'string',
             'links' => 'array|nullable',
             'thumbnail_item' => 'nullable',
             'is_published' => 'required|boolean'
