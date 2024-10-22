@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePostRequest extends FormRequest
 {
@@ -24,7 +25,8 @@ class StorePostRequest extends FormRequest
         return [
             'title' => 'required|max:255',
             'description' => 'required',
-            'metadata' => 'nullable',
+            'metadata.post_type' => [Rule::enum(PostType::class), 'required'],
+            'metadata.epNo' => 'string',
             'links' => 'array|nullable',
             'thumbnail_item' => 'nullable',
             'is_published' => 'required|boolean'

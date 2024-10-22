@@ -12,7 +12,7 @@ const propss = withDefaults(
     href?: string
     title: string
     subtitle?: string
-    overhead?: string
+    overhead?: string | null
     image?: string
     lazyImg?: string
     active?: boolean
@@ -84,6 +84,7 @@ const { smAndUp } = useDisplay()
         style="flex: 1; line-clamp: 2"
       >
         <ItemListTitle
+          :overhead
           :show-action
           :permissions
           :edit-url

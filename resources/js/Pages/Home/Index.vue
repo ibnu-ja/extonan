@@ -19,6 +19,8 @@ import { useLanguages } from '@/composables/useLanguages'
 type Postable = EpisodeData & {
   postable: AnimeData
   thumbnail: CoverImage | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  metadata: Record<string, any>
 }
 
 defineProps<{
@@ -27,6 +29,13 @@ defineProps<{
   latestAnime: AnimeData[]
   latestEpisodes: Postable[]
 }>()
+
+const getTitle = (post: Postable): string => {
+  if (post.metadata.post_type == 'tv') {
+    return `${translate(post.postable.title)} - ${post.metadata.epNo}`
+  }
+  return translate(post.title)
+}
 
 const { translate } = useLanguages()
 
@@ -73,7 +82,7 @@ const { translate } = useLanguages()
               class="mb-2"
               :image="episode.thumbnail?.extraLarge"
               :lazy-img="episode.thumbnail?.medium"
-              :title="translate(episode.title)"
+              :title="getTitle(episode)"
               :href="route('post.show', [episode.postable, episode])"
               :edit-url="route('post.edit', [episode.postable, episode])"
               :delete-url="route('post.destroy', [episode.postable, episode])"

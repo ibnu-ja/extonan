@@ -29,19 +29,19 @@ const props = defineProps<{
   canPublish: boolean
   post?: EpisodeData & {
     links: Resource[]
-    metadata: Record<string, unknown>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    metadata: Record<string, any>
     thumbnail_item: Media | null
   }
 }>()
 const route = inject('route') as typeof ziggyRoute
-
 const { mdAndUp } = useDisplay()
-
 type PostForm = {
   title: TranslatableField
   description: TranslatableField
   is_published: boolean
-  metadata: Record<string, unknown>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  metadata: Record<string, any>
   links: Resource[]
   thumbnail_item: Media | null
 }
@@ -58,7 +58,9 @@ const form = useForm<PostForm>({
     en: null,
     id: null,
   },
-  metadata: {},
+  metadata: {
+    post_type: 'tv',
+  },
   links: [],
   thumbnail_item: null,
 },
@@ -145,6 +147,22 @@ const deletePost = async () => {
     //
   }
 }
+
+const postType = [
+  {
+    value: 'bd',
+    title: 'Blu-ray BOX/DISC',
+  },
+  {
+    value: 'tv',
+    title: 'TV Ep',
+  },
+  {
+    value: 'movie',
+    title: 'Movie',
+  },
+]
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formErrors = computed(() => form.errors as any)
 
@@ -202,12 +220,13 @@ const showAnimeImage = ref(false)
               <v-card-item title="Basic Information" />
               <v-divider />
               <v-card-text>
-                <div class="flex mb-4 gap-4">
+                <div class="flex items-start mb-4 gap-4">
                   <v-text-field
                     v-model="form.metadata.epNo"
                     variant="outlined"
                     :hide-details="true"
                     label="Ep No."
+                    placeholder="1-4"
                     class="flex-none w-32"
                   />
                   <v-select
@@ -220,6 +239,16 @@ const showAnimeImage = ref(false)
                     item-title="label"
                     :hide-details="true"
                     item-value="value"
+                    class="flex-none w-36"
+                  />
+                  <v-select
+                    v-model="form.metadata['post_type']"
+                    :multiple="false"
+                    label="Ep. type"
+                    variant="outlined"
+                    :items="postType"
+                    hide-details="auto"
+                    :error-messages="formErrors['metadata.post_type']"
                     class="flex-none w-36"
                   />
                 </div>

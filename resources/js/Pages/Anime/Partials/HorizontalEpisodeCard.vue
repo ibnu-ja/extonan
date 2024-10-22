@@ -14,7 +14,7 @@ withDefaults(defineProps<{
   permissions?: Permissions
   title?: string
   subtitle?: string
-  overhead?: string
+  overhead?: string | null
   image?: string
   lazyImg?: string
   editUrl?: string

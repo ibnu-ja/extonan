@@ -22,6 +22,8 @@ dayjs.extend(calendar)
 
 type Post = EpisodeData & {
   thumbnail: CoverImage | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  metadata: Record<string, any>
 }
 
 const props = defineProps<{
@@ -38,6 +40,15 @@ const airingDate = dayjs({
   month: props.anime.metadata.startDate.month ? props.anime.metadata.startDate.month - 1 : undefined,
   day: props.anime.metadata.startDate.day ? props.anime.metadata.startDate.day - 1 : undefined,
 }).format('D MMM YYYY')
+
+const episodeTitle = (post: Post): string => {
+  if (post.metadata.epNo != null) {
+    if (post.metadata.post_type === 'tv') return `Ep. ${post.metadata.epNo}: ${translate(post.title)}`
+    if (post.metadata.post_type === 'bd') return `${translate(post.title)} (Ep. ${post.metadata.epNo})`
+  }
+
+  return translate(post.title)
+}
 
 </script>
 
@@ -93,7 +104,7 @@ const airingDate = dayjs({
           >
             <template #content>
               <div class="text-subtitle-1 list-title">
-                {{ translate(episode.title) }}
+                {{ episodeTitle(episode) }}
               </div>
               <div
                 class="text-subtitle-2 text-medium-emphasis"
