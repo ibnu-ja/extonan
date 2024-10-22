@@ -30,6 +30,7 @@ const props = defineProps<{
   post?: EpisodeData & {
     links: Resource[]
     metadata: Record<string, unknown>
+    thumbnail_item: Media | null
   }
 }>()
 const route = inject('route') as typeof ziggyRoute
@@ -42,7 +43,7 @@ type PostForm = {
   is_published: boolean
   metadata: Record<string, unknown>
   links: Resource[]
-  thumbnail: Media | number | null
+  thumbnail_item: Media | null
 }
 
 const form = useForm<PostForm>({
@@ -59,7 +60,7 @@ const form = useForm<PostForm>({
   },
   metadata: {},
   links: [],
-  thumbnail: null,
+  thumbnail_item: null,
 },
 )
 
@@ -68,10 +69,12 @@ if (props.post) {
   form.description = props.post.description
   form.links = props.post.links
   form.metadata = props.post.metadata
+  form.thumbnail_item = props.post.thumbnail_item
 }
 
 const submit = () => {
   if (props.post) {
+    form.is_published = props.post.is_published
     form.put(route('post.update', [props.anime, props.post]))
   } else {
     form.post(route('post.store', props.anime))
@@ -388,7 +391,7 @@ const showAnimeImage = ref(false)
           <div>
             <!--TODO-->
             <MediaManager
-              v-model="form.thumbnail"
+              v-model="form.thumbnail_item"
               class="mb-4"
               title="Media Thumbnail"
               :multiple="false"

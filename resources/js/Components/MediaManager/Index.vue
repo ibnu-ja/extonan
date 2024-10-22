@@ -106,7 +106,7 @@ const save = () => {
           :prepend-icon="mdiImage"
           @click="dialog = !dialog"
         >
-          Add Media
+          {{ modelValue == null ? 'Add' : 'Edit' }} Media
           <!-- {{ selected.length === 0 ? 'Add' : `${selected.length} Selected` }} -->
         </v-btn>
       </template>

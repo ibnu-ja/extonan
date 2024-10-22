@@ -26,7 +26,7 @@ class StorePostRequest extends FormRequest
             'description' => 'required',
             'metadata' => 'nullable',
             'links' => 'array|nullable',
-            'thumbnail' => 'nullable',
+            'thumbnail_item' => 'nullable',
             'is_published' => 'required|boolean'
         ];
     }

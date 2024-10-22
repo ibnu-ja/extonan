@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Anime;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -93,7 +92,7 @@ class PostController extends Controller implements HasMiddleware
 
         return Inertia::render('Anime/Post/Create', [
             'anime' => $anime,
-            'post' => $post->load(['author', 'links', 'media']),
+            'post' => $post->load(['author', 'links', 'media'])->append('thumbnail_item'),
             'canPublish' => request()->user()->can('publish', $post),
         ]);
     }
@@ -122,8 +121,8 @@ class PostController extends Controller implements HasMiddleware
 
         $post->links()->upsert($linksss->toArray(), uniqueBy: ['id'], update: ['name', 'value']);
 
-        if (!is_null($request->validated()['thumbnail'])) {
-            $post->syncMedia($request->validated()['thumbnail']['id'], 'thumbnail');
+        if (!is_null($request->validated()['thumbnail_item'])) {
+            $post->syncMedia($request->validated()['thumbnail_item']['id'], 'thumbnail');
         } else {
             $post->detachMediaTags('thumbnail');
         }

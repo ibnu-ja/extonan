@@ -78,6 +78,15 @@ class Post extends BasePost
         );
     }
 
+    public function thumbnailItem(): Attribute
+    {
+        return Attribute::make(
+            function () {
+                return $this->firstMedia('thumbnail');
+            }
+        );
+    }
+
     public function scopePrev(Builder $query, BasePost $basePost, Post $post): void
     {
         $query->whereHasMorph('postable', [Anime::class], function (Builder $query) use ($basePost) {

@@ -97,6 +97,7 @@ const clearAnilist = () => {
 
 const submit = () => {
   if (props.anime) {
+    form.is_published = props.anime.is_published
     form.put(route('anime.update', props.anime?.id))
   } else {
     form.post(route('anime.store'))
