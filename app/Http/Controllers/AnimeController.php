@@ -89,7 +89,7 @@ class AnimeController extends Controller implements HasMiddleware
 
         return Inertia::render('Anime/Show', [
             'anime' => fn() => $anime->load([
-                'posts' => fn(MorphMany $query) => $query->visible()->orderByDesc('title->native')->with(['author'])->get(),
+                'posts' => fn(MorphMany $query) => $query->orderBy('metadata->ep_no')->orderByDesc('title->native')->visible()->with(['author'])->get(),
                 'author',
                 'publisher',
             ]),
