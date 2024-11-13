@@ -1,4 +1,6 @@
-@use "vuetify/settings" with (
+@forward "vuetify/settings" with (
+  //$layers: true,
+  $pagination-item-margin: .3rem,
   $table-background: initial,
   $utilities: (
     margin: false,
@@ -39,3 +41,4 @@
     negative-padding-end: false
   )
 );
+

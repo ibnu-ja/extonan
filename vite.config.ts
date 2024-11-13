@@ -4,6 +4,22 @@ import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
 
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern',
+        // importers: [
+        //   new sass.NodePackageImporter(),
+        // ],
+      },
+      sass: {
+        api: 'modern',
+        // importers: [
+        //   new sass.NodePackageImporter(),
+        // ],
+      },
+    },
+  },
   plugins: [
     laravel({
       input: 'resources/js/app.ts',
