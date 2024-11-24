@@ -1,8 +1,11 @@
-@use 'vuetify';
+//@use 'vuetify';
 
 //@tailwind base;
 //@tailwind components;
+@forward 'vuetify';
+//@use "./settings";
 @tailwind utilities;
+
 
 [x-cloak] {
     display: none;

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Requests\ShinraiPostType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -99,5 +100,13 @@ class Post extends BasePost
         $query->whereHasMorph('postable', [Anime::class], function (Builder $query) use ($basePost) {
             $query->select('id')->where('id', '=', $basePost->id)->with('author');
         })->with(['author'])->where('title', '>', $post->title)->orderBy('title');
+    }
+
+    /**
+     * Scope a query to only include active users.
+     */
+    public function scopeShinrai(Builder $query): void
+    {
+        $query->whereIn('metadata->post_type', array_column(ShinraiPostType::cases(), 'value'));
     }
 }

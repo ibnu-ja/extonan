@@ -1,5 +1,5 @@
 // Styles
-import '../../css/app.scss'
+import '../../css/main.scss'
 
 // Vuetify
 import 'vuetify/styles'

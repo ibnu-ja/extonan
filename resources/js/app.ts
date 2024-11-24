@@ -1,6 +1,5 @@
 import './bootstrap'
-import '../css/app.scss'
-
+// import '../css/app.scss'
 import { createApp, DefineComponent, h } from 'vue'
 import { createInertiaApp, router } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'

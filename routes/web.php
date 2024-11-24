@@ -1,15 +1,21 @@
 <?php
 
+use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\MVController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ShinraiPostController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', HomeController::class)->name('home');
 
 Route::resource('/anime/{anime}/post', PostController::class)->except('index');
+Route::resource('/mv', MVController::class);
+Route::resource('/album', AlbumController::class);
+Route::resource('/shinrai', ShinraiPostController::class)->except('index', 'show');
 
 Route::resources([
     '/anime' => AnimeController::class

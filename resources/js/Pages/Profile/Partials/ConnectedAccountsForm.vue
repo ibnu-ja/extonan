@@ -77,7 +77,7 @@ const closeModal = () => {
         v-for="(provider) in page.props.socialstream.providers"
         :key="provider.id"
         :provider="provider"
-        :created-at="getAccountForProvider(provider)?.created_at"
+        :created-at="getAccountForProvider(provider)?.created_at!"
       >
         <template #action>
           <template v-if="getAccountForProvider(provider)">
