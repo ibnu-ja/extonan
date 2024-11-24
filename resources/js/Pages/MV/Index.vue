@@ -1,22 +1,11 @@
-<script lang="ts">
-
-import AppLayout from '@/Layouts/AppLayout.vue'
-
-export default {
-  layout: AppLayout,
-}
-</script>
-
 <script lang="ts" setup>
 import { Head, router } from '@inertiajs/vue3'
 import { VBtn } from 'vuetify/components'
 import { mdiFormatListNumbered, mdiPlus, mdiViewGrid } from 'mdi-js-es'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
-import InertiaLink from '@/Components/InertiaLink'
 import { PaginatedResponse } from '@/types'
 import { inject, watch } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
-import { useDisplay } from 'vuetify'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores'
 import { MV } from '@/types/mv'
@@ -26,6 +15,13 @@ import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.
 import { useLanguages } from '@/composables/useLanguages'
 import calendar from 'dayjs/plugin/calendar'
 import Pagination from '@/Components/Pagination.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import InertiaLink from '@/Components/InertiaLink'
+
+defineOptions({
+  name: 'MVIndex',
+  layout: AppLayout,
+})
 
 dayjs.extend(calendar)
 /*
@@ -75,8 +71,6 @@ defineProps<{
 
 const route = inject('route') as typeof ziggyRoute
 
-const { mdAndUp } = useDisplay()
-
 const { displayModeMV } = storeToRefs(useUserStore())
 
 watch(displayModeMV, (value) => {
@@ -91,19 +85,33 @@ const { translate } = useLanguages()
 
 </script>
 <template>
+  <InertiaLink
+    position="fixed"
+    class="m-[12px]"
+    location="bottom right"
+    style="z-index: 1005"
+    :href="route('mv.create')"
+    :as="VBtn"
+    size="large"
+    color="primary"
+    :icon="true"
+  >
+    <v-icon :icon="mdiPlus" />
+  </InertiaLink>
+
   <Head title="Music Video" />
   <PageHeader title="MV List">
-    <template #append>
-      <InertiaLink
-        v-if="canCreate"
-        :as="VBtn"
-        :href="route('mv.create')"
-        color="primary"
-        :icon="!mdAndUp ? mdiPlus : undefined"
-        :prepend-icon="mdAndUp ? mdiPlus : undefined"
-        :text="mdAndUp ? 'Create' : undefined"
-      />
-    </template>
+    <!--<template #append>-->
+    <!--  <InertiaLink-->
+    <!--    v-if="canCreate"-->
+    <!--    :as="VBtn"-->
+    <!--    :href="route('mv.create')"-->
+    <!--    color="primary"-->
+    <!--    :icon="!mdAndUp ? mdiPlus : undefined"-->
+    <!--    :prepend-icon="mdAndUp ? mdiPlus : undefined"-->
+    <!--    :text="mdAndUp ? 'Create' : undefined"-->
+    <!--  />-->
+    <!--</template>-->
   </PageHeader>
 
   <v-container class="my-0">
@@ -130,26 +138,26 @@ const { translate } = useLanguages()
         >
           <div class="grid md:grid-cols-2 lg:grid-cols-3">
             <HorizontalEpisodeCard
-              v-for="episode in mv.data"
-              :key="episode.id"
+              v-for="post in mv.data"
+              :key="post.id"
               :show-action="!!$page.props.auth.user"
-              :image="episode.thumbnail?.extraLarge"
-              :lazy-img="episode.thumbnail?.medium"
-              :href="route('mv.show', episode)"
-              :permissions="episode.can"
-              :delete-url="route('mv.destroy', episode)"
-              :edit-url="route('mv.edit', episode)"
-              :is-published="episode.is_published"
+              :image="post.thumbnail?.extraLarge"
+              :lazy-img="post.thumbnail?.medium"
+              :href="route('mv.show', post)"
+              :permissions="post.can"
+              :delete-url="route('mv.destroy', post)"
+              :edit-url="route('mv.edit', post)"
+              :is-published="post.is_published"
             >
               <template #content>
                 <div class="text-subtitle-1 list-title">
-                  {{ translate(episode) }}
+                  {{ translate(post.title) }}
                 </div>
                 <div
                   class="text-subtitle-2 text-medium-emphasis"
                 >
                   <template
-                    v-if="!episode.is_published"
+                    v-if="!post.is_published"
                   >
                     <span
                       class="text-success"
@@ -158,9 +166,9 @@ const { translate } = useLanguages()
                     </span> by
                   </template>
                   <template v-else>
-                    {{ dayjs(episode.published_at).format('D MMM YYYY') }} &bull;
+                    {{ dayjs(post.published_at).format('D MMM YYYY') }} &bull;
                   </template>
-                  {{ episode.author.name }}
+                  {{ post.author.name }}
                 </div>
               </template>
             </HorizontalEpisodeCard>

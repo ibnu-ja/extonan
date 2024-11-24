@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controllers\Middleware;
@@ -43,17 +44,18 @@ class MVController extends Controller
         ]);
     }
 
-    public function create(Request $request): Response
+    public function create(Request $request): RedirectResponse
     {
-        \Gate::authorize('create', Post::class);
-        abort(501);
+        return redirect()->route('shinrai.create', [
+            'type' => 'mv'
+        ]);
+
     }
 
     public function store(Request $request): Response
     {
-        \Gate::authorize('create', Post::class);
+        \Gate::authorize('store', Post::class);
         abort(501);
-        //return Inertia::render('MV/Index');
     }
 
     public function show(Request $request, Post $post): Response
