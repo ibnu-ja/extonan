@@ -1,12 +1,3 @@
-<script lang="ts">
-
-import AppLayout from '@/Layouts/AppLayout.vue'
-
-export default {
-  layout: AppLayout,
-}
-</script>
-
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
 import { AnimeData, EpisodeData, Resource } from '@/types/anime'
@@ -20,6 +11,12 @@ import { CoverImage } from '@/types/anilist'
 import { onMounted } from 'vue'
 import SpeedDial from '@/Pages/Anime/Post/Partials/SpeedDial.vue'
 import { useLanguages } from '@/composables/useLanguages'
+import AppLayout from '@/Layouts/AppLayout.vue'
+
+defineOptions({
+  name: 'AnimePostShow',
+  layout: AppLayout,
+})
 
 type ResourceModel = Post & Resource & {
   id: number

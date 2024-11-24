@@ -1,12 +1,3 @@
-<script lang="ts">
-
-import AppLayout from '@/Layouts/AppLayout.vue'
-
-export default {
-  layout: AppLayout,
-}
-</script>
-
 <script lang="ts" setup>
 import { Head } from '@inertiajs/vue3'
 import { AnimeData, EpisodeData } from '@/types/anime'
@@ -17,6 +8,12 @@ import { CoverImage } from '@/types/anilist'
 import SpeedDial from '@/Pages/Anime/Partials/SpeedDial.vue'
 import { useLanguages } from '@/composables/useLanguages'
 import calendar from 'dayjs/plugin/calendar'
+import AppLayout from '@/Layouts/AppLayout.vue'
+
+defineOptions({
+  name: 'AnimeShow',
+  layout: AppLayout,
+})
 
 dayjs.extend(calendar)
 
