@@ -19,7 +19,7 @@
                 "./vendor/tightenco/ziggy"
             ]
         },
-        "types": ["unplugin-vue-define-options/macros-global" /* ... */]
+        "types": ["unplugin-vue-define-options/macros-global"]
     },
     "include": [
         "resources/js/**/*.ts",

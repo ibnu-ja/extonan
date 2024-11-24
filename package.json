@@ -32,13 +32,13 @@
     "simple-icons": "^13.0.0",
     "swiper": "^11.1.10",
     "tailwindcss": "^3.4.10",
-    "typescript": "^5.0.2",
+    "typescript": "5.6.2",
     "typescript-eslint": "^8.4",
     "unplugin-vue-define-options": "^1.5.2",
     "vite": "^5.4.6",
     "vue": "^3.4.0",
     "vue-eslint-parser": "^9.4.3",
-    "vue-tsc": "^2.0.0"
+    "vue-tsc": "^2.1.10"
   },
   "dependencies": {
     "@vueuse/components": "^10.11.0",
