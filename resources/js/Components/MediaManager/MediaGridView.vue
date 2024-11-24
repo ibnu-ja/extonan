@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { mdiImage, mdiOpenInNew } from '@mdi/js'
-import prettyBytes from 'pretty-bytes'
+import { mdiImage, mdiOpenInNew } from 'mdi-js-es'
 import { computed } from 'vue'
 
 import { imageLink } from '@/composables/useImageLink'
 import { Media } from '@/types'
+import prettyBytes from 'pretty-bytes'
 
 const props = defineProps<{
   images: Media | Media[]

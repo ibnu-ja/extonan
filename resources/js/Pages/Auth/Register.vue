@@ -4,7 +4,7 @@ import AuthLayout from '@/Layouts/AuthLayout.vue'
 import { VBtn } from 'vuetify/components'
 import InertiaLink from '@/Components/InertiaLink'
 import { inject, ref } from 'vue'
-import { mdiEye, mdiEyeOff } from '@mdi/js'
+import { mdiEye, mdiEyeOff } from 'mdi-js-es'
 import Socialstream from '@/Components/Socialstream.vue'
 import { route as ziggyRoute } from 'ziggy-js'
 

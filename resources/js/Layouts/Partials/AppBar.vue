@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import { computed, inject, ref, watch } from 'vue'
-import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiLogin, mdiMenu } from '@mdi/js'
+import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiLogin, mdiMenu } from 'mdi-js-es'
 import { router, usePage } from '@inertiajs/vue3'
 import { VBtn, VListItem, VTab } from 'vuetify/components'
 import InertiaLink from '@/Components/InertiaLink'

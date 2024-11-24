@@ -13,7 +13,7 @@ import {
   mdiAlphabeticalVariant,
   mdiFormatListNumbered,
   mdiPlus,
-} from '@mdi/js'
+} from 'mdi-js-es'
 import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
 import InertiaLink from '@/Components/InertiaLink'

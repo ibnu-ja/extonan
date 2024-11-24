@@ -8,7 +8,7 @@ import { VCard } from 'vuetify/components'
 import { useLanguages } from '@/composables/useLanguages'
 import { useDisplay } from 'vuetify'
 import { computed, ref } from 'vue'
-import { mdiArrowRight, mdiClose } from '@mdi/js'
+import { mdiArrowRight, mdiClose } from 'mdi-js-es'
 
 const { gradient } = useGradient()
 

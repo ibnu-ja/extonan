@@ -2,7 +2,7 @@
 
 import { useDisplay } from 'vuetify'
 import { VCard } from 'vuetify/components'
-import { mdiPlay } from '@mdi/js'
+import { mdiPlay } from 'mdi-js-es'
 import InertiaLink from '@/Components/InertiaLink'
 import ItemListTitle from '@/Pages/Anime/Partials/ItemListTitle.vue'
 import { Permissions } from '@/types'

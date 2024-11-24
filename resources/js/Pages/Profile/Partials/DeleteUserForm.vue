@@ -2,7 +2,7 @@
 import { inject, ref, VNodeRef } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import ActionSection from '@/Components/ActionSection.vue'
-import { mdiEye, mdiEyeOff } from '@mdi/js'
+import { mdiEye, mdiEyeOff } from 'mdi-js-es'
 import { route as ziggyRoute } from 'ziggy-js'
 
 const route = inject('route') as typeof ziggyRoute

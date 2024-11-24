@@ -1,20 +1,17 @@
 <script lang="ts" setup>
-import { mdiDelete, mdiImage } from '@mdi/js'
+import { mdiDelete, mdiImage } from 'mdi-js-es'
 import axios from 'axios'
-import prettyBytes from 'pretty-bytes'
 import { inject, onMounted, ref, watch } from 'vue'
 
-import { openConfirmationDialog } from '@/composables/useDialog'
-// import { openErrorToast } from '@/composables/useSnackbar'
-import { Media, PaginatedResponse } from '@/types'
-
-// import Heading from '../Heading.vue'
+import { openConfirmationDialog } from '@/composables/useDialog' // import { openErrorToast } from '@/composables/useSnackbar'
+import { Media, PaginatedResponse } from '@/types' // import Heading from '../Heading.vue'
 import MediaRemoteUploader from './MediaRemoteUploader.vue'
 import MediaSelector from './MediaSelector.vue'
 import MediaUploader from './MediaUploader.vue'
 import { route as ziggyRoute } from 'ziggy-js'
-import dayjs from 'dayjs'
 import MediaGridView from '@/Components/MediaManager/MediaGridView.vue'
+import dayjs from 'dayjs'
+import prettyBytes from 'pretty-bytes'
 
 const emit = defineEmits([
   'update:modelValue',
@@ -87,6 +84,7 @@ watch(date, async () => {
 watch(media, async () => {
   await getMediaMonth()
 })
+
 const save = () => {
   dialog.value = false
   emit('update:modelValue', selected.value)

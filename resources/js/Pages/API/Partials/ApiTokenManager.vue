@@ -5,7 +5,7 @@ import ActionSection from '@/Components/ActionSection.vue'
 import FormSection from '@/Components/FormSection.vue'
 import { chunk } from 'lodash-es'
 import { ApiToken } from '@/types'
-import { mdiContentCopy } from '@mdi/js'
+import { mdiContentCopy } from 'mdi-js-es'
 import { UseClipboard } from '@vueuse/components'
 import { route as ziggyRoute } from 'ziggy-js'
 

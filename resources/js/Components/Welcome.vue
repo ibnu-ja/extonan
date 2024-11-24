@@ -1,7 +1,7 @@
 <script setup>
 import ApplicationLogo from '@/Components/ApplicationLogo.vue'
 import { useDisplay } from 'vuetify'
-import { mdiArrowRight, mdiBookOpenBlankVariantOutline, mdiLock, mdiVideo, mdiVuetify } from '@mdi/js'
+import { mdiArrowRight, mdiBookOpenBlankVariantOutline, mdiLock, mdiVideo, mdiVuetify } from 'mdi-js-es'
 
 const { xs } = useDisplay()
 </script>

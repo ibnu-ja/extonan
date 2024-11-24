@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiClose, mdiDelete, mdiPencil } from '@mdi/js'
+import { mdiClose, mdiDelete, mdiPencil } from 'mdi-js-es'
 import { inject, ref } from 'vue'
 import InertiaLink from '@/Components/InertiaLink'
 import { VBtn } from 'vuetify/components'
