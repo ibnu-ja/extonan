@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { usePage } from '@inertiajs/vue3'
-import { mdiClose } from '@mdi/js'
+import { mdiClose } from 'mdi-js-es'
 import { ref, watchEffect } from 'vue'
 
 const page = usePage()

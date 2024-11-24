@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { mdiDelete, mdiDotsVertical, mdiPencil, mdiSend } from '@mdi/js'
+import { mdiDelete, mdiDotsVertical, mdiPencil, mdiSend } from 'mdi-js-es'
 import { Permissions } from '@/types'
 import { VListItem } from 'vuetify/components'
 import { openConfirmationDialog } from '@/composables/useDialog'

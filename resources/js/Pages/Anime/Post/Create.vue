@@ -11,8 +11,8 @@ export default {
 
 import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import { Head, router, useForm } from '@inertiajs/vue3'
-import { mdiChevronDown, mdiChevronUp, mdiDelete } from '@mdi/js'
-import { mdiContentSave, mdiOpenInNew, mdiPencil, mdiPlus, mdiSend } from '@mdi/js'
+import { mdiChevronDown, mdiChevronUp, mdiDelete } from 'mdi-js-es'
+import { mdiContentSave, mdiOpenInNew, mdiPencil, mdiPlus, mdiSend } from 'mdi-js-es'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { useDisplay } from 'vuetify'
 import { TranslatableField } from '@/types/formHelper'

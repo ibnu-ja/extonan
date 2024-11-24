@@ -5,7 +5,7 @@ import { ref, watch } from 'vue'
 
 import { Media, PaginatedResponse } from '@/types'
 import { imageLink } from '@/composables/useImageLink'
-import { mdiCheck } from '@mdi/js'
+import { mdiCheck } from 'mdi-js-es'
 
 const props = withDefaults(defineProps<{
   media: PaginatedResponse<Media>

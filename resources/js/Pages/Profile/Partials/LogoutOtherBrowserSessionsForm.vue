@@ -3,7 +3,7 @@ import { inject, ref, VNodeRef } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import ActionSection from '@/Components/ActionSection.vue'
 import { UserSession } from '@/types'
-import { mdiCellphone, mdiDesktopTowerMonitor, mdiEye, mdiEyeOff } from '@mdi/js'
+import { mdiCellphone, mdiDesktopTowerMonitor, mdiEye, mdiEyeOff } from 'mdi-js-es'
 import { route as ziggyRoute } from 'ziggy-js'
 
 defineProps<{
