@@ -163,7 +163,8 @@ declare module 'ziggy-js' {
     "mv.show": [
         {
             "name": "mv",
-            "required": true
+            "required": true,
+            "binding": "id"
         }
     ],
     "mv.edit": [
@@ -181,6 +182,33 @@ declare module 'ziggy-js' {
     "mv.destroy": [
         {
             "name": "mv",
+            "required": true
+        }
+    ],
+    "album.index": [],
+    "album.create": [],
+    "album.store": [],
+    "album.show": [
+        {
+            "name": "album",
+            "required": true
+        }
+    ],
+    "album.edit": [
+        {
+            "name": "album",
+            "required": true
+        }
+    ],
+    "album.update": [
+        {
+            "name": "album",
+            "required": true
+        }
+    ],
+    "album.destroy": [
+        {
+            "name": "album",
             "required": true
         }
     ],

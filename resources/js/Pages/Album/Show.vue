@@ -8,18 +8,18 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import { MV } from '@/types/mv'
 
 defineOptions({
-  name: 'MVShow',
+  name: 'AlbumShow',
   layout: AppLayout,
 })
 
 const props = defineProps<{
-  post: MV
+  album: MV
 }>()
 
 const { smAndUp } = useDisplay()
 
 const { translate } = useLanguages()
-const title = translate(props.post.title)
+const title = translate(props.album.title)
 
 </script>
 
@@ -29,17 +29,17 @@ const title = translate(props.post.title)
   <v-container>
     <!--<SpeedDial-->
     <!--  :anime-id="anime.id"-->
-    <!--  :post-id="post.id"-->
+    <!--  :post-id="album.id"-->
     <!--/>-->
     <div>
       <h1 class="text-h4">
-        {{ translate(props.post.title) }}
+        {{ translate(props.album.title) }}
       </h1>
       <div
-        v-if="post.is_published"
+        v-if="album.is_published"
         class="text-medium-emphasis"
       >
-        Published at {{ dayjs(post.published_at) }} by {{ post.author.name }}
+        Published at {{ dayjs(album.published_at) }} by {{ album.author.name }}
       </div>
     </div>
   </v-container>
@@ -53,13 +53,13 @@ const title = translate(props.post.title)
         md="8"
       >
         <v-img
-          v-if="post.thumbnail"
+          v-if="album.thumbnail"
           class="w-full sm:w-[75%] mx-auto mb-4"
-          :src="post.thumbnail.extraLarge"
+          :src="album.thumbnail.extraLarge"
         />
 
         <p class="mb-4 px-2 sm:px-0">
-          {{ post.description.en }}
+          {{ album.description.en }}
         </p>
 
         <h3 class="text-h6 mb-4 px-2 sm:px-0">
@@ -67,13 +67,13 @@ const title = translate(props.post.title)
         </h3>
 
         <v-expansion-panels
-          v-if="post.links?.length > 0"
+          v-if="album.links?.length > 0"
           :rounded="smAndUp ? 'lg' : 0"
           multiple
           variant="accordion"
         >
           <v-expansion-panel
-            v-for="postItem in post.links"
+            v-for="postItem in album.links"
             :key="postItem.id"
             static
           >
@@ -116,13 +116,13 @@ const title = translate(props.post.title)
           <!--  :id="episode.slug"-->
           <!--  :key="episode.id"-->
           <!--  :show-action="!!$page.props.auth.user"-->
-          <!--  :active="episode.id == post.id"-->
+          <!--  :active="episode.id == album.id"-->
           <!--  :image="episode.thumbnail?.extraLarge"-->
           <!--  :lazy-img="episode.thumbnail?.medium"-->
-          <!--  :href="route('post.show', [anime, episode])"-->
+          <!--  :href="route('album.show', [anime, episode])"-->
           <!--  :title="episode.title.en!"-->
-          <!--  :edit-url="route('post.edit', [anime, episode])"-->
-          <!--  :delete-url="route('post.destroy', [anime, episode])"-->
+          <!--  :edit-url="route('album.edit', [anime, episode])"-->
+          <!--  :delete-url="route('album.destroy', [anime, episode])"-->
           <!--  :is-published="anime.is_published"-->
           <!--/>-->
         </div>

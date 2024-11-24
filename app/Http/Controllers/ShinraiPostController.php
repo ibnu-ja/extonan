@@ -58,7 +58,9 @@ class ShinraiPostController extends Controller implements HasMiddleware
             $post->detachMediaTags('thumbnail');
         }
 
-        return redirect()->route('mv.index')->banner('Post created successfully!');
+        $route = $request->validated()['metadata']['post_type'] == 'mv' ? 'mv.index' : 'album.index';
+
+        return redirect()->route($route)->banner('Post created successfully!');
     }
 
     /**

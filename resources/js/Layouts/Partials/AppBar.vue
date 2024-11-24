@@ -39,6 +39,12 @@ const itemList = computed(() => [
     exactActive: false,
   },
   {
+    value: 'album',
+    link: route('album.index'),
+    label: 'Album',
+    exactActive: false,
+  },
+  {
     value: 'mv',
     link: route('mv.index'),
     label: 'MV',

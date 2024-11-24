@@ -49,7 +49,6 @@ class MVController extends Controller
         return redirect()->route('shinrai.create', [
             'type' => 'mv'
         ]);
-
     }
 
     public function show(Request $request, Post $mv): Response

@@ -42,6 +42,13 @@ const page = usePage()
 
       <InertiaLink
         :as="VListItem"
+        :href="route('album.index')"
+      >
+        Album
+      </InertiaLink>
+
+      <InertiaLink
+        :as="VListItem"
         :href="route('mv.index')"
       >
         MV

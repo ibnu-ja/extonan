@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
@@ -13,6 +14,7 @@ Route::get('/', HomeController::class)->name('home');
 
 Route::resource('/anime/{anime}/post', PostController::class)->except('index');
 Route::resource('/mv', MVController::class);
+Route::resource('/album', AlbumController::class);
 Route::resource('/shinrai', ShinraiPostController::class)->except('index', 'show');
 
 Route::resources([
