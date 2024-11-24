@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
-import dayjs from 'dayjs'
 import { mdiOpenInNew } from 'mdi-js-es'
 import { useDisplay } from 'vuetify'
 import { useLanguages } from '@/composables/useLanguages'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { MV } from '@/types/mv'
+import Disc from '@/Pages/Album/Partials/Disc.vue'
+import dayjs from 'dayjs'
 
 defineOptions({
   name: 'AlbumShow',
@@ -61,6 +62,13 @@ const title = translate(props.album.title)
         <p class="mb-4 px-2 sm:px-0">
           {{ album.description.en }}
         </p>
+
+        <div
+          v-if="props.album.metadata.vgmdb_data?.discs && props.album.metadata.vgmdb_data?.discs?.length > 0"
+          class="mb-4"
+        >
+          <Disc :discs="props.album.metadata.vgmdb_data?.discs" />
+        </div>
 
         <h3 class="text-h6 mb-4 px-2 sm:px-0">
           Download Links

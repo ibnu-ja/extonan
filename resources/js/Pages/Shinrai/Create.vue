@@ -1,19 +1,21 @@
 <script lang="ts" setup>
 
 import { Head, useForm } from '@inertiajs/vue3'
-import { mdiContentSave, mdiDelete, mdiPencil, mdiPlus, mdiSend } from 'mdi-js-es'
+import { mdiClose, mdiContentSave, mdiDelete, mdiPencil, mdiPlus, mdiSend } from 'mdi-js-es'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { useDisplay } from 'vuetify'
 import { useLanguages } from '@/composables/useLanguages'
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
 import { openFormDialog } from '@/composables/useDialog'
 import MediaManager from '@/Components/MediaManager/Index.vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { MV, MVPostItem } from '@/types/mv'
+import axios from 'axios'
+import { Album, Disc } from '@/types/vgmdb'
 
 defineOptions({
-  name: 'AnimePostCreate',
+  name: 'ShinraiCreate',
   layout: AppLayout,
 })
 
@@ -31,7 +33,7 @@ const form = useForm<MVPostItem>({
   },
   is_published: true,
   links: [],
-  metadata: { post_type: route().params.type || 'mv' },
+  metadata: { post_type: route().params.type || 'mv', vgmdb_data: null },
   thumbnail_item: null,
   title: {
     en: null,
@@ -40,6 +42,8 @@ const form = useForm<MVPostItem>({
     romaji: null,
   },
 })
+
+const vgmdbUrl = import.meta.env.VITE_VGMDB_API_URL as string
 
 // assign props to form model
 if (props.post) {
@@ -50,6 +54,26 @@ if (props.post) {
   form.thumbnail_item = props.post.thumbnail_item
 }
 
+const apiSearchId = ref<number | null>(null)
+
+const fetchVgmdbData = async () => {
+  if (!apiSearchId.value) {
+    console.error('id is not set')
+    return
+  }
+  try {
+    const response = await axios.get<Album>(`${vgmdbUrl}/album/${apiSearchId.value}`)
+    form.metadata.vgmdb_data = response.data
+    console.log(form.metadata.vgmdb_data)
+    form.title.en = response.data.names.en
+    form.title.native = response.data.names.ja
+    form.title.romaji = response.data.names['ja-latn']
+    if (response.data.discs[0].tracks[0].names)
+      trackLangs.value = Object.keys(response.data.discs[0].tracks[0].names)
+  } catch (e) {
+    console.error(e)
+  }
+}
 const submit = () => {
   if (props.post) {
     form.is_published = props.post.is_published
@@ -109,6 +133,7 @@ const deleteFilename = (index: number) => {
 const deleteLink = (i: number, j: number) => {
   form.links[i].value.splice(j, 1)
 }
+const trackLangs = ref<string[]>([])
 
 // const title = props.post ? 'Editing ' + translate(props.post?.title) : 'Create Shinrai Post'
 const title = 'Create Shinrai Post'
@@ -123,6 +148,13 @@ const deletePost = async () => {
   // } catch {
   //   //
   // }
+}
+
+function addTrack(disc: Disc) {
+  disc!.tracks!.push({
+    names: {},
+    track_length: '',
+  })
 }
 
 // TODO translations
@@ -140,6 +172,39 @@ const postType = [
     title: 'Single',
   },
 ]
+
+function deleteTrackLanguage(index: number) {
+  const langName = trackLangs.value[index] as string
+  form.metadata.vgmdb_data?.discs?.forEach((disc) => {
+    disc.tracks?.forEach((track) => {
+      if (track.names && track.names[langName])
+        delete track.names[langName]
+      else console.log('not track lang found')
+    })
+  })
+  trackLangs.value.splice(index, 1)
+}
+
+const addDisc = () => {
+  alert('a')
+  form.metadata.vgmdb_data?.discs!.push({
+    disc_length: '',
+    name: '',
+    tracks: [
+      {
+        names: {
+          Japanese: null,
+          Romaji: null,
+        },
+        track_length: '',
+      },
+    ],
+  })
+}
+
+if (props.post?.metadata?.vgmdb_data?.discs?.[0]?.tracks?.[0]?.names) {
+  trackLangs.value = Object.keys(props.post.metadata.vgmdb_data.discs[0].tracks[0].names)
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formErrors = computed(() => form.errors as any)
@@ -255,7 +320,10 @@ const formErrors = computed(() => form.errors as any)
             </v-card>
           </section>
           <section>
-            <v-card :rounded="smAndUp">
+            <v-card
+              class="mb-4"
+              :rounded="smAndUp"
+            >
               <v-card-item>
                 <v-card-title>
                   Links
@@ -281,29 +349,19 @@ const formErrors = computed(() => form.errors as any)
                     <template #prepend>
                       <v-btn
                         variant="plain"
-                        :icon="true"
+                        :prepend-icon="mdiPencil"
                         density="comfortable"
                         color="secondary"
                         @click="editFilename(i)"
-                      >
-                        <v-icon
-                          :icon="mdiPencil"
-                          size="20"
-                        />
-                      </v-btn>
+                      />
 
                       <v-btn
                         variant="plain"
-                        :icon="true"
+                        :prepend-icon="mdiDelete"
                         density="comfortable"
                         color="error"
                         @click="deleteFilename(i)"
-                      >
-                        <v-icon
-                          :icon="mdiDelete"
-                          size="20"
-                        />
-                      </v-btn>
+                      />
                     </template>
                     <v-card-title>
                       {{ resource.name }}
@@ -311,17 +369,11 @@ const formErrors = computed(() => form.errors as any)
                     <template #append>
                       <v-btn
                         variant="plain"
-                        :icon="true"
-                        density="comfortable"
                         :prepend-icon="mdiPlus"
+                        density="comfortable"
                         color="primary"
                         @click.prevent="addLink(i)"
-                      >
-                        <v-icon
-                          :icon="mdiPlus"
-                          size="20"
-                        />
-                      </v-btn>
+                      />
                     </template>
                   </v-card-item>
                   <template
@@ -382,10 +434,222 @@ const formErrors = computed(() => form.errors as any)
               </v-card-text>
             </v-card>
           </section>
+          <v-expand-transition>
+            <section v-if="form.metadata.vgmdb_data">
+              <v-card
+                class="mb-4"
+                :disabled="form.processing"
+              >
+                <v-card-item>
+                  <v-card-title>
+                    Tracks Title Language
+                  </v-card-title>
+                  <template #append>
+                    <v-btn
+                      :disabled="form.processing"
+                      color="primary"
+                      :prepend-icon="mdiPlus"
+                      @click="trackLangs!.push('')"
+                    >
+                      Add Lang
+                    </v-btn>
+                  </template>
+                </v-card-item>
+
+                <v-divider />
+                <v-card-text class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <v-scroll-x-transition group>
+                    <p
+                      v-if="!trackLangs || trackLangs.length === 0"
+                      key="NA"
+                      class="mb-4 text-center col-span-md-2"
+                    >
+                      No data available
+                    </p>
+                    <v-text-field
+                      v-for="(lang, index) in trackLangs"
+                      :key="index"
+                      v-model="trackLangs![index]"
+                      :label="'Lang #' + (index + 1)"
+                      :append-inner-icon="mdiClose"
+                      variant="outlined"
+                      @click:append-inner="deleteTrackLanguage(index)"
+                    />
+                  </v-scroll-x-transition>
+                </v-card-text>
+              </v-card>
+              <!-- Disc -->
+              <v-card
+                :disabled="form.processing"
+              >
+                <v-card-item>
+                  <v-card-title class="d-flex">
+                    Discs
+                  </v-card-title>
+                  <template #append>
+                    <v-btn
+                      :disabled="form.processing"
+                      color="primary"
+                      :prepend-icon="mdiPlus"
+                      text="Add Disc"
+                      @click="addDisc"
+                    />
+                  </template>
+                </v-card-item>
+                <v-divider />
+                <v-card-text
+                  class="grid grid-cols-1 gap-2"
+                  :class="{'p-2': form.metadata.vgmdb_data?.discs && form.metadata.vgmdb_data?.discs.length > 0}"
+                >
+                  <v-scroll-x-transition group>
+                    <p
+                      v-if="!form.metadata.vgmdb_data?.discs || form.metadata.vgmdb_data?.discs.length === 0"
+                      key="NA"
+                      class="mb-4 text-center"
+                    >
+                      No data available
+                    </p>
+                    <v-card
+
+                      v-for="(disc, index) in form.metadata.vgmdb_data?.discs"
+                      :key="index"
+                      :disabled="form.processing"
+                      variant="outlined"
+                    >
+                      <v-card-title class="d-flex">
+                        Disc #{{ index + 1 }}
+                        <v-spacer />
+                        <v-btn
+                          :disabled="form.processing"
+                          size="small"
+                          color="error"
+                          @click="form.metadata.vgmdb_data?.discs!.splice(index, 1)"
+                        >
+                          <v-icon
+                            start
+                            :icon="mdiDelete"
+                          />
+                          Delete Disc #{{ index + 1 }}
+                        </v-btn>
+                      </v-card-title>
+                      <v-card-text class="p-2 grid grid-cols-3 gap-2">
+                        <v-text-field
+                          v-model="disc.name"
+                          class="col-span-2"
+                          label="Disc Name"
+                          variant="outlined"
+                        />
+                        <v-text-field
+                          v-model="disc.disc_length"
+                          label="Disc Length"
+                          variant="outlined"
+                        />
+                        <v-scroll-x-transition group>
+                          <div
+                            v-for="(track, i) in disc.tracks"
+                            :key="i"
+                            class="col-span-3"
+                          >
+                            <v-card
+                              :disabled="form.processing"
+                              variant="outlined"
+                            >
+                              <v-card-item>
+                                <v-card-title>
+                                  Track #{{ i + 1 }}
+                                </v-card-title>
+                                <template #append>
+                                  <v-btn
+                                    :disabled="form.processing"
+                                    color="error"
+                                    :prepend-icon="mdiDelete"
+                                    @click="disc.tracks!.splice(i, 1)"
+                                  >
+                                    Delete Track #{{ i + 1 }}
+                                  </v-btn>
+                                </template>
+                              </v-card-item>
+                              <v-card-text class="pa-2 d-grid grid-cols-3 gap-2">
+                                <v-text-field
+                                  v-for="(lang, j) in trackLangs"
+                                  :key="j"
+                                  v-model="track.names![lang]"
+                                  class="col-span-2"
+                                  :style="{order: j === 0 ? -1 : 2}"
+                                  :disabled="!lang"
+                                  :label="'Title ' + lang"
+                                  variant="outlined"
+                                />
+                                <v-text-field
+                                  v-model="track.track_length"
+                                  style="order: 1"
+                                  :disabled="!track.names || Object.keys(track.names).length === 0"
+                                  label="Track Length"
+                                  variant="outlined"
+                                />
+                              </v-card-text>
+                            </v-card>
+                          </div>
+                        </v-scroll-x-transition>
+                        <div
+                          class="col-span-3"
+                        >
+                          <v-btn
+                            :disabled="form.processing"
+                            color="primary"
+                            @click="addTrack(disc)"
+                          >
+                            Add Track
+                          </v-btn>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </v-scroll-x-transition>
+                </v-card-text>
+              </v-card>
+            </section>
+          </v-expand-transition>
         </div>
         <div class="md:col-span-4">
+          <v-card
+            :rounded="smAndUp"
+            class="mb-4"
+          >
+            <v-card-item>
+              <v-card-title>
+                Metadata
+              </v-card-title>
+            </v-card-item>
+            <v-divider />
+            <v-card-text>
+              <v-text-field
+                v-model="apiSearchId"
+                label="VGMDB API"
+                type="number"
+                :error-messages="form.errors.metadata!"
+                placeholder="10322"
+                variant="outlined"
+                hide-details="auto"
+                @keydown.enter.prevent="fetchVgmdbData"
+              />
+            </v-card-text>
+            <v-card-actions>
+              <v-expand-x-transition>
+                <v-btn
+                  v-if="form.metadata"
+                  :append-icon="mdiClose"
+                  text="Clear"
+                  @click="form.metadata.vgmdb_data = null"
+                />
+              </v-expand-x-transition>
+              <v-spacer />
+              <v-btn
+                text="Autofill"
+                @click="fetchVgmdbData"
+              />
+            </v-card-actions>
+          </v-card>
           <div>
-            <!--TODO-->
             <MediaManager
               v-model="form.thumbnail_item"
               class="mb-4"
