@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import laravel from 'laravel-vite-plugin'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
+import DefineOptions from 'unplugin-vue-define-options/vite'
 
 export default defineConfig({
   css: {
@@ -31,6 +32,7 @@ export default defineConfig({
         },
       },
     }),
+    DefineOptions(),
     vuetify({
       styles: {
         configFile: 'resources/css/settings.scss',
