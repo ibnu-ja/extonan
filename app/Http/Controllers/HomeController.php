@@ -22,7 +22,11 @@ class HomeController extends Controller
                 $query->with('author')->take(10);
             })->with(['postable', 'author'])->orderByDesc('published_at')->get(),
             'latestMv' => Post::with('author')
-                ->shinrai()
+                ->where('metadata->post_type', '=', 'mv')
+                ->current()
+                ->take(10)->orderBy('published_at')->get(),
+            'latestAlbum' => Post::with('author')
+                ->whereIn('metadata->post_type', ['album', 'single'])
                 ->current()
                 ->take(10)->orderBy('published_at')->get(),
         ]);

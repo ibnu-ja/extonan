@@ -9,6 +9,7 @@ import { useLanguages } from '@/composables/useLanguages'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { MV } from '@/types/mv'
 import SingleMvItem from '@/Pages/MV/Partials/SingleMvItem.vue'
+import AlbumItem from '@/Pages/Album/Partials/AlbumItem.vue'
 
 defineOptions({
   name: 'Home',
@@ -28,6 +29,7 @@ defineProps<{
   latestAnime: AnimeData[]
   latestEpisodes: Postable[]
   latestMv: MV[]
+  latestAlbum: MV[]
 }>()
 
 const getTitle = (post: Postable): string => {
@@ -115,6 +117,56 @@ const { translate } = useLanguages()
     </template>
     <v-container v-else>
       Add MV post to show latest MV.
+    </v-container>
+  </section>
+  <section class="mt-4 sm:mt-8">
+    <template v-if="latestEpisodes.length > 0">
+      <v-container class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4">
+        <h1 class="text-h4 text-md-h3">
+          Latest Album
+        </h1>
+      </v-container>
+      <!--TODO swiper-->
+      <v-container class="px-0 sm:px-4 pt-0 grid grid-cols-2 md:grid-cols-5 sm:grid-cols-3">
+        <AlbumItem
+          v-for="album in latestAlbum"
+          :key="album.id"
+          :show-action="!!$page.props.auth.user"
+          :image="album.thumbnail?.extraLarge"
+          :lazy-img="album.thumbnail?.medium"
+          :href="route('album.show', album)"
+          :permissions="album.can"
+          :delete-url="route('shinrai.destroy', album)"
+          :edit-url="route('album.edit', album)"
+          :is-published="album.is_published"
+        >
+          <template #content>
+            <div class="text-subtitle-1 list-title">
+              {{ translate(album.title) }}
+            </div>
+            <div
+              class="text-subtitle-2 text-medium-emphasis"
+            >
+              <template
+                v-if="!album.is_published"
+              >
+                <span
+                  class="text-success"
+                >
+                  Draft
+                </span> by
+              </template>
+              <template v-else>
+                {{ dayjs(album.published_at).format('D MMM YYYY') }} &bull;
+              </template>
+              {{ album.author.name }}
+            </div>
+          </template>
+        </AlbumItem>
+      </v-container>
+    </template>
+    <v-container v-else>
+      Add album post to show latest album.
     </v-container>
   </section>
 </template>
