@@ -11,12 +11,11 @@ import { useUserStore } from '@/stores'
 import { MV } from '@/types/mv'
 import TableView from '@/Pages/MV/Partials/TableView.vue'
 import dayjs from 'dayjs'
-import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
-import { useLanguages } from '@/composables/useLanguages'
 import calendar from 'dayjs/plugin/calendar'
 import Pagination from '@/Components/Pagination.vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import InertiaLink from '@/Components/InertiaLink'
+import SingleMvItem from '@/Pages/MV/Partials/SingleMvItem.vue'
 
 defineOptions({
   name: 'MVIndex',
@@ -81,8 +80,6 @@ watch(displayModeMV, (value) => {
   }
 })
 
-const { translate } = useLanguages()
-
 </script>
 <template>
   <InertiaLink
@@ -137,41 +134,11 @@ const { translate } = useLanguages()
           v-if="mv.data.length > 0"
         >
           <div class="grid md:grid-cols-2 lg:grid-cols-3">
-            <HorizontalEpisodeCard
+            <SingleMvItem
               v-for="post in mv.data"
               :key="post.id"
-              :show-action="!!$page.props.auth.user"
-              :image="post.thumbnail?.extraLarge"
-              :lazy-img="post.thumbnail?.medium"
-              :href="route('mv.show', post)"
-              :permissions="post.can"
-              :delete-url="route('mv.destroy', post)"
-              :edit-url="route('mv.edit', post)"
-              :is-published="post.is_published"
-            >
-              <template #content>
-                <div class="text-subtitle-1 list-title">
-                  {{ translate(post.title) }}
-                </div>
-                <div
-                  class="text-subtitle-2 text-medium-emphasis"
-                >
-                  <template
-                    v-if="!post.is_published"
-                  >
-                    <span
-                      class="text-success"
-                    >
-                      Draft
-                    </span> by
-                  </template>
-                  <template v-else>
-                    {{ dayjs(post.published_at).format('D MMM YYYY') }} &bull;
-                  </template>
-                  {{ post.author.name }}
-                </div>
-              </template>
-            </HorizontalEpisodeCard>
+              :post="post"
+            />
           </div>
           <Pagination :links="mv.links" />
         </template>

@@ -7,6 +7,8 @@ import dayjs from 'dayjs'
 import { CoverImage } from '@/types/anilist'
 import { useLanguages } from '@/composables/useLanguages'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import { MV } from '@/types/mv'
+import SingleMvItem from '@/Pages/MV/Partials/SingleMvItem.vue'
 
 defineOptions({
   name: 'Home',
@@ -25,6 +27,7 @@ defineProps<{
   phpVersion: string
   latestAnime: AnimeData[]
   latestEpisodes: Postable[]
+  latestMv: MV[]
 }>()
 
 const getTitle = (post: Postable): string => {
@@ -92,6 +95,26 @@ const { translate } = useLanguages()
     </template>
     <v-container v-else>
       Add anime post to show latest episode data.
+    </v-container>
+  </section>
+  <section class="mt-4 sm:mt-8">
+    <template v-if="latestEpisodes.length > 0">
+      <v-container class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4">
+        <h1 class="text-h4 text-md-h3">
+          Latest MV
+        </h1>
+      </v-container>
+      <!--TODO swiper-->
+      <v-container class="px-0 sm:px-4 pt-0 grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2">
+        <SingleMvItem
+          v-for="mv in latestMv"
+          :key="mv.id"
+          :post="mv"
+        />
+      </v-container>
+    </template>
+    <v-container v-else>
+      Add MV post to show latest MV.
     </v-container>
   </section>
 </template>
