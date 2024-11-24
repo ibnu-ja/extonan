@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="artisan ziggy:generate" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/artisan" scriptParameters="ziggy:generate --types-only $PROJECT_DIR$/resources/js/types/routes.d.ts">
+    <method v="2" />
+  </configuration>
+</component>
