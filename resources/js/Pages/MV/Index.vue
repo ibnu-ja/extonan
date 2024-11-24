@@ -10,7 +10,7 @@ export default {
 <script lang="ts" setup>
 import { Head, router } from '@inertiajs/vue3'
 import { VBtn } from 'vuetify/components'
-import { mdiFormatListNumbered, mdiPlus, mdiViewGrid } from '@mdi/js'
+import { mdiFormatListNumbered, mdiPlus, mdiViewGrid } from 'mdi-js-es'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import InertiaLink from '@/Components/InertiaLink'
 import { PaginatedResponse } from '@/types'
