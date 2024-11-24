@@ -58,4 +58,9 @@ class AlbumController extends Controller implements HasMiddleware {
             'type' => 'album'
         ]);
     }
+
+    public function edit(Request $request, Post $album): RedirectResponse
+    {
+        return redirect()->route('shinrai.edit', $album);
+    }
 }

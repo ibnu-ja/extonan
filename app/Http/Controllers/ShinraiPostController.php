@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\StoreShinraiPostRequest;
-use App\Models\Anime;
 use App\Models\Post;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Inertia\Inertia;
@@ -66,12 +65,11 @@ class ShinraiPostController extends Controller implements HasMiddleware
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Anime $anime, Post $post)
+    public function edit(Post $post)
     {
         \Gate::authorize('update', $post);
 
-        return Inertia::render('Anime/Post/Create', [
-            'anime' => $anime,
+        return Inertia::render('Shinrai/Create', [
             'post' => $post->load(['author', 'links', 'media'])->append('thumbnail_item'),
             'canPublish' => request()->user()->can('publish', $post),
         ]);
@@ -80,7 +78,7 @@ class ShinraiPostController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(Anime $anime, Post $post, StorePostRequest $request)
+    public function update(Post $post, StorePostRequest $request)
     {
         \Gate::authorize('update', $post);
         if ($request->boolean('is_published') && $request->user()->cannot('publish', Post::class)) {
@@ -116,11 +114,12 @@ class ShinraiPostController extends Controller implements HasMiddleware
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Anime $anime, Post $post)
+    public function destroy(Post $post)
     {
+        //dd($post);
         \Gate::authorize('delete', $post);
         $post->delete();
 
-        return redirect()->route('anime.show', $anime)->banner('Episode deleted successfully!');
+        return redirect()->back()->banner('Episode deleted successfully!');
     }
 }

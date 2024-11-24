@@ -26,5 +26,8 @@ class RouteBindingProvider extends ServiceProvider
         \Route::bind('album', function(int $id): Post {
             return Post::current()->withoutGlobalScopes()->whereIn('metadata->post_type', ['album', 'single'])->findOrFail($id);
         });
+        \Route::bind('shinrai', function(int $id): Post {
+            return Post::current()->withoutGlobalScopes()->shinrai()->findOrFail($id);
+        });
     }
 }

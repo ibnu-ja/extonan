@@ -19,7 +19,7 @@ const { translate } = useLanguages()
     :lazy-img="post.thumbnail?.medium"
     :href="route('mv.show', post)"
     :permissions="post.can"
-    :delete-url="route('mv.destroy', post)"
+    :delete-url="route('shinrai.destroy', post)"
     :edit-url="route('mv.edit', post)"
     :is-published="post.is_published"
   >

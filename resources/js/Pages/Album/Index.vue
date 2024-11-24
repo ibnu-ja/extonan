@@ -52,8 +52,8 @@ const { translate } = useLanguages()
         :lazy-img="post.thumbnail?.medium"
         :href="route('album.show', post)"
         :permissions="post.can"
-        :delete-url="route('mv.destroy', post)"
-        :edit-url="route('mv.edit', post)"
+        :delete-url="route('shinrai.destroy', post)"
+        :edit-url="route('album.edit', post)"
         :is-published="post.is_published"
       >
         <template #content>
