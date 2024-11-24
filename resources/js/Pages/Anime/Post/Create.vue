@@ -1,18 +1,17 @@
-<script lang="ts">
-
-import AppLayout from '@/Layouts/AppLayout.vue'
-
-export default {
-  layout: AppLayout,
-}
-</script>
-
 <script lang="ts" setup>
 
 import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import { Head, router, useForm } from '@inertiajs/vue3'
-import { mdiChevronDown, mdiChevronUp, mdiDelete } from 'mdi-js-es'
-import { mdiContentSave, mdiOpenInNew, mdiPencil, mdiPlus, mdiSend } from 'mdi-js-es'
+import {
+  mdiChevronDown,
+  mdiChevronUp,
+  mdiContentSave,
+  mdiDelete,
+  mdiOpenInNew,
+  mdiPencil,
+  mdiPlus,
+  mdiSend,
+} from 'mdi-js-es'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import { useDisplay } from 'vuetify'
 import { TranslatableField } from '@/types/formHelper'
@@ -23,6 +22,12 @@ import { route as ziggyRoute } from 'ziggy-js'
 import { openConfirmationDialog, openFormDialog } from '@/composables/useDialog'
 import MediaManager from '@/Components/MediaManager/Index.vue'
 import { Media } from '@/types'
+import AppLayout from '@/Layouts/AppLayout.vue'
+
+defineOptions({
+  name: 'AnimePostCreate',
+  layout: AppLayout,
+})
 
 const props = defineProps<{
   anime: AnimeData
@@ -121,6 +126,7 @@ const editFilename = async (index: number) => {
       variant: 'outlined',
       placeholder: form.links[index].name,
     })
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) { /* empty */
   }
 }

@@ -1,12 +1,3 @@
-<script lang="ts">
-
-import AppLayout from '@/Layouts/AppLayout.vue'
-
-export default {
-  layout: AppLayout,
-}
-</script>
-
 <script setup lang="ts">
 import { Head, usePage } from '@inertiajs/vue3'
 import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue'
@@ -18,6 +9,12 @@ import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsFor
 import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue'
 import { UserSession } from '@/types'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
+
+defineOptions({
+  name: 'ProfileShow',
+  layout: AppLayout,
+})
 
 defineProps<{
   confirmsTwoFactorAuthentication: boolean

@@ -1,12 +1,3 @@
-<script lang="ts">
-
-import AppLayout from '@/Layouts/AppLayout.vue'
-
-export default {
-  layout: AppLayout,
-}
-</script>
-
 <script lang="ts" setup>
 import { Head } from '@inertiajs/vue3'
 import { AnimeData, EpisodeData } from '@/types/anime'
@@ -15,6 +6,12 @@ import VerticalEpisodeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
 import dayjs from 'dayjs'
 import { CoverImage } from '@/types/anilist'
 import { useLanguages } from '@/composables/useLanguages'
+import AppLayout from '@/Layouts/AppLayout.vue'
+
+defineOptions({
+  name: 'Home',
+  layout: AppLayout,
+})
 
 type Postable = EpisodeData & {
   postable: AnimeData

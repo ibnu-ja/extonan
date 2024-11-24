@@ -1,19 +1,6 @@
-<script lang="ts">
-
-import AppLayout from '@/Layouts/AppLayout.vue'
-
-export default {
-  layout: AppLayout,
-}
-</script>
-
 <script lang="ts" setup>
 import { Head, router } from '@inertiajs/vue3'
-import {
-  mdiAlphabeticalVariant,
-  mdiFormatListNumbered,
-  mdiPlus,
-} from 'mdi-js-es'
+import { mdiAlphabeticalVariant, mdiFormatListNumbered, mdiPlus } from 'mdi-js-es'
 import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
 import InertiaLink from '@/Components/InertiaLink'
@@ -27,6 +14,12 @@ import { storeToRefs } from 'pinia'
 import { inject, watch } from 'vue'
 import AbcView from '@/Pages/Anime/Partials/AbcView.vue'
 import { route as ziggyRoute } from 'ziggy-js'
+import AppLayout from '@/Layouts/AppLayout.vue'
+
+defineOptions({
+  name: 'AnimeIndex',
+  layout: AppLayout,
+})
 
 const { mdAndUp } = useDisplay()
 
