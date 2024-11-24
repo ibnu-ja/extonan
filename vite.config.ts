@@ -7,16 +7,10 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'modern',
-        // importers: [
-        //   new sass.NodePackageImporter(),
-        // ],
+        api: 'modern-compiler',
       },
       sass: {
-        api: 'modern',
-        // importers: [
-        //   new sass.NodePackageImporter(),
-        // ],
+        api: 'modern-compiler',
       },
     },
   },
