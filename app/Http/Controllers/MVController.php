@@ -52,33 +52,19 @@ class MVController extends Controller
 
     }
 
-    public function store(Request $request): Response
+    public function show(Request $request, Post $mv): Response
     {
-        \Gate::authorize('store', Post::class);
-        abort(501);
+        \Gate::authorize('view', $mv);
+
+        return Inertia::render('MV/Show', [
+            'post' => $mv->load('author', 'links'),
+            'canPublish' => fn() => auth()->check() && auth()->user()->can('publish', $mv),
+        ]);
     }
 
-    public function show(Request $request, Post $post): Response
-    {
-        \Gate::authorize('view', $post);
-        abort(501);
-    }
-
-    public function edit(Request $request, Post $post): Response
+    public function edit(Request $request, Post $post): RedirectResponse
     {
         \Gate::authorize('update', $post);
-        abort(501);
-    }
-
-    public function update(Request $request, Post $post): Response
-    {
-        \Gate::authorize('update', $post);
-        abort(501);
-    }
-
-    public function destroy(Request $request, Post $post): Response
-    {
-        \Gate::authorize('delete', $post);
         abort(501);
     }
 }
