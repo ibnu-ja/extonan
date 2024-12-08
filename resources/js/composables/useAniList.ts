@@ -91,12 +91,20 @@ export function useAnime() {
         }
         seasonYear
         season
-        seasonInt
         genres
         title {
           romaji
           english
           native
+        }
+        tags {
+          category
+          id
+          isAdult
+          isGeneralSpoiler
+          isMediaSpoiler
+          name
+          rank
         }
       }
     }`

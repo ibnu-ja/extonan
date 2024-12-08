@@ -62,6 +62,15 @@ export type AnimeMediaAutofillResponse = {
       }[]
     }[]
   }
+  tags: {
+    category: string
+    id: number
+    isAdult: boolean
+    isGeneralSpoiler: boolean
+    isMediaSpoiler: boolean
+    name: string
+    rank: number
+  }
   seasonYear: number
   // WINTER
   // Months December to February
