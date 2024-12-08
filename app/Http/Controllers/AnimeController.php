@@ -13,6 +13,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class AnimeController extends Controller implements HasMiddleware
@@ -35,7 +36,15 @@ class AnimeController extends Controller implements HasMiddleware
     {
         $perPage = $request->integer('perPage', 15);
 
-        $anime = QueryBuilder::for(Anime::visible());
+        $anime = QueryBuilder::for(Anime::visible())->allowedFilters([
+            AllowedFilter::scope('season_in'),
+            AllowedFilter::scope('season_not_in'),
+            AllowedFilter::scope('tag_in'),
+            AllowedFilter::scope('tag_not_in'),
+            AllowedFilter::scope('genre_in'),
+            AllowedFilter::scope('genre_not_in'),
+            //AllowedFilter::scope('title'),
+        ]);
         if ($perPage === -1) {
             $results = $anime->get();
             $anime = new LengthAwarePaginator($results, $results->count(), -1);

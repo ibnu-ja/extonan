@@ -33,6 +33,13 @@ const props = defineProps<{
   seasons: string[]
 }>()
 
+type Filter = {
+  season_in?: string
+  season_not_in?: string
+  tag_in?: string
+  tag_not_in?: string
+}
+
 const { displayMode } = storeToRefs(useUserStore())
 
 watch(displayMode, (value) => {
@@ -47,8 +54,9 @@ watch(displayMode, (value) => {
   }))
 })
 
-const seasonIn = ref<string[]>([])
-const seasonNotIn = ref<string[]>([])
+const filter = route().params.filter as Filter | undefined
+const seasonIn = ref<string[]>(filter?.season_in?.split(',') || [] as string[])
+const seasonNotIn = ref<string[]>(filter?.season_not_in?.split(',') || [] as string[])
 
 const clickFilterSeason = (season: string) => {
   console.log(season)
@@ -81,8 +89,36 @@ const displaySeason = computed(() => {
   })
 })
 
-const tagsIn = ref<string[]>([])
-const tagsNotIn = ref<string[]>([])
+// const bwang = route().params.filter['tagsIn'] as string
+// const bwangNot = route().params.filter['season_in'] as string
+
+console.log()
+
+const tagsIn = ref<string[]>(filter?.tag_in?.split(',') || [] as string[])
+const tagsNotIn = ref<string[]>(filter?.tag_not_in?.split(',') || [] as string[])
+
+const search = () => {
+  const currentRoute = route().current() || 'anime.index'
+
+  let filter: Filter = {}
+
+  if (seasonIn.value.length > 0) {
+    filter.season_in = seasonIn.value.join(',')
+  }
+  if (seasonNotIn.value.length > 0) {
+    filter.season_not_in = seasonNotIn.value.join(',')
+  }
+  if (tagsIn.value.length > 0) {
+    filter.tag_in = tagsIn.value.join(',')
+  }
+  if (tagsNotIn.value.length > 0) {
+    filter.tag_not_in = tagsNotIn.value.join(',')
+  }
+
+  router.visit(route(currentRoute, {
+    filter: filter,
+  }), { only: ['anime'] })
+}
 </script>
 
 <template>
@@ -160,6 +196,22 @@ const tagsNotIn = ref<string[]>([])
       v-model="tagsIn"
       v-model:tags-not-in="tagsNotIn"
     />
+    <v-btn
+      color="primary"
+      @click="search"
+    >
+      Search
+    </v-btn>
+
+    <InertiaLink
+      :as="VBtn"
+      color="secondary"
+      :href="route('anime.index')"
+      :only="['anime']"
+    >
+      Reset Search
+    </InertiaLink>
+    TODO genre
     <v-tabs-window v-model="displayMode">
       <v-tabs-window-item value="abc">
         <AbcView

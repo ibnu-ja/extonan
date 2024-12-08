@@ -80,6 +80,34 @@ class Anime extends BasePost
         $query->whereJsonContains('metadata->genres', $genres, not: true);
     }
 
+    /**
+     * @param Builder $query
+     * @param string ...$tags
+     * @return void
+     */
+    public function scopeTagIn(Builder $query, ...$tags): void
+    {
+        $query->whereExists(function ($query) use ($tags) {
+            $query->select(DB::raw(1))
+                ->fromRaw('jsonb_array_elements(metadata->\'tags\') AS tag')
+                ->whereIn('tag->name', $tags);
+        });
+    }
+
+    /**
+     * @param Builder $query
+     * @param string ...$tags
+     * @return void
+     */
+    public function scopeTagNotIn(Builder $query, ...$tags): void
+    {
+        $query->whereExists(function ($query) use ($tags) {
+            $query->select(DB::raw(1))
+                ->fromRaw('jsonb_array_elements(metadata->\'tags\') AS tag')
+                ->whereNotIn('tag->name', $tags);
+        });
+    }
+
     public function scopeTitle(Builder $query, string $title): void
     {
         $query->whereJsonContainsLocales('title', ['en', 'native', 'jp', 'id'], '%' . $title . '%', 'like');
@@ -87,11 +115,11 @@ class Anime extends BasePost
 
     public function scopeSeasonIn(Builder $query, ...$seasons): void
     {
-        $query->where(DB::raw('CONCAT(metadata->>\'season\', \' \', metadata->>\'seasonYear\')'), $seasons);
+        $query->whereIn(DB::raw('CONCAT(metadata->>\'season\', \' \', metadata->>\'seasonYear\')'), $seasons);
     }
 
     public function scopeSeasonNotIn(Builder $query, ...$seasons): void
     {
-        $query->whereNot(DB::raw('CONCAT(metadata->>\'season\', \' \', metadata->>\'seasonYear\')'), $seasons);
+        $query->whereNotIn(DB::raw('CONCAT(metadata->>\'season\', \' \', metadata->>\'seasonYear\')'), $seasons);
     }
 }
