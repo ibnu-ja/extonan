@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAnimeRequest;
 use App\Models\Anime;
 use App\Models\Post;
+use App\Queries\AnimeSeasonsQuery;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -45,7 +46,8 @@ class AnimeController extends Controller implements HasMiddleware
         return Inertia::render("Anime/Index", [
             'anime' => fn() => $anime,
             'canCreate' => fn() => auth()->check() && auth()->user()->can('create', Post::class),
-            'canViewUnpublished' => fn() => auth()->check() && auth()->user()->can('viewAny')
+            'canViewUnpublished' => fn() => auth()->check() && auth()->user()->can('viewAny'),
+            'seasons' => fn() => (new AnimeSeasonsQuery())->builder()->get()->pluck('season_year'),
         ]);
     }
 
