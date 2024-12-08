@@ -11,10 +11,11 @@ import TableView from '@/Pages/Anime/Partials/TableView.vue'
 import { useUserStore } from '@/stores'
 
 import { storeToRefs } from 'pinia'
-import { inject, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import AbcView from '@/Pages/Anime/Partials/AbcView.vue'
 import { route as ziggyRoute } from 'ziggy-js'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import TagSelection from '@/Pages/Anime/Partials/TagSelection.vue'
 
 defineOptions({
   name: 'AnimeIndex',
@@ -25,10 +26,11 @@ const { mdAndUp } = useDisplay()
 
 const route = inject('route') as typeof ziggyRoute
 
-defineProps<{
+const props = defineProps<{
   canCreate: boolean
   canViewUnpublished: boolean
   anime: PaginatedResponse<AnimeData>
+  seasons: string[]
 }>()
 
 const { displayMode } = storeToRefs(useUserStore())
@@ -44,6 +46,43 @@ watch(displayMode, (value) => {
     perPage: -1,
   }))
 })
+
+const seasonIn = ref<string[]>([])
+const seasonNotIn = ref<string[]>([])
+
+const clickFilterSeason = (season: string) => {
+  console.log(season)
+  if (!seasonIn.value.includes(season) && !seasonNotIn.value.includes(season)) {
+    console.log('tambahkan')
+    seasonIn.value.push(season)
+  } else if (seasonIn.value.includes(season) && !seasonNotIn.value.includes(season)) {
+    console.log('not in')
+    seasonIn.value = seasonIn.value.filter(seasonItem => seasonItem != season)
+    seasonNotIn.value.push(season)
+  } else if (!seasonIn.value.includes(season) && seasonNotIn.value.includes(season)) {
+    console.log('hapus')
+    seasonNotIn.value = seasonNotIn.value.filter(seasonItem => seasonItem != season)
+  }
+}
+
+const displaySeason = computed(() => {
+  return props.seasons.map((season) => {
+    let color
+    if (seasonIn.value.includes(season)) {
+      color = 'success'
+    } else if (seasonNotIn.value.includes(season)) {
+      color = 'error'
+    }
+
+    return {
+      name: season,
+      color: color,
+    }
+  })
+})
+
+const tagsIn = ref<string[]>([])
+const tagsNotIn = ref<string[]>([])
 </script>
 
 <template>
@@ -87,6 +126,40 @@ watch(displayMode, (value) => {
 
   <!--  </template>-->
   <v-container class="px-0">
+    <div>
+      filter[season_in]: {{ seasonIn.join(',') }} <span
+        v-show="seasonIn.length > 0"
+        class="text-success"
+      >+{{
+        seasonIn.length
+      }}</span>
+    </div>
+    <div>
+      filter[season_not_in]: {{ seasonNotIn.join(',') }} <span
+        v-show="seasonNotIn.length > 0"
+        class="text-error"
+      >-{{ seasonNotIn.length }}</span>
+    </div>
+    <div class="flex gap-2 my-2">
+      <v-chip
+        v-for="season in displaySeason"
+        :key="season.name"
+        :color="season.color"
+        @click="clickFilterSeason(season.name)"
+      >
+        {{ season.name }}
+      </v-chip>
+    </div>
+    <div>
+      tagsIn: {{ tagsIn }}
+    </div>
+    <div>
+      tagsNotIn: {{ tagsNotIn }}
+    </div>
+    <TagSelection
+      v-model="tagsIn"
+      v-model:tags-not-in="tagsNotIn"
+    />
     <v-tabs-window v-model="displayMode">
       <v-tabs-window-item value="abc">
         <AbcView
