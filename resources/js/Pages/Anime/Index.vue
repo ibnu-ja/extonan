@@ -176,7 +176,7 @@ const search = () => {
         class="text-error"
       >-{{ seasonNotIn.length }}</span>
     </div>
-    <div class="flex gap-2 my-2">
+    <div class="flex flex-wrap gap-2 my-2">
       <v-chip
         v-for="season in displaySeason"
         :key="season.name"

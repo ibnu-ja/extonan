@@ -83,7 +83,7 @@ const removeTagNot = (tag: string) => {
         hide-details
         v-bind="props"
       >
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
           <v-chip
             v-for="tag in tagsIn"
             :key="tag"
