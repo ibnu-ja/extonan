@@ -19,7 +19,7 @@ const { tags } = useAnime()
 const tagsIn = defineModel<string[]>({ default: () => [] })
 // const tagsIn = ref<string[]>([])
 const tagsNotIn = defineModel<string[]>('tagsNotIn', { default: () => [] })
-const searchTextField = ref<HTMLInputElement>()
+const searchTextField = ref<InstanceType<typeof VTextField>>()
 const searchKeyword = ref<string>('')
 const searchedTags = computed(() => {
   let displayTags

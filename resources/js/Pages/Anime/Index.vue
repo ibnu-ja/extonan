@@ -15,7 +15,7 @@ import { computed, inject, ref, watch } from 'vue'
 import AbcView from '@/Pages/Anime/Partials/AbcView.vue'
 import { route as ziggyRoute } from 'ziggy-js'
 import AppLayout from '@/Layouts/AppLayout.vue'
-import TagSelection from '@/Pages/Anime/Partials/TagSelection.vue'
+import ThreeStateSelect from '@/Pages/Anime/Partials/ThreeStateSelect.vue'
 
 defineOptions({
   name: 'AnimeIndex',
@@ -192,7 +192,7 @@ const search = () => {
     <div>
       tagsNotIn: {{ tagsNotIn }}
     </div>
-    <TagSelection
+    <ThreeStateSelect
       v-model="tagsIn"
       v-model:tags-not-in="tagsNotIn"
     />
