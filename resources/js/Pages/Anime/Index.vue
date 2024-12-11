@@ -11,11 +11,12 @@ import TableView from '@/Pages/Anime/Partials/TableView.vue'
 import { useUserStore } from '@/stores'
 
 import { storeToRefs } from 'pinia'
-import { computed, inject, ref, watch } from 'vue'
+import { inject, ref, watch } from 'vue'
 import AbcView from '@/Pages/Anime/Partials/AbcView.vue'
 import { route as ziggyRoute } from 'ziggy-js'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import ThreeStateSelect from '@/Pages/Anime/Partials/ThreeStateSelect.vue'
+import { useAnime } from '@/composables/useAniList'
 
 defineOptions({
   name: 'AnimeIndex',
@@ -26,7 +27,7 @@ const { mdAndUp } = useDisplay()
 
 const route = inject('route') as typeof ziggyRoute
 
-const props = defineProps<{
+defineProps<{
   canCreate: boolean
   canViewUnpublished: boolean
   anime: PaginatedResponse<AnimeData>
@@ -58,42 +59,6 @@ const filter = route().params.filter as Filter | undefined
 const seasonIn = ref<string[]>(filter?.season_in?.split(',') || [] as string[])
 const seasonNotIn = ref<string[]>(filter?.season_not_in?.split(',') || [] as string[])
 
-const clickFilterSeason = (season: string) => {
-  console.log(season)
-  if (!seasonIn.value.includes(season) && !seasonNotIn.value.includes(season)) {
-    console.log('tambahkan')
-    seasonIn.value.push(season)
-  } else if (seasonIn.value.includes(season) && !seasonNotIn.value.includes(season)) {
-    console.log('not in')
-    seasonIn.value = seasonIn.value.filter(seasonItem => seasonItem != season)
-    seasonNotIn.value.push(season)
-  } else if (!seasonIn.value.includes(season) && seasonNotIn.value.includes(season)) {
-    console.log('hapus')
-    seasonNotIn.value = seasonNotIn.value.filter(seasonItem => seasonItem != season)
-  }
-}
-
-const displaySeason = computed(() => {
-  return props.seasons.map((season) => {
-    let color
-    if (seasonIn.value.includes(season)) {
-      color = 'success'
-    } else if (seasonNotIn.value.includes(season)) {
-      color = 'error'
-    }
-
-    return {
-      name: season,
-      color: color,
-    }
-  })
-})
-
-// const bwang = route().params.filter['tagsIn'] as string
-// const bwangNot = route().params.filter['season_in'] as string
-
-console.log()
-
 const tagsIn = ref<string[]>(filter?.tag_in?.split(',') || [] as string[])
 const tagsNotIn = ref<string[]>(filter?.tag_not_in?.split(',') || [] as string[])
 
@@ -119,6 +84,8 @@ const search = () => {
     filter: filter,
   }), { only: ['anime'] })
 }
+
+const { tags } = useAnime()
 </script>
 
 <template>
@@ -177,14 +144,14 @@ const search = () => {
       >-{{ seasonNotIn.length }}</span>
     </div>
     <div class="flex flex-wrap gap-2 my-2">
-      <v-chip
-        v-for="season in displaySeason"
-        :key="season.name"
-        :color="season.color"
-        @click="clickFilterSeason(season.name)"
-      >
-        {{ season.name }}
-      </v-chip>
+      <ThreeStateSelect
+        v-model="seasonIn"
+        v-model:tags-not-in="seasonNotIn"
+        :items="seasons"
+        variant="outlined"
+        label="asd"
+        clearable
+      />
     </div>
     <div>
       tagsIn: {{ tagsIn }}
@@ -195,6 +162,10 @@ const search = () => {
     <ThreeStateSelect
       v-model="tagsIn"
       v-model:tags-not-in="tagsNotIn"
+      :items="tags"
+      variant="outlined"
+      label="asd"
+      clearable
     />
     <v-btn
       color="primary"
