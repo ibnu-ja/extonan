@@ -1,42 +1,40 @@
 <script lang="ts" setup>
 
-import { useAnime } from '@/composables/useAniList'
 import { computed, ref } from 'vue'
-import { VTextField } from 'vuetify/components'
 import ThreeStateCheckbox from '@/Pages/Anime/Partials/ThreeStateCheckbox.vue'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     maxHeight?: number | string
-    variant?: 'filled' | 'underlined' | 'outlined' | 'plain' | 'solo' | 'solo-inverted' | 'solo-filled'
+    items: string[]
+    shorten?: boolean
+    shortenLength?: number
   }>(), {
     maxHeight: 400,
-    variant: 'filled',
+    items: () => [],
+    shorten: true,
+    shortenLength: 4,
   },
 )
 
-const { tags } = useAnime()
-const tagsIn = defineModel<string[]>({ default: () => [] })
-// const tagsIn = ref<string[]>([])
-const tagsNotIn = defineModel<string[]>('tagsNotIn', { default: () => [] })
-const searchTextField = ref<InstanceType<typeof VTextField>>()
-const searchKeyword = ref<string>('')
-const searchedTags = computed(() => {
-  let displayTags
-  if (searchKeyword.value?.length > 0) {
-    displayTags = tags.filter(
-      tag => tag.toLocaleLowerCase().indexOf(searchKeyword.value.toLowerCase()) > -1,
-    )
-  } else displayTags = tags
+type Item = {
+  name: string
+  state?: 'in' | 'notIn'
+  active: boolean
+  activeColor?: string
+}
 
-  return displayTags.map((season) => {
-    let state
+const itemIn = defineModel<string[]>({ default: () => [] })
+// const tagsIn = ref<string[]>([])
+const itemNotIn = defineModel<string[]>('tagsNotIn', { default: () => [] })
+const itemList = computed(() => {
+  return props.items.map((item): Item => {
+    let state: 'in' | 'notIn' | undefined
     let color
-    // let checkboxButton
-    if (tagsIn.value.includes(season)) {
+    if (itemIn.value.includes(item)) {
       color = 'success'
       state = 'in'
-    } else if (tagsNotIn.value.includes(season)) {
+    } else if (itemNotIn.value.includes(item)) {
       color = 'error'
       state = 'notIn'
     }
@@ -44,84 +42,141 @@ const searchedTags = computed(() => {
     return {
       active: color != undefined,
       activeColor: color,
-      name: season,
+      name: item,
       state: state,
     }
   })
 })
 
-const clickMenuFilter = (tag: string) => {
-  if (!tagsIn.value.includes(tag) && !tagsNotIn.value.includes(tag)) {
-    tagsIn.value.push(tag)
-  } else if (tagsIn.value.includes(tag) && !tagsNotIn.value.includes(tag)) {
-    removeTag(tag)
-    tagsNotIn.value.push(tag)
-  } else if (!tagsIn.value.includes(tag) && tagsNotIn.value.includes(tag)) {
+interface InternalItem<T = unknown> {
+  value: unknown
+  raw: T
+}
+
+const customSearch = (itemTitle: string, queryText: string, item?: InternalItem<Item>) => {
+  return item!.raw.name.toLocaleLowerCase().indexOf(queryText.toLowerCase()) > -1
+}
+const selectedItems = ref<string[]>([])
+
+const bwang = computed(() => {
+  return selectedItems.value.map((item): Item => {
+    let state: 'in' | 'notIn' | undefined
+    let color
+    if (itemIn.value.includes(item)) {
+      color = 'success'
+      state = 'in'
+    } else if (itemNotIn.value.includes(item)) {
+      color = 'error'
+      state = 'notIn'
+    }
+
+    return {
+      active: color != undefined,
+      activeColor: color,
+      name: item,
+      state: state,
+    }
+  })
+})
+
+const removeTagIn = (tag: string) => {
+  itemIn.value = itemIn.value.filter(seasonItem => seasonItem != tag)
+}
+const removeTagNot = (tag: string) => {
+  itemNotIn.value = itemNotIn.value.filter(seasonItem => seasonItem != tag)
+}
+
+const removeTag = (tag: string, state?: string) => {
+  if (state === undefined) {
+    return
+  } else if (state === 'notIn') {
+    selectedItems.value = selectedItems.value.filter(seasonItem => seasonItem != tag)
+    removeTagNot(tag)
+  } else if (state === 'in') {
+    selectedItems.value = selectedItems.value.filter(seasonItem => seasonItem != tag)
+    removeTagIn(tag)
+  }
+}
+
+const itemClick = (tag: string) => {
+  if (!itemIn.value.includes(tag) && !itemNotIn.value.includes(tag)) {
+    selectedItems.value.push(tag)
+    itemIn.value.push(tag)
+  } else if (itemIn.value.includes(tag) && !itemNotIn.value.includes(tag)) {
+    removeTagIn(tag)
+    itemNotIn.value.push(tag)
+  } else if (!itemIn.value.includes(tag) && itemNotIn.value.includes(tag)) {
+    selectedItems.value = selectedItems.value.filter(seasonItem => seasonItem != tag)
     removeTagNot(tag)
   }
 }
 
-const removeTag = (tag: string) => {
-  tagsIn.value = tagsIn.value.filter(seasonItem => seasonItem != tag)
+const clear = () => {
+  itemIn.value = []
+  itemNotIn.value = []
 }
-const removeTagNot = (tag: string) => {
-  tagsNotIn.value = tagsNotIn.value.filter(seasonItem => seasonItem != tag)
+
+const handleOnKeydown = (e: KeyboardEventInit): void => {
+  if (e.key === 'Backspace' && bwang.value.length > 0) {
+    const lastItem = bwang.value[selectedItems.value.length - 1]
+    removeTag(lastItem.name, lastItem.state)
+  }
 }
 
 </script>
 
 <template>
-  <v-menu
-    :close-on-content-click="false"
-    :max-height="400"
+  <v-autocomplete
+    :model-value="bwang"
+    multiple
+    v-bind="$attrs"
+    :items="itemList"
+    :return-object="true"
+    :custom-filter="customSearch"
+    @click:clear="clear"
+    @keydown="handleOnKeydown"
   >
-    <template #activator="{ props }">
-      <v-text-field
-        ref="searchTextField"
-        v-model="searchKeyword"
-        :variant="props.variant"
-        hide-details
-        v-bind="props"
+    <template #selection="{ item, index }">
+      <v-chip
+        v-if="index < shortenLength"
+        :key="index"
+        closable
+        :color="item.value.activeColor"
+        :value="item.value.name"
+        @click.prevent
+        @close.prevent="removeTag(item.value.name, item.value.state)"
+        @click:close.prevent="removeTag(item.value.name, item.value.state)"
       >
-        <div class="flex flex-wrap gap-2">
-          <v-chip
-            v-for="tag in tagsIn"
-            :key="tag"
-            closable
-            color="success"
-            @close.prevent="removeTag"
-            @click:close.prevent="removeTag(tag)"
-          >
-            {{ tag }}
-          </v-chip>
-
-          <v-chip
-            v-for="tag in tagsNotIn"
-            :key="tag"
-            closable
-            color="error"
-            @close.prevent="removeTagNot"
-            @click:close.prevent="removeTagNot(tag)"
-          >
-            {{ tag }}
-          </v-chip>
-        </div>
-      </v-text-field>
+        {{ item.value.name }}
+      </v-chip>
+      <div
+        v-if="index === shortenLength"
+        class="text-grey text-caption align-self-center"
+      >
+        <span
+          v-if="itemIn.length>0"
+          class="text-success"
+        >+{{
+          itemIn.length
+        }}</span> <span
+          v-if="itemNotIn.length>0"
+          class="text-error"
+        >-{{ itemNotIn.length }}</span> others
+      </div>
     </template>
-    <v-list>
+    <template #item="{ item, index }">
       <v-list-item
-        v-for="tag in searchedTags"
-        :key="tag.name"
-        :value="tag.name"
-        :active="tag.active"
-        :color="tag.activeColor"
-        @click="clickMenuFilter(tag.name)"
+        :key="index"
+        :value="item.value"
+        :active="item.value.active"
+        :color="item.value.activeColor"
+        @click="itemClick(item.value.name)"
       >
         <template #prepend>
-          <ThreeStateCheckbox :state="tag.state" />
+          <ThreeStateCheckbox :state="item.value.state" />
         </template>
-        <v-list-item-title>{{ tag.name }}</v-list-item-title>
+        <v-list-item-title>{{ item.value.name }}</v-list-item-title>
       </v-list-item>
-    </v-list>
-  </v-menu>
+    </template>
+  </v-autocomplete>
 </template>
