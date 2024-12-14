@@ -26,3 +26,5 @@ frankenphp-worker.php
 /config/caddy/autosave.json
 /data/caddy/instance.uuid
 /data/caddy/last_clean.json
+/data/caddy/pki
+/data/caddy/certificates
