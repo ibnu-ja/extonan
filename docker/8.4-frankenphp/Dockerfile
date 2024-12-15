@@ -24,10 +24,10 @@ RUN apt-get update && apt-get upgrade -y \
     && echo "deb [signed-by=/etc/apt/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu noble main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
     && apt-get update \
     && install-php-extensions @composer pcntl \
-       pgsql gd \
+       pgsql pdo_pgsql gd \
        mongodb \
        imap mysqli \
-       zip bcmath soap \
+       zip bcmath soap pdo_mysql \
        intl \
        ldap \
        msgpack igbinary redis \
