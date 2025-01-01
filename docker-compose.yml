@@ -4,8 +4,8 @@ services:
       context: './docker/8.4-frankenphp'
       dockerfile: Dockerfile
     image: 'frankenphp-8.4/app'
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+    #extra_hosts:
+    #  - 'host.docker.internal:host-gateway'
     ports:
       - '${APP_PORT:-80}:80'
       - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
@@ -67,8 +67,8 @@ services:
       - sail
   selenium:
     image: selenium/standalone-chrome
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+    #extra_hosts:
+    #  - 'host.docker.internal:host-gateway'
     volumes:
       - '/dev/shm:/dev/shm'
     networks:
