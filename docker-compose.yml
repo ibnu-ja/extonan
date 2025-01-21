@@ -12,7 +12,7 @@ services:
       - '8443:443'
       - '8443:443/udp'
     environment:
-      SUPERVISOR_PHP_COMMAND: "/usr/local/bin/php -d variables_order=EGPCS /app/artisan octane:start --host=localhost --port=443 --admin-port=2019 --https"
+      #SUPERVISOR_PHP_COMMAND: "/usr/local/bin/php -d variables_order=EGPCS /app/artisan octane:start --host=localhost --port=443 --admin-port=2019 --https"
       XDG_CONFIG_HOME: /app/config
       XDG_DATA_HOME: /app/data
       #      WWWUSER: '${WWWUSER}'
@@ -27,8 +27,6 @@ services:
     depends_on:
       - redis
       - meilisearch
-      - mailpit
-      - selenium
       - pgsql
   redis:
     image: 'bitnami/redis:latest'
@@ -58,21 +56,6 @@ services:
       test: [ 'CMD', 'wget','--no-verbose', '--spider', 'http://127.0.0.1:7700/health' ]
       retries: 3
       timeout: 5s
-  mailpit:
-    image: 'axllent/mailpit:latest'
-    ports:
-      - '${FORWARD_MAILPIT_PORT:-1025}:1025'
-      - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
-    networks:
-      - sail
-  selenium:
-    image: selenium/standalone-chrome
-    #extra_hosts:
-    #  - 'host.docker.internal:host-gateway'
-    volumes:
-      - '/dev/shm:/dev/shm'
-    networks:
-      - sail
   pgsql:
     image: 'postgres:17'
     ports:
