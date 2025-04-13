@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Head, router } from '@inertiajs/vue3'
-import { mdiAlphabeticalVariant, mdiFormatListNumbered, mdiPlus } from 'mdi-js-es'
+import { mdiAlphabeticalVariant, mdiFilterMenu, mdiFormatListNumbered, mdiMagnify, mdiPlus } from 'mdi-js-es'
 import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
 import InertiaLink from '@/Components/InertiaLink'
@@ -11,19 +11,20 @@ import TableView from '@/Pages/Anime/Partials/TableView.vue'
 import { useUserStore } from '@/stores'
 
 import { storeToRefs } from 'pinia'
-import { inject, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import AbcView from '@/Pages/Anime/Partials/AbcView.vue'
 import { route as ziggyRoute } from 'ziggy-js'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import ThreeStateSelect from '@/Pages/Anime/Partials/ThreeStateSelect.vue'
 import { useAnime } from '@/composables/useAniList'
+import { debounce } from 'lodash-es'
 
 defineOptions({
   name: 'AnimeIndex',
   layout: AppLayout,
 })
 
-const { mdAndUp } = useDisplay()
+const { mdAndUp, sm, lgAndUp } = useDisplay()
 
 const route = inject('route') as typeof ziggyRoute
 
@@ -39,6 +40,8 @@ type Filter = {
   season_not_in?: string
   tag_in?: string
   tag_not_in?: string
+  genre_in?: string
+  genre_not_in?: string
 }
 
 const { displayMode } = storeToRefs(useUserStore())
@@ -62,7 +65,10 @@ const seasonNotIn = ref<string[]>(filter?.season_not_in?.split(',') || [] as str
 const tagsIn = ref<string[]>(filter?.tag_in?.split(',') || [] as string[])
 const tagsNotIn = ref<string[]>(filter?.tag_not_in?.split(',') || [] as string[])
 
-const search = () => {
+const genresIn = ref<string[]>(filter?.genre_in?.split(',') || [] as string[])
+const genresNotIn = ref<string[]>(filter?.genre_not_in?.split(',') || [] as string[])
+
+const searchAction = () => {
   const currentRoute = route().current() || 'anime.index'
 
   let filter: Filter = {}
@@ -79,13 +85,50 @@ const search = () => {
   if (tagsNotIn.value.length > 0) {
     filter.tag_not_in = tagsNotIn.value.join(',')
   }
+  if (genresIn.value.length > 0) {
+    filter.genre_in = genresIn.value.join(',')
+  }
+  if (genresNotIn.value.length > 0) {
+    filter.genre_not_in = genresNotIn.value.join(',')
+  }
 
-  router.visit(route(currentRoute, {
-    filter: filter,
-  }), { only: ['anime'] })
+  router.visit(route(currentRoute, { filter: filter }), { only: ['anime'], preserveState: true, preserveScroll: true })
 }
 
-const { tags } = useAnime()
+const { tags, genres } = useAnime()
+
+const showFilter = ref(filter != undefined)
+
+const shortenLength = computed(() => {
+  if (sm.value || lgAndUp.value) return 3
+  else return 1
+})
+
+const SEARCH_DEBOUNCE_TIME = 500
+
+const search = () => {
+  const debounced = debounce(searchAction, SEARCH_DEBOUNCE_TIME)
+  debounced()
+}
+
+const clearSeasons = () => {
+  seasonIn.value = []
+  seasonNotIn.value = []
+  search()
+}
+
+const clearTags = () => {
+  tagsIn.value = []
+  tagsNotIn.value = []
+  search()
+}
+
+const clearGenres = () => {
+  genresIn.value = []
+  genresNotIn.value = []
+  search()
+}
+
 </script>
 
 <template>
@@ -107,81 +150,106 @@ const { tags } = useAnime()
     </template>
   </PageHeader>
 
-  <v-container class="my-0">
-    <v-btn-toggle
-      v-model="displayMode"
-      :mandatory="true"
-    >
-      <v-btn
-        value="abc"
-        :icon="mdiAlphabeticalVariant"
-      />
-      <v-btn
-        value="list"
-        :icon="mdiFormatListNumbered"
-      />
-      <!--      <v-btn-->
-      <!--        value="tile"-->
-      <!--        :icon="mdiViewGrid"-->
-      <!--      />-->
-    </v-btn-toggle>
-  </v-container>
-
-  <!--  </template>-->
   <v-container class="px-0">
-    <div>
-      filter[season_in]: {{ seasonIn.join(',') }} <span
-        v-show="seasonIn.length > 0"
-        class="text-success"
-      >+{{
-        seasonIn.length
-      }}</span>
-    </div>
-    <div>
-      filter[season_not_in]: {{ seasonNotIn.join(',') }} <span
-        v-show="seasonNotIn.length > 0"
-        class="text-error"
-      >-{{ seasonNotIn.length }}</span>
-    </div>
-    <div class="flex flex-wrap gap-2 my-2">
-      <ThreeStateSelect
-        v-model="seasonIn"
-        v-model:tags-not-in="seasonNotIn"
-        :items="seasons"
-        variant="outlined"
-        label="asd"
-        clearable
-      />
-    </div>
-    <div>
-      tagsIn: {{ tagsIn }}
-    </div>
-    <div>
-      tagsNotIn: {{ tagsNotIn }}
-    </div>
-    <ThreeStateSelect
-      v-model="tagsIn"
-      v-model:tags-not-in="tagsNotIn"
-      :items="tags"
-      variant="outlined"
-      label="asd"
-      clearable
-    />
-    <v-btn
-      color="primary"
-      @click="search"
-    >
-      Search
-    </v-btn>
+    <div class="px-4 md:px-0">
+      <div class="searching flex align-center gap-4 mb-4">
+        <v-text-field
+          label="Search"
+          variant="outlined"
+          hide-details
+          clearable
+          :prepend-inner-icon="mdiMagnify"
+          :append-inner-icon="mdiFilterMenu"
+          @click:append-inner="showFilter = !showFilter"
+          @update:model-value="search"
+        />
+        <!--<v-btn-->
+        <!--  size="large"-->
+        <!--  :prepend-icon="mdiFilterMenu"-->
+        <!--  text="Filter"-->
+        <!--/>-->
 
-    <InertiaLink
-      :as="VBtn"
-      color="secondary"
-      :href="route('anime.index')"
-      :only="['anime']"
-    >
-      Reset Search
-    </InertiaLink>
+        <v-btn-toggle
+          v-model="displayMode"
+          :mandatory="true"
+        >
+          <v-btn
+            value="abc"
+            :icon="mdiAlphabeticalVariant"
+          />
+          <v-btn
+            value="list"
+            :icon="mdiFormatListNumbered"
+          />
+          <!--      <v-btn-->
+          <!--        value="tile"-->
+          <!--        :icon="mdiViewGrid"-->
+          <!--      />-->
+        </v-btn-toggle>
+      </div>
+
+      <v-expand-transition>
+        <div
+          v-show="showFilter"
+          class="mb-4"
+        >
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <ThreeStateSelect
+              v-model="seasonIn"
+              v-model:tags-not-in="seasonNotIn"
+              :shorten-length
+              :items="seasons"
+              variant="outlined"
+              label="Season"
+              clearable
+              @click:clear="clearSeasons"
+              @update:model-value="search"
+            />
+            <ThreeStateSelect
+              v-model="genresIn"
+              v-model:tags-not-in="genresNotIn"
+              :shorten-length
+              :items="genres"
+              variant="outlined"
+              label="Genres"
+              clearable
+              @click:clear="clearGenres"
+              @update:model-value="search"
+            />
+            <ThreeStateSelect
+              v-model="tagsIn"
+              v-model:tags-not-in="tagsNotIn"
+              :shorten-length
+              :items="tags"
+              variant="outlined"
+              label="Tags"
+              clearable
+              @click:clear="clearTags"
+              @update:model-value="search"
+            />
+          </div>
+        </div>
+      </v-expand-transition>
+
+      <!--<div class="flex align-center gap-4">-->
+      <!--  <v-spacer />-->
+      <!--  <v-btn-->
+      <!--    color="primary"-->
+      <!--    @click="search"-->
+      <!--  >-->
+      <!--    Search-->
+      <!--  </v-btn>-->
+
+      <!--  <InertiaLink-->
+      <!--    :as="VBtn"-->
+      <!--    color="secondary"-->
+      <!--    :href="route('anime.index')"-->
+      <!--    :only="['anime']"-->
+      <!--  >-->
+      <!--    Reset Search-->
+      <!--  </InertiaLink>-->
+      <!--</div>-->
+    </div>
     TODO genre
     <v-tabs-window v-model="displayMode">
       <v-tabs-window-item value="abc">

@@ -19,7 +19,7 @@ const indeterminate = computed(() => {
 
 <template>
   <v-checkbox-btn
-    :model-value
+    :model-value="modelValue"
     :indeterminate
     :indeterminate-icon="mdiCloseBox"
     @change.prevent
