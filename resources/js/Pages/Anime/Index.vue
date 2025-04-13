@@ -36,6 +36,7 @@ defineProps<{
 }>()
 
 type Filter = {
+  title?: string
   season_in?: string
   season_not_in?: string
   tag_in?: string
@@ -59,6 +60,7 @@ watch(displayMode, (value) => {
 })
 
 const filter = route().params.filter as Filter | undefined
+const title = ref(filter?.title || null)
 const seasonIn = ref<string[]>(filter?.season_in?.split(',') || [] as string[])
 const seasonNotIn = ref<string[]>(filter?.season_not_in?.split(',') || [] as string[])
 
@@ -91,6 +93,9 @@ const searchAction = () => {
   if (genresNotIn.value.length > 0) {
     filter.genre_not_in = genresNotIn.value.join(',')
   }
+
+  if (title.value)
+    filter.title = title.value
 
   router.visit(route(currentRoute, { filter: filter }), { only: ['anime'], preserveState: true, preserveScroll: true })
 }
@@ -154,6 +159,7 @@ const clearGenres = () => {
     <div class="px-4 md:px-0">
       <div class="searching flex align-center gap-4 mb-4">
         <v-text-field
+          v-model="title"
           label="Search"
           variant="outlined"
           hide-details

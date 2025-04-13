@@ -110,7 +110,7 @@ class Anime extends BasePost
 
     public function scopeTitle(Builder $query, string $title): void
     {
-        $query->whereJsonContainsLocales('title', ['en', 'native', 'jp', 'id'], '%' . $title . '%', 'like');
+        $query->whereJsonContainsLocales('title', ['en', 'native', 'jp', 'id'], '%' . $title . '%', 'ilike');
     }
 
     public function scopeSeasonIn(Builder $query, ...$seasons): void

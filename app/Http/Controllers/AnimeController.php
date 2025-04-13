@@ -43,7 +43,7 @@ class AnimeController extends Controller implements HasMiddleware
             AllowedFilter::scope('tag_not_in'),
             AllowedFilter::scope('genre_in'),
             AllowedFilter::scope('genre_not_in'),
-            //AllowedFilter::scope('title'),
+            AllowedFilter::scope('title'),
         ]);
         if ($perPage === -1) {
             $results = $anime->get();
