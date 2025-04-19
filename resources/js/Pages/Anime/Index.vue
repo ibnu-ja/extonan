@@ -5,7 +5,7 @@ import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
 import InertiaLink from '@/Components/InertiaLink'
 import { VBtn } from 'vuetify/components'
-import { AnimeData } from '@/types/anime'
+import { AnimeData, Filter } from '@/types/anime'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import TableView from '@/Pages/Anime/Partials/TableView.vue'
 import { useUserStore } from '@/stores'
@@ -35,16 +35,6 @@ defineProps<{
   seasons: string[]
 }>()
 
-type Filter = {
-  title?: string
-  season_in?: string
-  season_not_in?: string
-  tag_in?: string
-  tag_not_in?: string
-  genre_in?: string
-  genre_not_in?: string
-}
-
 const { displayMode } = storeToRefs(useUserStore())
 
 watch(displayMode, (value) => {
@@ -69,6 +59,8 @@ const tagsNotIn = ref<string[]>(filter?.tag_not_in?.split(',') || [] as string[]
 
 const genresIn = ref<string[]>(filter?.genre_in?.split(',') || [] as string[])
 const genresNotIn = ref<string[]>(filter?.genre_not_in?.split(',') || [] as string[])
+
+console.log('filter', filter)
 
 const searchAction = () => {
   const currentRoute = route().current() || 'anime.index'

@@ -2,6 +2,7 @@
 import { AnimeMediaAutofillResponse } from '@/types/anilist'
 import dayjs from 'dayjs'
 import objectSupport from 'dayjs/plugin/objectSupport'
+import { VChip } from 'vuetify/components'
 
 dayjs.extend(objectSupport)
 
@@ -68,6 +69,22 @@ const airingDate = dayjs({
         :key="genre"
       >
         {{ genre }}
+      </v-chip>
+    </div>
+  </div>
+
+  <div
+    v-if="data.tags && data.tags.length> 0"
+  >
+    <v-list-subheader>
+      Tags
+    </v-list-subheader>
+    <div class="flex flex-wrap gap-1">
+      <v-chip
+        v-for="tag in data.tags"
+        :key="tag.id"
+      >
+        {{ tag.name }}
       </v-chip>
     </div>
   </div>
