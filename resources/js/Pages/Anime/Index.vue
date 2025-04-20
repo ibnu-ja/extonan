@@ -161,12 +161,6 @@ const clearGenres = () => {
           @click:append-inner="showFilter = !showFilter"
           @update:model-value="search"
         />
-        <!--<v-btn-->
-        <!--  size="large"-->
-        <!--  :prepend-icon="mdiFilterMenu"-->
-        <!--  text="Filter"-->
-        <!--/>-->
-
         <v-btn-toggle
           v-model="displayMode"
           :mandatory="true"
@@ -179,10 +173,6 @@ const clearGenres = () => {
             value="list"
             :icon="mdiFormatListNumbered"
           />
-          <!--      <v-btn-->
-          <!--        value="tile"-->
-          <!--        :icon="mdiViewGrid"-->
-          <!--      />-->
         </v-btn-toggle>
       </div>
 
@@ -228,27 +218,7 @@ const clearGenres = () => {
           </div>
         </div>
       </v-expand-transition>
-
-      <!--<div class="flex align-center gap-4">-->
-      <!--  <v-spacer />-->
-      <!--  <v-btn-->
-      <!--    color="primary"-->
-      <!--    @click="search"-->
-      <!--  >-->
-      <!--    Search-->
-      <!--  </v-btn>-->
-
-      <!--  <InertiaLink-->
-      <!--    :as="VBtn"-->
-      <!--    color="secondary"-->
-      <!--    :href="route('anime.index')"-->
-      <!--    :only="['anime']"-->
-      <!--  >-->
-      <!--    Reset Search-->
-      <!--  </InertiaLink>-->
-      <!--</div>-->
     </div>
-    TODO genre
     <v-tabs-window v-model="displayMode">
       <v-tabs-window-item value="abc">
         <AbcView

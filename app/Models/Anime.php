@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
+use Laravel\Scout\Searchable;
 use Oddvalue\LaravelDrafts\Concerns\HasDrafts;
 use Spatie\Sluggable\HasTranslatableSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -13,7 +14,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Anime extends BasePost
 {
-    use HasTranslations, HasTranslatableSlug, HasDrafts;
+    use HasTranslations, HasTranslatableSlug, HasDrafts, Searchable;
 
     public $table = 'anime';
 
@@ -121,5 +122,33 @@ class Anime extends BasePost
     public function scopeSeasonNotIn(Builder $query, ...$seasons): void
     {
         $query->whereNotIn(DB::raw('CONCAT(metadata->>\'season\', \' \', metadata->>\'seasonYear\')'), $seasons);
+    }
+
+
+    /**
+     * searching title with Scout with caveat
+     * @link https://github.com/spatie/laravel-query-builder/issues/147
+     */
+    public function scopeSearchTitle(Builder $query, string $search): void
+    {
+        $builder = self::search($search);
+        $builder->limit = 10000000;
+        $result = $builder->raw();
+        $ids = array_column($result['hits'], 'id');
+
+        $orders = array_map(fn($id) => sprintf("id = %d desc", $id), $ids);
+        $rawOrder = implode(', ', $orders);
+        $query->whereIn('id', $ids);
+
+        if (count($ids)) {
+            $query->orderByRaw($rawOrder);
+        }
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'title' => $this->getTranslations('title'),
+        ];
     }
 }
