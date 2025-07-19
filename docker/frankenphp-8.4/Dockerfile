@@ -8,8 +8,7 @@ WORKDIR /app
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
-ENV SUPERVISOR_PHP_COMMAND="/usr/local/bin/php -d variables_order=EGPCS /app/artisan octane:start --server=frankenphp --host=0.0.0.0 --admin-port=2019 --port='${APP_PORT:-80}'"
-ENV SUPERVISOR_PHP_USER="sail"
+ENV SUPERVISOR_PHP_COMMAND="/usr/local/bin/php -d variables_order=EGPCS /app/artisan octane:frankenphp --host=0.0.0.0 --admin-port=2019 --port='${APP_PORT:-80}'"
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 

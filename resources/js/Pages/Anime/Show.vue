@@ -9,6 +9,10 @@ import SpeedDial from '@/Pages/Anime/Partials/SpeedDial.vue'
 import { useLanguages } from '@/composables/useLanguages'
 import calendar from 'dayjs/plugin/calendar'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import { inject } from 'vue'
+import { route as ziggyRoute } from 'ziggy-js'
+import InertiaLink from '@/Components/InertiaLink'
+import { VChip } from 'vuetify/components'
 
 defineOptions({
   name: 'AnimeShow',
@@ -47,6 +51,8 @@ const episodeTitle = (post: Post): string => {
   return translate(post.title)
 }
 
+const route = inject('route') as typeof ziggyRoute
+
 </script>
 
 <template>
@@ -73,12 +79,14 @@ const episodeTitle = (post: Post): string => {
     <div class="grid sm:grid-cols-12 gap-4 items-start">
       <div class="sm:col-span-8 md:col-span-9">
         <div class="px-4 sm:px-0 flex gap-2 mb-4 flex-wrap">
-          <v-chip
+          <InertiaLink
             v-for="genre in anime.metadata.genres"
             :key="genre"
+            :as="VChip"
+            :href="route('anime.index', { filter: {genre_in: genre} })"
           >
             {{ genre }}
-          </v-chip>
+          </InertiaLink>
         </div>
         <h4 class="px-4 sm:px-0 text-h5">
           Episodes
@@ -127,9 +135,7 @@ const episodeTitle = (post: Post): string => {
           No post.
         </p>
       </div>
-      <div
-        class="px-4 sm:px-0 sm:col-span-4 md:col-span-3"
-      >
+      <div class="px-4 sm:px-0 sm:col-span-4 md:col-span-3">
         <v-theme-provider theme="dark">
           <v-card
             variant="tonal"
@@ -166,13 +172,31 @@ const episodeTitle = (post: Post): string => {
                   </v-chip>
                 </div>
               </div>
+              <div v-if="anime.metadata?.tags">
+                <v-list-subheader>
+                  Tags
+                </v-list-subheader>
+                <div class="flex flex-wrap gap-1">
+                  <InertiaLink
+                    v-for="tag in anime.metadata.tags"
+                    :key="tag.id"
+                    :as="VChip"
+                    :href="route('anime.index', { filter: {tag_in: tag.name} })"
+                  >
+                    {{ tag.name }}
+                  </InertiaLink>
+                </div>
+              </div>
               <div v-if="anime.metadata.season && anime.metadata.seasonYear">
                 <v-list-subheader>
                   Season
                 </v-list-subheader>
-                <v-chip>
+                <InertiaLink
+                  :as="VChip"
+                  :href="route('anime.index', { filter: {season_in: `${anime.metadata.season} ${anime.metadata.seasonYear}`} })"
+                >
                   {{ anime.metadata.season }} {{ anime.metadata.seasonYear }}
-                </v-chip>
+                </InertiaLink>
               </div>
             </v-card-text>
             <v-divider />

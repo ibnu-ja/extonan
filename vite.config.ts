@@ -3,6 +3,7 @@ import laravel from 'laravel-vite-plugin'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
 import DefineOptions from 'unplugin-vue-define-options/vite'
+import path from 'path'
 
 export default defineConfig({
   css: {
@@ -13,6 +14,17 @@ export default defineConfig({
       sass: {
         api: 'modern-compiler',
       },
+    },
+  },
+  resolve: {
+    alias: {
+      'ziggy-js': path.resolve(__dirname, 'vendor/tightenco/ziggy/dist/index.js'),
+      '@': path.resolve(__dirname, 'resources/js'),
+    },
+  },
+  server: {
+    hmr: {
+      host: 'localhost',
     },
   },
   plugins: [

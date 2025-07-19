@@ -23,6 +23,7 @@ import { openConfirmationDialog, openFormDialog } from '@/composables/useDialog'
 import MediaManager from '@/Components/MediaManager/Index.vue'
 import { Media } from '@/types'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import InertiaLink from '@/Components/InertiaLink'
 
 defineOptions({
   name: 'AnimePostCreate',
@@ -463,7 +464,9 @@ const showAnimeImage = ref(false)
                   <v-list-subheader>
                     Title
                   </v-list-subheader>
-                  {{ anime.title.en }}
+                  <InertiaLink :href="route('anime.show', anime.id)">
+                    {{ anime.title.en }}
+                  </InertiaLink>
                 </div>
                 <div>
                   <v-list-subheader>

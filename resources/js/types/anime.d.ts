@@ -33,3 +33,13 @@ export type Resource = {
   value: ResourceItem[]
   type: 'link' | 'embed'
 }
+
+export type Filter = {
+  title?: string
+  season_in?: string
+  season_not_in?: string
+  tag_in?: string
+  tag_not_in?: string
+  genre_in?: string
+  genre_not_in?: string
+}

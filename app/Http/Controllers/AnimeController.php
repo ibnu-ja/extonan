@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAnimeRequest;
 use App\Models\Anime;
 use App\Models\Post;
+use App\Queries\AnimeSeasonsQuery;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -12,6 +13,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class AnimeController extends Controller implements HasMiddleware
@@ -34,7 +36,15 @@ class AnimeController extends Controller implements HasMiddleware
     {
         $perPage = $request->integer('perPage', 15);
 
-        $anime = QueryBuilder::for(Anime::visible());
+        $anime = QueryBuilder::for(Anime::visible())->allowedFilters([
+            AllowedFilter::scope('season_in'),
+            AllowedFilter::scope('season_not_in'),
+            AllowedFilter::scope('tag_in'),
+            AllowedFilter::scope('tag_not_in'),
+            AllowedFilter::scope('genre_in'),
+            AllowedFilter::scope('genre_not_in'),
+            AllowedFilter::scope('title', 'searchTitle'),
+        ]);
         if ($perPage === -1) {
             $results = $anime->get();
             $anime = new LengthAwarePaginator($results, $results->count(), -1);
@@ -45,7 +55,8 @@ class AnimeController extends Controller implements HasMiddleware
         return Inertia::render("Anime/Index", [
             'anime' => fn() => $anime,
             'canCreate' => fn() => auth()->check() && auth()->user()->can('create', Post::class),
-            'canViewUnpublished' => fn() => auth()->check() && auth()->user()->can('viewAny')
+            'canViewUnpublished' => fn() => auth()->check() && auth()->user()->can('viewAny'),
+            'seasons' => fn() => (new AnimeSeasonsQuery())->builder()->get()->pluck('season_year'),
         ]);
     }
 

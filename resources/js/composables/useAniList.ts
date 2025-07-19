@@ -7,6 +7,9 @@ import {
   PaginatedMediaApiResponse,
 } from '@/types/anilist'
 
+import genres from '@/assets/data/genres.json'
+import tags from '@/assets/data/tags.json'
+
 export function useAnime() {
   const hitApi = async <T>(variables: unknown, query: string): Promise<T | undefined> => {
     try {
@@ -145,5 +148,5 @@ export function useAnime() {
     return response?.Page.media
   }
 
-  return { hitApi, animeApi, homeAnimeApi }
+  return { hitApi, animeApi, homeAnimeApi, genres, tags }
 }

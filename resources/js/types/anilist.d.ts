@@ -70,7 +70,7 @@ export type AnimeMediaAutofillResponse = {
     isMediaSpoiler: boolean
     name: string
     rank: number
-  }
+  }[]
   seasonYear: number
   // WINTER
   // Months December to February
