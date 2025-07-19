@@ -64,6 +64,7 @@ class MVController extends Controller
     public function edit(Request $request, Post $post): RedirectResponse
     {
         \Gate::authorize('update', $post);
-        abort(501);
+
+        return redirect()->route('shinrai.edit', $post);
     }
 }
