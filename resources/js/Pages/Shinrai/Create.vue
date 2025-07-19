@@ -31,7 +31,7 @@ const form = useForm<MVPostItem>({
     en: null,
     id: null,
   },
-  is_published: true,
+  is_published: props.post?.is_published ?? false,
   links: [],
   metadata: { post_type: route().params.type || 'mv', vgmdb_data: null },
   thumbnail_item: null,
@@ -82,8 +82,13 @@ const submit = () => {
     form.post(route('shinrai.store'))
   }
 }
+
+const publish = () => {
+  form.is_published = true
+  submit()
+}
+
 const save = () => {
-  form.is_published = false
   submit()
 }
 
@@ -236,13 +241,12 @@ const formErrors = computed(() => form.errors as any)
         />
         <v-btn
           v-if="canPublish && !post?.is_published"
-          form="storePost"
-          type="submit"
           :disabled="form.processing"
           color="primary"
           :icon="!mdAndUp ? mdiSend : undefined"
           :prepend-icon="mdAndUp ? mdiSend : undefined"
           :text="mdAndUp ? 'Publish' : undefined"
+          @click.prevent="publish"
         />
       </div>
     </template>

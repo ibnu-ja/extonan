@@ -59,7 +59,7 @@ const form = useForm<PostForm>({
     native: null,
     romaji: null,
   },
-  is_published: true,
+  is_published: props.post?.is_published ?? false,
   description: {
     en: null,
     id: null,
@@ -82,14 +82,18 @@ if (props.post) {
 
 const submit = () => {
   if (props.post) {
-    form.is_published = props.post.is_published
     form.put(route('post.update', [props.anime, props.post]))
   } else {
     form.post(route('post.store', props.anime))
   }
 }
+
+const publish = () => {
+  form.is_published = true
+  submit()
+}
+
 const save = () => {
-  form.is_published = false
   submit()
 }
 
@@ -203,13 +207,12 @@ const showAnimeImage = ref(false)
         />
         <v-btn
           v-if="canPublish && !post?.is_published"
-          form="storePost"
-          type="submit"
           :disabled="form.processing"
           color="primary"
           :icon="!mdAndUp ? mdiSend : undefined"
           :prepend-icon="mdAndUp ? mdiSend : undefined"
           :text="mdAndUp ? 'Publish' : undefined"
+          @click.prevent="publish"
         />
       </div>
     </template>
