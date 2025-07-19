@@ -1,0 +1,7 @@
+#!/bin/bash
+
+php artisan scout:flush "App\Models\Anime"
+php artisan scout:flush "App\Models\Post"
+
+php artisan scout:import "App\Models\Anime"
+php artisan scout:import "App\Models\Post"
