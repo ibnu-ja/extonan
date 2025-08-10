@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.2",
         "http-interop/http-factory-guzzle": "^1.2",
-        "inertiajs/inertia-laravel": "^1.0",
+        "inertiajs/inertia-laravel": "^2.0",
         "intervention/image-laravel": "^1.3",
         "joelbutcher/socialstream": "^6.0",
         "laravel/framework": "^11.9",
