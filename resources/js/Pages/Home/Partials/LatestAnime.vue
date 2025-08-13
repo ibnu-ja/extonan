@@ -45,7 +45,7 @@ onMounted(() => {
         <div
           v-for="(anime) in latestAnime"
           :key="anime.id"
-          class="embla__slide flex-none basis-[100%] min-w-0 h-[350px] mr-4 last:mr-0 cursor-pointer select-none"
+          class="embla__slide flex-none basis-[100%] min-w-0 h-[250px] md:h-[350px] mr-4 last:mr-0 cursor-pointer select-none"
         >
           <InertiaLink
             v-ripple="false"
@@ -55,8 +55,15 @@ onMounted(() => {
             :style="{ backgroundImage: `linear-gradient(${gradient}), url('${anime.metadata.bannerImage || anime.metadata.coverImage.extraLarge}')`, backgroundSize: 'cover' }"
             rounded="lg"
           >
-            <div class="p-10 flex gap-2 h-full min-h-0">
-              <div class="basis-1/2 flex flex-col justify-end">
+            <div class="p-5 md:p-10 flex gap-2 h-full min-h-0">
+              <div
+                class="
+                w-full
+                flex flex-col
+                justify-start items-center
+                md:justify-end md:items-start
+              "
+              >
                 <h3 class="text-h4 text-md-h3 mb-4">
                   {{ translate(anime.title) }}
                 </h3>
@@ -66,7 +73,13 @@ onMounted(() => {
                 <!--&gt;-->
                 <!--  {{ translate(anime.description) }}-->
                 <!--</p>-->
-                <div class="px-4 sm:px-0 gap-2 mb-4 flex-wrap hidden md:flex ">
+                <div
+                  class="
+                  gap-2 mb-4 flex flex-wrap w-full
+                  justify-center items-center
+                  md:justify-start md:items-start
+                "
+                >
                   <InertiaLink
                     v-for="genre in anime.metadata.genres"
                     :key="genre"
@@ -76,19 +89,6 @@ onMounted(() => {
                     {{ genre }}
                   </InertiaLink>
                 </div>
-              </div>
-              <!-- 3:4 Image Fallback -->
-              <div class="basis-1/2 min-h-0 hidden md:flex">
-                <!--<div-->
-                <!--  v-if="!anime.metadata.bannerImage"-->
-                <!--  class="h-full aspect-[3/4] overflow-hidden rounded-lg"-->
-                <!--&gt;-->
-                <!--  <img-->
-                <!--    :src="anime.metadata.coverImage.extraLarge"-->
-                <!--    alt=""-->
-                <!--    class="h-full w-full object-cover object-center"-->
-                <!--  >-->
-                <!--</div>-->
               </div>
             </div>
           </InertiaLink>
