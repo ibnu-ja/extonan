@@ -8,6 +8,7 @@ import { onMounted, ref } from 'vue'
 import InertiaLink from '@/Components/InertiaLink'
 import emblaCarouselVue from 'embla-carousel-vue'
 import { VCard, VChip } from 'vuetify/components'
+import Autoplay from 'embla-carousel-autoplay'
 
 // register()
 
@@ -19,7 +20,7 @@ const { gradient } = useGradient()
 
 const { translate } = useLanguages()
 
-const [emblaRef, emblaApi] = emblaCarouselVue({ loop: false, slidesToScroll: 1, align: 'start' }, [])
+const [emblaRef, emblaApi] = emblaCarouselVue({ loop: true, slidesToScroll: 1, align: 'start' }, [Autoplay()])
 
 const selected = ref<number>(0)
 
