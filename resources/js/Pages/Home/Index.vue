@@ -9,7 +9,7 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import { MV } from '@/types/mv'
 import SingleMvItem from '@/Pages/MV/Partials/SingleMvItem.vue'
 import AlbumItem from '@/Pages/Album/Partials/AlbumItem.vue'
-import LatestAnimeEpisode from '@/Pages/Home/Partials/LatestAnimeEpisode.vue'
+import LatestEpisode from '@/Pages/Home/Partials/LatestEpisode.vue'
 
 defineOptions({
   name: 'Home',
@@ -47,7 +47,7 @@ const { translate } = useLanguages()
     </v-container>
   </section>
   <section class="mt-4 sm:mt-8">
-    <LatestAnimeEpisode
+    <LatestEpisode
       v-if="latestEpisodes.length > 0"
       :latest-episodes
     />

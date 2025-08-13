@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import dayjs from 'dayjs'
 import { AnimeData, EpisodeData } from '@/types/anime'
 import { CoverImage } from '@/types/anilist'
@@ -8,6 +7,8 @@ import { usePage } from '@inertiajs/vue3'
 import { PageProps } from '@/types'
 import emblaCarouselVue from 'embla-carousel-vue'
 import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
+import { mdiChevronLeft, mdiChevronRight } from 'mdi-js-es'
+import { onMounted, ref } from 'vue'
 
 type Postable = EpisodeData & {
   postable: AnimeData
@@ -21,6 +22,8 @@ type Props = {
 }
 
 const { translate } = useLanguages()
+const page = usePage<PageProps>()
+defineProps<Props>()
 
 const getTitle = (post: Postable): string => {
   if (post.metadata.post_type == 'tv') {
@@ -29,13 +32,29 @@ const getTitle = (post: Postable): string => {
   return translate(post.title)
 }
 
-const page = usePage<PageProps>()
-defineProps<Props>()
+// Embla
+const canPrev = ref(false)
+const canNext = ref(false)
+const [emblaRef, emblaApi] = emblaCarouselVue(
+  { loop: false, slidesToScroll: 1, containScroll: 'trimSnaps', align: 'start' },
+  [],
+)
 
-// const chunkedEp = computed(() => chunk(props.latestEpisodes, 3))
+const updateButtons = () => {
+  if (!emblaApi.value) return
+  canPrev.value = emblaApi.value.canScrollPrev()
+  canNext.value = emblaApi.value.canScrollNext()
+}
 
-const [emblaRef] = emblaCarouselVue({ loop: false, slidesToScroll: 1, containScroll: 'trimSnaps', align: 'start' }, [])
+onMounted(() => {
+  if (!emblaApi.value) return
+  updateButtons()
+  emblaApi.value.on('select', updateButtons)
+  emblaApi.value.on('init', updateButtons)
+})
 
+const scrollPrev = () => emblaApi.value?.scrollPrev()
+const scrollNext = () => emblaApi.value?.scrollNext()
 </script>
 
 <template>
@@ -50,8 +69,9 @@ const [emblaRef] = emblaCarouselVue({ loop: false, slidesToScroll: 1, containScr
 
   <v-container
     max-width="1800"
-    class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4"
+    class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4 relative group"
   >
+    <!-- Carousel -->
     <div
       ref="emblaRef"
       class="embla overflow-hidden"
@@ -60,7 +80,7 @@ const [emblaRef] = emblaCarouselVue({ loop: false, slidesToScroll: 1, containScr
         <div
           v-for="episode in latestEpisodes"
           :key="episode.id"
-          class="embla__slide flex-none basis-1/4 min-w-0"
+          class="embla__slide flex-none basis-[83%] md:basis-[43%] lg:basis-[30%] xl:basis-[23%] min-w-0"
         >
           <HorizontalEpisodeCard
             :permissions="episode.can"
@@ -79,5 +99,32 @@ const [emblaRef] = emblaCarouselVue({ loop: false, slidesToScroll: 1, containScr
         </div>
       </div>
     </div>
+
+    <!-- Left Button -->
+    <v-btn
+      v-if="canPrev"
+      icon
+      :size="80"
+      class="!absolute left-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      @click="scrollPrev"
+    >
+      <v-icon
+        :icon="mdiChevronLeft"
+        :size="55"
+      />
+    </v-btn>
+
+    <v-btn
+      v-if="canNext"
+      icon
+      :size="80"
+      class="!absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      @click="scrollNext"
+    >
+      <v-icon
+        :icon="mdiChevronRight"
+        :size="55"
+      />
+    </v-btn>
   </v-container>
 </template>
