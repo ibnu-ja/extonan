@@ -92,9 +92,9 @@ const computedActive = computed(() => {
 
 // vuetify-specific props
 
-const onClick = (event: KeyboardEvent) => {
+const onClick = (event: Pick<MouseEvent, 'button' | 'altKey' | 'ctrlKey' | 'defaultPrevented' | 'target' | 'currentTarget' | 'metaKey' | 'shiftKey'>) => {
   if (shouldIntercept(event)) {
-    event.preventDefault()
+    // event.preventDefault()
     router.visit(href, {
       data: data,
       method: method,

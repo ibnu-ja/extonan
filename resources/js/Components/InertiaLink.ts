@@ -112,9 +112,9 @@ export default defineComponent({
       return currentUrl.startsWith(props.href!)
     })
 
-    const onClick = (event: KeyboardEvent) => {
+    const onClick = (event: Pick<MouseEvent, 'button' | 'altKey' | 'ctrlKey' | 'defaultPrevented' | 'target' | 'currentTarget' | 'metaKey' | 'shiftKey'>) => {
       if (shouldIntercept(event)) {
-        event.preventDefault()
+        // event.preventDefault()
         router.visit(href, {
           data,
           method: props.method,
