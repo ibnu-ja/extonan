@@ -18,6 +18,9 @@ const vuetify = createVuetify({
     },
   },
   ssr: true,
+  theme: {
+    defaultTheme: 'system',
+  },
 })
 
 export default vuetify
