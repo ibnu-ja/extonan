@@ -1,16 +1,12 @@
 <script lang="ts" setup>
 
 import dayjs from 'dayjs'
-import VerticalEpisodeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
 import { AnimeData, EpisodeData } from '@/types/anime'
 import { CoverImage } from '@/types/anilist'
 import { useLanguages } from '@/composables/useLanguages'
 import { usePage } from '@inertiajs/vue3'
 import { PageProps } from '@/types'
-import { computed } from 'vue'
-import { chunk } from 'lodash-es'
 import emblaCarouselVue from 'embla-carousel-vue'
-import Autoplay from 'embla-carousel-autoplay'
 import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
 
 type Postable = EpisodeData & {
@@ -34,7 +30,7 @@ const getTitle = (post: Postable): string => {
 }
 
 const page = usePage<PageProps>()
-const props = defineProps<Props>()
+defineProps<Props>()
 
 // const chunkedEp = computed(() => chunk(props.latestEpisodes, 3))
 

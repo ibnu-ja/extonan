@@ -575,7 +575,7 @@ const formErrors = computed(() => form.errors as any)
                                   </v-btn>
                                 </template>
                               </v-card-item>
-                              <v-card-text class="pa-2 d-grid grid-cols-3 gap-2">
+                              <v-card-text class="p-2 d-grid grid-cols-3 gap-2">
                                 <v-text-field
                                   v-for="(lang, j) in trackLangs"
                                   :key="j"

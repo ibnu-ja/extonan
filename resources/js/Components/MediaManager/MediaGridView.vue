@@ -38,7 +38,7 @@ const imageLists = computed(() => {
         >
           <template #placeholder>
             <v-row
-              class="fill-height ma-0"
+              class="fill-height m-0"
               align="center"
               justify="center"
             >

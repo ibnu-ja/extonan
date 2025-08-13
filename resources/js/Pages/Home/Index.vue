@@ -32,13 +32,6 @@ defineProps<{
   latestAlbum: MV[]
 }>()
 
-const getTitle = (post: Postable): string => {
-  if (post.metadata.post_type == 'tv') {
-    return `${translate(post.postable.title)} - ${post.metadata.ep_no}`
-  }
-  return translate(post.title)
-}
-
 const { translate } = useLanguages()
 
 </script>
@@ -48,19 +41,6 @@ const { translate } = useLanguages()
   <section style="position: relative">
     <template v-if="latestAnime.length > 0">
       <LatestAnime :latest-anime />
-      <!--Header-->
-      <!--<div-->
-      <!--  class="absolute top-4 md:top-16 left-0 w-full z-[5]"-->
-      <!--&gt;-->
-      <!--  <v-container-->
-      <!--    max-width="1800"-->
-      <!--    class="pb-0 mb-2 sm:mb-4"-->
-      <!--  >-->
-      <!--    <h1 class="text-h4 text-md-h3">-->
-      <!--      Latest Anime-->
-      <!--    </h1>-->
-      <!--  </v-container>-->
-      <!--</div>-->
     </template>
     <v-container v-else>
       Add anime to show latest anime slider.

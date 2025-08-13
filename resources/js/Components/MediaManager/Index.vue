@@ -133,7 +133,7 @@ const save = () => {
             :order="0"
           >
             <div
-              class="pa-2"
+              class="p-2"
             >
               <h5 class="text-h5">
                 Media Details

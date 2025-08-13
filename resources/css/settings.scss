@@ -2,6 +2,7 @@
   //$layers: true,
   $pagination-item-margin: .3rem,
   $table-background: initial,
+  $reset: false,
   $utilities: (
     margin: false,
     margin-x: false,
@@ -42,4 +43,3 @@
     sizing: false
   )
 );
-
