@@ -31,7 +31,7 @@ defineProps<{
 </script>
 <template>
   <Head :title="title" />
-  <v-layout>
+  <v-app>
     <Banner />
     <Dialog />
     <AppBar
@@ -43,5 +43,5 @@ defineProps<{
       <slot />
       <Footer />
     </v-main>
-  </v-layout>
+  </v-app>
 </template>
