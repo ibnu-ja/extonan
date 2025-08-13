@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { mdiChevronLeft, mdiChevronRight } from 'mdi-js-es'
 import { VBtn } from 'vuetify/components'
-import InertiaLink from '@/Components/InertiaLink'
+import { Link as InertiaLink } from '@inertiajs/vue3'
 import { Link } from '@/types'
 
 withDefaults(defineProps<{
@@ -28,7 +28,7 @@ withDefaults(defineProps<{
           :disabled="link.label === '...' || !link.url"
           size="small"
           icon
-          :href="link?.url"
+          :href="link?.url!"
           :variant="link?.active ? undefined : 'text'"
           preserve-scroll
         >

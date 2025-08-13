@@ -3,7 +3,7 @@ import { Head, router } from '@inertiajs/vue3'
 import { mdiAlphabeticalVariant, mdiFilterMenu, mdiFormatListNumbered, mdiMagnify, mdiPlus } from 'mdi-js-es'
 import { useDisplay } from 'vuetify'
 import { PaginatedResponse } from '@/types'
-import InertiaLink from '@/Components/InertiaLink'
+import { Link as InertiaLink } from '@inertiajs/vue3'
 import { VBtn } from 'vuetify/components'
 import { AnimeData, Filter } from '@/types/anime'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
@@ -60,7 +60,7 @@ const tagsNotIn = ref<string[]>(filter?.tag_not_in?.split(',') || [] as string[]
 const genresIn = ref<string[]>(filter?.genre_in?.split(',') || [] as string[])
 const genresNotIn = ref<string[]>(filter?.genre_not_in?.split(',') || [] as string[])
 
-console.log('filter', filter)
+// console.log('filter', filter)
 
 const searchAction = () => {
   const currentRoute = route().current() || 'anime.index'

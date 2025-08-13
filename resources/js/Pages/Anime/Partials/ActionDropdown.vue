@@ -4,7 +4,7 @@ import { Permissions } from '@/types'
 import { VListItem } from 'vuetify/components'
 import { openConfirmationDialog } from '@/composables/useDialog'
 import { router } from '@inertiajs/vue3'
-import InertiaLink from '@/Components/InertiaLink'
+import { Link as InertiaLink } from '@inertiajs/vue3'
 
 const props = withDefaults(defineProps<{
   permissions?: Permissions

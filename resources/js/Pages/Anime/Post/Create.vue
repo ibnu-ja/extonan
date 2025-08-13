@@ -23,7 +23,7 @@ import { openConfirmationDialog, openFormDialog } from '@/composables/useDialog'
 import MediaManager from '@/Components/MediaManager/Index.vue'
 import { Media } from '@/types'
 import AppLayout from '@/Layouts/AppLayout.vue'
-import InertiaLink from '@/Components/InertiaLink'
+import { Link as InertiaLink } from '@inertiajs/vue3'
 
 defineOptions({
   name: 'AnimePostCreate',
