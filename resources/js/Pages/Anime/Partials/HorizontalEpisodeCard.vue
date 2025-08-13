@@ -43,55 +43,57 @@ const { width } = useElementSize(imageRef)
 </script>
 
 <template>
-  <v-hover v-slot="{isHovering, props: propsss}">
-    <InertiaLink
-      v-bind="propsss"
-      :href
-      :as="VCard"
-      variant="text"
-      class="p-2"
-      :rounded="smAndUp ? 'lg' : false"
-    >
-      <v-img
-        ref="imageRef"
-        color="surface"
-        :height="(width / 16) * 9"
-        cover
-        rounded="lg"
-        :src="image"
-        :lazy-src="lazyImg"
+  <div>
+    <v-hover v-slot="{isHovering, props: propsss}">
+      <InertiaLink
+        v-bind="propsss"
+        :href
+        :as="VCard"
+        variant="text"
+        class="p-2"
+        :rounded="smAndUp ? 'lg' : false"
       >
-        <v-fade-transition>
-          <div
-            v-if="isHovering || !image"
-            class="!flex transition-fast-in-fast-out bg-grey-darken-4 v-card--reveal"
-            style="height: 100%;"
-          >
-            <v-icon :icon="mdiPlay" />
-          </div>
-        </v-fade-transition>
-      </v-img>
-
-      <ItemListTitle
-        :show-action
-        class="mt-2"
-        :permissions
-        :overhead
-        :title
-        :subtitle
-        :edit-url
-        :delete-url
-        :is-published
-      >
-        <template
-          v-if="$slots.content"
-          #content
+        <v-img
+          ref="imageRef"
+          color="surface"
+          :height="(width / 16) * 9"
+          cover
+          rounded="lg"
+          :src="image"
+          :lazy-src="lazyImg"
         >
-          <slot name="content" />
-        </template>
-      </ItemListTitle>
-    </InertiaLink>
-  </v-hover>
+          <v-fade-transition>
+            <div
+              v-if="isHovering || !image"
+              class="!flex transition-fast-in-fast-out bg-grey-darken-4 v-card--reveal"
+              style="height: 100%;"
+            >
+              <v-icon :icon="mdiPlay" />
+            </div>
+          </v-fade-transition>
+        </v-img>
+
+        <ItemListTitle
+          :show-action
+          class="mt-2"
+          :permissions
+          :overhead
+          :title
+          :subtitle
+          :edit-url
+          :delete-url
+          :is-published
+        >
+          <template
+            v-if="$slots.content"
+            #content
+          >
+            <slot name="content" />
+          </template>
+        </ItemListTitle>
+      </InertiaLink>
+    </v-hover>
+  </div>
 </template>
 
 <style scoped>
