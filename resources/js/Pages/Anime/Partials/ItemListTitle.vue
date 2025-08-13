@@ -26,16 +26,21 @@ defineProps<{
       <template v-else>
         <div
           v-if="overhead"
-          class="text-subtitle-2 text-medium-emphasis"
+          class="text-subtitle-2 text-medium-emphasis text-truncate"
+          :title="overhead"
         >
           {{ overhead }}
         </div>
-        <div class="text-subtitle-1 list-title">
+        <div
+          class="text-subtitle-1 list-title text-truncate"
+          :title
+        >
           {{ title }}
         </div>
         <div
           v-if="subtitle || $slots.subtitle"
-          class="text-subtitle-2 text-medium-emphasis"
+          class="text-subtitle-2 text-medium-emphasis text-truncate"
+          :title="subtitle!"
         >
           {{ subtitle }}
         </div>

@@ -20,7 +20,7 @@ class HomeController extends Controller
             'latestAnime' => Anime::with('author')->take(5)->orderBy('published_at')->get(),
             'latestEpisodes' => Post::whereHasMorph('postable', [Anime::class], function (Builder $query) {
                 $query->with('author')->take(10);
-            })->with(['postable', 'author'])->take(10)->orderByDesc('published_at')->get(),
+            })->with(['postable', 'author'])->take(30)->orderByDesc('published_at')->get(),
             'latestMv' => Post::with('author')
                 ->where('metadata->post_type', '=', 'mv')
                 ->current()

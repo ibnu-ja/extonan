@@ -3,139 +3,146 @@ import { AnimeData } from '@/types/anime'
 
 import { register } from 'swiper/element/bundle'
 import { useGradient } from '@/composables/useGradient'
-import { VCard } from 'vuetify/components'
+import { VBtn, VCard, VChip } from 'vuetify/components'
 import { useLanguages } from '@/composables/useLanguages'
-import { mdiCircle } from 'mdi-js-es'
-import { SwiperContainer } from 'swiper/element'
-import { ref } from 'vue'
+import { mdiApi, mdiCircle, mdiPlay } from 'mdi-js-es'
+import { computed, onMounted, ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import InertiaLink from '@/Components/InertiaLink'
+import emblaCarouselVue from 'embla-carousel-vue'
+import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
+import dayjs from 'dayjs'
+import { usePage } from '@inertiajs/vue3'
+import { PageProps } from '@/types'
 
-register()
+// register()
 
-defineProps<{
+const props = defineProps<{
   latestAnime: AnimeData[]
 }>()
 
 const { gradient } = useGradient()
+//
+// const { mdAndUp } = useDisplay()
+//
+// const { translate } = useLanguages()
+//
+// const [emblaRef] = emblaCarouselVue({ loop: false, slidesToScroll: 1, containScroll: 'trimSnaps', align: 'start' }, [])
+//
+// const slide = ref(0)
+//
+// const pressButton = (value: number) => {
+//   console.log(value)
+//   swiper.value?.swiper.slideTo(value)
+// }
+//
+// const anime = computed(() => props.latestAnime[0])
 
-const { mdAndUp } = useDisplay()
+const page = usePage<PageProps>()
 
 const { translate } = useLanguages()
 
-const swiper = ref<SwiperContainer>()
+const [emblaRef, emblaApi] = emblaCarouselVue({ loop: false, slidesToScroll: 1, align: 'start' }, [])
 
-const onTransitionEnd = () => {
-  if (!swiper.value) {
-    return
-  }
-  slide.value = swiper.value!.swiper.realIndex
-}
+const selected = ref<number>(0)
 
-const slide = ref(0)
+onMounted(() => {
+  emblaApi.value?.on('select', () => {
+    selected.value = emblaApi.value!.selectedScrollSnap()
+  })
+})
 
-const pressButton = (value: number) => {
-  console.log(value)
-  swiper.value?.swiper.slideTo(value)
-}
 </script>
-
 <template>
-  <div class="relative">
-    <swiper-container
-      ref="swiper"
-      :loop="true"
-      @swiperslidechange="onTransitionEnd"
+  <v-container
+    max-width="1800"
+    class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4 relative"
+  >
+    <!-- Slider -->
+    <div
+      ref="emblaRef"
+      class="embla overflow-hidden h-full"
     >
-      <!--eslint-disable vue/no-deprecated-slot-attribute-->
-      <div
-        v-if="latestAnime.length > 1"
-        slot="container-end"
-        class="text-center bg-transparent"
-      >
-        <v-item-group
-          v-model="slide"
-          mandatory
+      <div class="flex h-full">
+        <div
+          v-for="(anime) in latestAnime"
+          :key="anime.id"
+          class="embla__slide flex-none basis-[100%] min-w-0 h-[350px]"
         >
-          <v-item
-            v-for="(anime, n) in latestAnime"
-            :key="anime.id"
-            v-slot="{isSelected}"
+          <VCard
+            class="h-full bg-cover bg-center"
+            :style="{ backgroundImage: `linear-gradient(${gradient}), url('${anime.metadata.bannerImage || anime.metadata.coverImage.extraLarge}')`, backgroundSize: 'cover' }"
+            rounded="lg"
           >
-            <v-btn
-              :active="isSelected"
-              size="small"
-              variant="text"
-              class="v-carousel__controls__item swiper-pagination"
-              :icon="mdiCircle"
-              @click="pressButton(n)"
-            />
-          </v-item>
-        </v-item-group>
-      </div>
-      <!--eslint-enable-->
-      <swiper-slide
-        v-for="anime in latestAnime"
-        :key="anime.id"
-      >
-        <InertiaLink
-          :as="VCard"
-          :link="false"
-          :href="route('anime.show', anime)"
-          :rounded="false"
-          class="h-[330px] md:h-[400px] flex relative elevation-0 border-0 cursor-pointer"
-          :elevation="0"
-          variant="text"
-        >
-          <template #image>
-            <v-img
-              :gradient
-              class="bg-blur"
-              cover
-              :src="anime.metadata.coverImage.extraLarge"
-              :lazy-src="anime.metadata.coverImage.medium"
-            />
-          </template>
-          <v-container
-            class="mt-auto h-[70%] md:h-[65%] w-full"
-          >
-            <div class="md:p-4 gap-4 flex items-start">
-              <v-img
-                cover
-                rounded
-                class="flex-0-0 w-[30vw] sm:w-[20vw] md:w-[170px]"
-                :src="anime.metadata.coverImage.extraLarge"
-                :lazy-src="anime.metadata.coverImage.medium"
-              />
-
-              <div class="h-[330px]">
-                <h3 class="text-h4 mb-4">
+            <div class="p-10 flex gap-2 h-full min-h-0">
+              <div class="basis-1/2 flex flex-col justify-end">
+                <h3 class="text-h2 mb-4">
                   {{ translate(anime.title) }}
                 </h3>
-
-                <div
-                  v-if="mdAndUp"
-                  class="line-clamp-3 mb-4"
-                >
-                  <p class="text-medium-emphasis text-subtitle-1">
-                    {{ translate(anime.description) }}
-                  </p>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                  <v-chip
+                <!--<p-->
+                <!--  class="line-clamp-2 mb-4"-->
+                <!--  :title="translate(anime.description)"-->
+                <!--&gt;-->
+                <!--  {{ translate(anime.description) }}-->
+                <!--</p>-->
+                <div class="px-4 sm:px-0 flex gap-2 mb-4 flex-wrap">
+                  <InertiaLink
                     v-for="genre in anime.metadata.genres"
                     :key="genre"
+                    :as="VChip"
+                    :href="route('anime.index', { filter: {genre_in: genre} })"
                   >
                     {{ genre }}
-                  </v-chip>
+                  </InertiaLink>
                 </div>
               </div>
+              <!-- 3:4 Image Fallback -->
+              <div class="basis-1/2 flex min-h-0">
+                <!--<div-->
+                <!--  v-if="!anime.metadata.bannerImage"-->
+                <!--  class="h-full aspect-[3/4] overflow-hidden rounded-lg"-->
+                <!--&gt;-->
+                <!--  <img-->
+                <!--    :src="anime.metadata.coverImage.extraLarge"-->
+                <!--    alt=""-->
+                <!--    class="h-full w-full object-cover object-center"-->
+                <!--  >-->
+                <!--</div>-->
+              </div>
             </div>
-          </v-container>
-        </InertiaLink>
-      </swiper-slide>
-    </swiper-container>
-  </div>
+          </VCard>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slider Selector Overlay -->
+    <div
+      v-if="latestAnime.length > 1"
+      class="absolute bottom-5 right-10 z-10"
+    >
+      <v-item-group
+        v-model="selected"
+        mandatory
+      >
+        <v-item
+          v-for="(anime, n) in latestAnime"
+          :key="anime.id"
+          v-slot="{ isSelected }"
+        >
+          <v-btn
+            :active="isSelected"
+            size="x-small"
+            variant="text"
+            class="v-carousel__controls__item swiper-pagination mr-0"
+            :icon="mdiCircle"
+            @click="() => {
+              emblaApi?.scrollTo(n)
+            }"
+          />
+        </v-item>
+      </v-item-group>
+    </div>
+  </v-container>
 </template>
 
 <style lang="scss">
