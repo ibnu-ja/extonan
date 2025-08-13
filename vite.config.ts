@@ -40,7 +40,7 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
-  // ssr: {
-  //   noExternal: [/^vuetify/],
-  // },
+  ssr: {
+    noExternal: [/^vuetify/],
+  },
 })
