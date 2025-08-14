@@ -109,4 +109,11 @@ class Post extends BasePost
     {
         $query->whereIn('metadata->post_type', array_column(ShinraiPostType::cases(), 'value'));
     }
+
+    public function scopeOrderByEpisodeAndNativeTitle(Builder $query): void
+    {
+        $query
+            ->orderByRaw('"metadata" ->> \'ep_no\' collate "numeric"')
+            ->orderByDesc('title->native');
+    }
 }
