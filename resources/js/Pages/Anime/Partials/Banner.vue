@@ -29,6 +29,7 @@ const { xs, smAndUp } = useDisplay()
 
 const mobileDescription = ref<HTMLParagraphElement>()
 
+// TODO fix SSR
 const isClamped = computed(() => {
   return mobileDescription.value!.scrollHeight > mobileDescription.value!.clientHeight
 })
