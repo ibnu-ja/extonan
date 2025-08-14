@@ -3,9 +3,11 @@ import './bootstrap'
 import { createApp, DefineComponent, h } from 'vue'
 import { createInertiaApp, router } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import { ZiggyVue } from '../../vendor/tightenco/ziggy'
+import { ZiggyVue } from 'ziggy-js'
 import Vuetify from '@/plugins/vuetify'
 import pinia from '@/plugins/pinia'
+
+import '../css/tailwind.css'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 

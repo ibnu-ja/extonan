@@ -14,7 +14,7 @@ import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
 import Pagination from '@/Components/Pagination.vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
-import InertiaLink from '@/Components/InertiaLink'
+import { Link as InertiaLink } from '@inertiajs/vue3'
 import SingleMvItem from '@/Pages/MV/Partials/SingleMvItem.vue'
 
 defineOptions({

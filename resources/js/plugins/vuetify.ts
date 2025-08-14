@@ -1,6 +1,3 @@
-// Styles
-import '../../css/main.scss'
-
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
@@ -18,6 +15,9 @@ const vuetify = createVuetify({
     sets: {
       mdi,
     },
+  },
+  theme: {
+    defaultTheme: 'system',
   },
 })
 

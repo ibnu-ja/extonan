@@ -91,6 +91,7 @@ export type AnimeMediaAutofillResponse = {
     english: string
     native: string
   }
+  bannerImage: string | null | undefined
 }
 
 export type AnimeMediaHomepageResponse = {

@@ -3,19 +3,10 @@ import laravel from 'laravel-vite-plugin'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
 import DefineOptions from 'unplugin-vue-define-options/vite'
+import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
 export default defineConfig({
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern-compiler',
-      },
-      sass: {
-        api: 'modern-compiler',
-      },
-    },
-  },
   resolve: {
     alias: {
       'ziggy-js': path.resolve(__dirname, 'vendor/tightenco/ziggy/dist/index.js'),
@@ -39,9 +30,6 @@ export default defineConfig({
           base: null,
           includeAbsolute: false,
         },
-        compilerOptions: {
-          isCustomElement: (tag: string) => ['swiper-container', 'swiper-slide'].includes(tag),
-        },
       },
     }),
     DefineOptions(),
@@ -50,6 +38,7 @@ export default defineConfig({
         configFile: 'resources/css/settings.scss',
       },
     }),
+    tailwindcss(),
   ],
   ssr: {
     noExternal: [/^vuetify/],

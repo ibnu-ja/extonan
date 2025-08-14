@@ -109,6 +109,7 @@ export function useAnime() {
           name
           rank
         }
+        bannerImage
       }
     }`
 

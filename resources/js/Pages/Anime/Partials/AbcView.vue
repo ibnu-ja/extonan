@@ -3,7 +3,7 @@ import { PaginatedResponse } from '@/types'
 import { AnimeData } from '@/types/anime'
 import { groupBy, map, sortBy } from 'lodash-es'
 import { computed } from 'vue'
-import InertiaLink from '@/Components/InertiaLink'
+import { Link as InertiaLink } from '@inertiajs/vue3'
 import { useLanguages } from '@/composables/useLanguages'
 
 const props = defineProps<{

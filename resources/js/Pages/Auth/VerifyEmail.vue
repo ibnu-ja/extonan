@@ -3,7 +3,7 @@ import { computed, inject } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { VBtn } from 'vuetify/components'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
-import InertiaLink from '@/Components/InertiaLink'
+import { Link as InertiaLink } from '@inertiajs/vue3'
 import { route as ziggyRoute } from 'ziggy-js'
 
 const props = defineProps<{

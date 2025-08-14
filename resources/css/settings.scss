@@ -2,6 +2,7 @@
   //$layers: true,
   $pagination-item-margin: .3rem,
   $table-background: initial,
+  $reset: true,
   $utilities: (
     margin: false,
     margin-x: false,
@@ -38,7 +39,7 @@
     negative-padding-left: false,
     negative-padding-right: false,
     negative-padding-start: false,
-    negative-padding-end: false
+    negative-padding-end: false,
+    sizing: false
   )
 );
-

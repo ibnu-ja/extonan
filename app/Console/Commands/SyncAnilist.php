@@ -28,6 +28,84 @@ class SyncAnilist extends Command
     public function handle(): void
     {
         $animeToBeUpdated = Anime::all();
+        /*
+         *
+query ($id: Int, $idMal: Int) {
+  Media (id: $id, idMal: $idMal , type: ANIME) {
+    id
+    idMal
+    episodes
+    coverImage {
+      extraLarge
+      large
+      medium
+      color
+    }
+    startDate {
+      year
+      month
+      day
+    }
+    endDate {
+      year
+      month
+      day
+    }
+    studios {
+      edges {
+        node {
+          id
+          name
+        }
+      }
+    }
+    description
+    characters (sort: [ROLE, ID]) {
+      edges { # Array of character edges
+        node { # Character node
+          id
+          name {
+            full
+          }
+          image {
+            large
+            medium
+          }
+        }
+        role
+        voiceActors(language: JAPANESE) { # Array of voice actors of this character for the anime
+          id
+          image {
+            large
+            medium
+          }
+          name {
+            full
+          }
+        }
+      }
+    }
+    seasonYear
+    season
+    genres
+    title {
+      romaji
+      english
+      native
+    }
+    tags {
+      category
+      id
+      isAdult
+      isGeneralSpoiler
+      isMediaSpoiler
+      name
+      rank
+    }
+    bannerImage
+  }
+}
+         */
         $anilistQuery = '
 query ($idIn: [Int], $perPage: Int, $page: Int) {
   Page(perPage: $perPage, page: $page) {
@@ -40,15 +118,7 @@ query ($idIn: [Int], $perPage: Int, $page: Int) {
     }
     media(type: ANIME, id_in: $idIn) {
       id
-      tags {
-        category
-        id
-        isAdult
-        isGeneralSpoiler
-        isMediaSpoiler
-        name
-        rank
-      }
+      bannerImage
     }
   }
 }
@@ -72,7 +142,7 @@ query ($idIn: [Int], $perPage: Int, $page: Int) {
         foreach ($animeToBeUpdated as $anime) {
             $anilist_id = ($anime->metadata->id);
             $metadata = collect($anime->metadata);
-            $metadata['tags'] = $media->firstWhere('id', $anilist_id)['tags'];
+            $metadata['bannerImage'] = $media->firstWhere('id', $anilist_id)['bannerImage'];
             $anime->update([
                 'metadata' => $metadata
             ]);

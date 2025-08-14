@@ -1,6 +1,3 @@
-// Styles
-import '../../css/main.scss'
-
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
@@ -21,6 +18,9 @@ const vuetify = createVuetify({
     },
   },
   ssr: true,
+  theme: {
+    defaultTheme: 'system',
+  },
 })
 
 export default vuetify

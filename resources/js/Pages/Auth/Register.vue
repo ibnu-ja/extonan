@@ -2,7 +2,7 @@
 import { Head, useForm, usePage } from '@inertiajs/vue3'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import { VBtn } from 'vuetify/components'
-import InertiaLink from '@/Components/InertiaLink'
+import { Link as InertiaLink } from '@inertiajs/vue3'
 import { inject, ref } from 'vue'
 import { mdiEye, mdiEyeOff } from 'mdi-js-es'
 import Socialstream from '@/Components/Socialstream.vue'

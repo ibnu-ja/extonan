@@ -4,7 +4,7 @@ import { computed, inject, ref, watch } from 'vue'
 import { mdiAccount, mdiAccountPlus, mdiApi, mdiExitRun, mdiLogin, mdiMenu } from 'mdi-js-es'
 import { router, usePage } from '@inertiajs/vue3'
 import { VBtn, VListItem, VTab } from 'vuetify/components'
-import InertiaLink from '@/Components/InertiaLink'
+import { Link as InertiaLink } from '@inertiajs/vue3'
 import ThemeSelector from '@/Layouts/Partials/ThemeSelector.vue'
 import { BreadcrumbItem } from '@/types'
 import { route as ziggyRoute } from 'ziggy-js'
@@ -119,6 +119,8 @@ function logout() {
           :href="item.link"
           class="mr-2"
           :value="item.value"
+          active-color="secondary"
+          :variant="item.value === tab ? 'tonal' : undefined"
         >
           {{ item.label }}
         </InertiaLink>
@@ -166,7 +168,7 @@ function logout() {
             :href="route('api-tokens.index')"
           />
           <v-divider class="my-2" />
-          <InertiaLink
+          <VListItem
             :as="VListItem"
             :prepend-icon="mdiExitRun"
             title="Logout"

@@ -59,7 +59,7 @@ onUnmounted(() => {
   <v-card
     variant="outlined"
     style="height: 100%;"
-    class="pa-4 d-flex align-center justify-center"
+    class="p-4 d-flex align-center justify-center"
     :data-active="active"
     @dragenter.prevent="setActive"
     @dragover.prevent="setActive"

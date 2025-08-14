@@ -30,7 +30,7 @@ const commitURL = `${page.props.appGitOriginRepo.replace(/\.git$/, '')}/commit/$
   <v-footer
     app
     absolute
-    class="text-center d-flex flex-column"
+    class="text-center flex flex-col"
   >
     <div>
       <v-btn

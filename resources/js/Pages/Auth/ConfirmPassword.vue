@@ -3,7 +3,7 @@ import { inject, ref, VNodeRef } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { VBtn } from 'vuetify/components'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
-import Link from '@/Components/InertiaLink'
+import { Link } from '@inertiajs/vue3'
 import { mdiEye, mdiEyeOff } from 'mdi-js-es'
 import { route as ziggyRoute } from 'ziggy-js'
 

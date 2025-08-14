@@ -11,7 +11,7 @@ import calendar from 'dayjs/plugin/calendar'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { inject } from 'vue'
 import { route as ziggyRoute } from 'ziggy-js'
-import InertiaLink from '@/Components/InertiaLink'
+import { Link as InertiaLink } from '@inertiajs/vue3'
 import { VChip } from 'vuetify/components'
 
 defineOptions({
