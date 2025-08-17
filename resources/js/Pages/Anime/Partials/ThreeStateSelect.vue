@@ -229,12 +229,14 @@ const handleOnKeydown = (e: KeyboardEventInit): void => {
       </div>
     </template>
 
-    <template #item="{ item }">
+    <template #item="{ item, props: propsss }">
       <v-list-item
+        v-bind="propsss"
         :key="item.value.name"
         :value="item.value"
         :active="item.value.active"
         :color="item.value.activeColor"
+        :title="item.raw.name"
         @click="itemClick(item.value.name)"
       >
         <template #prepend>
@@ -243,7 +245,6 @@ const handleOnKeydown = (e: KeyboardEventInit): void => {
             class="mr-2"
           />
         </template>
-        <v-list-item-title>{{ item.raw.name }}</v-list-item-title>
       </v-list-item>
     </template>
   </v-autocomplete>

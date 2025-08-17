@@ -24,11 +24,13 @@ withDefaults(defineProps<{
         class="pagination__item"
       >
         <InertiaLink
+          v-if="link.url"
           :as="VBtn"
-          :disabled="link.label === '...' || !link.url"
+          :active="link.active"
+          :disabled="link.label === '...' || !link.url || link.active"
           size="small"
           icon
-          :href="link?.url!"
+          :href="link.url"
           :variant="link?.active ? undefined : 'text'"
           preserve-scroll
         >
@@ -44,6 +46,23 @@ withDefaults(defineProps<{
             {{ link?.label }}
           </template>
         </InertiaLink>
+        <VBtn
+          v-else
+          :active="link.active"
+          :disabled="link.label === '...' || !link.url || link.active"
+          size="small"
+          :variant="link?.active ? undefined : 'text'"
+          icon
+        >
+          <v-icon
+            v-if="i === 0"
+            :icon="mdiChevronLeft"
+          />
+          <v-icon
+            v-else-if="i === links.length-1"
+            :icon="mdiChevronRight"
+          />
+        </VBtn>
       </li>
     </ul>
   </div>

@@ -6,12 +6,17 @@ use App\Http\Requests\StoreAnimeRequest;
 use App\Models\Anime;
 use App\Models\Post;
 use App\Queries\AnimeSeasonsQuery;
+use Gate;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Redirector;
 use Inertia\Inertia;
+use Inertia\Response;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -32,9 +37,17 @@ class AnimeController extends Controller implements HasMiddleware
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)//: \Inertia\Response|LengthAwarePaginator
+    public function index(Request $request): Application|RedirectResponse|Redirector | Response
     {
-        $perPage = $request->integer('perPage', 15);
+        if (!$request->has('sort')) {
+            $query = $request->query();
+            $query['sort'] = 'title->romaji'; // your default sort key
+
+            $redirectUrl = $request->url() . '?' . http_build_query($query);
+
+            return redirect($redirectUrl);
+        }
+        // $perPage = $request->integer('perPage', 15);
 
         $anime = QueryBuilder::for(Anime::visible())->allowedFilters([
             AllowedFilter::scope('season_in'),
@@ -44,14 +57,10 @@ class AnimeController extends Controller implements HasMiddleware
             AllowedFilter::scope('genre_in'),
             AllowedFilter::scope('genre_not_in'),
             AllowedFilter::scope('title', 'searchTitle'),
-        ]);
-        if ($perPage === -1) {
-            $results = $anime->get();
-            $anime = new LengthAwarePaginator($results, $results->count(), -1);
-        } else {
-            $anime = $anime->paginate($perPage);
-        }
-        $anime->appends(request()->query());
+        ])
+            ->allowedSorts(['title->romaji', 'created_at', 'updated_at'])
+            ->paginate(14)->appends(request()->query());
+
         return Inertia::render("Anime/Index", [
             'anime' => fn() => $anime,
             'canCreate' => fn() => auth()->check() && auth()->user()->can('create', Post::class),
@@ -63,9 +72,9 @@ class AnimeController extends Controller implements HasMiddleware
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request): \Inertia\Response
+    public function create(Request $request): Response
     {
-        \Gate::authorize('create', Anime::class);
+        Gate::authorize('create', Anime::class);
 
         return Inertia::render("Anime/Create", [
             'canPublish' => $request->user()->can('publish', Anime::class)
@@ -79,7 +88,7 @@ class AnimeController extends Controller implements HasMiddleware
     {
         // if user wants to publish but does not have capability to publish
         // or user cannot create
-        \Gate::authorize('create', Anime::class);
+        Gate::authorize('create', Anime::class);
         if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class)) {
             abort(403);
         }
@@ -96,7 +105,7 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function show(Anime $anime)
     {
-        \Gate::authorize('view', $anime);
+        Gate::authorize('view', $anime);
 
         return Inertia::render('Anime/Show', [
             'anime' => fn() => $anime->load([
@@ -113,7 +122,7 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function edit(Anime $anime)
     {
-        \Gate::authorize('update', $anime);
+        Gate::authorize('update', $anime);
         if (auth()->user()->cannot('update', $anime)) {
             abort(403);
         }
@@ -128,7 +137,7 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function update(StoreAnimeRequest $request, Anime $anime)
     {
-        \Gate::authorize('update', $anime);
+        Gate::authorize('update', $anime);
         if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class)) {
             abort(403);
         }
@@ -143,7 +152,7 @@ class AnimeController extends Controller implements HasMiddleware
      */
     public function destroy(Anime $anime)
     {
-        \Gate::authorize('delete', $anime);
+        Gate::authorize('delete', $anime);
         $anime->delete();
 
         return redirect()->route('anime.index')->banner('Anime successfully deleted.');

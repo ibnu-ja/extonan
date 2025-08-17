@@ -173,6 +173,7 @@ declare module 'ziggy-js' {
         binding: 'id'
       },
     ]
+    'anime.az': []
     'mv.index': []
     'mv.create': []
     'mv.store': []

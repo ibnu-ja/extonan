@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\AnimeAZController;
 use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
@@ -13,6 +14,7 @@ use Inertia\Inertia;
 Route::get('/', HomeController::class)->name('home');
 
 Route::resource('/anime/{anime}/post', PostController::class)->except('index');
+Route::get('/anime/az', AnimeAZController::class)->name('anime.az');
 Route::resource('/mv', MVController::class);
 Route::resource('/album', AlbumController::class);
 Route::resource('/shinrai', ShinraiPostController::class)->except('index', 'show');
@@ -31,6 +33,7 @@ Route::middleware('auth')->group(function () {
         [MediaController::class, 'destroy'])->name('media.destroy');
 });
 
+/** @noinspection PhpParamsInspection */
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
