@@ -286,7 +286,7 @@ const page = usePage<PageProps>()
         </div>
       </v-expand-transition>
     </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7">
       <AnimeCover
         v-for="animeItem in anime.data"
         :key="animeItem.id"

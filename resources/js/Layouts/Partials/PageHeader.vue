@@ -8,6 +8,7 @@ defineProps<{
 
 <template>
   <v-container
+    :max-width="1800"
     class="py-0 my-4 mt-6 mt-lg-12"
   >
     <div class="flex justify-space-between align-end">
