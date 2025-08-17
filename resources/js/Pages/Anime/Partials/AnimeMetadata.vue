@@ -5,6 +5,8 @@ import { Link } from '@inertiajs/vue3'
 import { AnimeMediaAutofillResponse } from '@/types/anilist'
 import { UserRelation } from '@/types'
 import dayjs from 'dayjs'
+import { inject } from 'vue'
+import { route as ziggyRoute } from 'ziggy-js'
 
 type Props = {
   metadata: AnimeMediaAutofillResponse
@@ -23,6 +25,8 @@ type Props = {
 }
 
 defineProps<Props>()
+
+const route = inject('route') as typeof ziggyRoute
 
 </script>
 
