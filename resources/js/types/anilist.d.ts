@@ -1,3 +1,5 @@
+import { TranslatableField } from '@/types/formHelper'
+
 export type MediaApiResponse<T> = {
   Media: T
 }
@@ -21,13 +23,25 @@ export type FuzzyDate = {
   day: number | null
 }
 
+export type AnimeMetadataTag = {
+  id: number
+  name: string
+  rank: number
+  isAdult: boolean
+  category: string
+  isMediaSpoiler: boolean
+  isGeneralSpoiler: boolean
+}
+
+export type Language = 'romaji' | 'english' | 'native'
+
 export type AnimeMediaAutofillResponse = {
   id: number
+  tags: AnimeMetadataTag[]
   idMal: number
-  episodes: number
-  description: string
-  coverImage: CoverImage
-  startDate: FuzzyDate
+  title: TranslatableField<Language>
+  genres: string[]
+  season: 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL'
   endDate: FuzzyDate
   studios: {
     edges: {
@@ -37,6 +51,9 @@ export type AnimeMediaAutofillResponse = {
       }
     }[]
   }
+  episodes: number
+  seasonInt: number
+  startDate: FuzzyDate
   characters: {
     edges: {
       node: {
@@ -62,15 +79,7 @@ export type AnimeMediaAutofillResponse = {
       }[]
     }[]
   }
-  tags: {
-    category: string
-    id: number
-    isAdult: boolean
-    isGeneralSpoiler: boolean
-    isMediaSpoiler: boolean
-    name: string
-    rank: number
-  }[]
+  coverImage: CoverImage
   seasonYear: number
   // WINTER
   // Months December to February
@@ -83,15 +92,8 @@ export type AnimeMediaAutofillResponse = {
 
   // FALL
   // Months September to November
-  season: 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL'
-  seasonInt: number
-  genres: string[]
-  title: {
-    romaji: string
-    english: string
-    native: string
-  }
   bannerImage: string | null | undefined
+  description: string
 }
 
 export type AnimeMediaHomepageResponse = {

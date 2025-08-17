@@ -42,7 +42,7 @@ const { translate } = useLanguages()
         <template v-else>
           {{ dayjs(post.published_at).format('D MMM YYYY') }} &bull;
         </template>
-        {{ post.author.name }}
+        {{ post.author?.name }}
       </div>
     </template>
   </HorizontalEpisodeCard>

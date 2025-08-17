@@ -39,7 +39,7 @@ const title = translate(props.post.title)
         v-if="post.is_published"
         class="text-medium-emphasis"
       >
-        Published at {{ dayjs(post.published_at) }} by {{ post.author.name }}
+        Published at {{ dayjs(post.published_at) }} by {{ post.author?.name }}
       </div>
     </div>
   </v-container>

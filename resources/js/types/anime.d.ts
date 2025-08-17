@@ -1,25 +1,34 @@
 import { TranslatableField } from '@/types/formHelper'
-import { Post } from '@/types/index'
-import { AnimeMediaAutofillResponse } from '@/types/anilist'
+import { BasePost } from '@/types/index'
+import { AnimeMediaAutofillResponse, CoverImage } from '@/types/anilist'
 
-export type LatestAnimeItem = {
-  id: number
-  anilist_id: number
-  slug: string
-  description: TranslatableField
-  title: TranslatableField
-  link: string
-} & Post
+export type BaseLangage = 'en' | 'id' | 'native' | 'romaji'
 
 export type AnimeData = {
-  description: TranslatableField
-  metadata: AnimeMediaAutofillResponse
-} & LatestAnimeItem & Post
-
-export type EpisodeData = Post & {
-  title: TranslatableField
-  description: TranslatableField
   id: number
+  anilist_id: number
+  slug: TranslatableField<BaseLangage>
+  title: TranslatableField<BaseLangage>
+  description: TranslatableField<BaseLangage>
+  link: string
+  metadata: AnimeMediaAutofillResponse
+} & BasePost
+
+export type EpisodeData = BasePost & {
+  id: number
+  description: TranslatableField<BaseLangage>
+  slug: TranslatableField<BaseLangage>
+  title: TranslatableField<BaseLangage>
+  metadata: {
+    ep_no?: string | null
+    post_type?: 'bd' | 'tv' | 'movie' | null
+  }
+  postable_type: string
+  postable_id: number
+  thumbnail: CoverImage | null
+  // TODO check type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  media: any[]
 }
 
 export type ResourceItem = {

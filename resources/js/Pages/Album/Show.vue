@@ -40,7 +40,7 @@ const title = translate(props.album.title)
         v-if="album.is_published"
         class="text-medium-emphasis"
       >
-        Published at {{ dayjs(album.published_at) }} by {{ album.author.name }}
+        Published at {{ dayjs(album.published_at) }} by {{ album.author?.name }}
       </div>
     </div>
   </v-container>

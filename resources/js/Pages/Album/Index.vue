@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
 import AppLayout from '@/Layouts/AppLayout.vue'
-import { PaginatedResponse } from '@/types'
+import { PageProps, PaginatedResponse } from '@/types'
 import { MV } from '@/types/mv'
 import Pagination from '@/Components/Pagination.vue'
 import { useLanguages } from '@/composables/useLanguages'
 import { VBtn } from 'vuetify/components'
 import { mdiPlus } from 'mdi-js-es'
-import { Head } from '@inertiajs/vue3'
+import { Head, usePage } from '@inertiajs/vue3'
 import { Link as InertiaLink } from '@inertiajs/vue3'
 import PageHeader from '@/Layouts/Partials/PageHeader.vue'
 import dayjs from 'dayjs'
@@ -23,6 +23,8 @@ defineProps<{
 }>()
 
 const { translate } = useLanguages()
+
+const page = usePage<PageProps>()
 </script>
 
 <template>
@@ -47,7 +49,7 @@ const { translate } = useLanguages()
       <AlbumItem
         v-for="post in albums.data"
         :key="post.id"
-        :show-action="!!$page.props.auth.user"
+        :show-action="!page.props.auth.user"
         :image="post.thumbnail?.extraLarge"
         :lazy-img="post.thumbnail?.medium"
         :href="route('album.show', post)"
@@ -75,7 +77,7 @@ const { translate } = useLanguages()
             <template v-else>
               {{ dayjs(post.published_at).format('D MMM YYYY') }} &bull;
             </template>
-            {{ post.author.name }}
+            {{ post.author?.name }}
           </div>
         </template>
       </AlbumItem>

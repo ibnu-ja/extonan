@@ -2,9 +2,14 @@
 import { AnimeMediaAutofillResponse } from '@/types/anilist'
 import { useDisplay } from 'vuetify'
 
-defineProps<{
+type Props = {
   data: AnimeMediaAutofillResponse
-}>()
+  showTitle?: boolean
+}
+
+withDefaults(defineProps<Props>(), {
+  showTitle: true,
+})
 
 const { smAndUp } = useDisplay()
 </script>
@@ -14,7 +19,11 @@ const { smAndUp } = useDisplay()
     v-if="data && data.characters?.edges"
     class="mb-6"
   >
-    <v-card-title>Casts</v-card-title>
+    <v-card-title
+      v-if="showTitle"
+    >
+      Casts
+    </v-card-title>
     <div class="grid grid-cos-1 md:grid-cols-2 gap-4 text-body-2">
       <v-card
         v-for="character in data.characters.edges"
