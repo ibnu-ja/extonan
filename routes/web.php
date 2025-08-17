@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
         [MediaController::class, 'destroy'])->name('media.destroy');
 });
 
+/** @noinspection PhpParamsInspection */
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
