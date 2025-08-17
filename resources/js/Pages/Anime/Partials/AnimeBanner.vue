@@ -7,7 +7,7 @@ import { Link as InertiaLink } from '@inertiajs/vue3'
 import { AnimeData, EpisodeData } from '@/types/anime'
 import { mdiAccountHardHat, mdiAccountMultiple, mdiPlay } from 'mdi-js-es'
 import { useDisplay } from 'vuetify/framework'
-import { inject, ref } from 'vue'
+import { inject, onMounted, ref } from 'vue'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
 import { useLanguages } from '@/composables/useLanguages'
@@ -22,11 +22,9 @@ type Props = {
 
 defineProps<Props>()
 
-const tab = defineModel<string>('tab-1')
+const tab = defineModel<string | null | undefined>()
 
 const { smAndDown, mdAndUp } = useDisplay()
-
-const clamped = ref(true)
 
 const showingSynopsis = ref(false)
 
@@ -53,6 +51,22 @@ const tabs = [
     value: 'tab-3',
   },
 ]
+
+const contentRef = ref<HTMLDivElement | null>(null)
+const isClamped = ref(true)
+
+const checkClamped = () => {
+  const el = contentRef.value
+  if (!el) return
+  // Choose detection logic based on your CSS use:
+  isClamped.value = el.offsetHeight < el.scrollHeight
+}
+
+onMounted(() => {
+  checkClamped()
+  window.addEventListener('resize', checkClamped)
+})
+
 </script>
 
 <template>
@@ -139,21 +153,22 @@ const tabs = [
             </InertiaLink>
           </div>
           <div
-            class="text-medium-emphasis"
-            :class="{'line-clamp-3': clamped}"
+            ref="contentRef"
+            class="text-medium-emphasis mb-2"
+            :class="{'line-clamp-2': isClamped}"
           >
             {{ translate(anime.description) }}
           </div>
-          <div>
+          <div v-if="smAndDown || isClamped">
             <v-btn
               class="block mx-auto md:mr-0"
               variant="text"
               @click="() => {
                 if (smAndDown) showingSynopsis = !showingSynopsis
-                else clamped = !clamped
+                else isClamped = !isClamped
               }"
             >
-              {{ clamped ? 'show more' : 'show less' }}
+              {{ isClamped || smAndDown ? 'show more' : 'show less' }}
             </v-btn>
           </div>
         </div>

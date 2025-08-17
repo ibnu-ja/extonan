@@ -48,9 +48,11 @@ const airingDate = dayjs({
     :can-create-episode
     :anime-id="anime.id"
   />
+
   <Head :title="anime.title.en!" /> <!-- Top: fixed background image -->
 
   <AnimeBanner
+    v-model="tab"
     :anime
     :airing-date
   />
