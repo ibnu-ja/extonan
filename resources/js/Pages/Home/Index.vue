@@ -130,7 +130,7 @@ const { translate } = useLanguages()
               <template v-else>
                 {{ dayjs(album.published_at).format('D MMM YYYY') }} &bull;
               </template>
-              {{ album.author.name }}
+              {{ album.author?.name }}
             </div>
           </template>
         </AlbumItem>

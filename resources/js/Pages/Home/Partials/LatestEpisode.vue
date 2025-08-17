@@ -94,7 +94,7 @@ const scrollNext = () => emblaApi.value?.scrollNext()
             :edit-url="route('post.edit', [episode.postable, episode])"
             :delete-url="route('post.destroy', [episode.postable, episode])"
             :is-published="episode.is_published"
-            :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author.name}`"
+            :subtitle="`${dayjs(episode.published_at).format('D MMM YYYY')} &bull; ${episode.author?.name}`"
           />
         </div>
       </div>
