@@ -1,6 +1,6 @@
 import { TranslatableField } from '@/types/formHelper'
 import { CoverImage } from '@/types/anilist'
-import { Media, Post } from '@/types/index'
+import { Media, BasePost } from '@/types/index'
 import { Resource } from '@/types/anime'
 import { Album } from '@/types/vgmdb'
 
@@ -18,7 +18,7 @@ export type MV = {
   thumbnail: CoverImage | null
   links: Resource[]
   thumbnail_item: Media | null
-} & Post
+} & BasePost
 
 export type MVPostItem = {
   id?: string

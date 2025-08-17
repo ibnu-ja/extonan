@@ -5,6 +5,6 @@ export type LanguageItem = {
   value: Language
 }
 
-export type TranslatableField = {
-  [key in Language]?: string | null;
+export type TranslatableField<L extends string = Language> = {
+  [key in L]?: string | null;
 }

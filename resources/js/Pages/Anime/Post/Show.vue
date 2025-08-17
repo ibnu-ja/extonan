@@ -4,7 +4,7 @@ import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import dayjs from 'dayjs'
 import { Link as InertiaLink } from '@inertiajs/vue3'
 import VerticalEpisodeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
-import { Post } from '@/types'
+import { BasePost } from '@/types'
 import { mdiOpenInNew } from 'mdi-js-es'
 import { useDisplay } from 'vuetify'
 import { CoverImage } from '@/types/anilist'
@@ -18,7 +18,7 @@ defineOptions({
   layout: AppLayout,
 })
 
-type ResourceModel = Post & Resource & {
+type ResourceModel = BasePost & Resource & {
   id: number
 }
 

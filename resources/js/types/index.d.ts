@@ -176,8 +176,8 @@ export type UserRelation = {
   updated_at: Date | null
 }
 
-export type Post = {
-  author: UserRelation
+export type BasePost = {
+  author?: UserRelation
   author_id: number
   created_at: Date | string | null
   updated_at: Date | string | null
