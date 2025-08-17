@@ -17,6 +17,7 @@ import AnimeMetadata from '@/Pages/Anime/Partials/AnimeMetadata.vue'
 import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
 import Casts from '@/Pages/Anime/Partials/Casts.vue'
 import objectSupport from 'dayjs/plugin/objectSupport'
+import AnimeEpisodes from '@/Pages/Anime/Partials/AnimeEpisodes.vue'
 
 dayjs.extend(objectSupport)
 
@@ -43,15 +44,6 @@ const airingDate = dayjs({
   month: props.anime.metadata.startDate.month ? props.anime.metadata.startDate.month - 1 : undefined,
   day: props.anime.metadata.startDate.day ? props.anime.metadata.startDate.day - 1 : undefined,
 }).format('D MMM YYYY')
-
-const episodeTitle = (post: EpisodeData): string => {
-  if (post.metadata.ep_no != null) {
-    if (post.metadata.post_type === 'tv') return `Ep. ${post.metadata.ep_no}: ${translate(post.title)}`
-    if (post.metadata.post_type === 'bd') return `${translate(post.title)} (Ep. ${post.metadata.ep_no})`
-  }
-
-  return translate(post.title)
-}
 
 const route = inject('route') as typeof ziggyRoute
 
@@ -116,9 +108,7 @@ const page = usePage<PageProps>()
     :style="{ backgroundImage: `url(${bannerUrl})` }"
   />
   <v-container max-width="1800">
-    <div
-      class="flex md:flex-row flex-col gap-4"
-    >
+    <div class="flex md:flex-row flex-col gap-4">
       <div
         class="w-[150px] md:w-[250px] mx-auto md:mx-0"
         :class="{'-mt-40 md:-mt-20': anime.metadata.bannerImage}"
@@ -230,49 +220,10 @@ const page = usePage<PageProps>()
       <v-tabs-window-item
         value="tab-1"
       >
-        <div
-          v-if="anime.posts.length > 0"
-          class="grid md:grid-cols-2 lg:grid-cols-3"
-        >
-          <HorizontalEpisodeCard
-            v-for="episode in anime.posts"
-            :key="episode.id"
-            :show-action="!!page.props.auth.user"
-            :image="episode.thumbnail?.extraLarge"
-            :lazy-img="episode.thumbnail?.medium"
-            :href="route('post.show', [anime, episode])"
-            :permissions="episode.can"
-            :delete-url="route('post.destroy', [anime, episode])"
-            :edit-url="route('post.edit', [anime, episode])"
-            :is-published="episode.is_published"
-          >
-            <template #content>
-              <div class="text-subtitle-1 list-title">
-                {{ episodeTitle(episode) }}
-              </div>
-              <div
-                class="text-subtitle-2 text-medium-emphasis"
-              >
-                <template
-                  v-if="!episode.is_published"
-                >
-                  <span
-                    class="text-success"
-                  >
-                    Draft
-                  </span> by
-                </template>
-                <template v-else>
-                  {{ dayjs(episode.published_at).format('D MMM YYYY') }} &bull;
-                </template>
-                {{ episode.author?.name }}
-              </div>
-            </template>
-          </HorizontalEpisodeCard>
-        </div>
-        <p v-else>
-          No post.
-        </p>
+        <AnimeEpisodes
+          :posts="anime.posts"
+          :anime-id="anime.id"
+        />
       </v-tabs-window-item>
       <v-tabs-window-item
         value="tab-2"
@@ -300,80 +251,4 @@ const page = usePage<PageProps>()
       />
     </div>
   </v-container>
-
-  <!--<div-->
-  <!--  class="bg-fixed bg-cover bg-center h-50 relative"-->
-  <!--  :style="{ backgroundImage: `url(${bannerUrl})` }"-->
-  <!--&gt;-->
-  <!--  <v-img-->
-  <!--    style="cursor: pointer;"-->
-  <!--    cover-->
-  <!--    rounded-->
-  <!--    width="200"-->
-  <!--    class="flex-0-0 self-center sm:self-start absolute -bottom-24"-->
-  <!--    :src="anime.metadata.coverImage.extraLarge"-->
-  <!--    :lazy-src="anime.metadata.coverImage.medium"-->
-  <!--  >-->
-  <!--    <v-dialog-->
-  <!--      close-on-content-click-->
-  <!--      fullscreen-->
-  <!--      activator="parent"-->
-  <!--    >-->
-  <!--      <v-img-->
-  <!--        height="100%"-->
-  <!--        :src="anime.metadata.coverImage.extraLarge"-->
-  <!--        :lazy-src="anime.metadata.coverImage.medium"-->
-  <!--      />-->
-  <!--    </v-dialog>-->
-  <!--  </v-img>-->
-  <!--  <div class="p-10 ">-->
-  <!--    <h1 class="text-h3 font-bold">-->
-  <!--      {{ translate(anime.title) }}-->
-  <!--    </h1>-->
-  <!--    <p>Scroll down — the background stays in place.</p>-->
-  <!--  </div>-->
-  <!--</div>-->
-
-  <!--<p> Lorem </p>-->
-
-  <!--&lt;!&ndash; Next section &ndash;&gt;-->
-  <!--<section class="relative min-h-screen ">-->
-  <!--  &lt;!&ndash; Gradient overlay at the very top of the section &ndash;&gt;-->
-  <!--  <div-->
-  <!--    class="absolute -top-37 left-0 w-full h-[150px] pointer-events-none"-->
-  <!--    :style="{ background: gradient }"-->
-  <!--  />-->
-
-  <!--  <div class="p-10 relative z-10">-->
-  <!--    <h2>Next Section</h2>-->
-  <!--    <p>This section fades in over the image.</p>-->
-  <!--  </div>-->
-  <!--</section>-->
-  <!--{{ props.anime }}-->
-
-  <!--<v-container-->
-  <!--  max-width="1800"-->
-  <!--  class="px-0 sm:px-4"-->
-  <!--&gt;-->
-  <!--  <div class="grid sm:grid-cols-12 gap-4 items-start">-->
-  <!--    <div class="sm:col-span-8 md:col-span-9">-->
-  <!--      <div class="px-4 sm:px-0 flex gap-2 mb-4 flex-wrap">-->
-  <!--        <InertiaLink-->
-  <!--          v-for="genre in anime.metadata.genres"-->
-  <!--          :key="genre"-->
-  <!--          :as="VChip"-->
-  <!--          :href="route('anime.index', { filter: {genre_in: genre} })"-->
-  <!--        >-->
-  <!--          {{ genre }}-->
-  <!--        </InertiaLink>-->
-  <!--      </div>-->
-  <!--      <h4 class="px-4 sm:px-0 text-h5">-->
-  <!--        Episodes-->
-  <!--      </h4>-->
-
-  <!--    </div>-->
-  <!--    <div class="px-4 sm:px-0 sm:col-span-4 md:col-span-3">-->
-  <!--    </div>-->
-  <!--  </div>-->
-  <!--</v-container>-->
 </template>
