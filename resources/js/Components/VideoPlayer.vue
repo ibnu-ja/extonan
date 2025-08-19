@@ -1,15 +1,17 @@
 <template>
   <div
     ref="root"
-    class="v-video rounded-xl"
+    class="v-video rounded-xl relative w-full select-none focus:outline-none"
     tabindex="0"
     @mousemove="showControls"
     @keydown.space.prevent="togglePlayPause"
     @mouseleave="hideControls"
   >
+    <!-- video element -->
     <video
       ref="video"
-      class="v-video__media"
+      class="v-video__media rounded-xl w-full block h-auto object-contain object-center"
+      :class="{ 'w-full h-full max-w-full max-h-full': isFullscreen }"
       playsinline
       :poster="poster"
       :muted="isMuted"
@@ -24,53 +26,58 @@
       @dblclick="toggleFullscreen"
     />
 
+    <!-- controls: keep color in CSS but layout with Tailwind -->
     <v-sheet
-      class="v-video__controls"
-      elevation="2"
-      :class="{ 'visible': controlsVisible }"
-      tile
+      class="v-video__controls absolute left-2 right-2 bottom-2 flex items-center justify-between rounded-xl p-1 transition-all duration-300 ease-in-out backdrop-blur-md border"
+      :elevation="2"
+      rounded="xl"
+      :class="[
+        controlsVisible
+          ? 'opacity-90 translate-y-0 pointer-events-auto'
+          : 'opacity-0 translate-y-3 pointer-events-none'
+      ]"
     >
-      <div class="left">
+      <div class="left flex items-center gap-2">
         <v-btn
           variant="text"
           icon
-          density="compact"
+          class="!text-inherit"
           @click="togglePlayPause"
         >
           <v-icon>{{ isPlaying ? mdiPause : mdiPlay }}</v-icon>
         </v-btn>
 
         <v-btn
+          v-if="showVolume"
           variant="text"
           icon
-          density="compact"
+          class="!text-inherit"
           @click.prevent="toggleMute"
         >
           <v-icon>{{ isMuted ? mdiVolumeMute : mdiVolumeHigh }}</v-icon>
         </v-btn>
 
-        <span class="time">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</span>
+        <span class="time font-normal whitespace-nowrap hidden sm:inline-block">
+          {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
+        </span>
       </div>
 
-      <div class="center mx-4">
+      <div class="center flex-1 mx-4">
         <v-slider
           v-model="seeking"
-          color="primary"
           :step="0.1"
-          density="compact"
           :max="duration || 1"
           hide-details
           @update:model-value="onSeekChange"
         />
       </div>
 
-      <div class="right">
+      <div class="right flex items-center gap-2">
         <v-select
           v-if="qualities.length"
           v-model="currentQuality"
           variant="plain"
-          density="compact"
-          class="pb-2"
+          class="pb-4"
           hide-details
           :items="qualityOptions"
           :menu-props="{ attach: root as Element }"
@@ -79,7 +86,7 @@
         <v-btn
           variant="text"
           icon
-          density="compact"
+          class="text-inherit"
           @click="toggleFullscreen"
         >
           <v-icon>{{ isFullscreen ? mdiFullscreenExit : mdiFullscreen }}</v-icon>
@@ -92,7 +99,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useTemplateRef } from 'vue'
-import { useTheme } from 'vuetify'
 import Hls, { Level } from 'hls.js'
 import { mdiFullscreen, mdiFullscreenExit, mdiPause, mdiPlay, mdiVolumeHigh, mdiVolumeMute } from 'mdi-js-es'
 
@@ -218,7 +224,7 @@ let hideTimer: number | null = null
 function showControls() {
   controlsVisible.value = true
   if (hideTimer) clearTimeout(hideTimer)
-  hideTimer = window.setTimeout(() => controlsVisible.value = false, 3000)
+  hideTimer = window.setTimeout(() => controlsVisible.value = false, 2000)
 }
 
 function hideControls() {
@@ -255,162 +261,52 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '../../css/settings';
-@use 'sass:map';
-
-// Use Vuetify settings for theming
 .v-video {
-  position: relative;
   background: rgb(var(--v-theme-surface));
-  width: 100%;
-  user-select: none;
+}
 
-  &__media {
-    width: 100%;
-    display: block;
-    height: auto;
-    background: rgb(var(--v-theme-surface));
-    object-fit: contain;
-    object-position: center center;
+.v-video__controls {
+  background: rgba(var(--v-theme-surface), 0.9);
+  border-color: rgba(var(--v-theme-outline), 0.12);
+  color: rgb(var(--v-theme-on-surface));
+
+  :deep(.v-theme--dark) & {
+    background: rgba(var(--v-theme-surface-variant), 0.85);
+    border-color: rgba(var(--v-theme-outline), 0.2);
+  }
+}
+
+:deep(.v-btn) {
+  color: rgb(var(--v-theme-on-surface)) !important;
+
+  &:hover {
+    background: rgba(var(--v-theme-on-surface), 0.08);
   }
 
-  /* Fullscreen styles */
-  &:fullscreen,
-  &:-webkit-full-screen {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgb(var(--v-theme-surface));
-  }
-
-  &:fullscreen .v-video__media,
-  &:-webkit-full-screen .v-video__media {
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    object-position: center center;
-  }
-
-  &__controls {
-    position: absolute;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 12px;
-    background: rgba(var(--v-theme-surface), 0.9);
+  .v-icon {
     color: rgb(var(--v-theme-on-surface));
-    border-radius: settings.$border-radius-root;
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.2s settings.$standard-easing,
-    transform 0.2s settings.$standard-easing;
-    pointer-events: none;
-    backdrop-filter: blur(8px);
-    border: thin solid rgba(var(--v-theme-outline), 0.12);
-
-    // Dark theme specific adjustments
-    :deep(.v-theme--dark) & {
-      background: rgba(var(--v-theme-surface-variant), 0.85);
-      border-color: rgba(var(--v-theme-outline), 0.2);
-    }
-
-    &.visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    .left, .center, .right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .center {
-      flex: 1;
-    }
-
-    .time {
-      font-size: 0.875rem;
-      font-weight: map.get(settings.$font-weights, 'regular');
-      white-space: nowrap;
-    }
-
-    // Vuetify button overrides for video controls
-    :deep(.v-btn) {
-      color: rgb(var(--v-theme-on-surface)) !important;
-
-      &:hover {
-        background: rgba(var(--v-theme-on-surface), 0.08);
-      }
-
-      .v-icon {
-        color: rgb(var(--v-theme-on-surface));
-      }
-    }
-
-    // Slider theming
-    :deep(.v-slider) {
-      .v-slider__track-fill {
-        background: rgb(var(--v-theme-primary));
-      }
-
-      .v-slider__track-background {
-        background: rgba(var(--v-theme-on-surface), 0.3);
-      }
-
-      .v-slider__thumb {
-        background: rgb(var(--v-theme-primary));
-        border: 2px solid rgb(var(--v-theme-surface));
-      }
-    }
-
-    // Select component theming
-    :deep(.v-select) {
-      .v-field__input {
-        color: rgb(var(--v-theme-on-surface));
-        font-size: 0.875rem;
-      }
-    }
   }
 }
 
-// Responsive design using Vuetify breakpoints
-@media #{map.get(settings.$display-breakpoints, 'xs')} {
-  .v-video__controls {
-    .time {
-      display: none;
-    }
+:deep(.v-slider) {
+  .v-slider__track-fill {
+    background: rgb(var(--v-theme-primary));
+  }
 
-    .left, .right {
-      gap: 4px;
-    }
+  .v-slider__track-background {
+    background: rgba(var(--v-theme-on-surface), 0.3);
+  }
 
-    padding: 4px 8px;
+  .v-slider__thumb {
+    background: rgb(var(--v-theme-primary));
+    border: 2px solid rgb(var(--v-theme-surface));
   }
 }
 
-// High contrast mode support
-@media (prefers-contrast: high) {
-  .v-video__controls {
-    background: rgb(var(--v-theme-surface));
-    border: 2px solid rgb(var(--v-theme-outline));
-
-    .time {
-      color: rgb(var(--v-theme-on-surface));
-    }
-  }
-}
-
-// Reduced motion support
-@media (prefers-reduced-motion: reduce) {
-  .v-video__controls {
-    transition: opacity 0.1s ease, transform 0.1s ease;
+:deep(.v-select) {
+  .v-field__input {
+    color: rgb(var(--v-theme-on-surface));
+    //font-size: 0.875rem;
   }
 }
 </style>
