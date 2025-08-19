@@ -1,7 +1,7 @@
 <template>
   <div
     ref="root"
-    class="v-video rounded-xl relative w-full select-none focus:outline-none"
+    class="v-video relative w-full select-none focus:outline-none"
     tabindex="0"
     @mousemove="showControls"
     @keydown.space.prevent="togglePlayPause"
@@ -10,8 +10,8 @@
     <!-- video element -->
     <video
       ref="video"
-      class="v-video__media rounded-xl w-full block h-auto object-contain object-center"
-      :class="{ 'w-full h-full max-w-full max-h-full': isFullscreen }"
+      class="v-video__media w-full block h-auto object-contain object-center"
+      :class="{ 'w-full h-full max-w-full max-h-full': isFullscreen, 'rounded-xl' : !isFullscreen }"
       playsinline
       :poster="poster"
       :muted="isMuted"
@@ -28,13 +28,14 @@
 
     <!-- controls: keep color in CSS but layout with Tailwind -->
     <v-sheet
-      class="v-video__controls absolute left-2 right-2 bottom-2 flex items-center justify-between rounded-xl p-1 transition-all duration-300 ease-in-out backdrop-blur-md border"
+      class="v-video__controls absolute left-2 right-2 bottom-2 flex items-center justify-between p-1 transition-all duration-300 ease-in-out backdrop-blur-md border"
       :elevation="2"
       rounded="xl"
       :class="[
         controlsVisible
           ? 'opacity-90 translate-y-0 pointer-events-auto'
-          : 'opacity-0 translate-y-3 pointer-events-none'
+          : 'opacity-0 translate-y-3 pointer-events-none',
+        isFullscreen ? 'rounded-xl' : 'rounded-none'
       ]"
     >
       <div class="left flex items-center gap-2">
