@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3'
+import { Head, Link as InertiaLink, usePage } from '@inertiajs/vue3'
 import { AnimeData, EpisodeData, Resource } from '@/types/anime'
 import dayjs from 'dayjs'
-import { Link as InertiaLink } from '@inertiajs/vue3'
 import VerticalEpisodeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
-import { BasePost } from '@/types'
+import { BasePost, PageProps } from '@/types'
 import { mdiOpenInNew } from 'mdi-js-es'
 import { useDisplay } from 'vuetify'
 import { CoverImage } from '@/types/anilist'
-import { onMounted } from 'vue'
+import { inject, nextTick, onMounted, useTemplateRef } from 'vue'
 import SpeedDial from '@/Pages/Anime/Post/Partials/SpeedDial.vue'
 import { useLanguages } from '@/composables/useLanguages'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import { route as ziggyRoute } from 'ziggy-js'
 
 defineOptions({
   name: 'AnimePostShow',
@@ -91,16 +91,31 @@ function getResolutionTag(filename: string): { resolution: Resolution, color: st
 
   return null // Return null if no resolution is found
 }
+
+const page = usePage<PageProps>()
+
+const route = inject('route') as typeof ziggyRoute
+
+const episodeListRef = useTemplateRef<HTMLDivElement>('episode-list')
+// I DONT KNOW WHAT HAPPENED HERE
+const currentEpisodeRef = useTemplateRef<HTMLDivElement[]>('episode-' + props.post.id)
+
+onMounted(async () => {
+  await nextTick()
+  if (episodeListRef.value && currentEpisodeRef.value) {
+    currentEpisodeRef.value[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }
+})
 </script>
 
 <template>
   <Head :title />
 
-  <v-container>
-    <SpeedDial
-      :anime-id="anime.id"
-      :post-id="post.id"
-    />
+  <SpeedDial
+    :anime-id="anime.id"
+    :post-id="post.id"
+  />
+  <v-container :max-width="1800">
     <div>
       <div>
         <InertiaLink
@@ -124,15 +139,15 @@ function getResolutionTag(filename: string): { resolution: Resolution, color: st
 
   <v-divider />
 
-  <v-container class="sm:px-4 px-0">
-    <v-row>
-      <v-col
-        cols="12"
-        md="8"
-      >
+  <v-container
+    max-width="1800"
+    class="sm:px-4 px-0"
+  >
+    <div class="flex flex-col lg:flex-row">
+      <div class="md:basis-3/4">
         <v-img
           v-if="post.thumbnail"
-          class="w-full sm:w-[75%] mx-auto mb-4"
+          max-height="400"
           :src="post.thumbnail.extraLarge"
         />
 
@@ -187,31 +202,35 @@ function getResolutionTag(filename: string): { resolution: Resolution, color: st
         >
           No download links available.
         </div>
-      </v-col>
-      <v-col
-        cols="12"
-        md="4"
-      >
+      </div>
+      <div>
         <h4 class="text-h5 mb-4 px-2 sm:px-0">
           Other Episodes
         </h4>
-        <div class="overflow-auto h-128">
-          <VerticalEpisodeCard
+        <div
+          ref="episode-list"
+          class="overflow-auto h-128"
+        >
+          <div
             v-for="episode in anime.posts"
-            :id="episode.slug"
+            :id="'episode-' + episode.id"
             :key="episode.id"
-            :show-action="!!$page.props.auth.user"
-            :active="episode.id == post.id"
-            :image="episode.thumbnail?.extraLarge"
-            :lazy-img="episode.thumbnail?.medium"
-            :href="route('post.show', [anime, episode])"
-            :title="episode.title.en!"
-            :edit-url="route('post.edit', [anime, episode])"
-            :delete-url="route('post.destroy', [anime, episode])"
-            :is-published="anime.is_published"
-          />
+            :ref="'episode-' + episode.id"
+          >
+            <VerticalEpisodeCard
+              :show-action="!!page.props.auth.user"
+              :active="episode.id == post.id"
+              :image="episode.thumbnail?.extraLarge"
+              :lazy-img="episode.thumbnail?.medium"
+              :href="route('post.show', [anime, episode])"
+              :title="episode.title.en!"
+              :edit-url="route('post.edit', [anime, episode])"
+              :delete-url="route('post.destroy', [anime, episode])"
+              :is-published="anime.is_published"
+            />
+          </div>
         </div>
-      </v-col>
-    </v-row>
+      </div>
+    </div>
   </v-container>
 </template>
