@@ -20,8 +20,8 @@
       @pause="onPause"
       @ended="onEnded"
       @error="onError"
-      @click.prevent="togglePlayPause"
-      @dblclick.prevent="toggleFullscreen"
+      @click="togglePlayPause"
+      @dblclick="toggleFullscreen"
     />
 
     <v-sheet
@@ -60,7 +60,7 @@
           density="compact"
           :max="duration || 1"
           hide-details
-          @change="onSeekChange"
+          @update:model-value="onSeekChange"
         />
       </div>
 
@@ -120,7 +120,6 @@ const emit = defineEmits<{
   (e: 'ready'): void
 }>()
 
-const theme = useTheme()
 const root = ref<HTMLElement | null>(null)
 const video = useTemplateRef<HTMLVideoElement>('video')
 const isPlaying = ref(false)
@@ -154,6 +153,7 @@ function formatTime(sec: number) {
 
 function togglePlayPause() {
   const v = video.value!
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   v.paused ? v.play().catch(() => {}) : v.pause()
 }
 
@@ -173,8 +173,10 @@ function onLoadedMetadata() {
 }
 
 function onTimeUpdate() {
-  currentTime.value = video.value!.currentTime
-  seeking.value = currentTime.value
+  if (video.value) {
+    currentTime.value = video.value.currentTime
+    seeking.value = currentTime.value
+  }
 }
 
 function onPlay() {
