@@ -11,7 +11,7 @@
     <video
       ref="video"
       class="v-video__media w-full block h-auto object-contain object-center"
-      :class="{ 'w-full h-full max-w-full max-h-full': isFullscreen, 'rounded-xl' : !isFullscreen }"
+      :class="{ 'w-full h-full max-w-full max-h-full': isFullscreen, 'rounded-none sm:rounded-xl' : !isFullscreen }"
       playsinline
       :poster="poster"
       :muted="isMuted"
