@@ -190,3 +190,5 @@ export type BasePost = {
   publisher_id: number | null
   can: Permissions
 }
+
+export type ListItem = { title: string, value: number }
