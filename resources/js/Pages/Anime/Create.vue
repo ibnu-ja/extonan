@@ -41,7 +41,7 @@ type AnimeForm = {
   metadata: AnimeMediaAutofillResponse | null
 }
 
-// @ts-expect-error inertia type shallow
+// @ts-ignore
 const form = useForm<AnimeForm>({
   title: {
     en: null,

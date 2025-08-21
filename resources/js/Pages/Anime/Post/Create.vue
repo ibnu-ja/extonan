@@ -51,7 +51,7 @@ type PostForm = {
   thumbnail_item: Media | null
 }
 
-// @ts-expect-error inertia type shallow
+// @ts-ignore
 const form = useForm<PostForm>({
   title: {
     en: null,
