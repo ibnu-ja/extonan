@@ -12,6 +12,7 @@ import SpeedDial from '@/Pages/Anime/Post/Partials/SpeedDial.vue'
 import { useLanguages } from '@/composables/useLanguages'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { route as ziggyRoute } from 'ziggy-js'
+import { VListItem } from 'vuetify/components'
 
 defineOptions({
   name: 'AnimePostShow',
@@ -103,9 +104,17 @@ const currentEpisodeRef = useTemplateRef<HTMLDivElement[]>('episode-' + props.po
 onMounted(async () => {
   await nextTick()
   if (episodeListRef.value && currentEpisodeRef.value) {
-    currentEpisodeRef.value[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    currentEpisodeRef.value[0].scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 })
+
+const epNo = (post: EpisodeData): string | null => {
+  if (post.metadata.ep_no != null) {
+    if (post.metadata.post_type === 'tv') return `Ep. ${post.metadata.ep_no}`
+    if (post.metadata.post_type === 'bd') return `(Ep. ${post.metadata.ep_no})`
+  }
+  return null
+}
 </script>
 
 <template>
@@ -115,16 +124,11 @@ onMounted(async () => {
     :anime-id="anime.id"
     :post-id="post.id"
   />
-  <v-container :max-width="1800">
-    <div>
-      <div>
-        <InertiaLink
-          :href="anime.link"
-          class="text-decoration-none mb-2 text-h6"
-        >
-          {{ translate(props.anime.title) }}
-        </InertiaLink> <span v-if="post.metadata.ep_no">- {{ post.metadata.ep_no }}</span>
-      </div>
+  <v-container
+    class="sm:px-4 px-0"
+    :max-width="1800"
+  >
+    <div class="px-2 sm:px-0">
       <h1 class="text-h4">
         {{ translate(props.post.title) }}
       </h1>
@@ -140,10 +144,10 @@ onMounted(async () => {
   <v-divider />
 
   <v-container
-    max-width="1800"
+    :max-width="1800"
     class="sm:px-4 px-0"
   >
-    <div class="flex flex-col lg:flex-row">
+    <div class="flex flex-col lg:flex-row gap-4">
       <div class="md:basis-3/4">
         <v-img
           v-if="post.thumbnail"
@@ -204,9 +208,33 @@ onMounted(async () => {
         </div>
       </div>
       <div>
-        <h4 class="text-h5 mb-4 px-2 sm:px-0">
-          Other Episodes
-        </h4>
+        <InertiaLink
+          :as="VListItem"
+          :href="anime.link"
+        >
+          <template #title>
+            <h4
+              class="text-decoration-none mb-2 text-h6"
+            >
+              {{ translate(props.anime.title) }}
+            </h4>
+          </template>
+          <template #subtitle>
+            <v-list-item-subtitle>
+              Other Episodes
+            </v-list-item-subtitle>
+          </template>
+
+          <template #prepend>
+            <v-list-item-media start>
+              <v-img
+                width="70"
+                :src="anime.metadata.coverImage.large"
+              />
+            </v-list-item-media>
+          </template>
+        </InertiaLink>
+        <v-divider />
         <div
           ref="episode-list"
           class="overflow-auto h-128"
@@ -218,6 +246,7 @@ onMounted(async () => {
             :ref="'episode-' + episode.id"
           >
             <VerticalEpisodeCard
+              :overhead="epNo(episode)"
               :show-action="!!page.props.auth.user"
               :active="episode.id == post.id"
               :image="episode.thumbnail?.extraLarge"

@@ -6,6 +6,10 @@ import dayjs from 'dayjs'
 import { useLanguages } from '@/composables/useLanguages'
 import { usePage } from '@inertiajs/vue3'
 import { PageProps } from '@/types'
+import { computed, inject } from 'vue'
+import { route as ziggyRoute } from 'ziggy-js'
+import { useDisplay } from 'vuetify'
+import VerticalEpisodeCard from '@/Pages/Anime/Partials/VerticalEpisodeCard.vue'
 
 type Props = {
   posts: EpisodeData[]
@@ -26,6 +30,12 @@ const episodeTitle = (post: EpisodeData): string => {
 }
 
 const page = usePage<PageProps>()
+
+const route = inject('route') as typeof ziggyRoute
+
+const { mdAndUp } = useDisplay()
+
+const episodeComp = computed(() => mdAndUp.value ? HorizontalEpisodeCard : VerticalEpisodeCard)
 </script>
 <template>
   <div>
@@ -33,7 +43,8 @@ const page = usePage<PageProps>()
       v-if="posts.length > 0"
       class="grid md:grid-cols-2 lg:grid-cols-3"
     >
-      <HorizontalEpisodeCard
+      <component
+        :is="episodeComp"
         v-for="episode in posts"
         :key="episode.id"
         :show-action="!!page.props.auth.user"
@@ -67,7 +78,7 @@ const page = usePage<PageProps>()
             {{ episode.author?.name }}
           </div>
         </template>
-      </HorizontalEpisodeCard>
+      </component>
     </div>
     <p v-else>
       No post.

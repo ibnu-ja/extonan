@@ -52,6 +52,7 @@ type PostForm = {
   thumbnail_item: Media | null
 }
 
+// @ts-expect-error inertia type shallow
 const form = useForm<PostForm>({
   title: {
     en: null,
@@ -69,8 +70,7 @@ const form = useForm<PostForm>({
   },
   links: [],
   thumbnail_item: null,
-},
-)
+})
 
 if (props.post) {
   form.title = props.post.title

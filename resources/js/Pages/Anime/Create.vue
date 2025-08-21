@@ -41,6 +41,7 @@ type AnimeForm = {
   metadata: AnimeMediaAutofillResponse | null
 }
 
+// @ts-expect-error inertia type shallow
 const form = useForm<AnimeForm>({
   title: {
     en: null,
@@ -55,8 +56,7 @@ const form = useForm<AnimeForm>({
   },
   anilist_id: null,
   metadata: null,
-},
-)
+})
 
 const { translate } = useLanguages()
 const apiType = ref<'MAL' | 'Anilist'>('MAL')
