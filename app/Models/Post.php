@@ -110,10 +110,15 @@ class Post extends BasePost
         $query->whereIn('metadata->post_type', array_column(ShinraiPostType::cases(), 'value'));
     }
 
-    public function scopeOrderByEpisodeAndNativeTitle(Builder $query): void
+    public function scopeOrderByEpisodeAndNativeTitle(Builder $query, $direction = 'asc'): void
     {
-        $query
-            ->orderByRaw('"metadata" ->> \'ep_no\' collate "numeric"')
+        $direction = strtolower($direction) === 'desc' ? 'DESC' : 'ASC'; // sanitize direction
+
+        // Use jsonb_exists to avoid the '?' operator (PDO/Laravel will not mangle this).
+        $orderExpr = "CASE WHEN pg_catalog.jsonb_exists(metadata, 'ep_no') " .
+            "THEN (metadata->>'ep_no')::numeric END {$direction} NULLS LAST";
+
+        $query->orderByRaw($orderExpr)
             ->orderByDesc('title->native');
     }
 }
