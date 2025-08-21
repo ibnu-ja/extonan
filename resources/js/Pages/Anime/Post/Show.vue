@@ -122,7 +122,10 @@ const epNo = (post: EpisodeData): string | null => {
 // const saluranFiles = computed(() => {
 //   return props.post.links.filter(({ type }) => type === 'saluran').map(link => ({ title: link.name, value: link.id }))
 // })
-const selectedSaluran = ref<ResourceModel>(props.post.saluran[0])
+const selectedSaluran = ref<ResourceModel | null>(
+  props.post.saluran.length > 0 ? props.post.saluran[0] : null
+)
+
 const saluranLinks = computed(() => {
   return selectedSaluran.value?.value.map((link) => {
     // TODO nama saluran wajib unique
@@ -130,7 +133,11 @@ const saluranLinks = computed(() => {
     return { title: link.name, value: link.value }
   })
 })
-const saluranLink = ref<{ title: string, value: string }>(saluranLinks.value[0])
+
+const saluranLink = ref<{ title: string; value: string } | null>(
+  saluranLinks.value && saluranLinks.value.length > 0 ? saluranLinks.value[0] : null
+)
+
 </script>
 
 <template>
