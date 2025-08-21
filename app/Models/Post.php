@@ -53,13 +53,17 @@ class Post extends BasePost
 
     public function links(): HasMany
     {
-//        natural sorting ->orderBy(DB::raw('LENGTH(name), name'))
         return $this->resources()->where('type', '=', 'link');
     }
 
     public function embeds(): HasMany
     {
         return $this->resources()->where('type', '=', 'embed');
+    }
+
+    public function saluran(): HasMany
+    {
+        return $this->resources()->where('type', '=', 'saluran');
     }
 
     public function thumbnail(): Attribute

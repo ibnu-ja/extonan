@@ -40,7 +40,7 @@ export type Resource = {
   id?: number
   name: string
   value: ResourceItem[]
-  type: 'link' | 'embed'
+  type: 'link' | 'embed' | 'saluran'
 }
 
 export type Filter = {
