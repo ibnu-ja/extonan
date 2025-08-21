@@ -23,6 +23,7 @@ import { openConfirmationDialog, openFormDialog } from '@/composables/useDialog'
 import MediaManager from '@/Components/MediaManager/Index.vue'
 import { Media } from '@/types'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import { VBtn } from "vuetify/components";
 
 defineOptions({
   name: 'AnimePostCreate',
@@ -212,6 +213,16 @@ const showAnimeImage = ref(false)
           :prepend-icon="mdAndUp ? mdiSend : undefined"
           :text="mdAndUp ? 'Publish' : undefined"
           @click.prevent="publish"
+        />
+        <v-btn
+          target="_blank"
+          v-if="post?.id"
+          :as="VBtn"
+          :href="route('post.show', [anime.id, post.id])"
+          color="secondary"
+          :icon="!mdAndUp ? mdiOpenInNew : undefined"
+          :append-icon="mdAndUp ? mdiOpenInNew : undefined"
+          :text="mdiOpenInNew ? 'Open' : undefined"
         />
       </div>
     </template>
