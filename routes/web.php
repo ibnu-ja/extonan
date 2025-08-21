@@ -3,6 +3,7 @@
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\AnimeAZController;
 use App\Http\Controllers\AnimeController;
+use App\Http\Controllers\AnimeResourceController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\MVController;
@@ -13,6 +14,7 @@ use Inertia\Inertia;
 
 Route::get('/', HomeController::class)->name('home');
 
+Route::delete('/anime/{anime}/post/{post}/{resource}', [AnimeResourceController::class, 'destroy'])->name('anime.post.resource.destroy');
 Route::resource('/anime/{anime}/post', PostController::class)->except('index');
 Route::get('/anime/az', AnimeAZController::class)->name('anime.az');
 Route::resource('/mv', MVController::class);

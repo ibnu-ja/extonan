@@ -82,7 +82,7 @@ if (props.post) {
 
 const submit = () => {
   if (props.post) {
-    form.put(route('post.update', [props.anime, props.post]))
+    form.put(route('post.update', [ props.anime, props.post ]))
   } else {
     form.post(route('post.store', props.anime))
   }
@@ -106,10 +106,10 @@ const addFilename = async () => {
     const result = await openFormDialog('Tambahkan File')
     form.resources.push({
       name: result,
-      value: [{
+      value: [ {
         name: '',
         value: '',
-      }],
+      } ],
       type: 'link',
     })
   } catch {
@@ -140,6 +140,18 @@ const deleteFilename = (index: number) => {
   form.resources.splice(index, 1)
 }
 
+// TOLOL
+const removeResource = async (id: number, index: number) => {
+  try {
+    const confirmed = await openConfirmationDialog('Are you sure want to delete this item?')
+    if (confirmed && props.post?.id && props.anime.id) {
+      router.delete(route('anime.post.resource.destroy', [ props.anime.id, props.post.id, id ]), { preserveScroll: true })
+      deleteFilename(index)
+    }
+  } catch {
+    //
+  }
+}
 const deleteLink = (i: number, j: number) => {
   form.resources[i].value.splice(j, 1)
 }
@@ -152,7 +164,7 @@ const deletePost = async () => {
   try {
     const confirmed = await openConfirmationDialog('Are you sure want to delete this item?')
     if (confirmed && props.post?.id && props.anime.id) {
-      router.delete(route('post.destroy', [props.anime.id, props.post.id]))
+      router.delete(route('post.destroy', [ props.anime.id, props.post.id ]))
     }
   } catch {
     //
@@ -182,7 +194,7 @@ const showAnimeImage = ref(false)
 </script>
 
 <template>
-  <Head :title />
+  <Head :title/>
   <PageHeader :title>
     <template #append>
       <div class="flex gap-2">
@@ -240,8 +252,8 @@ const showAnimeImage = ref(false)
         <div class="md:col-span-8">
           <section class="mb-4">
             <v-card :rounded="smAndUp">
-              <v-card-item title="Basic Information" />
-              <v-divider />
+              <v-card-item title="Basic Information"/>
+              <v-divider/>
               <v-card-text>
                 <div class="flex items-start mb-4 gap-4">
                   <v-text-field
@@ -326,7 +338,7 @@ const showAnimeImage = ref(false)
                   </v-btn>
                 </template>
               </v-card-item>
-              <v-divider />
+              <v-divider/>
               <v-card-text class="flex gap-4 flex-col">
                 <v-card
                   v-for="(resource, i) in form.resources"
@@ -353,7 +365,7 @@ const showAnimeImage = ref(false)
                         :icon="true"
                         density="comfortable"
                         color="error"
-                        @click="deleteFilename(i)"
+                        @click="resource.id ? removeResource(resource.id, i) : deleteFilename(i)"
                       >
                         <v-icon
                           :icon="mdiDelete"
@@ -432,7 +444,7 @@ const showAnimeImage = ref(false)
                         </v-col>
                       </v-row>
                     </v-card-text>
-                    <v-divider v-if="j < resource.value.length" />
+                    <v-divider v-if="j < resource.value.length"/>
                   </template>
                   <v-card-text v-if="resource.value.length < 1">
                     No data.
@@ -480,7 +492,7 @@ const showAnimeImage = ref(false)
                   </v-tooltip>
                 </template>
               </v-card-item>
-              <v-divider />
+              <v-divider/>
               <v-card-text>
                 <!-- template -->
                 <div>
@@ -502,7 +514,7 @@ const showAnimeImage = ref(false)
                       target="_blank"
                     >
                       Anilist
-                      <v-icon :icon="mdiOpenInNew" />
+                      <v-icon :icon="mdiOpenInNew"/>
                     </v-chip>
                     <v-chip
                       prepend-avatar="https://upload.wikimedia.org/wikipedia/commons/9/9b/MyAnimeList_favicon.svg"
@@ -510,7 +522,7 @@ const showAnimeImage = ref(false)
                       target="_blank"
                     >
                       MyAnimelist
-                      <v-icon :icon="mdiOpenInNew" />
+                      <v-icon :icon="mdiOpenInNew"/>
                     </v-chip>
                   </div>
                 </div>
@@ -518,7 +530,7 @@ const showAnimeImage = ref(false)
 
               <v-expand-transition>
                 <div v-if="anime.metadata">
-                  <v-divider />
+                  <v-divider/>
                   <v-card-text>
                     <Metadata
                       :data="anime.metadata"

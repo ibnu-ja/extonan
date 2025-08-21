@@ -114,29 +114,42 @@ class PostController extends Controller implements HasMiddleware
         }
         $validated = $request->validated();
 
+        // return $validated['resources'];
+
         $resources = collect($validated['resources'])->map(function ($item) {
             return array_filter([
-                'id' => $item['id'] ?? null,  // This will return null if 'id' does not exist, making the key potentially removable
+                'id' => $item['id'] ?? null,
                 'name' => $item['name'],
                 'type' => $item['type'],
                 'value' => json_encode($item['value'])
             ], function ($value, $key) {
-                // Filter out the 'id' key if the value is null
                 return !(is_null($value) && $key === 'id');
             }, ARRAY_FILTER_USE_BOTH);
         });
-
         $post->update($validated);
+        $resourcesWithId = $resources->filter(fn($r) => isset($r['id']))->values()->toArray();
+        $resourcesWithoutId = $resources->filter(fn($r) => !isset($r['id']))->values()->map(function ($resource) {
+            $resource['value'] = json_decode($resource['value'], true); // Decode JSON string to array
+            return $resource;
+        })->toArray();
 
-        $post->resources()->upsert($resources->toArray(), uniqueBy: ['id'], update: ['name', 'value']);
-
+        if (!empty($resourcesWithId)) {
+            $post->resources()->upsert(
+                $resourcesWithId,
+                ['id'],
+                ['name', 'value', 'type']
+            );
+        }
+        if (!empty($resourcesWithoutId)) {
+            $post->resources()->createMany($resourcesWithoutId);
+        }
         if (!is_null($request->validated()['thumbnail_item'])) {
             $post->syncMedia($request->validated()['thumbnail_item']['id'], 'thumbnail');
         } else {
             $post->detachMediaTags('thumbnail');
         }
 
-        return redirect()->back()->banner('Episode updated successfully!');
+        return redirect()->refresh()->banner('Episode updated successfully!');
     }
 
     /**
