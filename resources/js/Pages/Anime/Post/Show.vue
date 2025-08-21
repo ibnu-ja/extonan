@@ -185,6 +185,7 @@ const saluranLink = ref<{ title: string; value: string } | null>(
             class="flex flex-col md:flex-row gap-2 mb-2"
           >
             <v-select
+              v-if="props.post.saluran.length > 1"
               v-model="selectedSaluran"
               label="File stream"
               variant="solo"
@@ -196,7 +197,7 @@ const saluranLink = ref<{ title: string; value: string } | null>(
               return-object
             />
             <v-select
-              v-if="selectedSaluran"
+              v-if="saluranLinks!.length > 1"
               v-model="saluranLink"
               label="Mirror stream"
               variant="solo"
