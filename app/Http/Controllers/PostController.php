@@ -59,7 +59,7 @@ class PostController extends Controller implements HasMiddleware
 //        return $request->all();
         $post = $anime->posts()->create($request->validated());
 
-        $post->resources()->createMany($request->validated()['links']);
+        $post->resources()->createMany($request->validated()['resources']);
 
         if (!is_null($request->validated()['thumbnail_item'])) {
             $post->syncMedia($request->validated()['thumbnail_item']['id'], 'thumbnail');
@@ -114,7 +114,7 @@ class PostController extends Controller implements HasMiddleware
         }
         $validated = $request->validated();
 
-        $linksss = collect($validated['links'])->map(function ($item) {
+        $resources = collect($validated['resources'])->map(function ($item) {
             return array_filter([
                 'id' => $item['id'] ?? null,  // This will return null if 'id' does not exist, making the key potentially removable
                 'name' => $item['name'],
@@ -128,7 +128,7 @@ class PostController extends Controller implements HasMiddleware
 
         $post->update($validated);
 
-        $post->links()->upsert($linksss->toArray(), uniqueBy: ['id'], update: ['name', 'value']);
+        $post->resources()->upsert($resources->toArray(), uniqueBy: ['id'], update: ['name', 'value']);
 
         if (!is_null($request->validated()['thumbnail_item'])) {
             $post->syncMedia($request->validated()['thumbnail_item']['id'], 'thumbnail');

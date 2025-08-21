@@ -28,7 +28,7 @@ class StoreShinraiPostRequest extends FormRequest
             'description' => 'required',
             'metadata.post_type' => [Rule::enum(ShinraiPostType::class), 'required'],
             'metadata.vgmdb_data' => 'array|nullable',
-            'links' => 'array|nullable',
+            'resources' => 'array|nullable',
             'thumbnail_item' => 'nullable',
             'is_published' => 'required|boolean'
         ];
