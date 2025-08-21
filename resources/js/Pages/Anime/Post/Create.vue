@@ -33,7 +33,7 @@ const props = defineProps<{
   anime: AnimeData
   canPublish: boolean
   post?: EpisodeData & {
-    links: Resource[]
+    resources: Resource[]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: Record<string, any>
     thumbnail_item: Media | null
@@ -47,7 +47,7 @@ type PostForm = {
   is_published: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadata: Record<string, any>
-  links: Resource[]
+  resources: Resource[]
   thumbnail_item: Media | null
 }
 
@@ -67,14 +67,14 @@ const form = useForm<PostForm>({
   metadata: {
     post_type: 'tv',
   },
-  links: [],
+  resources: [],
   thumbnail_item: null,
 })
 
 if (props.post) {
   form.title = props.post.title
   form.description = props.post.description
-  form.links = props.post.links
+  form.resources = props.post.resources
   form.metadata = props.post.metadata
   form.thumbnail_item = props.post.thumbnail_item
 }
@@ -103,7 +103,7 @@ const { languages, selectedLanguage: currentLang } = useLanguages()
 const addFilename = async () => {
   try {
     const result = await openFormDialog('Tambahkan File')
-    form.links.push({
+    form.resources.push({
       name: result,
       value: [{
         name: '',
@@ -117,7 +117,7 @@ const addFilename = async () => {
 }
 
 const addLink = (index: number) => {
-  form.links[index].value.push({
+  form.resources[index].value.push({
     name: '',
     value: '',
   })
@@ -125,10 +125,10 @@ const addLink = (index: number) => {
 
 const editFilename = async (index: number) => {
   try {
-    form.links[index].name = await openFormDialog('Edit filename', undefined, {
+    form.resources[index].name = await openFormDialog('Edit filename', undefined, {
       label: 'Filename',
       variant: 'outlined',
-      placeholder: form.links[index].name,
+      placeholder: form.resources[index].name,
     })
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) { /* empty */
@@ -136,11 +136,11 @@ const editFilename = async (index: number) => {
 }
 
 const deleteFilename = (index: number) => {
-  form.links.splice(index, 1)
+  form.resources.splice(index, 1)
 }
 
 const deleteLink = (i: number, j: number) => {
-  form.links[i].value.splice(j, 1)
+  form.resources[i].value.splice(j, 1)
 }
 
 const { translate } = useLanguages()
@@ -318,7 +318,7 @@ const showAnimeImage = ref(false)
               <v-divider />
               <v-card-text class="flex gap-4 flex-col">
                 <v-card
-                  v-for="(resource, i) in form.links"
+                  v-for="(resource, i) in form.resources"
                   :key="i"
                   variant="outlined"
                 >
@@ -389,7 +389,7 @@ const showAnimeImage = ref(false)
                         </v-col>
                         <v-col cols="9">
                           <v-text-field
-                            v-model="form.links[i].value[j].name"
+                            v-model="form.resources[i].value[j].name"
                             placeholder="Gudang"
                             variant="outlined"
                             hide-details="auto"
@@ -405,7 +405,7 @@ const showAnimeImage = ref(false)
                         </v-col>
                         <v-col cols="9">
                           <v-textarea
-                            v-model="form.links[i].value[j].value"
+                            v-model="form.resources[i].value[j].value"
                             placeholder="https://gudang.extonan.id/"
                             rows="2"
                             variant="outlined"
@@ -428,7 +428,7 @@ const showAnimeImage = ref(false)
                   </v-card-text>
                 </v-card>
                 <!--  -->
-                <template v-if="form.links.length < 1">
+                <template v-if="form.resources.length < 1">
                   No data.
                 </template>
               </v-card-text>

@@ -98,7 +98,7 @@ class PostController extends Controller implements HasMiddleware
 
         return Inertia::render('Anime/Post/Create', [
             'anime' => $anime,
-            'post' => $post->load(['author', 'links', 'media'])->append('thumbnail_item'),
+            'post' => $post->load(['author', 'resources', 'media'])->append('thumbnail_item'),
             'canPublish' => request()->user()->can('publish', $post),
         ]);
     }
