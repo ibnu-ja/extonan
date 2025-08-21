@@ -176,6 +176,7 @@ const saluranLink = ref<{ title: string; value: string } | null>(
           v-if="post.saluran.length > 0"
         >
           <VideoPlayer
+            v-if="saluranLink"
             class="mb-2"
             :poster="post.thumbnail?.extraLarge"
             :src="saluranLink.value"
