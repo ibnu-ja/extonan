@@ -11,7 +11,7 @@ const propss = withDefaults(
   defineProps<{
     // episode: EpisodeData
     href?: string
-    title: string
+    title?: string
     subtitle?: string
     overhead?: string | null
     image?: string
@@ -27,6 +27,7 @@ const propss = withDefaults(
     showAction?: boolean
   }>(),
   {
+    title: undefined,
     noThumbnail: false,
     href: undefined,
     subtitle: undefined,
@@ -86,15 +87,22 @@ const { smAndUp } = useDisplay()
           style="flex: 1; line-clamp: 2"
         >
           <ItemListTitle
-            :overhead
             :show-action
             :permissions
+            :overhead
+            :title
+            :subtitle
             :edit-url
             :delete-url
             :is-published
-            :subtitle
-            :title
-          />
+          >
+            <template
+              v-if="$slots.content"
+              #content
+            >
+              <slot name="content" />
+            </template>
+          </ItemListTitle>
         </div>
       </InertiaLink>
     </v-hover>
