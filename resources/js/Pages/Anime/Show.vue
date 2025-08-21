@@ -58,7 +58,7 @@ const airingDate = dayjs({
   />
   <v-container
     max-width="1800"
-    class="flex flex-row gap-4"
+    class="flex flex-row gap-4 p-0 sm:p-4"
   >
     <v-tabs-window
       v-model="tab"
