@@ -7,7 +7,9 @@ export const useUserStore = defineStore('user', () => {
   const displayMode = useStorage<'abc' | 'list' | 'tile'>('displayMode', 'abc')
   const displayModeMV = useStorage<'grid' | 'list'>('displayMode', 'grid')
 
-  return { theme, displayMode, displayModeMV }
+  const videoQuality = useStorage('videoQuality', -1)
+
+  return { theme, displayMode, displayModeMV, videoQuality }
 })
 
 export const useSnackbar = defineStore('snackbar', () => {

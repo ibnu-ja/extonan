@@ -1,23 +1,36 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
-import { useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import Hls, { Level } from 'hls.js'
-import { mdiFullscreen, mdiFullscreenExit, mdiPause, mdiPlay, mdiVolumeHigh, mdiVolumeMute } from 'mdi-js-es'
+import {
+  mdiFullscreen,
+  mdiFullscreenExit,
+  mdiPause,
+  mdiPlay,
+  mdiSkipBackward,
+  mdiSkipForward,
+  mdiVolumeHigh,
+  mdiVolumeMute,
+} from 'mdi-js-es'
 import { useScreenOrientation } from '@vueuse/core'
+import { useDisplay } from 'vuetify'
+import { useUserStore } from '@/stores'
+import { storeToRefs } from 'pinia'
 
 type Props = {
   src: string
   poster?: string
   autoplay?: boolean
   muted?: boolean
-  showVolume?: boolean
+  showVolume?: boolean | 'auto'
+  showSkipButtons?: boolean | 'auto'
 }
 
 const props = withDefaults(
   defineProps<Props>(), {
-    showVolume: true,
+    showVolume: 'auto',
     muted: false,
     poster: undefined,
+    showSkipButtons: 'auto',
   },
 )
 
@@ -31,6 +44,8 @@ const emit = defineEmits<{
   (e: 'ready'): void
 }>()
 
+const user = useUserStore()
+
 const root = ref<HTMLDivElement | null>(null)
 const video = useTemplateRef<HTMLVideoElement>('video')
 const isPlaying = ref(false)
@@ -41,9 +56,10 @@ const currentTime = ref(0)
 const seeking = ref(0)
 const volume = ref((props.muted ? 0 : 100))
 const qualities = ref<Level[]>([])
-const currentQuality = ref(-1)
+const { videoQuality: currentQuality } = storeToRefs(user)
 const hlsRef = ref<Hls | null>(null)
 const isFullscreen = ref(false)
+const { mdAndUp } = useDisplay()
 
 const qualityOptions = computed(() => [
   { title: 'Auto', value: -1 },
@@ -65,13 +81,26 @@ function formatTime(sec: number) {
 function togglePlayPause() {
   const v = video.value!
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  v.paused ? v.play().catch(() => {}) : v.pause()
+  v.paused
+    ? v.play().catch(() => {
+      })
+    : v.pause()
 }
 
 function toggleMute() {
   const v = video.value!
   v.muted = !v.muted
   isMuted.value = v.muted
+}
+
+function skipBack() {
+  const v = video.value!
+  v.currentTime = Math.max(0, v.currentTime - 10)
+}
+
+function skipForward() {
+  const v = video.value!
+  v.currentTime = Math.min(duration.value, v.currentTime + 10)
 }
 
 function onSeekChange() {
@@ -128,6 +157,7 @@ function toggleFullscreen() {
 }
 
 let hideTimer: number | null = null
+
 function showControls() {
   controlsVisible.value = true
   if (hideTimer) clearTimeout(hideTimer)
@@ -137,6 +167,35 @@ function showControls() {
 function hideControls() {
   controlsVisible.value = false
 }
+
+// TODO create button overlay skip backward 10s
+function onVideoClick() {
+  // event: MouseEvent
+  // const rect = video.value!.getBoundingClientRect()
+  // const clickX = event.clientX - rect.left
+  // const videoWidth = rect.width
+  //
+  // // If clicked on the left side (first third), skip back
+  // if (clickX < videoWidth / 3) {
+  //   skipBack()
+  // } else {
+  togglePlayPause()
+  // }
+}
+
+const computedShowSkipButtons = computed(() => {
+  if (typeof props.showSkipButtons === 'boolean') {
+    return props.showSkipButtons
+  }
+  return mdAndUp.value || isFullscreen.value
+})
+
+const computedShowVolume = computed(() => {
+  if (typeof props.showVolume === 'boolean') {
+    return props.showVolume
+  }
+  return mdAndUp.value
+})
 
 onMounted(() => {
   const v = video.value!
@@ -170,16 +229,18 @@ onBeforeUnmount(() => {
 <template>
   <div
     ref="root"
-    class="v-video relative w-full select-none focus:outline-none"
+    class="relative w-full select-none focus:outline-none bg-background"
     tabindex="0"
     @mousemove="showControls"
     @keydown.space.prevent="togglePlayPause"
+    @keydown.left.prevent="skipBack"
     @mouseleave="hideControls"
+    @keydown.right.prevent="skipForward"
   >
     <!-- video element -->
     <video
       ref="video"
-      class="v-video__media w-full block h-auto object-contain object-center"
+      class="w-full block h-auto object-contain object-center"
       :class="{ 'w-full h-full max-w-full max-h-full': isFullscreen, 'rounded-none sm:rounded-xl' : !isFullscreen }"
       playsinline
       :poster="poster"
@@ -191,20 +252,18 @@ onBeforeUnmount(() => {
       @pause="onPause"
       @ended="onEnded"
       @error="onError"
-      @click="togglePlayPause"
+      @click="onVideoClick"
       @dblclick="toggleFullscreen"
     />
-
     <!-- controls: keep color in CSS but layout with Tailwind -->
     <v-sheet
-      class="v-video__controls absolute left-2 right-2 bottom-2 flex items-center justify-between p-1 transition-all duration-300 ease-in-out backdrop-blur-md border"
-      :elevation="2"
+      class="absolute left-2 right-2 bottom-2 flex items-center justify-between p-1 transition-all duration-300 ease-in-out"
       rounded="xl"
+      :elevation="isFullscreen ? 0 : 2"
       :class="[
         controlsVisible
           ? 'opacity-90 translate-y-0 pointer-events-auto'
           : 'opacity-0 translate-y-3 pointer-events-none',
-        isFullscreen ? 'rounded-xl' : 'rounded-none'
       ]"
     >
       <div class="left flex items-center gap-2">
@@ -218,7 +277,7 @@ onBeforeUnmount(() => {
         </v-btn>
 
         <v-btn
-          v-if="showVolume"
+          v-if="computedShowVolume"
           variant="text"
           icon
           class="!text-inherit"
@@ -243,6 +302,23 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="right flex items-center gap-2">
+        <template v-if="computedShowSkipButtons">
+          <v-btn
+            variant="text"
+            :icon="mdiSkipBackward"
+            class="!text-inherit"
+            title="Skip backward 10 seconds"
+            @click="skipBack"
+          />
+          <v-btn
+            variant="text"
+            :icon="mdiSkipForward"
+            class="!text-inherit"
+            title="Skip forward 10 seconds"
+            @click="skipForward"
+          />
+        </template>
+
         <v-select
           v-if="qualities.length"
           v-model="currentQuality"
@@ -265,54 +341,3 @@ onBeforeUnmount(() => {
     </v-sheet>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.v-video {
-  background: rgb(var(--v-theme-background));
-}
-
-.v-video__controls {
-  background: rgba(var(--v-theme-surface), 0.9);
-  border-color: rgba(var(--v-theme-outline), 0.12);
-  color: rgb(var(--v-theme-on-surface));
-
-  :deep(.v-theme--dark) & {
-    background: rgba(var(--v-theme-surface-variant), 0.85);
-    border-color: rgba(var(--v-theme-outline), 0.2);
-  }
-}
-
-:deep(.v-btn) {
-  color: rgb(var(--v-theme-on-surface)) !important;
-
-  &:hover {
-    background: rgba(var(--v-theme-on-surface), 0.08);
-  }
-
-  .v-icon {
-    color: rgb(var(--v-theme-on-surface));
-  }
-}
-
-:deep(.v-slider) {
-  .v-slider__track-fill {
-    background: rgb(var(--v-theme-primary));
-  }
-
-  .v-slider__track-background {
-    background: rgba(var(--v-theme-on-surface), 0.3);
-  }
-
-  .v-slider__thumb {
-    background: rgb(var(--v-theme-primary));
-    border: 2px solid rgb(var(--v-theme-surface));
-  }
-}
-
-:deep(.v-select) {
-  .v-field__input {
-    color: rgb(var(--v-theme-on-surface));
-    //font-size: 0.875rem;
-  }
-}
-</style>
