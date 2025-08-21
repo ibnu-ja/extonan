@@ -7,10 +7,11 @@ import { BasePost, PageProps } from '@/types'
 import { mdiOpenInNew } from 'mdi-js-es'
 import { useDisplay } from 'vuetify'
 import { CoverImage } from '@/types/anilist'
-import { inject, nextTick, onMounted, useTemplateRef } from 'vue'
+import { computed, inject, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 import SpeedDial from '@/Pages/Anime/Post/Partials/SpeedDial.vue'
 import { useLanguages } from '@/composables/useLanguages'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import VideoPlayer from '@/Components/VideoPlayer.vue'
 import { route as ziggyRoute } from 'ziggy-js'
 import { VListItem } from 'vuetify/components'
 
@@ -34,6 +35,7 @@ const props = defineProps<{
   }
   post: EpisodeData & {
     links: ResourceModel[]
+    saluran: ResourceModel[]
     embeds: ResourceModel[]
     thumbnail: CoverImage | null
     metadata: Record<string, unknown>
@@ -115,6 +117,20 @@ const epNo = (post: EpisodeData): string | null => {
   }
   return null
 }
+
+// const downloadLinks = computed(() => props.post.links.filter(link => link.type === 'link'))
+// const saluranFiles = computed(() => {
+//   return props.post.links.filter(({ type }) => type === 'saluran').map(link => ({ title: link.name, value: link.id }))
+// })
+const selectedSaluran = ref<ResourceModel>(props.post.saluran[0])
+const saluranLinks = computed(() => {
+  return selectedSaluran.value?.value.map((link) => {
+    // TODO nama saluran wajib unique
+    // link.name = i + 1 + '. ' + link.name
+    return { title: link.name, value: link.value }
+  })
+})
+const saluranLink = ref<{ title: string, value: string }>(saluranLinks.value[0])
 </script>
 
 <template>
@@ -149,11 +165,41 @@ const epNo = (post: EpisodeData): string | null => {
   >
     <div class="flex flex-col lg:flex-row gap-4">
       <div class="md:basis-3/4">
-        <v-img
-          v-if="post.thumbnail"
-          max-height="400"
-          :src="post.thumbnail.extraLarge"
-        />
+        <div
+          v-if="post.saluran.length > 0"
+        >
+          <VideoPlayer
+            class="mb-2"
+            :poster="post.thumbnail?.extraLarge"
+            :src="saluranLink.value"
+          />
+          <div
+            class="flex flex-col md:flex-row gap-2 mb-2"
+          >
+            <v-select
+              v-model="selectedSaluran"
+              label="File stream"
+              variant="solo"
+              hide-details
+              mandatory
+              :items="post.saluran"
+              item-value="id"
+              item-title="name"
+              return-object
+            />
+            <v-select
+              v-if="selectedSaluran"
+              v-model="saluranLink"
+              label="Mirror stream"
+              variant="solo"
+              hide-details
+              mandatory
+              item-value="title"
+              :items="saluranLinks"
+              return-object
+            />
+          </div>
+        </div>
 
         <p class="mb-4 px-2 sm:px-0">
           {{ post.description.en }}
@@ -165,7 +211,7 @@ const epNo = (post: EpisodeData): string | null => {
 
         <v-expansion-panels
           v-if="post.links.length > 0"
-          :rounded="smAndUp ? 'lg' : 0"
+          :rounded="smAndUp ? undefined : 0"
           multiple
           variant="accordion"
         >

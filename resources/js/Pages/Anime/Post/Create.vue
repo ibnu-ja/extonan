@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import { AnimeData, EpisodeData, Resource } from '@/types/anime'
-import { Head, router, useForm } from '@inertiajs/vue3'
+import { Head, Link as InertiaLink, router, useForm } from '@inertiajs/vue3'
 import {
   mdiChevronDown,
   mdiChevronUp,
@@ -23,7 +23,6 @@ import { openConfirmationDialog, openFormDialog } from '@/composables/useDialog'
 import MediaManager from '@/Components/MediaManager/Index.vue'
 import { Media } from '@/types'
 import AppLayout from '@/Layouts/AppLayout.vue'
-import { Link as InertiaLink } from '@inertiajs/vue3'
 
 defineOptions({
   name: 'AnimePostCreate',
@@ -131,7 +130,7 @@ const editFilename = async (index: number) => {
       variant: 'outlined',
       placeholder: form.links[index].name,
     })
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) { /* empty */
   }
 }
@@ -217,7 +216,10 @@ const showAnimeImage = ref(false)
       </div>
     </template>
   </PageHeader>
-  <v-container class="p-0 p-sm-4">
+  <v-container
+    :max-width="1800"
+    class="p-0 md:p-4"
+  >
     <v-form
       id="storePost"
       :disabled="form.processing"
@@ -352,6 +354,13 @@ const showAnimeImage = ref(false)
                       {{ resource.name }}
                     </v-card-title>
                     <template #append>
+                      <v-select
+                        v-model="resource.type"
+                        variant="solo-inverted"
+                        density="compact"
+                        hide-details
+                        :items="[{title: 'Link DL', value: 'link'}, {title: 'URL Saluran', value: 'saluran'}, { title: 'Embed HTML', value: 'embed'}]"
+                      />
                       <v-btn
                         variant="plain"
                         :icon="true"
