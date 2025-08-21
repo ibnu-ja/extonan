@@ -171,7 +171,7 @@ const saluranLink = ref<{ title: string; value: string } | null>(
     class="sm:px-4 px-0"
   >
     <div class="flex flex-col lg:flex-row gap-4">
-      <div class="md:basis-3/4">
+      <div class="grow">
         <div
           v-if="post.saluran.length > 0"
         >
@@ -262,7 +262,7 @@ const saluranLink = ref<{ title: string; value: string } | null>(
           No download links available.
         </div>
       </div>
-      <div>
+      <div class="lg:max-w-[400px]">
         <InertiaLink
           :as="VListItem"
           :href="anime.link"
