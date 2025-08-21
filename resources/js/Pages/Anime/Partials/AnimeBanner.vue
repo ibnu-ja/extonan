@@ -177,7 +177,7 @@ onMounted(() => {
           v-model="tab"
           class="mt-auto"
           :items="tabs"
-          align-tabs="start"
+          :align-tabs="mdAndUp ? 'start' : 'center'"
         >
           <template #tab="{ item }">
             <v-tab
