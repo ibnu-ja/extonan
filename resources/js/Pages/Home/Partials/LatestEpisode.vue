@@ -69,7 +69,7 @@ const scrollNext = () => emblaApi.value?.scrollNext()
 
   <v-container
     max-width="1800"
-    class="px-2 sm:px-4 pb-0 mb-2 sm:mb-4 relative group"
+    class="px-0 sm:px-4 pb-0 mb-2 sm:mb-4 relative group"
   >
     <!-- Carousel -->
     <div
