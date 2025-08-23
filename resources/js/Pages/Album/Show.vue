@@ -55,6 +55,7 @@ const title = translate(props.album.title)
       >
         <v-img
           v-if="album.thumbnail"
+          max-height="400"
           class="w-full sm:w-[75%] mx-auto mb-4"
           :src="album.thumbnail.extraLarge"
         />

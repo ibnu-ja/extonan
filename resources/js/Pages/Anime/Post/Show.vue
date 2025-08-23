@@ -209,6 +209,11 @@ const saluranLink = ref<{ title: string; value: string } | null>(
             />
           </div>
         </div>
+        <v-img
+          v-else-if="post.thumbnail?.extraLarge"
+          max-height="400"
+          :src="post.thumbnail.extraLarge"
+        />
 
         <p class="mb-4 px-2 sm:px-0">
           {{ post.description.en }}

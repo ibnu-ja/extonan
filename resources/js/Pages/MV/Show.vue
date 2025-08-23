@@ -54,6 +54,7 @@ const title = translate(props.post.title)
       >
         <v-img
           v-if="post.thumbnail"
+          max-height="400"
           class="w-full sm:w-[75%] mx-auto mb-4"
           :src="post.thumbnail.extraLarge"
         />
