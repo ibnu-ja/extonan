@@ -116,13 +116,8 @@ class Post extends BasePost
 
     public function scopeOrderByEpisodeAndNativeTitle(Builder $query, $direction = 'asc'): void
     {
-        $direction = strtolower($direction) === 'desc' ? 'DESC' : 'ASC'; // sanitize direction
-
-        // Use jsonb_exists to avoid the '?' operator (PDO/Laravel will not mangle this).
-        $orderExpr = "CASE WHEN pg_catalog.jsonb_exists(metadata, 'ep_no') " .
-            "THEN (metadata->>'ep_no')::numeric END {$direction} NULLS LAST";
-
-        $query->orderByRaw($orderExpr)
+        $query
+            ->orderByRaw('"metadata" ->> \'ep_no\' collate "numeric" ' . $direction)
             ->orderByDesc('title->native');
     }
 }
