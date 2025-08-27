@@ -77,7 +77,7 @@ function logout() {
 </script>
 
 <template>
-  <v-app-bar extension-height="34">
+  <v-app-bar extension-height="34" scroll-behavior="elevate">
     <v-app-bar-nav-icon v-if="!lgAndUp">
       <v-btn
         v-model="drawer"
