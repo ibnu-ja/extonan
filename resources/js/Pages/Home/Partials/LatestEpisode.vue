@@ -8,8 +8,9 @@ import { PageProps } from '@/types'
 import emblaCarouselVue from 'embla-carousel-vue'
 import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
 import { mdiChevronLeft, mdiChevronRight } from 'mdi-js-es'
-import { onMounted, ref } from 'vue'
+import { inject, onMounted, ref } from 'vue'
 import { useDisplay } from "vuetify";
+import { route as ziggyRoute } from "ziggy-js";
 
 type Postable = EpisodeData & {
   postable: AnimeData
@@ -56,6 +57,8 @@ onMounted(() => {
 
 const scrollPrev = () => emblaApi.value?.scrollPrev()
 const scrollNext = () => emblaApi.value?.scrollNext()
+
+const route = inject('route') as typeof ziggyRoute
 </script>
 
 <template>
