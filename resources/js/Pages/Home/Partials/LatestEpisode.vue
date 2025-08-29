@@ -9,6 +9,7 @@ import emblaCarouselVue from 'embla-carousel-vue'
 import HorizontalEpisodeCard from '@/Pages/Anime/Partials/HorizontalEpisodeCard.vue'
 import { mdiChevronLeft, mdiChevronRight } from 'mdi-js-es'
 import { onMounted, ref } from 'vue'
+import { useDisplay } from "vuetify";
 
 type Postable = EpisodeData & {
   postable: AnimeData
@@ -36,7 +37,7 @@ const getTitle = (post: Postable): string => {
 const canPrev = ref(false)
 const canNext = ref(false)
 const [emblaRef, emblaApi] = emblaCarouselVue(
-  { loop: false, slidesToScroll: 1, containScroll: 'trimSnaps', align: 'start' },
+  { loop: false, slidesToScroll: useDisplay().mdAndUp.value ?  1: undefined, align: 'start', dragFree: useDisplay().smAndDown.value },
   [],
 )
 
@@ -80,7 +81,7 @@ const scrollNext = () => emblaApi.value?.scrollNext()
         <div
           v-for="episode in latestEpisodes"
           :key="episode.id"
-          class="embla__slide flex-none basis-[83%] md:basis-[43%] lg:basis-[30%] xl:basis-[23%] min-w-0"
+          class="embla__slide flex-none basis-[70%] md:basis-[43%] lg:basis-[30%] xl:basis-[23%] min-w-0"
         >
           <HorizontalEpisodeCard
             :permissions="episode.can"
