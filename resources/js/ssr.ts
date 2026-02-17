@@ -1,31 +1,19 @@
-import { createSSRApp, DefineComponent, h } from 'vue'
-import { renderToString } from '@vue/server-renderer'
-import { createInertiaApp } from '@inertiajs/vue3'
-import createServer from '@inertiajs/vue3/server'
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import { ZiggyVue } from 'ziggy-js'
-import VuetifySSR from '@/plugins/vuetify-ssr'
-import pinia from '@/plugins/pinia'
+import { createInertiaApp } from '@inertiajs/svelte';
+import createServer from '@inertiajs/svelte/server';
+import { render } from 'svelte/server';
 
-import '../css/tailwind.css'
+const appName = import.meta.env.VITE_APP_NAME || 'Larasvelte';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
-
-createServer(page =>
-  createInertiaApp({
-    page,
-    render: renderToString,
-    title: title => `${title} - ${appName}`,
-    resolve: name => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob<DefineComponent>('./Pages/**/*.vue')),
-    setup({ App, props, plugin }) {
-      return createSSRApp({ render: () => h(App, props) })
-        .use(plugin)
-        .use(VuetifySSR)
-        .use(pinia)
-        .use(ZiggyVue, {
-          ...page.props.ziggy,
-          location: new URL(page.props.ziggy.location),
-        })
-    },
-  }),
-)
+createServer((page) =>
+    createInertiaApp({
+        page,
+        title: (title) => (title ? `${title} - ${appName}` : appName),
+        resolve: (name) => {
+            const pages = import.meta.glob<{ default: any }>('./pages/**/*.svelte', { eager: true });
+            return pages[`./pages/${name}.svelte`] as any;
+        },
+        setup({ App, props }) {
+            return render(App, { props });
+        },
+    }),
+);

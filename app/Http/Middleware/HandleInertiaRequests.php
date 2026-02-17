@@ -2,24 +2,25 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\Git;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
     /**
-     * The root template that is loaded on the first page visit.
+     * The root template that's loaded on the first page visit.
+     *
+     * @see https://inertiajs.com/server-side-setup#root-template
      *
      * @var string
      */
     protected $rootView = 'app';
 
     /**
-     * Determine the current asset version.
+     * Determines the current asset version.
+     *
+     * @see https://inertiajs.com/asset-versioning
      */
     public function version(Request $request): ?string
     {
@@ -29,25 +30,23 @@ class HandleInertiaRequests extends Middleware
     /**
      * Define the props that are shared by default.
      *
+     * @see https://inertiajs.com/shared-data
+     *
      * @return array<string, mixed>
      */
     public function share(Request $request): array
     {
         return [
             ...parent::share($request),
-            'ziggy' => fn() => [
+            'name' => config('app.name'),
+            'auth' => [
+                'user' => $request->user(),
+            ],
+            'ziggy' => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'appVersion' => Cache::remember('git-latest-tag', 3600, fn () => app(Git::class)->getLatestTag()),
-            'appCommitHash' => Cache::remember('git-commit-hash', 3600, fn () => app(Git::class)->getAppCommitHash()),
-            'appBranch' => Cache::remember('git-branch', 3600, fn () => app(Git::class)->getAppBranch()),
-            'appGitOriginRepo' => Cache::remember('git-origin-repo', 3600, fn () => app(Git::class)->getRepoUrl()),
-            'locale' => \App::currentLocale(),
-            'fallbackLocale' => \App::getFallbackLocale(),
-            'locales' => config( 'app.available_locales' ),
+            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
 }
