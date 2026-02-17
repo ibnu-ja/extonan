@@ -1,8 +1,8 @@
-FROM dunglas/frankenphp:php8.4-bookworm
+FROM docker.io/dunglas/frankenphp:php8.4-bookworm
 
 ARG NODE_VERSION=22
 ARG MYSQL_CLIENT="default-mysql-client"
-ARG POSTGRES_VERSION=17
+ARG POSTGRES_VERSION=18
 
 WORKDIR /app
 
@@ -50,7 +50,7 @@ RUN apt-get update && apt-get upgrade -y \
 
 COPY start-container /usr/local/bin/start-container
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php.ini /etc/php/8.4/cli/conf.d/99-sail.ini
+COPY php.ini /usr/local/etc/php/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
 
 EXPOSE 80/tcp

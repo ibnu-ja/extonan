@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-if [ ! -d /.composer ]; then
-    mkdir /.composer
-fi
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

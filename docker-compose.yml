@@ -1,9 +1,9 @@
 services:
   laravel.test:
     build:
-      context: './docker/frankenphp-8.4'
-      dockerfile: Dockerfile
-    image: 'frankenphp/sail:8.4'
+      context: './docker/devcontainer'
+      dockerfile: Containerfile
+    image: 'localhost/frankenphp-sail:php8.5-bookworm'
     ports:
       - '${APP_PORT:-80}:80'
       - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
@@ -22,7 +22,7 @@ services:
       - meilisearch
       - pgsql
   redis:
-    image: 'bitnami/redis:latest'
+    image: 'docker.io/bitnami/redis:latest'
     ports:
       - '${FORWARD_REDIS_PORT:-6379}:6379'
     volumes:
@@ -32,7 +32,7 @@ services:
     networks:
       - sail
   meilisearch:
-    image: 'getmeili/meilisearch:latest'
+    image: 'docker.io/getmeili/meilisearch:latest'
     ports:
       - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
     environment:
@@ -42,7 +42,7 @@ services:
     networks:
       - sail
   pgsql:
-    image: 'postgres:17'
+    image: 'docker.io/library/postgres:18'
     ports:
       - '${FORWARD_DB_PORT:-5432}:5432'
     environment:
@@ -51,8 +51,8 @@ services:
       POSTGRES_USER: '${DB_USERNAME}'
       POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
     volumes:
-      - 'sail-pgsql:/var/lib/postgresql/data'
-      - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+      - 'sail-pgsql:/var/lib/postgresql/18/docker'
+      - './database/create-testing-database.sql:/docker-entrypoint-initdb.d/create-testing-database.sql'
     networks:
       - sail
 networks:

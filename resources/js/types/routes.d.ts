@@ -89,6 +89,7 @@ declare module 'ziggy-js' {
     'two-factor.qr-code': []
     'two-factor.secret-key': []
     'two-factor.recovery-codes': []
+    'two-factor.regenerate-recovery-codes': []
     'terms.show': []
     'policy.show': []
     'profile.show': []
