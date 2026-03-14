@@ -30,3 +30,7 @@ yarn-error.log
 /.zed
 .DS_Store
 /.claude
+
+# check XDG_CONFIG_HOME XDG_DATA_HOME variable
+data/caddy/
+config/caddy/
