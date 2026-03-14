@@ -1,7 +1,10 @@
 <script lang="ts">
     import PlaceholderPattern from '@/components/PlaceholderPatternn.svelte';
     import AppLayout from '@/layouts/AppLayout.svelte';
+    import { inertiaNav } from '@/lib/inertia-nav';
     import { type BreadcrumbItem } from '@/types';
+    import {Button} from "m3-svelte";
+    import { page } from '@inertiajs/svelte';
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -16,6 +19,10 @@
 </svelte:head>
 
 <AppLayout {breadcrumbs}>
+    <Button href="/" data-preserve-scroll="true" {@attach inertiaNav}>
+        Home
+    </Button>
+    {$page.url}
     <div class="space-y-4 px-4 pt-4 overflow-x-auto">
         <div class="grid auto-rows-min gap-4 md:grid-cols-3">
             <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">

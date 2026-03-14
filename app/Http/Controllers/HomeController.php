@@ -6,6 +6,7 @@ use App\Models\Anime;
 use App\Models\Post;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Inertia\Inertia;
+use Laravel\Fortify\Features;
 
 class HomeController extends Controller
 {
@@ -14,9 +15,10 @@ class HomeController extends Controller
      */
     public function __invoke(): \Inertia\Response
     {
-        return Inertia::render('Home/Index', [
+        return Inertia::render('Home', [
             'laravelVersion' => app()->version(),
             'phpVersion' => PHP_VERSION,
+            'canRegister' => Features::enabled(Features::registration()),
             'latestAnime' => Anime::with('author')->take(5)->orderBy('published_at')->get(),
             'latestEpisodes' => Post::whereHasMorph('postable', [Anime::class], function (Builder $query) {
                 $query->with('author')->take(10);

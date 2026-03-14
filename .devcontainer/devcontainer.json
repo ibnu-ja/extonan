@@ -19,7 +19,7 @@
 		}
 	},
 	// "remoteUser": "sail",
-	// "postCreateCommand": "chown -R sail:sail /var/www/html 2>/dev/null || true"
+	"postCreateCommand": "apt-get update && apt-get install -y xdg-utils"
 	// "forwardPorts": [],
 	// "runServices": [],
 	// "shutdownAction": "none",

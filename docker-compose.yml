@@ -8,6 +8,8 @@ services:
       - '${APP_PORT:-80}:80'
       - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
     environment:
+      GITHUB_COPILOT_TOKEN: '${COPILOT_GITHUB_TOKEN}'
+      SUPERVISOR_PHP_USER: root
       XDG_CONFIG_HOME: /app/config
       XDG_DATA_HOME: /app/data
       XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
