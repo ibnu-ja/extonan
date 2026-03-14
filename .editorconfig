@@ -22,3 +22,34 @@ ij_typescript_spaces_within_imports = true
 
 [{*.cjs,*.js,*.jsx}]
 ij_javascript_spaces_within_imports = true
+
+[*.less]
+ij_less_line_comment_at_first_column = false
+
+[*.sass]
+ij_sass_line_comment_at_first_column = false
+
+[*.scss]
+ij_scss_line_comment_at_first_column = false
+
+[{*.ant,*.fxml,*.jhm,*.jnlp,*.jrxml,*.rng,*.tld,*.ui,*.wsdd,*.wsdl,*.xjb,*.xml,*.xsd,*.xsl,*.xslt,*.xul,phpunit.xml.dist}]
+ij_xml_block_comment_at_first_column = false
+ij_xml_line_comment_at_first_column = false
+
+[{*.ats,*.cts,*.mts,*.ts}]
+ij_typescript_block_comment_at_first_column = false
+ij_typescript_line_comment_at_first_column = false
+
+[{*.cjs,*.es6,*.js,*.mjs}]
+ij_javascript_block_comment_at_first_column = false
+ij_javascript_line_comment_at_first_column = false
+
+[{*.ctp,*.hphp,*.inc,*.module,*.php,*.php4,*.php5,*.phtml}]
+ij_php_line_comment_at_first_column = false
+
+[{*.htm,*.html,*.sht,*.shtm,*.shtml}]
+ij_html_block_comment_at_first_column = false
+ij_html_line_comment_at_first_column = false
+
+[{*.yaml,*.yml}]
+ij_yaml_line_comment_at_first_column = false
