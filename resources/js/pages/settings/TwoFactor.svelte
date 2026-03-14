@@ -1,5 +1,5 @@
 <script lang="ts">
-    import HeadingSmall from '@/components/HeadingSmall.svelte';
+    import HeadingSmall from '@/components/typography/HeadingSmall.svelte';
     import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.svelte';
     import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.svelte';
     import { Badge } from '@/components/ui/badge';

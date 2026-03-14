@@ -1,5 +1,5 @@
 <script lang="ts">
-    import AppLogoIcon from '@/components/AppLogoIcon.svelte';
+    import AppLogoIcon from '@/components/branding/AppLogoIcon.svelte';
 </script>
 
 <div class="inline-flex items-center gap-3">

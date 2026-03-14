@@ -1,14 +1,14 @@
 <script lang="ts">
-    import AppLogo from '@/components/AppLogo.svelte';
-    import AppLogoIcon from '@/components/AppLogoIcon.svelte';
-    import Breadcrumbs from '@/components/Breadcrumbs.svelte';
+    import AppLogo from '@/components/branding/AppLogo.svelte';
+    import AppLogoIcon from '@/components/branding/AppLogoIcon.svelte';
+    import Breadcrumbs from '@/components/layout/Breadcrumbs.svelte';
     import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
     import { Button } from '@/components/ui/button';
     import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
     import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from '@/components/ui/menubar';
     import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
     import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-    import UserMenuContent from '@/components/UserMenuContent.svelte';
+    import UserMenuContent from '@/components/layout/UserMenuContent.svelte';
     import { getInitials } from '@/hooks/useInitials';
     import { dashboard } from '@/routes';
     import type { BreadcrumbItem } from '@/types';

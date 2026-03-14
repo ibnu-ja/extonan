@@ -1,5 +1,5 @@
 <script lang="ts">
-    import TextLink from '@/components/TextLink.svelte';
+    import TextLink from '@/components/typography/TextLink.svelte';
     import { Button } from '@/components/ui/button';
     import AuthLayout from '@/layouts/AuthLayout.svelte';
     import { Form } from '@inertiajs/svelte';

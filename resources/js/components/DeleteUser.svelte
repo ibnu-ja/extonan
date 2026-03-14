@@ -1,5 +1,5 @@
 <script lang="ts">
-    import HeadingSmall from '@/components/HeadingSmall.svelte';
+    import HeadingSmall from '@/components/typography/HeadingSmall.svelte';
     import InputError from '@/components/InputError.svelte';
     import { Button } from '@/components/ui/button';
     import {
