@@ -1,8 +1,9 @@
-import tailwindcss from '@tailwindcss/vite';
+// import tailwindcss from '@tailwindcss/vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
 import path from "path";
+import { functionsMixins } from "vite-plugin-functions-mixins";
 
 export default defineConfig({
     server: {
@@ -17,7 +18,8 @@ export default defineConfig({
             refresh: true,
         }),
         svelte(),
-        tailwindcss(),
+        functionsMixins({ deps: ["m3-svelte"] })
+        // tailwindcss(),
     ],
     resolve: {
         alias: {

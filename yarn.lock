@@ -320,6 +320,11 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.10.tgz#a2a1e3812d14525f725d011a73eceb41fef5bc1c"
   integrity sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==
 
+"@fontsource-variable/google-sans-flex@^5.2.1":
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/@fontsource-variable/google-sans-flex/-/google-sans-flex-5.2.1.tgz#65467313574247dffc70dc6510ad4524060ac08d"
+  integrity sha512-CZzNhNK6NTjJsX3SP2g/WWzldFzSiSHrE1DtXh2Nkbflb40CGtP3G+1OABongwrNV3Tu/bUfirgcP14ajcglMw==
+
 "@hapi/hoek@^9.0.0", "@hapi/hoek@^9.3.0":
   version "9.3.0"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.3.0.tgz#8368869dcb735be2e7f5cb7647de78e167a251fb"
@@ -359,6 +364,11 @@
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.3.tgz#c2b9d2e374ee62c586d3adbea87199b1d7a7a6ba"
   integrity sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==
+
+"@iconify/types@*", "@iconify/types@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@iconify/types/-/types-2.0.0.tgz#ab0e9ea681d6c8a1214f30cd741fe3a20cc57f57"
+  integrity sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==
 
 "@inertiajs/core@2.3.15":
   version "2.3.15"
@@ -429,6 +439,13 @@
   dependencies:
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
+
+"@ktibow/iconset-material-symbols@^0.0.1764827375", "@ktibow/iconset-material-symbols@~0.0.1764827375":
+  version "0.0.1764827375"
+  resolved "https://registry.yarnpkg.com/@ktibow/iconset-material-symbols/-/iconset-material-symbols-0.0.1764827375.tgz#f6313b443f02a6e777dc4d91c21c666f70070515"
+  integrity sha512-D5r08cbHpLn+G2G03Zj3nV0afQpS/IV4kD0g7rDHpU4k7tC/CUt6+PbddKISTWz8u+SRPQNaR5cZU0e9IlUoWg==
+  dependencies:
+    "@iconify/types" "*"
 
 "@layerstack/svelte-actions@1.0.1-next.14":
   version "1.0.1-next.14"
@@ -2541,6 +2558,14 @@ lz-string@^1.5.0:
   resolved "https://registry.yarnpkg.com/lz-string/-/lz-string-1.5.0.tgz#c1ab50f77887b712621201ba9fd4e3a6ed099941"
   integrity sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==
 
+m3-svelte@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/m3-svelte/-/m3-svelte-7.1.1.tgz#02ad39e017a53c6673508e8fa9aee15d7709cc27"
+  integrity sha512-DpAcA9WRNSa7rdW1MYLHA+ai1AaHGNOAWzOoSkOjRZOKLF/W6wPuNpN0Puzcwc1LUo6K+vVU9mw+aEK5klbU5w==
+  dependencies:
+    "@iconify/types" "^2.0.0"
+    "@ktibow/iconset-material-symbols" "~0.0.1764827375"
+
 magic-string@^0.30.11, magic-string@^0.30.21:
   version "0.30.21"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.21.tgz#56763ec09a0fa8091df27879fd94d19078c00d91"
@@ -3634,6 +3659,11 @@ vite-plugin-full-reload@^1.1.0:
   dependencies:
     picocolors "^1.0.0"
     picomatch "^2.3.1"
+
+vite-plugin-functions-mixins@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/vite-plugin-functions-mixins/-/vite-plugin-functions-mixins-0.4.1.tgz#84f32af183db2082084fb67e2bbf4f6f5a7bdfc4"
+  integrity sha512-xl9wCfeEvJls+5wnEa76xQ3nrnNOw1Zm9C4mc49dQrHTXRNTV3mwOsFILGxRsjOCm6mJwp3TfjIDFbyFPppe1g==
 
 vite@^7.3.1:
   version "7.3.1"
