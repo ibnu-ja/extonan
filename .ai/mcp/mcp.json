@@ -3,8 +3,23 @@
     "laravel-boost": {
       "command": "/usr/local/bin/php",
       "args": [
-        "/app/example-app/artisan",
+        "/app/artisan",
         "boost:mcp"
+      ]
+    },
+    "svelte": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@sveltejs/mcp"
+      ]
+    },
+    "shadcn-svelte": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://shadcn-svelte.mastra.cloud/api/mcp/shadcn/sse"
       ]
     }
   }
