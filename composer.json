@@ -29,6 +29,7 @@
         "meilisearch/meilisearch-php": "^1.16",
         "oddvalue/laravel-drafts": "^3.1",
         "plank/laravel-mediable": "^6.5",
+        "spatie/laravel-data": "^4.23",
         "spatie/laravel-model-status": "^1.20",
         "spatie/laravel-permission": "^7.4",
         "spatie/laravel-query-builder": "^7.3",
