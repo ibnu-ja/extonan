@@ -23,6 +23,12 @@
             }
         },
         {
+            "files": "**/*.json",
+            "options": {
+                "tabWidth": 2
+            }
+        },
+        {
             "files": "**/*.svelte",
             "options": {
                 "parser": "svelte"
