@@ -29,9 +29,9 @@
 			opts={{ loop: true, align: 'start' }}
 			plugins={[Autoplay({ delay: 5000 })]}
 		>
-			<Carousel.Content class="h-64 md:h-80">
+			<Carousel.Content class="h-64 md:h-80 ms-0">
 				{#each latestAnime as anime (anime.id)}
-					<Carousel.Item class="h-full basis-full">
+					<Carousel.Item class="h-full basis-full ps-0">
 						<AnimeSlideCard
 							title={anime.title}
 							slug={anime.slug}
