@@ -48,7 +48,7 @@
 		{/if}
 	</div>
 	<div class="min-w-0">
-		<p class="truncate text-sm font-medium">{displayTitle}</p>
+		<p class="font-heading truncate text-sm font-medium">{displayTitle}</p>
 		<p class="truncate text-xs text-muted-foreground">
 			{#if !isPublished}
 				<Badge variant="destructive" class="mr-1">Draft</Badge>

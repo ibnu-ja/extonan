@@ -52,7 +52,7 @@
 	<div class="flex min-w-0 flex-1 flex-col justify-between gap-1">
 		<div class="min-w-0">
 			<p class="truncate text-xs text-muted-foreground">{animeDisplayTitle}</p>
-			<Link href={link} class="block truncate font-medium hover:underline">
+			<Link href={link} class="font-heading block truncate font-medium hover:underline">
 				{episodeLabel}
 			</Link>
 			{#if !isPublished}

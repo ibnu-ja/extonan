@@ -31,7 +31,7 @@
 	class="flex h-full w-full flex-col justify-end bg-cover bg-center p-5 md:p-10"
 	style="background-image: {bgImage}"
 >
-	<h3 class="mb-4 text-2xl font-bold text-white md:text-3xl">{displayTitle}</h3>
+	<h3 class="font-heading mb-4 text-2xl font-bold text-white md:text-3xl">{displayTitle}</h3>
 	<div class="flex flex-wrap gap-2">
 		{#each genres as genre}
 			<Badge variant="secondary" class="bg-white/20 text-white hover:bg-white/30">{genre}</Badge>
