@@ -17,7 +17,7 @@
 </script>
 
 {#if variant === 'sidebar'}
-    <SidebarInset class={cn('flex flex-col', className)}>
+    <SidebarInset class={cn('flex flex-col pb-16 md:pb-0', className)}>
         {@render children?.()}
         <AppFooter />
     </SidebarInset>

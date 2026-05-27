@@ -29,6 +29,7 @@
                     asChild
                     isActive={url.isCurrentUrl(item.href, url.currentUrl)}
                     tooltip={item.title}
+                    class="transition-all duration-200"
                 >
                     {#snippet children(props)}
                         <Link

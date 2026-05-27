@@ -2,6 +2,7 @@
     import { Link, router } from '@inertiajs/svelte';
     import LogOut from 'lucide-svelte/icons/log-out';
     import Settings from 'lucide-svelte/icons/settings';
+    import type { Snippet } from 'svelte';
     import {
         DropdownMenuGroup,
         DropdownMenuItem,
@@ -16,8 +17,10 @@
 
     let {
         user,
+        children,
     }: {
         user: User;
+        children?: Snippet;
     } = $props();
 
     function handleLogout(propsOnClick?: () => void) {
@@ -34,6 +37,10 @@
     </div>
 </DropdownMenuLabel>
 <DropdownMenuSeparator />
+{#if children}
+    {@render children?.()}
+    <DropdownMenuSeparator />
+{/if}
 <DropdownMenuGroup>
     <DropdownMenuItem asChild>
         {#snippet children(props)}

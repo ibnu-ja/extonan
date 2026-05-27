@@ -1,12 +1,13 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
     import { page } from '@inertiajs/svelte';
-    import BookOpen from 'lucide-svelte/icons/book-open';
     import Clapperboard from 'lucide-svelte/icons/clapperboard';
     import Disc3 from 'lucide-svelte/icons/disc-3';
     import Film from 'lucide-svelte/icons/film';
-    import FolderGit2 from 'lucide-svelte/icons/folder-git-2';
+    import House from 'lucide-svelte/icons/house';
     import LayoutGrid from 'lucide-svelte/icons/layout-grid';
+    import LogIn from 'lucide-svelte/icons/log-in';
+    import UserPlus from 'lucide-svelte/icons/user-plus';
     import type { Snippet } from 'svelte';
     import AppLogo from '@/components/AppLogo.svelte';
     import NavFooter from '@/components/NavFooter.svelte';
@@ -22,7 +23,7 @@
         SidebarMenuItem,
     } from '@/components/ui/sidebar';
     import { toUrl } from '@/lib/utils';
-    import { dashboard } from '@/routes';
+    import { dashboard, home, login, register as registerRoute } from '@/routes';
     import { index as album } from '@/routes/album';
     import { index as anime } from '@/routes/anime';
     import { index as mv } from '@/routes/mv';
@@ -36,13 +37,14 @@
 
     const auth = $derived(page.props.auth);
     const isLoggedIn = $derived(!!auth.user);
+    const canRegister = $derived(page.props.canRegister as boolean | undefined);
 
     const mainNavItems = $derived(<NavItem[]>[
-        ...(isLoggedIn ? [{
-            title: 'Dashboard',
-            href: dashboard(),
-            icon: LayoutGrid,
-        }] : []),
+        {
+            title: 'Home',
+            href: home(),
+            icon: House,
+        },
         {
             title: 'Anime',
             href: anime(),
@@ -58,31 +60,38 @@
             href: mv(),
             icon: Clapperboard,
         },
+        {
+            title: 'Dashboard',
+            href: dashboard(),
+            icon: LayoutGrid,
+        },
     ]);
 
-    const footerNavItems: NavItem[] = [
-        {
-            title: 'Repository',
-            href: 'https://github.com/laravel/svelte-starter-kit',
-            icon: FolderGit2,
-        },
-        {
-            title: 'Documentation',
-            href: 'https://laravel.com/docs/starter-kits#svelte',
-            icon: BookOpen,
-        },
-    ];
-</script>
+    const footerNavItems = $derived(<NavItem[]>[
+        ...(!isLoggedIn ? [
+            {
+                title: 'Log in',
+                href: login(),
+                icon: LogIn,
+            },
+            ...(canRegister ? [{
+                title: 'Register',
+                href: registerRoute(),
+                icon: UserPlus,
+            }] : []),
+        ] : []),
+    ]);
 
-<Sidebar collapsible="icon" variant="inset">
+</script>
+<Sidebar collapsible="icon" variant="inset" class="hidden md:flex">
     <SidebarHeader>
         <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton size="lg" asChild>
+                <SidebarMenuButton size="lg" asChild class="hover:bg-transparent hover:text-inherit active:bg-transparent active:text-inherit data-[state=open]:hover:bg-transparent data-[state=open]:hover:text-inherit">
                     {#snippet children(props)}
                         <Link
                             {...props}
-                            href={toUrl(dashboard())}
+                            href={toUrl(home())}
                             class={props.class}
                         >
                             <AppLogo />
