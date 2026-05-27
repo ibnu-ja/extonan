@@ -5,14 +5,12 @@
 
 	let {
 		title,
-		slug,
 		genres,
 		bannerImage,
 		coverImage,
 		link,
 	}: {
 		title: Record<string, string | null>;
-		slug: Record<string, string | null>;
 		genres: string[];
 		bannerImage: string | null;
 		coverImage: { extraLarge: string; large: string; medium: string; color: string };
@@ -33,7 +31,7 @@
 >
 	<h3 class="font-heading mb-4 text-2xl font-bold text-white md:text-3xl">{displayTitle}</h3>
 	<div class="flex flex-wrap gap-2">
-		{#each genres as genre}
+		{#each genres as genre (genre)}
 			<Badge variant="secondary" class="bg-white/20 text-white hover:bg-white/30">{genre}</Badge>
 		{/each}
 	</div>

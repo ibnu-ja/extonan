@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '@inertiajs/svelte';
-	import { Separator } from '@/components/ui/separator';
 	import { siFacebook, siDiscord, siGithub } from 'simple-icons';
+	import { Separator } from '@/components/ui/separator';
 
 	const links = [
 		{ url: 'https://facebook.com/extonan', title: 'Facebook', icon: siFacebook.path },
@@ -24,7 +24,7 @@
 <footer class="mt-auto py-6">
 	<div class="mx-auto flex max-w-screen-2xl flex-col items-center gap-3 px-2 pb-3 text-center text-xs text-muted-foreground sm:px-4">
 		<div class="flex gap-4">
-			{#each links as link}
+			{#each links as link (link.url)}
 				<a href={link.url} target="_blank" rel="noopener noreferrer" class="hover:text-foreground" aria-label={link.title}>
 					<svg viewBox="0 0 24 24" class="size-5 fill-current">
 						<path d={link.icon} />

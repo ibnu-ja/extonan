@@ -1,10 +1,10 @@
 <script lang="ts">
-	import * as Carousel from '@/components/ui/carousel';
 	import Autoplay from 'embla-carousel-autoplay';
 	import AnimeSlideCard from '@/components/home/AnimeSlideCard.svelte';
 	import EpisodeCard from '@/components/home/EpisodeCard.svelte';
 	import MusicCard from '@/components/home/MusicCard.svelte';
 	import SectionHeading from '@/components/home/SectionHeading.svelte';
+	import * as Carousel from '@/components/ui/carousel';
 
 	let {
 		latestAnime,
@@ -57,16 +57,13 @@
 		<div class="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 			{#each latestEpisodes as episode (episode.id)}
 				<EpisodeCard
-					id={episode.id}
 					title={episode.title}
 					epNo={episode.epNo}
-					postType={episode.postType}
 					thumbnail={episode.thumbnail}
 					animeTitle={episode.animeTitle}
 					author={episode.author}
 					publishedAt={episode.publishedAt}
 					isPublished={episode.isPublished}
-					isCurrent={episode.isCurrent}
 					link={episode.link}
 					permissions={episode.permissions}
 				/>
@@ -90,7 +87,6 @@
 					{#each latestMv as mv (mv.id)}
 						<Carousel.Item class="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
 							<MusicCard
-								id={mv.id}
 								title={mv.title}
 								thumbnail={mv.thumbnail}
 								author={mv.author}
@@ -125,7 +121,6 @@
 					{#each latestAlbum as album (album.id)}
 						<Carousel.Item class="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
 							<MusicCard
-								id={album.id}
 								title={album.title}
 								thumbnail={album.thumbnail}
 								author={album.author}

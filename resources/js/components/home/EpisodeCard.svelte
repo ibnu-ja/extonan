@@ -1,35 +1,29 @@
 <script lang="ts">
 	import { Link } from '@inertiajs/svelte';
-	import { Badge } from '@/components/ui/badge';
-	import { Button } from '@/components/ui/button';
 	import PencilIcon from '@lucide/svelte/icons/pencil';
 	import TrashIcon from '@lucide/svelte/icons/trash';
+	import { Badge } from '@/components/ui/badge';
+	import { Button } from '@/components/ui/button';
 	import type {} from '@/types/generated';
 
 	let {
-		id,
 		title,
 		epNo,
-		postType,
 		thumbnail,
 		animeTitle,
 		author,
 		publishedAt,
 		isPublished,
-		isCurrent,
 		link,
 		permissions,
 	}: {
-		id: number;
 		title: Record<string, string | null>;
 		epNo: string | null;
-		postType: string;
 		thumbnail: { extraLarge: string; large: string; medium: string; color: string } | null;
 		animeTitle: Record<string, string | null>;
 		author: { id: number; name: string | null; avatar: string | null } | null;
 		publishedAt: string | null;
 		isPublished: boolean;
-		isCurrent: boolean;
 		link: string;
 		permissions: { update: boolean; delete: boolean; publish: boolean };
 	} = $props();

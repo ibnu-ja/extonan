@@ -83,11 +83,21 @@ export function createTwoFactorAuth() {
     }
 
     return {
-        get errors() { return errors; },
-        get manualSetupKey() { return manualSetupKey; },
-        get qrCodeSvg() { return qrCodeSvg; },
-        get recoveryCodesList() { return recoveryCodesList; },
-        get hasSetupData() { return hasSetupData; },
+        get errors() {
+ return errors; 
+},
+        get manualSetupKey() {
+ return manualSetupKey; 
+},
+        get qrCodeSvg() {
+ return qrCodeSvg; 
+},
+        get recoveryCodesList() {
+ return recoveryCodesList; 
+},
+        get hasSetupData() {
+ return hasSetupData; 
+},
         clearSetupData,
         clearErrors,
         clearTwoFactorAuthData,

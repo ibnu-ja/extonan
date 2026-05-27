@@ -1,7 +1,7 @@
 <script lang="ts">
+    import { Link } from '@inertiajs/svelte';
     import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
     import type { NavItem } from '@/types';
-    import { Link } from '@inertiajs/svelte';
 
     interface Props {
         items: NavItem[];

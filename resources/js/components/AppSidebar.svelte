@@ -1,6 +1,10 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
+    import { page } from '@inertiajs/svelte';
     import BookOpen from 'lucide-svelte/icons/book-open';
+    import Clapperboard from 'lucide-svelte/icons/clapperboard';
+    import Disc3 from 'lucide-svelte/icons/disc-3';
+    import Film from 'lucide-svelte/icons/film';
     import FolderGit2 from 'lucide-svelte/icons/folder-git-2';
     import LayoutGrid from 'lucide-svelte/icons/layout-grid';
     import type { Snippet } from 'svelte';
@@ -19,6 +23,9 @@
     } from '@/components/ui/sidebar';
     import { toUrl } from '@/lib/utils';
     import { dashboard } from '@/routes';
+    import { index as album } from '@/routes/album';
+    import { index as anime } from '@/routes/anime';
+    import { index as mv } from '@/routes/mv';
     import type { NavItem } from '@/types';
 
     let {
@@ -27,13 +34,31 @@
         children?: Snippet;
     } = $props();
 
-    const mainNavItems: NavItem[] = [
-        {
+    const auth = $derived(page.props.auth);
+    const isLoggedIn = $derived(!!auth.user);
+
+    const mainNavItems = $derived(<NavItem[]>[
+        ...(isLoggedIn ? [{
             title: 'Dashboard',
             href: dashboard(),
             icon: LayoutGrid,
+        }] : []),
+        {
+            title: 'Anime',
+            href: anime(),
+            icon: Film,
         },
-    ];
+        {
+            title: 'Album',
+            href: album(),
+            icon: Disc3,
+        },
+        {
+            title: 'MV',
+            href: mv(),
+            icon: Clapperboard,
+        },
+    ]);
 
     const footerNavItems: NavItem[] = [
         {

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { SidebarInset } from '@/components/ui/sidebar';
     import type { Snippet } from 'svelte';
+    import { SidebarInset } from '@/components/ui/sidebar';
 
     type Props = {
         variant?: 'header' | 'sidebar';

@@ -1,16 +1,16 @@
 <script lang="ts">
-    import HeadingSmall from '@/components/typography/HeadingSmall.svelte';
+    import { Form } from '@inertiajs/svelte';
+    import { ShieldBan, ShieldCheck } from 'lucide-svelte';
+    import { onDestroy } from 'svelte';
     import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.svelte';
     import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.svelte';
+    import HeadingSmall from '@/components/typography/HeadingSmall.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import AppLayout from '@/layouts/AppLayout.svelte';
     import SettingsLayout from '@/layouts/settings/Layout.svelte';
     import { createTwoFactorAuth } from '@/lib/two-factor-auth.svelte';
     import type { BreadcrumbItem } from '@/types';
-    import { Form } from '@inertiajs/svelte';
-    import { ShieldBan, ShieldCheck } from 'lucide-svelte';
-    import { onDestroy } from 'svelte';
 
     interface Props {
         requiresConfirmation?: boolean;

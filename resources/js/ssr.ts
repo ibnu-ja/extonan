@@ -10,6 +10,7 @@ createServer((page) =>
         title: (title) => (title ? `${title} - ${appName}` : appName),
         resolve: (name) => {
             const pages = import.meta.glob<{ default: any }>('./pages/**/*.svelte', { eager: true });
+
             return pages[`./pages/${name}.svelte`] as any;
         },
         setup({ App, props }) {

@@ -1,12 +1,12 @@
 <script lang="ts">
+    import { Link } from '@inertiajs/svelte';
+    import { BookOpen, Folder, LayoutGrid } from 'lucide-svelte';
+    import AppLogo from '@/components/branding/AppLogo.svelte';
     import NavFooter from '@/components/layout/NavFooter.svelte';
     import NavMain from '@/components/layout/NavMain.svelte';
     import NavUser from '@/components/layout/NavUser.svelte';
     import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-    import { type NavItem } from '@/types';
-    import { Link } from '@inertiajs/svelte';
-    import { BookOpen, Folder, LayoutGrid } from 'lucide-svelte';
-    import AppLogo from '@/components/branding/AppLogo.svelte';
+    import type {NavItem} from '@/types';
 
     const mainNavItems: NavItem[] = [
         {

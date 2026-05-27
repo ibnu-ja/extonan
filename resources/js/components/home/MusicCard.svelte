@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { Link } from '@inertiajs/svelte';
-	import { Badge } from '@/components/ui/badge';
-	import { Button } from '@/components/ui/button';
 	import PencilIcon from '@lucide/svelte/icons/pencil';
 	import TrashIcon from '@lucide/svelte/icons/trash';
+	import { Badge } from '@/components/ui/badge';
+	import { Button } from '@/components/ui/button';
 	import { cn } from '@/lib/utils';
 
 	let {
-		id,
 		title,
 		thumbnail,
 		author,
@@ -17,7 +16,6 @@
 		permissions,
 		aspect = 'square',
 	}: {
-		id: number;
 		title: Record<string, string | null>;
 		thumbnail: { extraLarge: string; large: string; medium: string; color: string } | null;
 		author: { id: number; name: string | null; avatar: string | null } | null;
