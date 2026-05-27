@@ -57,6 +57,18 @@
             </div>
 
             <div class="grid gap-2">
+                <Label for="invite_code">Invite Code</Label>
+                <Input
+                    id="invite_code"
+                    type="text"
+                    required
+                    name="invite_code"
+                    placeholder="Enter your invite code"
+                />
+                <InputError message={errors.invite_code} />
+            </div>
+
+            <div class="grid gap-2">
                 <Label for="password">Password</Label>
                 <PasswordInput
                     id="password"
