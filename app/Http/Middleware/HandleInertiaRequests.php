@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Git;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,6 +36,8 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $git = app(Git::class);
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -42,6 +45,10 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'appVersion' => $git->getLatestTag(),
+            'appBranch' => $git->getAppBranch(),
+            'appCommitHash' => $git->getAppCommitHash(),
+            'appGitOriginRepo' => $git->getRepoUrl(),
         ];
     }
 }

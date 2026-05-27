@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import { SidebarInset } from '@/components/ui/sidebar';
+    import AppFooter from '@/components/AppFooter.svelte';
     import { cn } from '@/lib/utils';
     import type { AppVariant } from '@/types';
 
@@ -16,8 +17,9 @@
 </script>
 
 {#if variant === 'sidebar'}
-    <SidebarInset class={className}>
+    <SidebarInset class={cn('flex flex-col', className)}>
         {@render children?.()}
+        <AppFooter />
     </SidebarInset>
 {:else}
     <main
@@ -27,5 +29,6 @@
         )}
     >
         {@render children?.()}
+        <AppFooter />
     </main>
 {/if}
