@@ -13,13 +13,13 @@ class RolesPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-//        $roles = [
-//            'admin',
-//            'editor',
-//            'author',
-//            'contributor',
-//            'subscriber'
-//        ];
+        //        $roles = [
+        //            'admin',
+        //            'editor',
+        //            'author',
+        //            'contributor',
+        //            'subscriber'
+        //        ];
 
         $permissions = [
             'post.create' => ['editor', 'author', 'contributor'],

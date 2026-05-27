@@ -21,7 +21,7 @@ class MVController extends Controller
     {
         return [
             new Middleware('auth', except: ['index', 'show']),
-            WithDraftsMiddleware::class
+            WithDraftsMiddleware::class,
         ];
     }
 
@@ -37,17 +37,18 @@ class MVController extends Controller
             $mv = $mv->paginate($perPage);
         }
         $mv->appends(request()->query());
+
         return Inertia::render('MV/Index', [
-            'mv' => fn() => $mv,
-            'canCreate' => fn() => auth()->check() && auth()->user()->can('create', Post::class),
-            'canViewUnpublished' => fn() => auth()->check() && auth()->user()->can('viewAny')
+            'mv' => fn () => $mv,
+            'canCreate' => fn () => auth()->check() && auth()->user()->can('create', Post::class),
+            'canViewUnpublished' => fn () => auth()->check() && auth()->user()->can('viewAny'),
         ]);
     }
 
     public function create(Request $request): RedirectResponse
     {
         return redirect()->route('shinrai.create', [
-            'type' => 'mv'
+            'type' => 'mv',
         ]);
     }
 
@@ -57,7 +58,7 @@ class MVController extends Controller
 
         return Inertia::render('MV/Show', [
             'post' => $mv->load('author', 'links'),
-            'canPublish' => fn() => auth()->check() && auth()->user()->can('publish', $mv),
+            'canPublish' => fn () => auth()->check() && auth()->user()->can('publish', $mv),
         ]);
     }
 

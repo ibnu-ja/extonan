@@ -1,23 +1,33 @@
 {
     "agents": [
         "junie",
-        "copilot"
+        "copilot",
+        "opencode"
     ],
+    "cloud": false,
     "guidelines": true,
-    "herd_mcp": false,
     "mcp": true,
-    "nightwatch_mcp": false,
+    "nightwatch": false,
     "packages": [
-        "laravel/fortify",
         "spatie/laravel-permission",
-        "oddvalue/laravel-drafts"
+        "oddvalue/laravel-drafts",
+        "spatie/laravel-query-builder",
+        "spatie/laravel-sluggable",
+        "spatie/laravel-translatable",
+        "barryvdh/laravel-debugbar"
     ],
-    "sail": false,
+    "sail": true,
     "skills": [
+        "fortify-development",
+        "laravel-best-practices",
+        "scout-development",
         "wayfinder-development",
         "inertia-svelte-development",
         "tailwindcss-development",
-        "developing-with-fortify",
-        "laravel-permission-development"
+        "laravel-permission-development",
+        "laravel-query-builder",
+        "sluggable-development",
+        "translatable-development",
+        "debug-using-debugbar"
     ]
 }

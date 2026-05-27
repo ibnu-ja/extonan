@@ -6,6 +6,7 @@ use App\Models\Anime;
 use App\Models\Post;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Inertia\Inertia;
+use Inertia\Response;
 use Laravel\Fortify\Features;
 
 class HomeController extends Controller
@@ -13,7 +14,7 @@ class HomeController extends Controller
     /**
      * Show homepage
      */
-    public function __invoke(): \Inertia\Response
+    public function __invoke(): Response
     {
         return Inertia::render('Home', [
             'laravelVersion' => app()->version(),

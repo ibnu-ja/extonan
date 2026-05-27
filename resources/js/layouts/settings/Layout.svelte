@@ -1,57 +1,69 @@
 <script lang="ts">
-    import Heading from '@/components/typography/Heading.svelte';
+    import { Link } from '@inertiajs/svelte';
+    import type { Snippet } from 'svelte';
+    import Heading from '@/components/Heading.svelte';
     import { Button } from '@/components/ui/button';
     import { Separator } from '@/components/ui/separator';
-    import { cn } from '@/lib/utils';
-    import { type NavItem } from '@/types';
-    import { Link, page } from '@inertiajs/svelte';
-    import type { Snippet } from 'svelte';
+    import { currentUrlState } from '@/lib/currentUrl.svelte';
+    import { toUrl } from '@/lib/utils';
+    import { edit as editAppearance } from '@/routes/appearance';
+    import { edit as editProfile } from '@/routes/profile';
+    import { edit as editSecurity } from '@/routes/security';
+    import type { NavItem } from '@/types';
+
+    let {
+        children,
+    }: {
+        children?: Snippet;
+    } = $props();
 
     const sidebarNavItems: NavItem[] = [
         {
             title: 'Profile',
-            href: '/settings/profile',
+            href: editProfile(),
         },
         {
-            title: 'Password',
-            href: '/settings/password',
-        },
-        {
-            title: 'Two-Factor',
-            href: '/settings/two-factor',
+            title: 'Security',
+            href: editSecurity(),
         },
         {
             title: 'Appearance',
-            href: '/settings/appearance',
+            href: editAppearance(),
         },
     ];
 
-    const currentPath = $page.props.ziggy?.location ? new URL($page.props.ziggy.location).pathname : '';
-
-    interface Props {
-        children?: Snippet;
-    }
-
-    let { children }: Props = $props();
+    const url = currentUrlState();
 </script>
 
 <div class="px-4 py-6">
-    <Heading title="Settings" description="Manage your profile and account settings" />
+    <Heading
+        title="Settings"
+        description="Manage your profile and account settings"
+    />
 
     <div class="flex flex-col lg:flex-row lg:space-x-12">
         <aside class="w-full max-w-xl lg:w-48">
-            <nav class="flex flex-col space-x-0 space-y-1">
-                {#each sidebarNavItems as item (item.href)}
-                    <Link href={item.href}>
-                        <Button
-                            variant="ghost"
-                            class={cn('w-full justify-start', {
-                                'bg-muted': currentPath === item.href,
-                            })}
-                        >
-                            {item.title}
-                        </Button>
-                    </Link>
+            <nav
+                class="flex flex-col space-y-1 space-x-0"
+                aria-label="Settings"
+            >
+                {#each sidebarNavItems as item (toUrl(item.href))}
+                    <Button
+                        variant="ghost"
+                        class="w-full justify-start {url.isCurrentUrl(
+                            item.href,
+                            url.currentUrl,
+                        )
+                            ? 'bg-muted'
+                            : ''}"
+                        asChild
+                    >
+                        {#snippet children(props)}
+                            <Link href={toUrl(item.href)} class={props.class}>
+                                {item.title}
+                            </Link>
+                        {/snippet}
+                    </Button>
                 {/each}
             </nav>
         </aside>

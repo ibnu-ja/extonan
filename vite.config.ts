@@ -1,30 +1,27 @@
-// import tailwindcss from '@tailwindcss/vite';
+import inertia from '@inertiajs/vite';
+import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import tailwindcss from '@tailwindcss/vite';
 import laravel from 'laravel-vite-plugin';
+import { bunny } from 'laravel-vite-plugin/fonts';
 import { defineConfig } from 'vite';
-import path from "path";
-import { functionsMixins } from "vite-plugin-functions-mixins";
 
 export default defineConfig({
-    server: {
-        hmr: {
-            host: 'localhost',
-        },
-    },
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.ts'],
-            ssr: 'resources/js/ssr.ts',
             refresh: true,
+            fonts: [
+                bunny('Instrument Sans', {
+                    weights: [400, 500, 600],
+                }),
+            ],
         }),
+        inertia(),
+        tailwindcss(),
         svelte(),
-        functionsMixins({ deps: ["m3-svelte"] })
-        // tailwindcss(),
+        wayfinder({
+            formVariants: true,
+        }),
     ],
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, './resources/js'),
-            'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
-        },
-    },
 });

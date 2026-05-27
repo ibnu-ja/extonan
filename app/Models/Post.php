@@ -14,7 +14,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Post extends BasePost
 {
-    use HasTranslations, HasTranslatableSlug, Mediable;
+    use HasTranslatableSlug, HasTranslations, Mediable;
 
     /**
      * @var string[]
@@ -53,7 +53,7 @@ class Post extends BasePost
 
     public function links(): HasMany
     {
-//        natural sorting ->orderBy(DB::raw('LENGTH(name), name'))
+        //        natural sorting ->orderBy(DB::raw('LENGTH(name), name'))
         return $this->resources()->where('type', '=', 'link');
     }
 
@@ -69,12 +69,15 @@ class Post extends BasePost
                 if ($this->hasMedia('thumbnail')) {
                     $this->loadMediaWithVariants('thumbnail');
                     $media = $this->firstMedia('thumbnail');
+
                     return [
                         'medium' => $media->findVariant('medium')->getUrl(),
                         'large' => $media->findVariant('large')->getUrl(),
                         'extraLarge' => $media->getUrl(),
                     ];
-                } else return null;
+                } else {
+                    return null;
+                }
             }
         );
     }

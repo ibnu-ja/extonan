@@ -125,26 +125,26 @@ query ($idIn: [Int], $perPage: Int, $page: Int) {
 ';
 
         $this->info(sprintf('Updating %d anime', $animeToBeUpdated->count()));
-        $idIn = $animeToBeUpdated->unique('anilist_id')->pluck("anilist_id");
+        $idIn = $animeToBeUpdated->unique('anilist_id')->pluck('anilist_id');
         $this->info('query anilist id: '.$idIn);
         $variables = [
-            "idIn" => $idIn,
+            'idIn' => $idIn,
         ];
 
         $response = Http::post('https://graphql.anilist.co', [
             'query' => $anilistQuery,
             'variables' => $variables,
-        ])->json()["data"]["Page"]["media"];
+        ])->json()['data']['Page']['media'];
 
         $media = collect($response);
 
-        //TODO pagination handle
+        // TODO pagination handle
         foreach ($animeToBeUpdated as $anime) {
             $anilist_id = ($anime->metadata->id);
             $metadata = collect($anime->metadata);
             $metadata['bannerImage'] = $media->firstWhere('id', $anilist_id)['bannerImage'];
             $anime->update([
-                'metadata' => $metadata
+                'metadata' => $metadata,
             ]);
         }
     }

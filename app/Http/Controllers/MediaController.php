@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Plank\Mediable\Facades\ImageManipulator;
 use Plank\Mediable\Facades\MediaUploader;
 use Plank\Mediable\Media;
 
 class MediaController extends Controller
 {
-
-    public function index(Request $request): \Illuminate\Pagination\LengthAwarePaginator
+    public function index(Request $request): LengthAwarePaginator
     {
         $validated = $request->validate([
             'dir' => 'sometimes|nullable|date_format:Y-m',
@@ -59,9 +60,10 @@ class MediaController extends Controller
         }
     }
 
-    public function getMonths(): \Illuminate\Support\Collection
+    public function getMonths(): Collection
     {
         $months = Media::select('directory')->distinct()->get()->pluck('directory');
+
         return $months;
     }
 

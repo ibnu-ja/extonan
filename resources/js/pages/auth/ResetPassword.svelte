@@ -1,74 +1,90 @@
+<script module lang="ts">
+    export const layout = {
+        title: 'Reset password',
+        description: 'Please enter your new password below',
+    };
+</script>
+
 <script lang="ts">
+    import { Form } from '@inertiajs/svelte';
+    import AppHead from '@/components/AppHead.svelte';
     import InputError from '@/components/InputError.svelte';
+    import PasswordInput from '@/components/PasswordInput.svelte';
     import { Button } from '@/components/ui/button';
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
-    import AuthLayout from '@/layouts/AuthLayout.svelte';
-    import type { BaseFormSnippetProps } from '@/types/forms';
-    import { Form } from '@inertiajs/svelte';
-    import { LoaderCircle } from 'lucide-svelte';
+    import { Spinner } from '@/components/ui/spinner';
+    import { update } from '@/routes/password';
 
-    interface Props {
+    let {
+        token,
+        email,
+        passwordRules,
+    }: {
         token: string;
         email: string;
-    }
-
-    let { token, email }: Props = $props();
+        passwordRules: string;
+    } = $props();
 </script>
 
-<svelte:head>
-    <title>Reset Password</title>
-</svelte:head>
+<AppHead title="Reset password" />
 
-<AuthLayout title="Reset password" description="Please enter your new password below">
-    <Form
-        method="post"
-        action={route('password.store')}
-        transform={(data) => ({ ...data, token, email })}
-        resetOnSuccess={['password', 'password_confirmation']}
-    >
-        {#snippet children({ errors, processing }: BaseFormSnippetProps)}
-            <div class="grid gap-6">
-                <div class="grid gap-2">
-                    <Label for="email">Email</Label>
-                    <Input id="email" type="email" name="email" autocomplete="email" class="mt-1 block w-full" readonly />
-                    <InputError message={errors.email} class="mt-2" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="password">Password</Label>
-                    <Input
-                        id="password"
-                        type="password"
-                        name="password"
-                        autocomplete="new-password"
-                        class="mt-1 block w-full"
-                        autofocus
-                        placeholder="Password"
-                    />
-                    <InputError message={errors.password} />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm Password</Label>
-                    <Input
-                        id="password_confirmation"
-                        type="password"
-                        name="password_confirmation"
-                        autocomplete="new-password"
-                        class="mt-1 block w-full"
-                        placeholder="Confirm password"
-                    />
-                    <InputError message={errors.password_confirmation} />
-                </div>
-
-                <Button type="submit" class="mt-4 w-full" disabled={processing}>
-                    {#if processing}
-                        <LoaderCircle class="h-4 w-4 animate-spin" />
-                    {/if}
-                    Reset password
-                </Button>
+<Form
+    {...update.form()}
+    transform={(data) => ({ ...data, token, email })}
+    resetOnSuccess={['password', 'password_confirmation']}
+>
+    {#snippet children({ errors, processing })}
+        <div class="grid gap-6">
+            <div class="grid gap-2">
+                <Label for="email">Email</Label>
+                <Input
+                    id="email"
+                    type="email"
+                    name="email"
+                    autocomplete="email"
+                    value={email}
+                    class="mt-1 block w-full"
+                    readonly
+                />
+                <InputError message={errors.email} class="mt-2" />
             </div>
-        {/snippet}
-    </Form>
-</AuthLayout>
+
+            <div class="grid gap-2">
+                <Label for="password">Password</Label>
+                <PasswordInput
+                    id="password"
+                    name="password"
+                    autocomplete="new-password"
+                    class="mt-1 block w-full"
+                    placeholder="Password"
+                    passwordrules={passwordRules}
+                />
+                <InputError message={errors.password} />
+            </div>
+
+            <div class="grid gap-2">
+                <Label for="password_confirmation">Confirm password</Label>
+                <PasswordInput
+                    id="password_confirmation"
+                    name="password_confirmation"
+                    autocomplete="new-password"
+                    class="mt-1 block w-full"
+                    placeholder="Confirm password"
+                    passwordrules={passwordRules}
+                />
+                <InputError message={errors.password_confirmation} />
+            </div>
+
+            <Button
+                type="submit"
+                class="mt-4 w-full"
+                disabled={processing}
+                data-test="reset-password-button"
+            >
+                {#if processing}<Spinner />{/if}
+                Reset password
+            </Button>
+        </div>
+    {/snippet}
+</Form>

@@ -68,27 +68,28 @@ class PostPolicy
      */
     public function publish(User $user, ?BasePost $post = null): bool
     {
-        //if post is null means it's creating and self-publish
+        // if post is null means it's creating and self-publish
         if ($post == null && $user->can('post.publish.self') || $user->can('post.publish.any')) {
             return true;
         }
-        //when editing user should only able to publish its own post
+
+        // when editing user should only able to publish its own post
         return $user->id === $post?->author_id;
     }
 
-    ///**
+    // /**
     // * Determine whether the user can restore the model.
     // */
-    //public function restore(User $user, BasePost $post): bool
-    //{
+    // public function restore(User $user, BasePost $post): bool
+    // {
     //    //
-    //}
+    // }
     //
-    ///**
+    // /**
     // * Determine whether the user can permanently delete the model.
     // */
-    //public function forceDelete(User $user, BasePost $post): bool
-    //{
+    // public function forceDelete(User $user, BasePost $post): bool
+    // {
     //    //
-    //}
+    // }
 }

@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Redirector;
@@ -30,20 +29,20 @@ class AnimeController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', except: ['index', 'show']),
-            WithDraftsMiddleware::class
+            WithDraftsMiddleware::class,
         ];
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): Application|RedirectResponse|Redirector | Response
+    public function index(Request $request): Application|RedirectResponse|Redirector|Response
     {
-        if (!$request->has('sort')) {
+        if (! $request->has('sort')) {
             $query = $request->query();
             $query['sort'] = 'title->romaji'; // your default sort key
 
-            $redirectUrl = $request->url() . '?' . http_build_query($query);
+            $redirectUrl = $request->url().'?'.http_build_query($query);
 
             return redirect($redirectUrl);
         }
@@ -61,11 +60,11 @@ class AnimeController extends Controller implements HasMiddleware
             ->allowedSorts(['title->romaji', 'created_at', 'updated_at'])
             ->paginate(14)->appends(request()->query());
 
-        return Inertia::render("Anime/Index", [
-            'anime' => fn() => $anime,
-            'canCreate' => fn() => auth()->check() && auth()->user()->can('create', Post::class),
-            'canViewUnpublished' => fn() => auth()->check() && auth()->user()->can('viewAny'),
-            'seasons' => fn() => (new AnimeSeasonsQuery())->builder()->get()->pluck('season_year'),
+        return Inertia::render('Anime/Index', [
+            'anime' => fn () => $anime,
+            'canCreate' => fn () => auth()->check() && auth()->user()->can('create', Post::class),
+            'canViewUnpublished' => fn () => auth()->check() && auth()->user()->can('viewAny'),
+            'seasons' => fn () => (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year'),
         ]);
     }
 
@@ -76,8 +75,8 @@ class AnimeController extends Controller implements HasMiddleware
     {
         Gate::authorize('create', Anime::class);
 
-        return Inertia::render("Anime/Create", [
-            'canPublish' => $request->user()->can('publish', Anime::class)
+        return Inertia::render('Anime/Create', [
+            'canPublish' => $request->user()->can('publish', Anime::class),
         ]);
     }
 
@@ -97,7 +96,7 @@ class AnimeController extends Controller implements HasMiddleware
             $request->validated()
         );
 
-        return redirect()->route('anime.index')->banner('Anime ' . ($request->boolean('is_published') ? 'published' : 'draft saved') . ' successfully.');
+        return redirect()->route('anime.index')->banner('Anime '.($request->boolean('is_published') ? 'published' : 'draft saved').' successfully.');
     }
 
     /**
@@ -108,12 +107,12 @@ class AnimeController extends Controller implements HasMiddleware
         Gate::authorize('view', $anime);
 
         return Inertia::render('Anime/Show', [
-            'anime' => fn() => $anime->load([
-                'posts' => fn(MorphMany $query) => $query->orderByEpisodeAndNativeTitle()->visible()->with(['author'])->get(),
+            'anime' => fn () => $anime->load([
+                'posts' => fn (MorphMany $query) => $query->orderByEpisodeAndNativeTitle()->visible()->with(['author'])->get(),
                 'author',
                 'publisher',
             ]),
-            'canCreateEpisode' => fn() => auth()->check() && auth()->user()->can('create', Post::class),
+            'canCreateEpisode' => fn () => auth()->check() && auth()->user()->can('create', Post::class),
         ]);
     }
 
@@ -126,9 +125,10 @@ class AnimeController extends Controller implements HasMiddleware
         if (auth()->user()->cannot('update', $anime)) {
             abort(403);
         }
+
         return Inertia::render('Anime/Create', [
             'anime' => $anime,
-            'canPublish' => auth()->user()->can('publish', $anime)
+            'canPublish' => auth()->user()->can('publish', $anime),
         ]);
     }
 

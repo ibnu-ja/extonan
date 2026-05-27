@@ -20,7 +20,7 @@ final readonly class Git
 
     public function getAppBranch(): string
     {
-        //git rev-parse --abbrev-ref HEAD
+        // git rev-parse --abbrev-ref HEAD
         return trim(
             Process::path(base_path())->run(['git', 'rev-parse', '--abbrev-ref', 'HEAD'])->output(),
         );
@@ -28,16 +28,15 @@ final readonly class Git
 
     public function getAppCommitHash(): string
     {
-        //git rev-parse --short HEAD
+        // git rev-parse --short HEAD
         return trim(
             Process::path(base_path())->run(['git', 'rev-parse', '--short', 'HEAD'])->output(),
         );
     }
 
-
     public function getRepoUrl(): ?string
     {
-        //git remote get-url origin
+        // git remote get-url origin
         $url = trim(
             Process::path(base_path())->run(['git', 'remote', 'get-url', 'origin'])->output()
         );

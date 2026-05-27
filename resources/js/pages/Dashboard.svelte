@@ -1,42 +1,44 @@
-<script lang="ts">
-    import PlaceholderPattern from '@/components/PlaceholderPatternn.svelte';
-    import AppLayout from '@/layouts/AppLayout.svelte';
-    import { inertiaNav } from '@/lib/inertia-nav';
-    import { type BreadcrumbItem } from '@/types';
-    import {Button} from "m3-svelte";
-    import { page } from '@inertiajs/svelte';
+<script module lang="ts">
+    import { dashboard } from '@/routes';
 
-    const breadcrumbs: BreadcrumbItem[] = [
-        {
-            title: 'Dashboard',
-            href: '/dashboard',
-        },
-    ];
+    export const layout = {
+        breadcrumbs: [
+            {
+                title: 'Dashboard',
+                href: dashboard(),
+            },
+        ],
+    };
 </script>
 
-<svelte:head>
-    <title>Dashboard</title>
-</svelte:head>
+<script lang="ts">
+    import AppHead from '@/components/AppHead.svelte';
+    import PlaceholderPattern from '@/components/PlaceholderPattern.svelte';
+</script>
 
-<AppLayout {breadcrumbs}>
-    <Button href="/" data-preserve-scroll="true" {@attach inertiaNav}>
-        Home
-    </Button>
-    {$page.url}
-    <div class="space-y-4 px-4 pt-4 overflow-x-auto">
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                <PlaceholderPattern class="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-            </div>
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                <PlaceholderPattern class="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-            </div>
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                <PlaceholderPattern class="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-            </div>
+<AppHead title="Dashboard" />
+
+<div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+    <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+        <div
+            class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
+        >
+            <PlaceholderPattern />
         </div>
-        <div class="relative h-[calc(100vh-21rem)] overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-            <PlaceholderPattern class="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+        <div
+            class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
+        >
+            <PlaceholderPattern />
+        </div>
+        <div
+            class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
+        >
+            <PlaceholderPattern />
         </div>
     </div>
-</AppLayout>
+    <div
+        class="relative min-h-screen flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border"
+    >
+        <PlaceholderPattern />
+    </div>
+</div>

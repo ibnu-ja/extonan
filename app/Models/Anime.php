@@ -14,7 +14,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Anime extends BasePost
 {
-    use HasTranslations, HasTranslatableSlug, HasDrafts, Searchable;
+    use HasDrafts, HasTranslatableSlug, HasTranslations, Searchable;
 
     public $table = 'anime';
 
@@ -52,7 +52,7 @@ class Anime extends BasePost
     protected function link(): Attribute
     {
         return Attribute::make(
-            get: fn() => route('anime.show', $this->attributes['id']),
+            get: fn () => route('anime.show', $this->attributes['id']),
         );
     }
 
@@ -62,9 +62,7 @@ class Anime extends BasePost
     }
 
     /**
-     * @param Builder $query
-     * @param string ...$genres
-     * @return void
+     * @param  string  ...$genres
      */
     public function scopeGenreIn(Builder $query, ...$genres): void
     {
@@ -72,9 +70,7 @@ class Anime extends BasePost
     }
 
     /**
-     * @param Builder $query
-     * @param string ...$genres
-     * @return void
+     * @param  string  ...$genres
      */
     public function scopeGenreNotIn(Builder $query, ...$genres): void
     {
@@ -82,9 +78,7 @@ class Anime extends BasePost
     }
 
     /**
-     * @param Builder $query
-     * @param string ...$tags
-     * @return void
+     * @param  string  ...$tags
      */
     public function scopeTagIn(Builder $query, ...$tags): void
     {
@@ -96,9 +90,7 @@ class Anime extends BasePost
     }
 
     /**
-     * @param Builder $query
-     * @param string ...$tags
-     * @return void
+     * @param  string  ...$tags
      */
     public function scopeTagNotIn(Builder $query, ...$tags): void
     {
@@ -111,7 +103,7 @@ class Anime extends BasePost
 
     public function scopeTitle(Builder $query, string $title): void
     {
-        $query->whereJsonContainsLocales('title', ['en', 'native', 'jp', 'id'], '%' . $title . '%', 'ilike');
+        $query->whereJsonContainsLocales('title', ['en', 'native', 'jp', 'id'], '%'.$title.'%', 'ilike');
     }
 
     public function scopeSeasonIn(Builder $query, ...$seasons): void
@@ -124,9 +116,9 @@ class Anime extends BasePost
         $query->whereNotIn(DB::raw('CONCAT(metadata->>\'season\', \' \', metadata->>\'seasonYear\')'), $seasons);
     }
 
-
     /**
      * searching title with Scout with caveat
+     *
      * @link https://github.com/spatie/laravel-query-builder/issues/147
      */
     public function scopeSearchTitle(Builder $query, string $search): void
@@ -136,7 +128,7 @@ class Anime extends BasePost
         $result = $builder->raw();
         $ids = array_column($result['hits'], 'id');
 
-        $orders = array_map(fn($id) => sprintf("id = %d desc", $id), $ids);
+        $orders = array_map(fn ($id) => sprintf('id = %d desc', $id), $ids);
         $rawOrder = implode(', ', $orders);
         $query->whereIn('id', $ids);
 

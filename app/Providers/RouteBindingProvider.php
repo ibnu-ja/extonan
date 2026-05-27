@@ -20,13 +20,13 @@ class RouteBindingProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Route::bind('mv', function(int $id): Post {
+        \Route::bind('mv', function (int $id): Post {
             return Post::current()->withoutGlobalScopes()->where('metadata->post_type', 'mv')->findOrFail($id);
         });
-        \Route::bind('album', function(int $id): Post {
+        \Route::bind('album', function (int $id): Post {
             return Post::current()->withoutGlobalScopes()->whereIn('metadata->post_type', ['album', 'single'])->findOrFail($id);
         });
-        \Route::bind('shinrai', function(int $id): Post {
+        \Route::bind('shinrai', function (int $id): Post {
             return Post::current()->withoutGlobalScopes()->shinrai()->findOrFail($id);
         });
     }

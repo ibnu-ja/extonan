@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\DB;
  */
 final readonly class AnimeSeasonsQuery
 {
-    /**
-     * @return Builder
-     */
     public function builder(): Builder
     {
         $subquery = DB::table('anime')

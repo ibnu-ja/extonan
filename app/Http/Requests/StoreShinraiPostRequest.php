@@ -30,7 +30,7 @@ class StoreShinraiPostRequest extends FormRequest
             'metadata.vgmdb_data' => 'array|nullable',
             'links' => 'array|nullable',
             'thumbnail_item' => 'nullable',
-            'is_published' => 'required|boolean'
+            'is_published' => 'required|boolean',
         ];
     }
 }

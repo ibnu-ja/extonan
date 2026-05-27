@@ -17,6 +17,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP COLLATION IF EXISTS numeric;");
+        DB::statement('DROP COLLATION IF EXISTS numeric;');
     }
 };

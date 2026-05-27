@@ -1,98 +1,105 @@
+<script module lang="ts">
+    import { edit } from '@/routes/profile';
+
+    export const layout = {
+        breadcrumbs: [
+            {
+                title: 'Profile settings',
+                href: edit(),
+            },
+        ],
+    };
+</script>
+
 <script lang="ts">
+    import { Form, page } from '@inertiajs/svelte';
+    import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
+    import AppHead from '@/components/AppHead.svelte';
     import DeleteUser from '@/components/DeleteUser.svelte';
-    import HeadingSmall from '@/components/typography/HeadingSmall.svelte';
+    import Heading from '@/components/Heading.svelte';
     import InputError from '@/components/InputError.svelte';
+    import TextLink from '@/components/TextLink.svelte';
     import { Button } from '@/components/ui/button';
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
-    import AppLayout from '@/layouts/AppLayout.svelte';
-    import SettingsLayout from '@/layouts/settings/Layout.svelte';
-    import { type BreadcrumbItem, type User } from '@/types';
-    import type { ProfileFormSnippetProps } from '@/types/forms';
-    import { Form, Link, page } from '@inertiajs/svelte';
-    import { fade } from 'svelte/transition';
+    import { send } from '@/routes/verification';
 
-    interface Props {
-        mustVerifyEmail: boolean;
-        status?: string;
-    }
-
-    let { mustVerifyEmail, status }: Props = $props();
-
-    const breadcrumbItems: BreadcrumbItem[] = [
-        {
-            title: 'Profile settings',
-            href: '/settings/profile',
-        },
-    ];
-
-    const user = $page.props.auth.user as User;
+    const user = $derived(page.props.auth.user);
 </script>
 
-<svelte:head>
-    <title>Profile Settings</title>
-</svelte:head>
+<AppHead title="Profile settings" />
 
-<AppLayout breadcrumbs={breadcrumbItems}>
-    <SettingsLayout>
-        <div class="flex flex-col space-y-6">
-            <HeadingSmall title="Profile Information" description="Update your name and email address" />
+<h1 class="sr-only">Profile settings</h1>
 
-            <Form method="patch" action={route('profile.update')} class="space-y-6">
-                {#snippet children({ errors, processing, recentlySuccessful }: ProfileFormSnippetProps)}
-                    <div class="grid gap-2">
-                        <Label for="name">Name</Label>
-                        <Input name="name" class="mt-1 block w-full" defaultValue={user.name} required autocomplete="name" placeholder="Full name" />
-                        <InputError class="mt-2" message={errors.name} />
-                    </div>
+<div class="flex flex-col space-y-6">
+    <Heading
+        variant="small"
+        title="Profile"
+        description="Update your name and email address"
+    />
 
-                    <div class="grid gap-2">
-                        <Label for="email">Email address</Label>
-                        <Input
-                            id="email"
-                            name="email"
-                            class="mt-1 block w-full"
-                            defaultValue={user.email}
-                            required
-                            autocomplete="username"
-                            placeholder="Email address"
-                        />
-                        <InputError class="mt-2" message={errors.email} />
-                    </div>
+    <Form
+        {...ProfileController.update.form()}
+        class="space-y-6"
+        options={{ preserveScroll: true }}
+    >
+        {#snippet children({ errors, processing })}
+            <div class="grid gap-2">
+                <Label for="name">Name</Label>
+                <Input
+                    id="name"
+                    name="name"
+                    class="mt-1 block w-full"
+                    value={user.name}
+                    required
+                    autocomplete="name"
+                    placeholder="Full name"
+                />
+                <InputError class="mt-2" message={errors.name} />
+            </div>
 
-                    {#if mustVerifyEmail && !user.email_verified_at}
-                        <div>
-                            <p class="-mt-4 text-sm text-muted-foreground">
-                                Your email address is unverified.
-                                <Link
-                                    href={route('verification.send')}
-                                    method="post"
-                                    as="button"
-                                    class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
-                                >
-                                    Click here to resend the verification email.
-                                </Link>
-                            </p>
+            <div class="grid gap-2">
+                <Label for="email">Email address</Label>
+                <Input
+                    id="email"
+                    type="email"
+                    name="email"
+                    class="mt-1 block w-full"
+                    value={user.email}
+                    required
+                    autocomplete="username"
+                    placeholder="Email address"
+                />
+                <InputError class="mt-2" message={errors.email} />
+            </div>
 
-                            {#if status === 'verification-link-sent'}
-                                <div class="mt-2 text-sm font-medium text-green-600">
-                                    A new verification link has been sent to your email address.
-                                </div>
-                            {/if}
+            {#if Boolean(page.props.mustVerifyEmail) && !user.email_verified_at}
+                <div>
+                    <p class="-mt-4 text-sm text-muted-foreground">
+                        Your email address is unverified.
+                        <TextLink href={send()} as="button">
+                            Click here to re-send the verification email.
+                        </TextLink>
+                    </p>
+
+                    {#if page.props.status === 'verification-link-sent'}
+                        <div class="mt-2 text-sm font-medium text-green-600">
+                            A new verification link has been sent to your email
+                            address.
                         </div>
                     {/if}
+                </div>
+            {/if}
 
-                    <div class="flex items-center gap-4">
-                        <Button type="submit" disabled={processing}>Save</Button>
+            <div class="flex items-center gap-4">
+                <Button
+                    type="submit"
+                    disabled={processing}
+                    data-test="update-profile-button">Save</Button
+                >
+            </div>
+        {/snippet}
+    </Form>
+</div>
 
-                        {#if recentlySuccessful}
-                            <p class="text-sm text-neutral-600" transition:fade={{ duration: 150 }}>Saved.</p>
-                        {/if}
-                    </div>
-                {/snippet}
-            </Form>
-        </div>
-
-        <DeleteUser />
-    </SettingsLayout>
-</AppLayout>
+<DeleteUser />

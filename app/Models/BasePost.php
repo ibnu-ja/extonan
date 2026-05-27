@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use App\Publishable;
+use App\Observers\RecordAuthorObserver;
+use App\Observers\RecordPublishDateObserver;
 use Auth;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,14 +16,14 @@ use Oddvalue\LaravelDrafts\Concerns\HasDrafts;
 use Plank\Mediable\Mediable;
 use Spatie\Sluggable\HasSlug;
 
+#[ObservedBy([RecordAuthorObserver::class, RecordPublishDateObserver::class])]
 abstract class BasePost extends Model
 {
-    use HasSlug,
-        HasDrafts,
-        Searchable,
+    use HasDrafts,
         HasFactory,
+        HasSlug,
         Mediable,
-        Publishable;
+        Searchable;
 
     /*
     |
@@ -48,7 +50,7 @@ abstract class BasePost extends Model
 
     public function can(): Attribute
     {
-        return Attribute::get(fn() => [
+        return Attribute::get(fn () => [
             'update' => Auth::check() && Auth::user()->can('update', $this),
             'publish' => Auth::check() && Auth::user()->can('publish', $this),
             'delete' => Auth::check() && Auth::user()->can('delete', $this),
@@ -81,6 +83,6 @@ abstract class BasePost extends Model
             $q->withoutDrafts();
         });
 
-        //dd($query->toRawSql());
+        // dd($query->toRawSql());
     }
 }

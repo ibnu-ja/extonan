@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Post;
@@ -11,15 +12,16 @@ use Inertia\Response;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class AlbumController extends Controller implements HasMiddleware {
+class AlbumController extends Controller implements HasMiddleware
+{
     /**
      * Get the middleware that should be assigned to the controller.
      */
     public static function middleware(): array
     {
         return [
-            //new Middleware('auth', except: ['show', 'store']),
-            WithDraftsMiddleware::class
+            // new Middleware('auth', except: ['show', 'store']),
+            WithDraftsMiddleware::class,
         ];
     }
 
@@ -35,10 +37,11 @@ class AlbumController extends Controller implements HasMiddleware {
             $albums = $albums->paginate($perPage);
         }
         $albums->appends(request()->query());
+
         return Inertia::render('Album/Index', [
-            'albums' => fn() => $albums,
-            'canCreate' => fn() => auth()->check() && auth()->user()->can('create', Post::class),
-            'canViewUnpublished' => fn() => auth()->check() && auth()->user()->can('viewAny')
+            'albums' => fn () => $albums,
+            'canCreate' => fn () => auth()->check() && auth()->user()->can('create', Post::class),
+            'canViewUnpublished' => fn () => auth()->check() && auth()->user()->can('viewAny'),
         ]);
     }
 
@@ -48,14 +51,14 @@ class AlbumController extends Controller implements HasMiddleware {
 
         return Inertia::render('Album/Show', [
             'album' => $album->load('author', 'links'),
-            'canPublish' => fn() => auth()->check() && auth()->user()->can('publish', $album),
+            'canPublish' => fn () => auth()->check() && auth()->user()->can('publish', $album),
         ]);
     }
 
     public function create(Request $request): RedirectResponse
     {
         return redirect()->route('shinrai.create', [
-            'type' => 'album'
+            'type' => 'album',
         ]);
     }
 

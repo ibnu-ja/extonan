@@ -1,18 +1,33 @@
-import { createInertiaApp, type ResolvedComponent } from '@inertiajs/svelte';
-import { hydrate, mount } from 'svelte';
-import '../css/app.css';
-import './bootstrap';
+import { createInertiaApp } from '@inertiajs/svelte';
+import AppLayout from '@/layouts/AppLayout.svelte';
+import AuthLayout from '@/layouts/AuthLayout.svelte';
+import SettingsLayout from '@/layouts/settings/Layout.svelte';
+import { initializeFlashToast } from '@/lib/flash-toast';
+import { initializeTheme } from '@/lib/theme.svelte';
+
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
-    resolve: (name: string) => {
-        const pages = import.meta.glob<ResolvedComponent>('./pages/**/*.svelte', { eager: true });
-        return pages[`./pages/${name}.svelte`];
-    },
-    setup({ el, App, props }) {
-        if (el && el.dataset.serverRendered === 'true') {
-            hydrate(App, { target: el, props });
-        } else if (el) {
-            mount(App, { target: el, props });
+    title: (title) => (title ? `${title} - ${appName}` : appName),
+    layout: (name) => {
+        switch (true) {
+            case name === 'Welcome':
+                return null;
+            case name.startsWith('auth/'):
+                return AuthLayout;
+            case name.startsWith('settings/'):
+                return [AppLayout, SettingsLayout];
+            default:
+                return AppLayout;
         }
     },
+    progress: {
+        color: '#4B5563',
+    },
 });
+
+// This will set light / dark mode on page load...
+initializeTheme();
+
+// This will listen for flash toast data from the server...
+initializeFlashToast();

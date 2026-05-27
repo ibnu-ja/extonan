@@ -1,278 +1,173 @@
-/*@import 'tailwindcss';*/
-/*@import 'tw-animate-css';*/
+@import 'tailwindcss';
 
-/*@source "../views";*/
-/*@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views!*.blade.php';*/
+@import 'tw-animate-css';
 
-/*@custom-variant dark (&:is(.dark *));*/
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
 
-/*@theme inline {*/
-/*    --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';*/
+@custom-variant dark (&:is(.dark *));
 
-/*    --radius-lg: var(--radius);*/
-/*    --radius-md: calc(var(--radius) - 2px);*/
-/*    --radius-sm: calc(var(--radius) - 4px);*/
+@theme inline {
+    --font-sans:
+        Instrument Sans, ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
 
-/*    --color-background: var(--background);*/
-/*    --color-foreground: var(--foreground);*/
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
 
-/*    --color-card: var(--card);*/
-/*    --color-card-foreground: var(--card-foreground);*/
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
 
-/*    --color-popover: var(--popover);*/
-/*    --color-popover-foreground: var(--popover-foreground);*/
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
 
-/*    --color-primary: var(--primary);*/
-/*    --color-primary-foreground: var(--primary-foreground);*/
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
 
-/*    --color-secondary: var(--secondary);*/
-/*    --color-secondary-foreground: var(--secondary-foreground);*/
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
 
-/*    --color-muted: var(--muted);*/
-/*    --color-muted-foreground: var(--muted-foreground);*/
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
 
-/*    --color-accent: var(--accent);*/
-/*    --color-accent-foreground: var(--accent-foreground);*/
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
 
-/*    --color-destructive: var(--destructive);*/
-/*    --color-destructive-foreground: var(--destructive-foreground);*/
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
 
-/*    --color-border: var(--border);*/
-/*    --color-input: var(--input);*/
-/*    --color-ring: var(--ring);*/
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
 
-/*    --color-chart-1: var(--chart-1);*/
-/*    --color-chart-2: var(--chart-2);*/
-/*    --color-chart-3: var(--chart-3);*/
-/*    --color-chart-4: var(--chart-4);*/
-/*    --color-chart-5: var(--chart-5);*/
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
 
-/*    --color-sidebar: var(--sidebar-background);*/
-/*    --color-sidebar-foreground: var(--sidebar-foreground);*/
-/*    --color-sidebar-primary: var(--sidebar-primary);*/
-/*    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);*/
-/*    --color-sidebar-accent: var(--sidebar-accent);*/
-/*    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);*/
-/*    --color-sidebar-border: var(--sidebar-border);*/
-/*    --color-sidebar-ring: var(--sidebar-ring);*/
-/*}*/
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
 
-/*!**/
-/*  The default border color has changed to `currentColor` in Tailwind CSS v4,*/
-/*  so we've added these compatibility styles to make sure everything still*/
-/*  looks the same as it did with Tailwind CSS v3.*/
-
-/*  If we ever want to remove these styles, we need to add an explicit border*/
-/*  color utility to any element that depends on these defaults.*/
-/**!*/
-/*@layer base {*/
-/*    *,*/
-/*    ::after,*/
-/*    ::before,*/
-/*    ::backdrop,*/
-/*    ::file-selector-button {*/
-/*        border-color: var(--color-gray-200, currentColor);*/
-/*    }*/
-/*}*/
-
-/*@layer utilities {*/
-/*    body,*/
-/*    html {*/
-/*        --font-sans:*/
-/*            'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';*/
-/*    }*/
-/*}*/
-
-/*@layer base {*/
-/*    :root {*/
-/*        --background: hsl(0 0% 100%);*/
-/*        --foreground: hsl(0 0% 3.9%);*/
-/*        --card: hsl(0 0% 100%);*/
-/*        --card-foreground: hsl(0 0% 3.9%);*/
-/*        --popover: hsl(0 0% 100%);*/
-/*        --popover-foreground: hsl(0 0% 3.9%);*/
-/*        --primary: hsl(0 0% 9%);*/
-/*        --primary-foreground: hsl(0 0% 98%);*/
-/*        --secondary: hsl(0 0% 92.1%);*/
-/*        --secondary-foreground: hsl(0 0% 9%);*/
-/*        --muted: hsl(0 0% 96.1%);*/
-/*        --muted-foreground: hsl(0 0% 45.1%);*/
-/*        --accent: hsl(0 0% 96.1%);*/
-/*        --accent-foreground: hsl(0 0% 9%);*/
-/*        --destructive: hsl(0 84.2% 60.2%);*/
-/*        --destructive-foreground: hsl(0 0% 98%);*/
-/*        --border: hsl(0 0% 92.8%);*/
-/*        --input: hsl(0 0% 89.8%);*/
-/*        --ring: hsl(0 0% 3.9%);*/
-/*        --chart-1: hsl(12 76% 61%);*/
-/*        --chart-2: hsl(173 58% 39%);*/
-/*        --chart-3: hsl(197 37% 24%);*/
-/*        --chart-4: hsl(43 74% 66%);*/
-/*        --chart-5: hsl(27 87% 67%);*/
-/*        --radius: 0.5rem;*/
-/*        --sidebar-background: hsl(0 0% 98%);*/
-/*        --sidebar-foreground: hsl(240 5.3% 26.1%);*/
-/*        --sidebar-primary: hsl(0 0% 10%);*/
-/*        --sidebar-primary-foreground: hsl(0 0% 98%);*/
-/*        --sidebar-accent: hsl(0 0% 94%);*/
-/*        --sidebar-accent-foreground: hsl(0 0% 30%);*/
-/*        --sidebar-border: hsl(0 0% 91%);*/
-/*        --sidebar-ring: hsl(217.2 91.2% 59.8%);*/
-/*        --sidebar: hsl(0 0% 98%);*/
-/*    }*/
-
-/*    .dark {*/
-/*        --background: hsl(0 0% 3.9%);*/
-/*        --foreground: hsl(0 0% 98%);*/
-/*        --card: hsl(0 0% 3.9%);*/
-/*        --card-foreground: hsl(0 0% 98%);*/
-/*        --popover: hsl(0 0% 3.9%);*/
-/*        --popover-foreground: hsl(0 0% 98%);*/
-/*        --primary: hsl(0 0% 98%);*/
-/*        --primary-foreground: hsl(0 0% 9%);*/
-/*        --secondary: hsl(0 0% 14.9%);*/
-/*        --secondary-foreground: hsl(0 0% 98%);*/
-/*        --muted: hsl(0 0% 16.08%);*/
-/*        --muted-foreground: hsl(0 0% 63.9%);*/
-/*        --accent: hsl(0 0% 14.9%);*/
-/*        --accent-foreground: hsl(0 0% 98%);*/
-/*        --destructive: hsl(0 84% 60%);*/
-/*        --destructive-foreground: hsl(0 0% 98%);*/
-/*        --border: hsl(0 0% 14.9%);*/
-/*        --input: hsl(0 0% 14.9%);*/
-/*        --ring: hsl(0 0% 83.1%);*/
-/*        --chart-1: hsl(220 70% 50%);*/
-/*        --chart-2: hsl(160 60% 45%);*/
-/*        --chart-3: hsl(30 80% 55%);*/
-/*        --chart-4: hsl(280 65% 60%);*/
-/*        --chart-5: hsl(340 75% 55%);*/
-/*        --sidebar-background: hsl(0 0% 7%);*/
-/*        --sidebar-foreground: hsl(0 0% 95.9%);*/
-/*        --sidebar-primary: hsl(360, 100%, 100%);*/
-/*        --sidebar-primary-foreground: hsl(0 0% 100%);*/
-/*        --sidebar-accent: hsl(0 0% 15.9%);*/
-/*        --sidebar-accent-foreground: hsl(240 4.8% 95.9%);*/
-/*        --sidebar-border: hsl(0 0% 15.9%);*/
-/*        --sidebar-ring: hsl(217.2 91.2% 59.8%);*/
-/*        --sidebar: hsl(240 5.9% 10%);*/
-/*    }*/
-/*}*/
-
-/*@layer base {*/
-/*    * {*/
-/*        @apply border-border outline-ring/50;*/
-/*    }*/
-/*    body {*/
-/*        @apply bg-background text-foreground;*/
-/*    }*/
-/*}*/
-@import "@fontsource-variable/google-sans-flex/opsz.css";
-
-@import "m3-svelte/etc/styles.css";
-@import "m3-svelte/etc/recommended-styles.css";
-@function --m3-density(--size) {
-    result: var(--size);
-}
-:root {
-    color-scheme: light dark;
-}
-
-/* 1. Use a more-intuitive box-sizing model */
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-
-/* 2. Remove default margin */
-*:not(dialog) {
-    margin: 0;
-}
-
-/* 3. Enable keyword animations */
-@media (prefers-reduced-motion: no-preference) {
-    html {
-        interpolate-size: allow-keywords;
-    }
-}
-
-body {
-    /* 4. Add accessible line-height */
-    line-height: 1.5;
-    /* 5. Improve text rendering */
-    -webkit-font-smoothing: antialiased;
-}
-
-/* 6. Improve media defaults */
-img, picture, video, canvas, svg {
-    display: block;
-    max-width: 100%;
-}
-
-/* 7. Inherit fonts for form controls */
-input, button, textarea, select {
-    font: inherit;
-}
-
-/* 8. Avoid text overflows */
-p, h1, h2, h3, h4, h5, h6 {
-    overflow-wrap: break-word;
-}
-
-/* 9. Improve line wrapping */
-p {
-    text-wrap: pretty;
-}
-h1, h2, h3, h4, h5, h6 {
-    text-wrap: balance;
+    --color-sidebar: var(--sidebar-background);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
 }
 
 /*
-  10. Create a root stacking context
-*/
-#root, #__next {
-    isolation: isolate;
-}
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
 
-@layer tokens {
-    :root {
-        --m3c-surface: light-dark(#fdf7fe, #0f0d12);
-        --m3c-surface-container-lowest: light-dark(#fff, #000);
-        --m3c-surface-container-low: light-dark(#f8f1fa, #141218);
-        --m3c-surface-container: light-dark(#f2ecf5, #1b181f);
-        --m3c-surface-container-high: light-dark(#ece6f0, #211e26);
-        --m3c-surface-container-highest: light-dark(#e7e0ec, #27242d);
-        --m3c-on-surface: light-dark(#34313a, #eae3ef);
-        --m3c-on-surface-variant: light-dark(#615d67, #afa9b4);
-        --m3c-outline: light-dark(#7e7983, #78737e);
-        --m3c-outline-variant: light-dark(#b6b0bb, #4a4650);
-        --m3c-inverse-surface: light-dark(#0f0d12, #fdf7fe);
-        --m3c-inverse-on-surface: light-dark(#a09ba1, #575459);
-        --m3c-primary: light-dark(#655789, #cec0ec);
-        --m3c-on-primary: light-dark(#fdf7ff, #453a5f);
-        --m3c-primary-container: light-dark(#d2c0f9, #574c72);
-        --m3c-on-primary-container: light-dark(#483a6a, #eadeff);
-        --m3c-inverse-primary: light-dark(#d2c0f9, #64597f);
-        --m3c-secondary: light-dark(#635c71, #ccc2db);
-        --m3c-on-secondary: light-dark(#fdf7ff, #433d51);
-        --m3c-secondary-container: light-dark(#e8def8, #3e384c);
-        --m3c-on-secondary-container: light-dark(#554e63, #c4bbd4);
-        --m3c-tertiary: light-dark(#7c5270, #ffcfee);
-        --m3c-on-tertiary: light-dark(#fff7f9, #69415f);
-        --m3c-tertiary-container: #f4bfe2;
-        --m3c-on-tertiary-container: #603955;
-        --m3c-error: light-dark(#a8364b, #f97386);
-        --m3c-on-error: light-dark(#fff7f7, #490013);
-        --m3c-error-container: light-dark(#f97386, #871c34);
-        --m3c-on-error-container: light-dark(#6e0523, #ff97a3);
-        --m3c-shadow: #000;
-        --m3c-scrim: #000;
-        --m3c-on-on-primary: light-dark(#655788, #cebfec);
-        --m3c-primary-container-subtle: light-dark(#e2d3ff, #302649);
-        --m3c-on-primary-container-subtle: light-dark(#534575, #b2a4cf);
-        --m3c-secondary-container-subtle: light-dark(#e0d6ef, #2f293c);
-        --m3c-on-secondary-container-subtle: light-dark(#50495e, #b0a7bf);
-        --m3c-tertiary-container-subtle: light-dark(#ffcbed, #43203b);
-        --m3c-on-tertiary-container-subtle: light-dark(#67405d, #ce9cbe);
-        --m3c-error-container-subtle: light-dark(#ffced2, #5f001c);
-        --m3c-on-error-container-subtle: light-dark(#8f2339, #ff8796);
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
     }
 }
+
+@layer utilities {
+    body,
+    html {
+        --font-sans:
+            'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+            'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+            'Noto Color Emoji';
+    }
+}
+
+:root {
+    --background: hsl(0 0% 100%);
+    --foreground: hsl(0 0% 3.9%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(0 0% 3.9%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(0 0% 3.9%);
+    --primary: hsl(0 0% 9%);
+    --primary-foreground: hsl(0 0% 98%);
+    --secondary: hsl(0 0% 92.1%);
+    --secondary-foreground: hsl(0 0% 9%);
+    --muted: hsl(0 0% 96.1%);
+    --muted-foreground: hsl(0 0% 45.1%);
+    --accent: hsl(0 0% 96.1%);
+    --accent-foreground: hsl(0 0% 9%);
+    --destructive: hsl(0 84.2% 60.2%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(0 0% 92.8%);
+    --input: hsl(0 0% 89.8%);
+    --ring: hsl(0 0% 3.9%);
+    --chart-1: hsl(12 76% 61%);
+    --chart-2: hsl(173 58% 39%);
+    --chart-3: hsl(197 37% 24%);
+    --chart-4: hsl(43 74% 66%);
+    --chart-5: hsl(27 87% 67%);
+    --radius: 0.5rem;
+    --sidebar-background: hsl(0 0% 98%);
+    --sidebar-foreground: hsl(240 5.3% 26.1%);
+    --sidebar-primary: hsl(0 0% 10%);
+    --sidebar-primary-foreground: hsl(0 0% 98%);
+    --sidebar-accent: hsl(0 0% 94%);
+    --sidebar-accent-foreground: hsl(0 0% 30%);
+    --sidebar-border: hsl(0 0% 91%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+    --sidebar: hsl(0 0% 98%);
+}
+
+.dark {
+    --background: hsl(0 0% 3.9%);
+    --foreground: hsl(0 0% 98%);
+    --card: hsl(0 0% 3.9%);
+    --card-foreground: hsl(0 0% 98%);
+    --popover: hsl(0 0% 3.9%);
+    --popover-foreground: hsl(0 0% 98%);
+    --primary: hsl(0 0% 98%);
+    --primary-foreground: hsl(0 0% 9%);
+    --secondary: hsl(0 0% 14.9%);
+    --secondary-foreground: hsl(0 0% 98%);
+    --muted: hsl(0 0% 16.08%);
+    --muted-foreground: hsl(0 0% 63.9%);
+    --accent: hsl(0 0% 14.9%);
+    --accent-foreground: hsl(0 0% 98%);
+    --destructive: hsl(0 84% 60%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(0 0% 14.9%);
+    --input: hsl(0 0% 14.9%);
+    --ring: hsl(0 0% 83.1%);
+    --chart-1: hsl(220 70% 50%);
+    --chart-2: hsl(160 60% 45%);
+    --chart-3: hsl(30 80% 55%);
+    --chart-4: hsl(280 65% 60%);
+    --chart-5: hsl(340 75% 55%);
+    --sidebar-background: hsl(0 0% 7%);
+    --sidebar-foreground: hsl(0 0% 95.9%);
+    --sidebar-primary: hsl(360, 100%, 100%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(0 0% 15.9%);
+    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-border: hsl(0 0% 15.9%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+    --sidebar: hsl(240 5.9% 10%);
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+

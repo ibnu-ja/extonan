@@ -49,7 +49,7 @@
                     {@attach inertiaNav}
                     variant="auto"
                     href={normalizePath(path)}
-                    selected={normalizePath(path) === normalizePath($page.url)}
+                    selected={normalizePath(path) === normalizePath($page.url.pathname)}
                     {icon}
                     text={label}
                 />
