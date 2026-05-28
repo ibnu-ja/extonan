@@ -12,7 +12,14 @@
         children: Snippet;
     }
 
-    let { href, tabindex, method, as, class: className, children }: Props = $props();
+    let {
+        href,
+        tabindex,
+        method,
+        as,
+        class: className,
+        children,
+    }: Props = $props();
 </script>
 
 <Link

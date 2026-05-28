@@ -1,6 +1,10 @@
 <script lang="ts">
-    import type { Snippet } from "svelte";
-    import type { ButtonAttrs, DivAttrs, AnchorAttrs } from "../misc/typing-utils";
+    import type { Snippet } from 'svelte';
+    import type {
+        ButtonAttrs,
+        DivAttrs,
+        AnchorAttrs,
+    } from '../misc/typing-utils';
 
     type ActionProps = ButtonAttrs | DivAttrs | AnchorAttrs;
 
@@ -13,7 +17,7 @@
         supporting,
         ...extra
     }: {
-        variant: "elevated" | "filled" | "outlined";
+        variant: 'elevated' | 'filled' | 'outlined';
         children?: Snippet;
         image?: {
             src: string;
@@ -28,7 +32,12 @@
 {#if extra.onclick}
     <button type="button" class="m3-container {variant} m3-layer" {...extra}>
         {#if image}
-            <img src={image.src} alt={image.alt} loading="lazy" class="card-image"/>
+            <img
+                src={image.src}
+                alt={image.alt}
+                loading="lazy"
+                class="card-image"
+            />
         {/if}
         <div class="card-content">
             {#if headline}
@@ -48,7 +57,12 @@
 {:else if extra.href}
     <a class="m3-container {variant} m3-layer" {...extra}>
         {#if image}
-            <img src={image.src} alt={image.alt} loading="lazy" class="card-image"/>
+            <img
+                src={image.src}
+                alt={image.alt}
+                loading="lazy"
+                class="card-image"
+            />
         {/if}
         <div class="card-content">
             {#if headline}
@@ -68,7 +82,12 @@
 {:else}
     <div class="m3-container {variant}" {...extra}>
         {#if image}
-            <img src={image.src} alt={image.alt} loading="lazy" class="card-image"/>
+            <img
+                src={image.src}
+                alt={image.alt}
+                loading="lazy"
+                class="card-image"
+            />
         {/if}
         <div class="card-content">
             {#if headline}
@@ -171,7 +190,7 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        padding: 0.25rem 0.75rem 0.75rem 0.75rem ;
+        padding: 0.25rem 0.75rem 0.75rem 0.75rem;
     }
 
     .headline {

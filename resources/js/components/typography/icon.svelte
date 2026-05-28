@@ -9,7 +9,13 @@
         strokeWidth?: number | string;
     }
 
-    let { name, class: className, size = 16, color, strokeWidth = 2 }: Props = $props();
+    let {
+        name,
+        class: className,
+        size = 16,
+        color,
+        strokeWidth = 2,
+    }: Props = $props();
 
     const Component = $derived(() => {
         const iconName = name.charAt(0).toUpperCase() + name.slice(1);

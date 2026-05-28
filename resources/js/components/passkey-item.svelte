@@ -83,9 +83,7 @@
             <DialogFooter>
                 <DialogClose>
                     {#snippet child({ props })}
-                        <Button variant="secondary" {...props}>
-                            Cancel
-                        </Button>
+                        <Button variant="secondary" {...props}>Cancel</Button>
                     {/snippet}
                 </DialogClose>
                 <Button
