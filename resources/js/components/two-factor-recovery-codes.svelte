@@ -14,7 +14,7 @@
         CardHeader,
         CardTitle,
     } from '@/components/ui/card';
-    import { twoFactorAuthState } from '@/lib/twoFactorAuth.svelte';
+    import { twoFactorAuthState } from '@/lib/two-factor-auth.svelte';
     import { regenerateRecoveryCodes } from '@/routes/two-factor';
 
     const twoFactorAuth = twoFactorAuthState();

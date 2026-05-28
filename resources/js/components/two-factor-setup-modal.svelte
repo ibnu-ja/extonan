@@ -20,7 +20,7 @@
     } from '@/components/ui/input-otp';
     import { Spinner } from '@/components/ui/spinner';
     import { themeState } from '@/lib/theme.svelte';
-    import { twoFactorAuthState } from '@/lib/twoFactorAuth.svelte';
+    import { twoFactorAuthState } from '@/lib/two-factor-auth.svelte';
     import { confirm } from '@/routes/two-factor';
     import type { TwoFactorConfigContent } from '@/types';
 

@@ -4,7 +4,7 @@
 	import Disc3 from 'lucide-svelte/icons/disc-3';
 	import Film from 'lucide-svelte/icons/film';
 	import House from 'lucide-svelte/icons/house';
-	import { currentUrlState } from '@/lib/currentUrl.svelte';
+	import { currentUrlState } from '@/lib/current-url.svelte';
 	import { toUrl } from '@/lib/utils';
 	import { home } from '@/routes';
 	import { index as album } from '@/routes/album';

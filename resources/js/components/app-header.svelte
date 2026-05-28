@@ -39,7 +39,7 @@
         TooltipTrigger,
     } from '@/components/ui/tooltip';
     import UserMenuContent from '@/components/user-menu-content.svelte';
-    import { currentUrlState } from '@/lib/currentUrl.svelte';
+    import { currentUrlState } from '@/lib/current-url.svelte';
     import { getInitials } from '@/lib/initials';
     import { toUrl } from '@/lib/utils';
     import { dashboard } from '@/routes';

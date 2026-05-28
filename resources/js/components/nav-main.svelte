@@ -3,7 +3,7 @@
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import * as Collapsible from '@/components/ui/collapsible/index.js';
 	import * as Sidebar from '@/components/ui/sidebar/index.js';
-	import { currentUrlState } from '@/lib/currentUrl.svelte';
+	import { currentUrlState } from '@/lib/current-url.svelte';
 	import { toUrl } from '@/lib/utils';
 
 	let {

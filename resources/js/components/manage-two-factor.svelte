@@ -6,7 +6,7 @@
     import TwoFactorRecoveryCodes from '@/components/two-factor-recovery-codes.svelte';
     import TwoFactorSetupModal from '@/components/two-factor-setup-modal.svelte';
     import { Button } from '@/components/ui/button';
-    import { twoFactorAuthState } from '@/lib/twoFactorAuth.svelte';
+    import { twoFactorAuthState } from '@/lib/two-factor-auth.svelte';
     import { disable, enable } from '@/routes/two-factor';
 
     export type Props = {
