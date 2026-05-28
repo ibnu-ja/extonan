@@ -1,13 +1,13 @@
 <script lang="ts">
     import { Form } from '@inertiajs/svelte';
     import { fade } from 'svelte/transition';
-    import InputError from '@/components/InputError.svelte';
-    import HeadingSmall from '@/components/typography/HeadingSmall.svelte';
+    import InputError from '@/components/input-error.svelte';
+    import HeadingSmall from '@/components/typography/heading-small.svelte';
     import { Button } from '@/components/ui/button';
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
-    import AppLayout from '@/layouts/AppLayout.svelte';
-    import SettingsLayout from '@/layouts/settings/Layout.svelte';
+    import AppLayout from '@/layouts/app-layout.svelte';
+    import SettingsLayout from '@/layouts/settings/layout.svelte';
     import type {BreadcrumbItem} from '@/types';
 
     const breadcrumbItems: BreadcrumbItem[] = [

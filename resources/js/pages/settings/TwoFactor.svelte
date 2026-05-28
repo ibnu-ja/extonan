@@ -2,13 +2,13 @@
     import { Form } from '@inertiajs/svelte';
     import { ShieldBan, ShieldCheck } from 'lucide-svelte';
     import { onDestroy } from 'svelte';
-    import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.svelte';
-    import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.svelte';
-    import HeadingSmall from '@/components/typography/HeadingSmall.svelte';
+    import TwoFactorRecoveryCodes from '@/components/two-factor-recovery-codes.svelte';
+    import TwoFactorSetupModal from '@/components/two-factor-setup-modal.svelte';
+    import HeadingSmall from '@/components/typography/heading-small.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
-    import AppLayout from '@/layouts/AppLayout.svelte';
-    import SettingsLayout from '@/layouts/settings/Layout.svelte';
+    import AppLayout from '@/layouts/app-layout.svelte';
+    import SettingsLayout from '@/layouts/settings/layout.svelte';
     import { createTwoFactorAuth } from '@/lib/two-factor-auth.svelte';
     import type { BreadcrumbItem } from '@/types';
 

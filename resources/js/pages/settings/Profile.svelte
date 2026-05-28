@@ -14,11 +14,11 @@
 <script lang="ts">
     import { Form, page } from '@inertiajs/svelte';
     import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-    import AppHead from '@/components/AppHead.svelte';
-    import DeleteUser from '@/components/DeleteUser.svelte';
-    import Heading from '@/components/Heading.svelte';
-    import InputError from '@/components/InputError.svelte';
-    import TextLink from '@/components/TextLink.svelte';
+    import AppHead from '@/components/app-head.svelte';
+    import DeleteUser from '@/components/delete-user.svelte';
+    import Heading from '@/components/heading.svelte';
+    import InputError from '@/components/input-error.svelte';
+    import TextLink from '@/components/text-link.svelte';
     import { Button } from '@/components/ui/button';
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';

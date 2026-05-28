@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\AnimeController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MVController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');

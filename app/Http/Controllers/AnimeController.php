@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\Anime\AnimeAZResponse;
+use App\Data\Anime\AnimeFormData;
+use App\Data\Anime\AnimeIndexResponse;
+use App\Data\Anime\AnimeListItemData;
+use App\Data\Anime\AnimeShowResponse;
+use App\Data\EpisodeSummaryData;
+use App\Data\PaginationData;
 use App\Http\Requests\StoreAnimeRequest;
 use App\Models\Anime;
 use App\Models\Post;
@@ -14,17 +21,16 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
+use Spatie\LaravelData\DataCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class AnimeController extends Controller implements HasMiddleware
 {
-    /**
-     * Get the middleware that should be assigned to the controller.
-     */
     public static function middleware(): array
     {
         return [
@@ -33,22 +39,20 @@ class AnimeController extends Controller implements HasMiddleware
         ];
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request): Application|RedirectResponse|Redirector|Response
     {
         if (! $request->has('sort')) {
             $query = $request->query();
-            $query['sort'] = 'title->romaji'; // your default sort key
+            $query['sort'] = 'title->romaji';
 
             $redirectUrl = $request->url().'?'.http_build_query($query);
 
             return redirect($redirectUrl);
         }
-        // $perPage = $request->integer('perPage', 15);
 
-        $anime = QueryBuilder::for(Anime::visible())->allowedFilters([
+        $user = Auth::user();
+
+        $paginator = QueryBuilder::for(Anime::visible())->allowedFilters(
             AllowedFilter::scope('season_in'),
             AllowedFilter::scope('season_not_in'),
             AllowedFilter::scope('tag_in'),
@@ -56,69 +60,74 @@ class AnimeController extends Controller implements HasMiddleware
             AllowedFilter::scope('genre_in'),
             AllowedFilter::scope('genre_not_in'),
             AllowedFilter::scope('title', 'searchTitle'),
-        ])
-            ->allowedSorts(['title->romaji', 'created_at', 'updated_at'])
+        )
+            ->allowedSorts('title->romaji', 'created_at', 'updated_at')
             ->paginate(14)->appends(request()->query());
 
-        return Inertia::render('Anime/Index', [
-            'anime' => fn () => $anime,
-            'canCreate' => fn () => auth()->check() && auth()->user()->can('create', Post::class),
-            'canViewUnpublished' => fn () => auth()->check() && auth()->user()->can('viewAny'),
-            'seasons' => fn () => (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year'),
-        ]);
+        $items = collect($paginator->items())
+            ->map(fn (Anime $a) => AnimeListItemData::fromModel($a, $user));
+
+        return Inertia::render('anime/Index', new AnimeIndexResponse(
+            items: new DataCollection(AnimeListItemData::class, $items),
+            pagination: new PaginationData(
+                currentPage: $paginator->currentPage(),
+                lastPage: $paginator->lastPage(),
+                perPage: $paginator->perPage(),
+                total: $paginator->total(),
+                links: $paginator->linkCollection()->toArray(),
+            ),
+            seasons: (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray(),
+            canCreate: auth()->check() && auth()->user()?->can('create', Post::class),
+        ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $request): Response
     {
         Gate::authorize('create', Anime::class);
 
-        return Inertia::render('Anime/Create', [
-            'canPublish' => $request->user()->can('publish', Anime::class),
-        ]);
+        return Inertia::render('anime/Create', new AnimeFormData(
+            id: null,
+            title: [],
+            description: [],
+            anilistId: null,
+            metadata: null,
+            isPublished: false,
+            canPublish: $request->user()->can('publish', Anime::class),
+        ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreAnimeRequest $request)
     {
-        // if user wants to publish but does not have capability to publish
-        // or user cannot create
         Gate::authorize('create', Anime::class);
         if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class)) {
             abort(403);
         }
 
-        Anime::create(
-            $request->validated()
-        );
+        Anime::create($request->validated());
 
         return redirect()->route('anime.index')->banner('Anime '.($request->boolean('is_published') ? 'published' : 'draft saved').' successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Anime $anime)
     {
         Gate::authorize('view', $anime);
 
-        return Inertia::render('Anime/Show', [
-            'anime' => fn () => $anime->load([
-                'posts' => fn (MorphMany $query) => $query->orderByEpisodeAndNativeTitle()->visible()->with(['author'])->get(),
-                'author',
-                'publisher',
-            ]),
-            'canCreateEpisode' => fn () => auth()->check() && auth()->user()->can('create', Post::class),
+        $user = Auth::user();
+        $anime->load([
+            'posts' => fn (MorphMany $query) => $query->orderByEpisodeAndNativeTitle()->visible()->with(['author'])->get(),
+            'author',
+            'publisher',
         ]);
+
+        return Inertia::render('anime/Show', new AnimeShowResponse(
+            anime: AnimeListItemData::fromModel($anime, $user),
+            episodes: new DataCollection(EpisodeSummaryData::class, $anime->posts->map(
+                fn ($post) => EpisodeSummaryData::fromModel($post, $user)
+            )),
+            canCreateEpisode: auth()->check() && auth()->user()?->can('create', Post::class),
+        ));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Anime $anime)
     {
         Gate::authorize('update', $anime);
@@ -126,15 +135,11 @@ class AnimeController extends Controller implements HasMiddleware
             abort(403);
         }
 
-        return Inertia::render('Anime/Create', [
-            'anime' => $anime,
-            'canPublish' => auth()->user()->can('publish', $anime),
+        return Inertia::render('anime/Create', [
+            'anime' => AnimeFormData::fromModel($anime, auth()->user()->can('publish', $anime)),
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(StoreAnimeRequest $request, Anime $anime)
     {
         Gate::authorize('update', $anime);
@@ -147,14 +152,26 @@ class AnimeController extends Controller implements HasMiddleware
         return redirect()->route('anime.show', $anime)->banner('Anime updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Anime $anime)
     {
         Gate::authorize('delete', $anime);
         $anime->delete();
 
         return redirect()->route('anime.index')->banner('Anime successfully deleted.');
+    }
+
+    public function az(): Response
+    {
+        $user = Auth::user();
+
+        $anime = Anime::visible()
+            ->orderBy('title->romaji')
+            ->get()
+            ->map(fn (Anime $a) => AnimeListItemData::fromModel($a, $user));
+
+        return Inertia::render('anime/AZ', new AnimeAZResponse(
+            items: new DataCollection(AnimeListItemData::class, $anime),
+            canCreate: auth()->check() && auth()->user()?->can('create', Post::class),
+        ));
     }
 }

@@ -1,0 +1,55 @@
+<script lang="ts">
+    import { Link } from '@inertiajs/svelte';
+    import LogOut from 'lucide-svelte/icons/log-out';
+    import Settings from 'lucide-svelte/icons/settings';
+    import type { Snippet } from 'svelte';
+    import {
+        DropdownMenuGroup,
+        DropdownMenuItem,
+        DropdownMenuLabel,
+        DropdownMenuSeparator,
+    } from '@/components/ui/dropdown-menu';
+    import UserInfo from '@/components/user-info.svelte';
+    import { toUrl } from '@/lib/utils';
+    import { logout } from '@/routes';
+    import { edit } from '@/routes/profile';
+    import type { User } from '@/types';
+
+    let {
+        user,
+        children,
+    }: {
+        user: User;
+        children?: Snippet;
+    } = $props();
+</script>
+
+<DropdownMenuLabel class="p-0 font-normal">
+    <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+        <UserInfo {user} showEmail={true} />
+    </div>
+</DropdownMenuLabel>
+<DropdownMenuSeparator />
+{#if children}
+    {@render children?.()}
+    <DropdownMenuSeparator />
+{/if}
+<DropdownMenuGroup>
+    <DropdownMenuItem>
+        {#snippet child({ props })}
+            <Link {...props} href={toUrl(edit())} prefetch>
+                <Settings class="mr-2 h-4 w-4" />
+                Settings
+            </Link>
+        {/snippet}
+    </DropdownMenuItem>
+</DropdownMenuGroup>
+<DropdownMenuSeparator />
+<DropdownMenuItem>
+    {#snippet child({ props })}
+        <Link {...props} href={logout()} as="button">
+            <LogOut class="mr-2 h-4 w-4" />
+            Log out
+        </Link>
+    {/snippet}
+</DropdownMenuItem>

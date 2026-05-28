@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Autoplay from 'embla-carousel-autoplay';
-	import AnimeSlideCard from '@/components/home/AnimeSlideCard.svelte';
-	import EpisodeCard from '@/components/home/EpisodeCard.svelte';
-	import MusicCard from '@/components/home/MusicCard.svelte';
-	import SectionHeading from '@/components/home/SectionHeading.svelte';
+	import AnimeSlideCard from '@/components/home/anime-slide-card.svelte';
+	import EpisodeCard from '@/components/home/episode-card.svelte';
+	import MusicCard from '@/components/home/music-card.svelte';
+	import SectionHeading from '@/components/home/section-heading.svelte';
 	import * as Carousel from '@/components/ui/carousel';
 
 	let {

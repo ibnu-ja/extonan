@@ -7,11 +7,11 @@
 
 <script lang="ts">
     import { Form } from '@inertiajs/svelte';
-    import AppHead from '@/components/AppHead.svelte';
-    import InputError from '@/components/InputError.svelte';
-    import PasskeyVerify from '@/components/PasskeyVerify.svelte';
-    import PasswordInput from '@/components/PasswordInput.svelte';
-    import TextLink from '@/components/TextLink.svelte';
+    import AppHead from '@/components/app-head.svelte';
+    import InputError from '@/components/input-error.svelte';
+    import PasskeyVerify from '@/components/passkey-verify.svelte';
+    import PasswordInput from '@/components/password-input.svelte';
+    import TextLink from '@/components/text-link.svelte';
     import { Button } from '@/components/ui/button';
     import { Checkbox } from '@/components/ui/checkbox';
     import { Input } from '@/components/ui/input';
