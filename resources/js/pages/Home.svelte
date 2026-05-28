@@ -26,7 +26,7 @@
 {#if latestAnime.length > 0}
 	<div class="relative overflow-hidden">
 		<Carousel.Root
-			opts={{ loop: true, align: 'start' }}
+			opts={{ loop: true, align: 'start', skipSnaps: true }}
 			plugins={[Autoplay({ delay: 5000 })]}
 		>
 			<Carousel.Content class="h-64 md:h-80 ms-0">
@@ -34,7 +34,6 @@
 					<Carousel.Item class="h-full basis-full ps-0">
 						<AnimeSlideCard
 							title={anime.title}
-							slug={anime.slug}
 							genres={anime.genres}
 							bannerImage={anime.bannerImage}
 							coverImage={anime.coverImage}
@@ -82,7 +81,7 @@
 	</div>
 	{#if latestMv.length > 0}
 		<div class="relative group">
-			<Carousel.Root opts={{ align: 'start' }}>
+			<Carousel.Root opts={{ align: 'start', skipSnaps: true }}>
 				<Carousel.Content class="ms-0 pe-4">
 					{#each latestMv as mv (mv.id)}
 						<Carousel.Item class="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
@@ -116,7 +115,7 @@
 	</div>
 	{#if latestAlbum.length > 0}
 		<div class="relative group">
-			<Carousel.Root opts={{ align: 'start' }}>
+			<Carousel.Root opts={{ align: 'start', skipSnaps: true }}>
 				<Carousel.Content class="ms-0 pe-4">
 					{#each latestAlbum as album (album.id)}
 						<Carousel.Item class="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
