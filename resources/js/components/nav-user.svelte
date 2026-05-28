@@ -59,9 +59,9 @@
 						</DropdownMenu.Item>
 					</DropdownMenu.Group>
 					<DropdownMenu.Separator />
-					<DropdownMenu.Item>
+					<DropdownMenu.Item class="w-full">
 						{#snippet child({ props })}
-							<Button {...props} variant="ghost" class="w-full justify-start gap-2" onclick={() => router.post(logout().url)}>
+							<Button variant="ghost" class="w-full justify-start gap-2" {...props} onclick={() => router.post(logout().url)}>
 								<LogOutIcon class="size-4" />
 								Log out
 							</Button>

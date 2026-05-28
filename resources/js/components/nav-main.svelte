@@ -19,17 +19,17 @@
 <Sidebar.Group>
 	<Sidebar.GroupLabel>Platform</Sidebar.GroupLabel>
 	<Sidebar.Menu>
-		{#each items as item (item.href)}
+		{#each items as { title, href, icon: Icon, isActive, items: subItems } (href)}
 			<Sidebar.MenuItem>
-				{#if item.items?.length}
-					<Collapsible.Root open={item.isActive}>
+				{#if subItems?.length}
+					<Collapsible.Root open={isActive}>
 						{#snippet child({ props })}
 							<Sidebar.MenuItem {...props}>
-								<Sidebar.MenuButton tooltipContent={item.title}>
+								<Sidebar.MenuButton tooltipContent={title}>
 									{#snippet child({ props })}
-										<Link {...props} href={toUrl(item.href)} class={props.class}>
-											{#if item.icon}<item.icon />{/if}
-											<span>{item.title}</span>
+										<Link {...props} href={toUrl(href)} class={props.class}>
+											{#if Icon}<Icon />{/if}
+											<span>{title}</span>
 										</Link>
 									{/snippet}
 								</Sidebar.MenuButton>
@@ -43,10 +43,10 @@
 								</Collapsible.Trigger>
 								<Collapsible.Content>
 									<Sidebar.MenuSub>
-										{#each item.items as subItem (subItem.href)}
+										{#each subItems as { title: subTitle, href: subHref } (subHref)}
 											<Sidebar.MenuSubItem>
-												<Sidebar.MenuSubButton href={subItem.href}>
-													<span>{subItem.title}</span>
+												<Sidebar.MenuSubButton href={toUrl(subHref)}>
+													<span>{subTitle}</span>
 												</Sidebar.MenuSubButton>
 											</Sidebar.MenuSubItem>
 										{/each}
@@ -56,11 +56,11 @@
 						{/snippet}
 					</Collapsible.Root>
 				{:else}
-					<Sidebar.MenuButton isActive={url.isCurrentUrl(item.href, url.currentUrl)} tooltipContent={item.title} class="transition-all duration-200">
+					<Sidebar.MenuButton isActive={url.isCurrentUrl(href, url.currentUrl)} tooltipContent={title} class="transition-all duration-200">
 						{#snippet child({ props })}
-							<Link {...props} href={toUrl(item.href)} class={props.class}>
-								{#if item.icon}<item.icon class="size-4 shrink-0" />{/if}
-								<span>{item.title}</span>
+							<Link {...props} href={toUrl(href)} class={props.class}>
+								{#if Icon}<Icon class="size-4 shrink-0" />{/if}
+								<span>{title}</span>
 							</Link>
 						{/snippet}
 					</Sidebar.MenuButton>

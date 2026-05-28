@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
+    import { router } from '@inertiajs/svelte';
     import LogOut from 'lucide-svelte/icons/log-out';
     import Settings from 'lucide-svelte/icons/settings';
     import type { Snippet } from 'svelte';
@@ -35,21 +35,21 @@
     <DropdownMenuSeparator />
 {/if}
 <DropdownMenuGroup>
-    <DropdownMenuItem>
+    <DropdownMenuItem class="w-full">
         {#snippet child({ props })}
-            <Link {...props} href={toUrl(edit())} prefetch>
-                <Settings class="mr-2 h-4 w-4" />
+            <a {...props} href={toUrl(edit())} class="flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground disabled:cursor-default">
+                <Settings class="size-4" />
                 Settings
-            </Link>
+            </a>
         {/snippet}
     </DropdownMenuItem>
 </DropdownMenuGroup>
 <DropdownMenuSeparator />
-<DropdownMenuItem>
+<DropdownMenuItem class="w-full">
     {#snippet child({ props })}
-        <Link {...props} href={logout()} as="button">
-            <LogOut class="mr-2 h-4 w-4" />
+        <button {...props} onclick={() => router.post(logout().url)} class="flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground disabled:cursor-default">
+            <LogOut class="size-4" />
             Log out
-        </Link>
+        </button>
     {/snippet}
 </DropdownMenuItem>
