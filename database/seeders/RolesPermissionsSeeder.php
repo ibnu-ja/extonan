@@ -50,5 +50,9 @@ class RolesPermissionsSeeder extends Seeder
                 $role->givePermissionTo($permission);
             }
         }
+
+        // Admin gets all permissions
+        $admin = Role::findOrCreate('admin');
+        $admin->syncPermissions(Permission::all());
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Data\Anime;
 
+use App\Data\LabelValue;
 use App\Data\PaginationData;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\TypeScript;
@@ -19,5 +20,14 @@ class AnimeIndexResponse extends Data
         /** @var string[] */
         public array $seasons,
         public bool $canCreate,
+        /** @var DataCollection<LabelValue> */
+        #[DataCollectionOf(LabelValue::class)]
+        public DataCollection $genres,
+        /** @var DataCollection<LabelValue> */
+        #[DataCollectionOf(LabelValue::class)]
+        public DataCollection $tags,
+        /** @var DataCollection<LabelValue> */
+        #[DataCollectionOf(LabelValue::class)]
+        public DataCollection $sortOptions,
     ) {}
 }

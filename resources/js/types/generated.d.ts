@@ -31,6 +31,10 @@ declare namespace App {
             link: string;
             permissions: App.Data.PermissionsData;
         };
+        export type LabelValue = {
+            key: string;
+            value: string;
+        };
         export type MusicSummaryData = {
             id: number;
             title: Record<string, string | null>;
@@ -44,6 +48,17 @@ declare namespace App {
             link: string;
             permissions: App.Data.PermissionsData;
         };
+        export type PaginationData = {
+            currentPage: number;
+            lastPage: number;
+            perPage: number;
+            total: number;
+            links: {
+                url: string | null;
+                label: string;
+                active: boolean;
+            }[];
+        };
         export type PermissionsData = {
             update: boolean;
             delete: boolean;
@@ -54,6 +69,44 @@ declare namespace App {
             name: string | null;
             avatar: string | null;
         };
+        namespace Anime {
+            export type AnimeAZResponse = {
+                items: App.Data.Anime.AnimeListItemData[];
+                canCreate: boolean;
+            };
+            export type AnimeFormData = {
+                id: number | null;
+                title: Record<string, string | null>;
+                description: Record<string, string | null>;
+                anilistId: number | null;
+                metadata: object | null;
+                isPublished: boolean;
+                canPublish: boolean;
+            };
+            export type AnimeIndexResponse = {
+                items: App.Data.Anime.AnimeListItemData[];
+                pagination: App.Data.PaginationData;
+                seasons: string[];
+                canCreate: boolean;
+                genres: App.Data.LabelValue[];
+                tags: App.Data.LabelValue[];
+                sortOptions: App.Data.LabelValue[];
+            };
+            export type AnimeListItemData = {
+                id: number;
+                title: Record<string, string | null>;
+                slug: Record<string, string | null>;
+                coverImage: App.Data.CoverImageData;
+                isPublished: boolean;
+                link: string;
+                permissions: App.Data.PermissionsData;
+            };
+            export type AnimeShowResponse = {
+                anime: App.Data.Anime.AnimeListItemData;
+                episodes: App.Data.EpisodeSummaryData[];
+                canCreateEpisode: boolean;
+            };
+        }
         namespace Home {
             export type HomePageResponse = {
                 latestAnime: App.Data.AnimeSummaryData[];

@@ -5,17 +5,12 @@
 	import * as Sidebar from '@/components/ui/sidebar/index.js';
 	import { currentUrlState } from '@/lib/current-url.svelte';
 	import { toUrl } from '@/lib/utils';
+	import type { NavItem } from '@/types';
 
 	let {
-		items,
+		items = [],
 	}: {
-		items: {
-			title: string;
-			href: string;
-			icon?: any;
-			isActive?: boolean;
-			items?: { title: string; href: string }[];
-		}[];
+		items: NavItem[];
 	} = $props();
 
 	const url = currentUrlState();

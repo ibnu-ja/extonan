@@ -1,10 +1,12 @@
 <script lang="ts" module>
-	import { cn, type WithElementRef } from "@/lib/utils.js";
+	import { cn, type WithElementRef, type WithoutChildrenOrChild } from "@/lib/utils.js";
+	import { mergeProps } from "bits-ui";
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements";
+	import type { ComponentProps, Snippet } from "svelte";
 	import { type VariantProps, tv } from "tailwind-variants";
 
 	export const buttonVariants = tv({
-		base: "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 active:not-aria-[haspopup]:translate-y-px aria-invalid:ring-3 [&_svg:not([class*='size-'])]:size-4 group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+		base: "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 active:not-aria-[haspopup]:translate-y-px aria-invalid:ring-3 [&_svg:not([class*='size-'])]:size-4 group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none disabled:cursor-default disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cursor-pointer",
 		variants: {
 			variant: {
 				default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
@@ -38,6 +40,7 @@
 		WithElementRef<HTMLAnchorAttributes> & {
 			variant?: ButtonVariant;
 			size?: ButtonSize;
+			child?: Snippet<[{ props: Record<string, unknown> }]>;
 		};
 </script>
 
@@ -51,31 +54,36 @@
 		type = "button",
 		disabled,
 		children,
+		child,
 		...restProps
 	}: ButtonProps = $props();
+
+	const buttonProps = $derived({
+		class: cn(buttonVariants({ variant, size }), className),
+		"data-slot": "button",
+		...restProps,
+	});
 </script>
 
-{#if href}
+{#if child}
+	{@render child({ props: buttonProps })}
+{:else if href}
 	<a
 		bind:this={ref}
-		data-slot="button"
-		class={cn(buttonVariants({ variant, size }), className)}
+		{...buttonProps}
 		href={disabled ? undefined : href}
 		aria-disabled={disabled}
 		role={disabled ? "link" : undefined}
 		tabindex={disabled ? -1 : undefined}
-		{...restProps}
 	>
 		{@render children?.()}
 	</a>
 {:else}
 	<button
 		bind:this={ref}
-		data-slot="button"
-		class={cn(buttonVariants({ variant, size }), className)}
+		{...buttonProps}
 		{type}
 		{disabled}
-		{...restProps}
 	>
 		{@render children?.()}
 	</button>

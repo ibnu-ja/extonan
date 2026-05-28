@@ -8,6 +8,7 @@ use App\Data\Anime\AnimeIndexResponse;
 use App\Data\Anime\AnimeListItemData;
 use App\Data\Anime\AnimeShowResponse;
 use App\Data\EpisodeSummaryData;
+use App\Data\LabelValue;
 use App\Data\PaginationData;
 use App\Http\Requests\StoreAnimeRequest;
 use App\Models\Anime;
@@ -50,6 +51,21 @@ class AnimeController extends Controller implements HasMiddleware
             return redirect($redirectUrl);
         }
 
+        $validGenres = config('anime.genres', []);
+        $validTags = config('anime.tags', []);
+
+        $request->validate([
+            'filter.genre_in.*' => ['nullable', 'string', 'in:'.implode(',', $validGenres)],
+            'filter.genre_not_in.*' => ['nullable', 'string', 'in:'.implode(',', $validGenres)],
+            'filter.tag_in.*' => ['nullable', 'string', 'in:'.implode(',', $validTags)],
+            'filter.tag_not_in.*' => ['nullable', 'string', 'in:'.implode(',', $validTags)],
+            'filter.season_in.*' => ['nullable', 'string'],
+            'filter.season_not_in.*' => ['nullable', 'string'],
+            'filter.title' => ['nullable', 'string', 'max:255'],
+            'filter.is_published' => ['nullable', 'boolean'],
+            'sort' => ['nullable', 'string', 'in:title->romaji,-title->romaji,created_at,-created_at,updated_at,-updated_at'],
+        ]);
+
         $user = Auth::user();
 
         $paginator = QueryBuilder::for(Anime::visible())->allowedFilters(
@@ -60,6 +76,7 @@ class AnimeController extends Controller implements HasMiddleware
             AllowedFilter::scope('genre_in'),
             AllowedFilter::scope('genre_not_in'),
             AllowedFilter::scope('title', 'searchTitle'),
+            AllowedFilter::exact('is_published'),
         )
             ->allowedSorts('title->romaji', 'created_at', 'updated_at')
             ->paginate(14)->appends(request()->query());
@@ -78,6 +95,23 @@ class AnimeController extends Controller implements HasMiddleware
             ),
             seasons: (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray(),
             canCreate: auth()->check() && auth()->user()?->can('create', Post::class),
+            genres: new DataCollection(LabelValue::class, collect(config('anime.genres', []))->map(fn (string $genre) => new LabelValue(
+                key: $genre,
+                value: __('anime.genres.'.$genre),
+            ))),
+            tags: new DataCollection(LabelValue::class, collect(config('anime.tags', []))->map(fn (string $tag) => new LabelValue(
+                key: $tag,
+                value: __('anime.tags.'.$tag),
+            ))),
+            sortOptions: new DataCollection(LabelValue::class, collect(['title->romaji', '-title->romaji', 'created_at', '-created_at', 'updated_at', '-updated_at'])->map(function (string $sort) {
+                $dir = str_starts_with($sort, '-') ? 'desc' : 'asc';
+                $field = ltrim($sort, '-');
+
+                return new LabelValue(
+                    key: $sort,
+                    value: __('anime.sort.'.$field).' '.__('anime.sort_dir.'.$dir),
+                );
+            })),
         ));
     }
 

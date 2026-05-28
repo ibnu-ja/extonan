@@ -1,4 +1,5 @@
 import '@inertiajs/svelte';
+import type { LinkComponentBaseProps } from '@inertiajs/core';
 import type { Config } from 'ziggy-js';
 
 export interface Auth {
@@ -12,9 +13,10 @@ export interface BreadcrumbItem {
 
 export interface NavItem {
     title: string;
-    href: string;
+    href: NonNullable<LinkComponentBaseProps['href']>;
     icon?: any;
     isActive?: boolean;
+    items?: NavItem[];
 }
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {

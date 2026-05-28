@@ -16,7 +16,7 @@ final readonly class AnimeSeasonsQuery
             ->select(
                 DB::raw('metadata->>\'season\' as season'),
                 DB::raw('metadata->>\'seasonYear\' as year'),
-                DB::raw('CONCAT(metadata->>\'season\', \' \', metadata->>\'seasonYear\') AS season_year'))
+                DB::raw('CONCAT(INITCAP(metadata->>\'season\'), \' \', metadata->>\'seasonYear\') AS season_year'))
             ->distinct();
 
         return DB::query()

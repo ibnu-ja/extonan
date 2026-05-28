@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { Link, page } from '@inertiajs/svelte';
+	import { Link, page, router } from '@inertiajs/svelte';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
 	import LogOutIcon from '@lucide/svelte/icons/log-out';
 	import SettingsIcon from '@lucide/svelte/icons/settings';
+	import { Button } from '@/components/ui/button';
 	import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
 	import * as Sidebar from '@/components/ui/sidebar/index.js';
 	import { useSidebar } from '@/components/ui/sidebar/index.js';
@@ -46,20 +47,24 @@
 					<DropdownMenu.Group>
 						<DropdownMenu.Item>
 							{#snippet child({ props })}
-								<Link {...props} href={toUrl(edit())} prefetch>
-									<SettingsIcon />
-									Settings
-								</Link>
+								<Button variant="ghost" class="w-full justify-start gap-2">
+									{#snippet child({ props: btnProps })}
+										<Link {...props} {...btnProps} href={toUrl(edit())} prefetch>
+											<SettingsIcon class="size-4" />
+											Settings
+										</Link>
+									{/snippet}
+								</Button>
 							{/snippet}
 						</DropdownMenu.Item>
 					</DropdownMenu.Group>
 					<DropdownMenu.Separator />
 					<DropdownMenu.Item>
 						{#snippet child({ props })}
-							<Link {...props} href={logout()} as="button">
-								<LogOutIcon />
+							<Button {...props} variant="ghost" class="w-full justify-start gap-2" onclick={() => router.post(logout().url)}>
+								<LogOutIcon class="size-4" />
 								Log out
-							</Link>
+							</Button>
 						{/snippet}
 					</DropdownMenu.Item>
 				</DropdownMenu.Content>

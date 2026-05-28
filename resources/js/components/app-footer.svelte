@@ -22,7 +22,9 @@
 </script>
 
 <footer class="mt-auto py-6">
-	<div class="mx-auto flex max-w-screen-2xl flex-col items-center gap-3 px-2 pb-3 text-center text-xs text-muted-foreground sm:px-4">
+    <Separator />
+
+	<div class="mx-auto flex max-w-screen-2xl flex-col items-center gap-3 px-2 pt-3 text-center text-xs text-muted-foreground sm:px-4">
 		<div class="flex gap-4">
 			{#each links as link (link.url)}
 				<a href={link.url} target="_blank" rel="noopener noreferrer" class="hover:text-foreground" aria-label={link.title}>
@@ -33,8 +35,6 @@
 			{/each}
 		</div>
 	</div>
-
-	<Separator />
 
 	<div class="mx-auto flex max-w-screen-2xl flex-col items-center gap-1 px-2 pt-3 text-center text-xs text-muted-foreground sm:px-4">
 		<p>

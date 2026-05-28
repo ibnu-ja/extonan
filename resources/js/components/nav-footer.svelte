@@ -18,7 +18,7 @@
 		<Sidebar.Menu>
 			{#each items as item (toUrl(item.href))}
 				<Sidebar.MenuItem>
-					<Sidebar.MenuButton class="text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100 transition-all duration-200">
+					<Sidebar.MenuButton class="text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100">
 						{#snippet child({ props })}
 							<Link {...props} href={toUrl(item.href)} class={props.class}>
 								{#if item.icon}<item.icon class="size-4 shrink-0" />{/if}
