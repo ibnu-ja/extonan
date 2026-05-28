@@ -3,10 +3,7 @@
     import CircleUserRound from 'lucide-svelte/icons/circle-user-round';
     import LayoutGrid from 'lucide-svelte/icons/layout-grid';
     import Breadcrumbs from '@/components/breadcrumbs.svelte';
-    import {
-        Avatar,
-        AvatarFallback,
-    } from '@/components/ui/avatar';
+    import { Avatar, AvatarFallback } from '@/components/ui/avatar';
     import { Button } from '@/components/ui/button';
     import {
         DropdownMenu,
@@ -35,7 +32,7 @@
 >
     <div class="flex items-center gap-2">
         <SidebarTrigger class="-ml-1 hidden md:inline-flex" />
-        {#if breadcrumbs && breadcrumbs.length > 0}
+        {#if breadcrumbs.length > 1}
             <Breadcrumbs {breadcrumbs} />
         {/if}
     </div>
@@ -52,8 +49,11 @@
                             {...props}
                         >
                             <Avatar class="size-8">
-                                <AvatarFallback class="rounded-full text-xs font-medium">
-                                    {auth.user.name?.charAt(0)?.toUpperCase() ?? '?'}
+                                <AvatarFallback
+                                    class="rounded-full text-xs font-medium"
+                                >
+                                    {auth.user.name?.charAt(0)?.toUpperCase() ??
+                                        '?'}
                                 </AvatarFallback>
                             </Avatar>
                         </Button>
@@ -82,16 +82,16 @@
                             class="relative size-9 rounded-full p-0"
                             {...props}
                         >
-                            <CircleUserRound class="size-5 text-muted-foreground" />
+                            <CircleUserRound
+                                class="size-5 text-muted-foreground"
+                            />
                         </Button>
                     {/snippet}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" class="w-40">
                     <DropdownMenuItem>
                         {#snippet child({ props })}
-                            <Link {...props} href={toUrl(login())}>
-                                Log in
-                            </Link>
+                            <Link {...props} href={toUrl(login())}>Log in</Link>
                         {/snippet}
                     </DropdownMenuItem>
                     <DropdownMenuItem>
@@ -104,7 +104,10 @@
                 </DropdownMenuContent>
             </DropdownMenu>
         {:else}
-            <Link href={toUrl(login())} class="inline-flex size-9 items-center justify-center rounded-full hover:bg-accent">
+            <Link
+                href={toUrl(login())}
+                class="inline-flex size-9 items-center justify-center rounded-full hover:bg-accent"
+            >
                 <CircleUserRound class="size-5 text-muted-foreground" />
             </Link>
         {/if}

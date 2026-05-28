@@ -1,54 +1,54 @@
 <script lang="ts">
-	import UserNav from '@/components/user-nav.svelte';
-	import type { BreadcrumbItem } from '@/types';
+    import UserNav from '@/components/user-nav.svelte';
 
-	let {
-		breadcrumbs = [],
-	}: {
-		breadcrumbs?: BreadcrumbItem[];
-	} = $props();
+    let {
+        title = '',
+        scrolled = false,
+        autoHide = false,
+    }: {
+        title?: string;
+        scrolled?: boolean;
+        autoHide?: boolean;
+    } = $props();
 
-	let lastScrollY = $state(0);
-	let hidden = $state(false);
+    let lastScrollY = $state(0);
+    let hidden = $state(false);
 
-	$effect(() => {
-		if (typeof window === 'undefined') {
+    $effect(() => {
+        if (typeof window === 'undefined' || !autoHide) {
 return;
 }
 
-		const onScroll = () => {
-			const sy = window.scrollY;
+        const onScroll = () => {
+            const sy = window.scrollY;
 
-			if (sy > lastScrollY && sy > 50) {
-				hidden = true;
-			} else if (sy < lastScrollY) {
-				hidden = false;
-			}
+            if (sy > lastScrollY && sy > 50) {
+                hidden = true;
+            } else if (sy < lastScrollY) {
+                hidden = false;
+            }
 
-			lastScrollY = sy;
-		};
-		window.addEventListener('scroll', onScroll, { passive: true });
+            lastScrollY = sy;
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
 
-		return () => window.removeEventListener('scroll', onScroll);
-	});
+        return () => window.removeEventListener('scroll', onScroll);
+    });
 </script>
 
 <header
-	class="fixed top-0 left-0 right-0 z-50 flex h-16 items-center gap-2 border-b bg-background px-4 transition-transform duration-300"
-	style={hidden ? 'transform: translateY(-100%);' : ''}
+    class="fixed top-0 left-0 right-0 z-50 flex h-16 items-center gap-2 border-b bg-background px-4 transition-transform duration-300"
+    style={hidden ? 'transform: translateY(-100%);' : ''}
 >
-	{#if breadcrumbs && breadcrumbs.length > 0}
-		<nav class="flex items-center gap-1 text-sm text-muted-foreground">
-			{#each breadcrumbs as crumb, i (crumb.href)}
-				{#if i > 0}
-					<span class="text-muted-foreground/40">/</span>
-				{/if}
-				<span class={i === breadcrumbs.length - 1 ? 'font-medium text-foreground' : ''}>
-					{crumb.title}
-				</span>
-			{/each}
-		</nav>
-	{/if}
+    <div class="flex flex-1 flex-col justify-center min-w-0">
+        <h1
+            class="transition-opacity duration-200 truncate text-base font-semibold font-heading"
+            class:opacity-0={!scrolled}
+            class:opacity-100={scrolled}
+        >
+            {title}
+        </h1>
+    </div>
 
-	<UserNav />
+    <UserNav />
 </header>

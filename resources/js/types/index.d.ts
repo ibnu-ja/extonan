@@ -5,7 +5,9 @@ export interface Auth {
     user: User;
 }
 
-export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+export type PageProps<
+    T extends Record<string, unknown> = Record<string, unknown>,
+> = T & {
     name: string;
     auth: Auth;
     sidebarOpen: boolean;

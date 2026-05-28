@@ -7,7 +7,6 @@
     import Search from 'lucide-svelte/icons/search';
     import AppLogoIcon from '@/components/app-logo-icon.svelte';
     import AppLogo from '@/components/app-logo.svelte';
-    import Breadcrumbs from '@/components/breadcrumbs.svelte';
     import {
         Avatar,
         AvatarFallback,
@@ -43,13 +42,7 @@
     import { getInitials } from '@/lib/initials';
     import { toUrl } from '@/lib/utils';
     import { dashboard } from '@/routes';
-    import type { BreadcrumbItem, NavItem } from '@/types';
-
-    let {
-        breadcrumbs = [],
-    }: {
-        breadcrumbs?: BreadcrumbItem[];
-    } = $props();
+    import type { NavItem } from '@/types';
 
     const auth = $derived(page.props.auth);
     const url = currentUrlState();
@@ -263,14 +256,4 @@
             </div>
         </div>
     </div>
-
-    {#if breadcrumbs.length > 1}
-        <div class="flex w-full border-b border-sidebar-border/70">
-            <div
-                class="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl"
-            >
-                <Breadcrumbs {breadcrumbs} />
-            </div>
-        </div>
-    {/if}
 </div>
