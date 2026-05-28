@@ -47,7 +47,7 @@
         }
 
         const onScroll = () => {
-            scrolled = window.scrollY > 30;
+            scrolled = window.scrollY > 60;
         };
         window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -62,27 +62,29 @@
             <div class="h-16"></div>
             <MobileTopBar {title} {scrolled} />
         {:else}
-            <AppSidebarHeader {breadcrumbs} />
+			<AppSidebarHeader {breadcrumbs} />
         {/if}
         <div class="flex flex-1 flex-col">
-            {#if isMobile}
-                <div
-                    class="px-4 pt-4 transition-opacity duration-200"
-                    class:opacity-0={scrolled}
-                    class:opacity-100={!scrolled}
-                >
-				<h1 class="text-3xl font-semibold font-heading">{title}</h1>
-					{#if breadcrumbs.length > 1}
-						<div class="mt-1"><Breadcrumbs {breadcrumbs} /></div>
-					{/if}
-				</div>
-			{:else}
-				<div class="px-4 pt-6">
-					{#if breadcrumbs.length > 1}
-						<Breadcrumbs {breadcrumbs} />
-					{/if}
-					<h1 class="text-3xl font-semibold font-heading">{title}</h1>
-                </div>
+            {#if title}
+                {#if isMobile}
+                    <div
+                        class="px-4 pt-4 transition-opacity duration-200"
+                        class:opacity-0={scrolled}
+                        class:opacity-100={!scrolled}
+                    >
+                        <h1 class="text-3xl font-semibold font-heading">{title}</h1>
+                        {#if breadcrumbs.length > 1}
+                            <div class="mt-1"><Breadcrumbs {breadcrumbs} /></div>
+                        {/if}
+                    </div>
+                {:else}
+                    <div class="px-4 pt-6">
+                        {#if breadcrumbs.length > 1}
+                            <Breadcrumbs {breadcrumbs} />
+                        {/if}
+                        <h1 class="text-3xl font-semibold font-heading">{title}</h1>
+                    </div>
+                {/if}
             {/if}
             {@render children?.()}
         </div>
