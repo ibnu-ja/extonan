@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="artisan octane:start --watch" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/artisan" scriptParameters="octane:start --watch --server frankenphp --host 0.0.0.0 --admin-port 2019 --port 80">
+    <CommandLine parameters="-d variables_order=EGPCS">
+      <envs>
+        <env name="COLUMNS" value="120" />
+      </envs>
+    </CommandLine>
+    <method v="2" />
+  </configuration>
+</component>
