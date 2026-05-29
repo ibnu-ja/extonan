@@ -14,7 +14,6 @@
         singleSelect = false,
         icon: Icon,
         onselect,
-        onclose,
     }: {
         label?: string;
         items: string[];
@@ -24,7 +23,6 @@
         singleSelect?: boolean;
         icon?: any;
         onselect?: (item: string, mode: 'in' | 'notIn' | 'none') => void;
-        onclose?: () => void;
     } = $props();
 
     let open = $state(false);
@@ -51,16 +49,6 @@
 
         return 'none';
     }
-
-    let prevOpen = false;
-
-    $effect(() => {
-        if (prevOpen && !open) {
-            onclose?.();
-        }
-
-        prevOpen = open;
-    });
 
     function cycleMode(item: string) {
         const mode = getItemMode(item);
