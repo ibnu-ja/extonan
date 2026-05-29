@@ -32,7 +32,9 @@
     function pageSearchParams(): URLSearchParams {
         const idx = page.url.indexOf('?');
 
-        return idx >= 0 ? new URLSearchParams(page.url.slice(idx)) : new URLSearchParams();
+        return idx >= 0
+            ? new URLSearchParams(page.url.slice(idx))
+            : new URLSearchParams();
     }
 
     function parseFilterState(): AnimeFilterState {
@@ -69,9 +71,7 @@
     }
 
     let filters = $state<AnimeFilterState>(parseFilterState());
-    let sort = $state(
-        pageSearchParams().get('sort') || 'title->romaji',
-    );
+    let sort = $state(pageSearchParams().get('sort') || 'title->romaji');
     const canReadDrafts = $derived(
         page.props.auth?.permissions?.includes('post.read.self') ?? false,
     );
@@ -79,7 +79,11 @@
         (() => {
             const val = pageSearchParams().get('filter[is_published]');
 
-            return val === 'true' ? 'published' : val === 'false' ? 'draft' : null;
+            return val === 'true'
+                ? 'published'
+                : val === 'false'
+                  ? 'draft'
+                  : null;
         })(),
     );
 
