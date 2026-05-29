@@ -10,10 +10,7 @@
 </script>
 
 <script lang="ts">
-    let {
-        items,
-        canCreate,
-    }: App.Data.Anime.AnimeAZResponse = $props();
+    let { items, canCreate }: App.Data.Anime.AnimeAZResponse = $props();
 </script>
 
 <svelte:head>
