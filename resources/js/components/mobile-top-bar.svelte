@@ -16,8 +16,8 @@
 
     $effect(() => {
         if (typeof window === 'undefined' || !autoHide) {
-return;
-}
+            return;
+        }
 
         const onScroll = () => {
             const sy = window.scrollY;
@@ -37,10 +37,10 @@ return;
 </script>
 
 <header
-	class="fixed top-0 left-0 right-0 z-50 flex h-16 items-center gap-2 px-4 transition-all duration-300"
-	class:bg-background={scrolled}
-	class:bg-transparent={!scrolled}
-	class:border-b={scrolled}
+    class="fixed top-0 left-0 right-0 z-50 flex h-16 items-center gap-2 px-4 transition-all duration-300"
+    class:bg-background={scrolled}
+    class:bg-transparent={!scrolled}
+    class:border-b={scrolled}
     style={hidden ? 'transform: translateY(-100%);' : ''}
 >
     <div class="flex flex-1 flex-col justify-center min-w-0">

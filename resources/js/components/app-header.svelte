@@ -101,7 +101,7 @@
                             class="flex h-full flex-1 flex-col justify-between space-y-4 pt-6 pb-10"
                         >
                             <nav class="-mx-3 space-y-1">
-                                {#each mainNavItems as item (toUrl(item.href))}
+                                {#each mainNavItems as { icon: Icon, ...item } (toUrl(item.href))}
                                     <Link
                                         href={toUrl(item.href)}
                                         class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent {url.whenCurrentUrl(
@@ -111,23 +111,23 @@
                                             '',
                                         ) ?? ''}"
                                     >
-                                        {#if item.icon}
-                                            <item.icon class="h-5 w-5" />
+                                        {#if Icon}
+                                            <Icon class="h-5 w-5" />
                                         {/if}
                                         {item.title}
                                     </Link>
                                 {/each}
                             </nav>
                             <div class="flex flex-col space-y-4">
-                                {#each rightNavItems as item (toUrl(item.href))}
+                                {#each rightNavItems as { icon: Icon, ...item } (toUrl(item.href))}
                                     <a
                                         href={toUrl(item.href)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class="flex items-center space-x-2 text-sm font-medium"
                                     >
-                                        {#if item.icon}
-                                            <item.icon class="h-5 w-5" />
+                                        {#if Icon}
+                                            <Icon class="h-5 w-5" />
                                         {/if}
                                         <span>{item.title}</span>
                                     </a>
@@ -148,7 +148,7 @@
                     <NavigationMenuList
                         class="flex h-full items-stretch space-x-2"
                     >
-                        {#each mainNavItems as item (toUrl(item.href))}
+                        {#each mainNavItems as { icon: Icon, ...item } (toUrl(item.href))}
                             <NavigationMenuItem
                                 class="relative flex h-full items-center"
                             >
@@ -161,8 +161,8 @@
                                     ) ?? ''} h-9 cursor-pointer px-4"
                                     href={toUrl(item.href)}
                                 >
-                                    {#if item.icon}
-                                        <item.icon class="mr-2 h-4 w-4" />
+                                    {#if Icon}
+                                        <Icon class="mr-2 h-4 w-4" />
                                     {/if}
                                     {item.title}
                                 </Link>
@@ -190,7 +190,7 @@
                     </Button>
 
                     <div class="hidden space-x-1 lg:flex">
-                        {#each rightNavItems as item (toUrl(item.href))}
+                        {#each rightNavItems as { icon: Icon, ...item } (toUrl(item.href))}
                             <TooltipProvider delayDuration={0}>
                                 <Tooltip>
                                     <TooltipTrigger>
@@ -205,7 +205,7 @@
                                                 <span class="sr-only"
                                                     >{item.title}</span
                                                 >
-                                                <item.icon
+                                                <Icon
                                                     class="size-5 opacity-80 group-hover:opacity-100"
                                                 />
                                             </a>

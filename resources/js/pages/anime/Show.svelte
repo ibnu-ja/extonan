@@ -21,4 +21,8 @@
     <title>Anime</title>
 </svelte:head>
 
-<pre class="p-4 text-xs">{JSON.stringify({ anime, episodes, canCreateEpisode }, null, 2)}</pre>
+<pre class="p-4 text-xs">{JSON.stringify(
+        { anime, episodes, canCreateEpisode },
+        null,
+        2,
+    )}</pre>

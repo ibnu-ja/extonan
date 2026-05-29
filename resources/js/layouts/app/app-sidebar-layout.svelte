@@ -30,7 +30,9 @@
             return;
         }
 
-        const md = getComputedStyle(document.documentElement).getPropertyValue('--breakpoint-md').trim();
+        const md = getComputedStyle(document.documentElement)
+            .getPropertyValue('--breakpoint-md')
+            .trim();
         const mq = window.matchMedia(`(max-width: ${md})`);
         isMobile = mq.matches;
         const handler = (e: MediaQueryListEvent) => {
@@ -62,7 +64,7 @@
             <div class="h-16"></div>
             <MobileTopBar {title} {scrolled} />
         {:else}
-			<AppSidebarHeader {breadcrumbs} />
+            <AppSidebarHeader {breadcrumbs} />
         {/if}
         <div class="flex flex-1 flex-col">
             {#if title}
@@ -72,9 +74,13 @@
                         class:opacity-0={scrolled}
                         class:opacity-100={!scrolled}
                     >
-                        <h1 class="text-3xl font-semibold font-heading">{title}</h1>
+                        <h1 class="text-3xl font-semibold font-heading">
+                            {title}
+                        </h1>
                         {#if breadcrumbs.length > 1}
-                            <div class="mt-1"><Breadcrumbs {breadcrumbs} /></div>
+                            <div class="mt-1">
+                                <Breadcrumbs {breadcrumbs} />
+                            </div>
                         {/if}
                     </div>
                 {:else}
@@ -82,7 +88,9 @@
                         {#if breadcrumbs.length > 1}
                             <Breadcrumbs {breadcrumbs} />
                         {/if}
-                        <h1 class="text-3xl font-semibold font-heading">{title}</h1>
+                        <h1 class="text-3xl font-semibold font-heading">
+                            {title}
+                        </h1>
                     </div>
                 {/if}
             {/if}
