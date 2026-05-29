@@ -87,7 +87,6 @@ declare namespace App {
                 items: App.Data.Anime.AnimeListItemData[];
                 pagination: App.Data.PaginationData;
                 seasons: string[];
-                canCreate: boolean;
                 genres: App.Data.LabelValue[];
                 tags: App.Data.LabelValue[];
                 sortOptions: App.Data.LabelValue[];

@@ -19,7 +19,6 @@ class AnimeIndexResponse extends Data
         public PaginationData $pagination,
         /** @var string[] */
         public array $seasons,
-        public bool $canCreate,
         /** @var DataCollection<LabelValue> */
         #[DataCollectionOf(LabelValue::class)]
         public DataCollection $genres,

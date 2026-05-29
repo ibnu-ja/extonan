@@ -11,6 +11,7 @@
     import { Clapperboard, Tag, Calendar, Eye, EyeOff } from 'lucide-svelte';
     import { Button } from '@/components/ui/button';
     import * as ButtonGroup from '@/components/ui/button-group';
+    import { useAuth } from '@/lib/auth.svelte';
     import { useAnime } from '@/lib/use-anime.svelte';
     import type { AnimeFilterState } from '@/lib/use-anime.svelte';
     import type { RouteQueryOptions } from '@/wayfinder';
@@ -26,6 +27,7 @@
     }: App.Data.Anime.AnimeIndexResponse = $props();
 
     const { genres, tags, seasons, buildFilterQuery } = useAnime();
+    const { can } = useAuth();
 
     let searchTimeout: ReturnType<typeof setTimeout> | undefined;
 
@@ -72,9 +74,6 @@
 
     let filters = $state<AnimeFilterState>(parseFilterState());
     let sort = $state(pageSearchParams().get('sort') || 'title->romaji');
-    const canReadDrafts = $derived(
-        page.props.auth?.permissions?.includes('post.read.self') ?? false,
-    );
     let publishFilter = $state<'published' | 'draft' | null>(
         (() => {
             const val = pageSearchParams().get('filter[is_published]');

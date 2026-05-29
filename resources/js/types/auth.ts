@@ -13,7 +13,7 @@ export type User = {
 export type Auth = {
     user: User;
     permissions?: App.Enums.Permission[];
-    roles?: string[];
+    roles?: App.Enums.Role[];
 };
 
 /* @chisel-passkeys */

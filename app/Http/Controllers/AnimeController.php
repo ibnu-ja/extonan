@@ -94,7 +94,6 @@ class AnimeController extends Controller implements HasMiddleware
                 links: $paginator->linkCollection()->toArray(),
             ),
             seasons: (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray(),
-            canCreate: auth()->check() && auth()->user()?->can('create', Post::class),
             genres: new DataCollection(LabelValue::class, collect(config('anime.genres', []))->map(fn (string $genre) => new LabelValue(
                 key: $genre,
                 value: __('anime.genres.'.$genre),
