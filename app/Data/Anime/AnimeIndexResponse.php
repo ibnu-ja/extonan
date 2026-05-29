@@ -3,7 +3,7 @@
 namespace App\Data\Anime;
 
 use App\Data\LabelValue;
-use App\Data\PaginationData;
+use App\Data\PaginatedCollection;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
@@ -13,10 +13,8 @@ use Spatie\LaravelData\DataCollection;
 class AnimeIndexResponse extends Data
 {
     public function __construct(
-        /** @var DataCollection<AnimeListItemData> */
-        #[DataCollectionOf(AnimeListItemData::class)]
-        public DataCollection $items,
-        public PaginationData $pagination,
+        /** @var PaginatedCollection<AnimeListItemData> */
+        public PaginatedCollection $anime,
         /** @var string[] */
         public array $seasons,
         /** @var DataCollection<LabelValue> */

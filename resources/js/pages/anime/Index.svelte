@@ -16,21 +16,20 @@
         Eye,
         EyeOff,
     } from 'lucide-svelte';
+    import Pagination from '@/components/pagination.svelte';
     import { Button } from '@/components/ui/button';
     import * as ButtonGroup from '@/components/ui/button-group';
     import { useAuth } from '@/lib/auth.svelte';
-    import { useAnime } from '@/lib/use-anime.svelte';
-    import type { AnimeFilterState } from '@/lib/use-anime.svelte';
+    import { useAnime  } from '@/lib/use-anime.svelte';
+import type {AnimeFilterState} from '@/lib/use-anime.svelte';
     import type { RouteQueryOptions } from '@/wayfinder';
     import Fab from './index/components/fab.svelte';
     import FilterBar from './index/components/filter-bar.svelte';
     import FilterDropdown from './index/components/filter-dropdown.svelte';
     import Grid from './index/components/grid.svelte';
-    import Pagination from './index/components/pagination.svelte';
 
     let {
-        items = [],
-        pagination,
+        anime,
         sortOptions = [],
     }: App.Data.Anime.AnimeIndexResponse = $props();
 
@@ -100,6 +99,8 @@
         })(),
     );
 
+    let perPage = $state(anime?.perPage ?? 14);
+
     function applyFilters() {
         const query = buildFilterQuery({
             filter: {
@@ -112,11 +113,13 @@
                           : null,
             },
             sort: sort || null,
+            perPage,
         } satisfies App.Data.Anime.AnimeIndexRequest);
 
         router.get(animeIndex.url({ query } as RouteQueryOptions), undefined, {
             preserveState: true,
             preserveScroll: true,
+            only: ['anime'],
         });
     }
 
@@ -246,10 +249,10 @@
         {/if}
     </div>
 
-    <Grid {items} />
+    <Grid items={anime.data} />
 
-    {#if pagination}
-        <Pagination links={pagination.links} />
+    {#if anime}
+        <Pagination data={anime} only={['anime']} />
     {/if}
 
     {#if can('post.create')}

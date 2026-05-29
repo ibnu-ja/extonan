@@ -48,7 +48,8 @@ declare namespace App {
             link: string;
             permissions: App.Data.PermissionsData;
         };
-        export type PaginationData = {
+        export type PaginatedCollection<TValue> = {
+            data: TValue[];
             currentPage: number;
             lastPage: number;
             perPage: number;
@@ -96,10 +97,10 @@ declare namespace App {
             export type AnimeIndexRequest = {
                 filter: App.Data.Anime.AnimeFilterData;
                 sort: string | null;
+                perPage: number | null;
             };
             export type AnimeIndexResponse = {
-                items: App.Data.Anime.AnimeListItemData[];
-                pagination: App.Data.PaginationData;
+                anime: App.Data.PaginatedCollection<App.Data.Anime.AnimeListItemData>;
                 seasons: string[];
                 genres: App.Data.LabelValue[];
                 tags: App.Data.LabelValue[];

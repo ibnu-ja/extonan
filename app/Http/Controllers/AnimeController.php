@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Data\Anime\AnimeAZResponse;
 use App\Data\Anime\AnimeFormData;
 use App\Data\Anime\AnimeIndexRequest;
-use App\Data\Anime\AnimeIndexResponse;
 use App\Data\Anime\AnimeListItemData;
 use App\Data\Anime\AnimeShowResponse;
 use App\Data\EpisodeSummaryData;
 use App\Data\LabelValue;
-use App\Data\PaginationData;
+use App\Data\PaginatedCollection;
 use App\Http\Requests\StoreAnimeRequest;
 use App\Models\Anime;
 use App\Models\Post;
@@ -67,39 +66,34 @@ class AnimeController extends Controller implements HasMiddleware
             AllowedFilter::exact('isPublished', 'is_published'),
         )
             ->allowedSorts('title->romaji', 'created_at', 'updated_at')
-            ->paginate(14)->appends(request()->query());
+            ->paginate($request->integer('perPage', 14))->appends($request->except('page'));
 
-        $items = collect($paginator->items())
-            ->map(fn (Anime $a) => AnimeListItemData::fromModel($a, $user));
-
-        return Inertia::render('anime/Index', new AnimeIndexResponse(
-            items: new DataCollection(AnimeListItemData::class, $items),
-            pagination: new PaginationData(
-                currentPage: $paginator->currentPage(),
-                lastPage: $paginator->lastPage(),
-                perPage: $paginator->perPage(),
-                total: $paginator->total(),
-                links: $paginator->linkCollection()->toArray(),
+        return Inertia::render('anime/Index', [
+            'anime' => PaginatedCollection::fromPaginator(
+                $paginator,
+                fn (Anime $a) => AnimeListItemData::fromModel($a, $user),
             ),
-            seasons: (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray(),
-            genres: new DataCollection(LabelValue::class, collect(config('anime.genres', []))->map(fn (string $genre) => new LabelValue(
+            'seasons' => Inertia::once(fn () => (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray()),
+            'genres' => Inertia::once(fn () => new DataCollection(LabelValue::class, collect(config('anime.genres', []))->map(fn (string $genre) => new LabelValue(
                 key: $genre,
                 value: __('anime.genres.'.$genre),
-            ))),
-            tags: new DataCollection(LabelValue::class, collect(config('anime.tags', []))->map(fn (string $tag) => new LabelValue(
+            )))),
+            'tags' => Inertia::once(fn () => new DataCollection(LabelValue::class, collect(config('anime.tags', []))->map(fn (string $tag) => new LabelValue(
                 key: $tag,
                 value: __('anime.tags.'.$tag),
-            ))),
-            sortOptions: new DataCollection(LabelValue::class, collect(['title->romaji', '-title->romaji', 'created_at', '-created_at', 'updated_at', '-updated_at'])->map(function (string $sort) {
-                $dir = str_starts_with($sort, '-') ? 'desc' : 'asc';
-                $field = ltrim($sort, '-');
+            )))),
+            'sortOptions' => Inertia::once(function () {
+                return new DataCollection(LabelValue::class, collect(['title->romaji', '-title->romaji', 'created_at', '-created_at', 'updated_at', '-updated_at'])->map(function (string $sort) {
+                    $dir = str_starts_with($sort, '-') ? 'desc' : 'asc';
+                    $field = ltrim($sort, '-');
 
-                return new LabelValue(
-                    key: $sort,
-                    value: __('anime.sort.'.$field).' '.__('anime.sort_dir.'.$dir),
-                );
-            })),
-        ));
+                    return new LabelValue(
+                        key: $sort,
+                        value: __('anime.sort.'.$field).' '.__('anime.sort_dir.'.$dir),
+                    );
+                }));
+            }),
+        ]);
     }
 
     public function create(Request $request): Response

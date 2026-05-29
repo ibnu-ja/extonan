@@ -16,19 +16,15 @@ export function buildFilterQuery(
         query.sort = request.sort;
     }
 
+    if (request.perPage != null) {
+        query.perPage = request.perPage;
+    }
+
     if (request.filter) {
         const filter: Record<string, unknown> = {};
 
         for (const [key, value] of Object.entries(request.filter)) {
-            if (value == null) {
-                continue;
-            }
-
-            if (Array.isArray(value) && value.length === 0) {
-                continue;
-            }
-
-            if (value === '') {
+            if (value == null || value === '' || (Array.isArray(value) && value.length === 0)) {
                 continue;
             }
 
