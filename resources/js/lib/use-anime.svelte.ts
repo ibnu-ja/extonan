@@ -24,7 +24,11 @@ export function buildFilterQuery(
         const filter: Record<string, unknown> = {};
 
         for (const [key, value] of Object.entries(request.filter)) {
-            if (value == null || value === '' || (Array.isArray(value) && value.length === 0)) {
+            if (
+                value == null ||
+                value === '' ||
+                (Array.isArray(value) && value.length === 0)
+            ) {
                 continue;
             }
 

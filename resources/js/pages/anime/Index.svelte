@@ -20,18 +20,16 @@
     import { Button } from '@/components/ui/button';
     import * as ButtonGroup from '@/components/ui/button-group';
     import { useAuth } from '@/lib/auth.svelte';
-    import { useAnime  } from '@/lib/use-anime.svelte';
-import type {AnimeFilterState} from '@/lib/use-anime.svelte';
+    import { useAnime } from '@/lib/use-anime.svelte';
+    import type { AnimeFilterState } from '@/lib/use-anime.svelte';
     import type { RouteQueryOptions } from '@/wayfinder';
     import Fab from './index/components/fab.svelte';
     import FilterBar from './index/components/filter-bar.svelte';
     import FilterDropdown from './index/components/filter-dropdown.svelte';
     import Grid from './index/components/grid.svelte';
 
-    let {
-        anime,
-        sortOptions = [],
-    }: App.Data.Anime.AnimeIndexResponse = $props();
+    let { anime, sortOptions = [] }: App.Data.Anime.AnimeIndexResponse =
+        $props();
 
     const { genres, tags, seasons, buildFilterQuery } = useAnime();
     const { can } = useAuth();
