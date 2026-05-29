@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import AppFooter from '@/components/app-footer.svelte';
     import { SidebarInset } from '@/components/ui/sidebar';
+    import AppFooter from '@/layouts/components/app-footer.svelte';
     import { cn } from '@/lib/utils';
     import type { AppVariant } from '@/types';
 

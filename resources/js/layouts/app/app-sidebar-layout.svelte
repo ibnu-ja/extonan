@@ -1,14 +1,14 @@
 <script lang="ts">
     import { page } from '@inertiajs/svelte';
     import type { Snippet } from 'svelte';
-    import AppFooter from '@/components/app-footer.svelte';
-    import AppSidebarHeader from '@/components/app-sidebar-header.svelte';
-    import AppSidebar from '@/components/app-sidebar.svelte';
-    import BottomNavBar from '@/components/bottom-nav-bar.svelte';
     import Breadcrumbs from '@/components/breadcrumbs.svelte';
-    import MobileTopBar from '@/components/mobile-top-bar.svelte';
     import * as Sidebar from '@/components/ui/sidebar/index.js';
     import { Toaster } from '@/components/ui/sonner';
+    import AppFooter from '@/layouts/components/app-footer.svelte';
+    import AppSidebarHeader from '@/layouts/components/app-sidebar-header.svelte';
+    import AppSidebar from '@/layouts/components/app-sidebar.svelte';
+    import BottomNavBar from '@/layouts/components/bottom-nav-bar.svelte';
+    import MobileTopBar from '@/layouts/components/mobile-top-bar.svelte';
     import type { BreadcrumbItem } from '@/types';
 
     let {

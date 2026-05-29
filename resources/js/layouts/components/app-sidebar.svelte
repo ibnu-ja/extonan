@@ -9,10 +9,10 @@
     import UserPlus from 'lucide-svelte/icons/user-plus';
     import type { ComponentProps } from 'svelte';
     import AppLogo from '@/components/app-logo.svelte';
-    import NavFooter from '@/components/nav-footer.svelte';
-    import NavMain from '@/components/nav-main.svelte';
-    import NavUser from '@/components/nav-user.svelte';
     import * as Sidebar from '@/components/ui/sidebar/index.js';
+    import NavFooter from '@/layouts/components/nav-footer.svelte';
+    import NavMain from '@/layouts/components/nav-main.svelte';
+    import NavUser from '@/layouts/components/nav-user.svelte';
     import { toUrl } from '@/lib/utils';
     import {
         dashboard,

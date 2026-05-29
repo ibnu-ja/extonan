@@ -13,11 +13,15 @@
 
     const url = currentUrlState();
 
-    function navClass(href: ReturnType<typeof toUrl>): string {
+    function navClass(
+        href: Parameters<typeof toUrl>[0],
+        exactActive = false,
+    ): string {
         const resolved = toUrl(href);
-        const isActive =
-            url.isCurrentUrl(resolved, url.currentUrl) ||
-            url.isCurrentOrParentUrl(resolved, url.currentUrl);
+        const isActive = exactActive
+            ? url.isCurrentUrl(resolved, url.currentUrl)
+            : url.isCurrentUrl(resolved, url.currentUrl) ||
+              url.isCurrentOrParentUrl(resolved, url.currentUrl);
 
         return isActive
             ? 'relative flex flex-col items-center gap-0.5 px-3 pb-1 pt-2 text-[0.75rem] text-primary'
@@ -28,7 +32,7 @@
 <nav
     class="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t bg-background md:hidden"
 >
-    <Link href={toUrl(home())} class={navClass(home())}>
+    <Link href={toUrl(home())} class={navClass(home(), true)}>
         <House class="size-4" />
         <span>Home</span>
     </Link>
