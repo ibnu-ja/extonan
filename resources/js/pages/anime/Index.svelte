@@ -1,5 +1,5 @@
 <script module lang="ts">
-    import { index as animeIndex } from '@/routes/anime';
+    import { create as animeCreate, index as animeIndex } from '@/routes/anime';
 
     export const layout = {
         breadcrumbs: [{ title: 'Anime', href: animeIndex() }],
@@ -7,8 +7,16 @@
 </script>
 
 <script lang="ts">
-    import { page, router } from '@inertiajs/svelte';
-    import { Clapperboard, Tag, Calendar, Eye, EyeOff } from 'lucide-svelte';
+    import { Link, page, router } from '@inertiajs/svelte';
+    import {
+        Clapperboard,
+        Plus,
+        Tag,
+        Calendar,
+        Eye,
+        EyeOff,
+    } from 'lucide-svelte';
+    import Fab from '@/components/fab.svelte';
     import { Button } from '@/components/ui/button';
     import * as ButtonGroup from '@/components/ui/button-group';
     import { useAuth } from '@/lib/auth.svelte';
@@ -29,7 +37,12 @@
     const { genres, tags, seasons, buildFilterQuery } = useAnime();
     const { can } = useAuth();
 
-    let searchTimeout: ReturnType<typeof setTimeout> | undefined;
+    let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+
+    function debouncedApply() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(applyFilters, 400);
+    }
 
     function pageSearchParams(): URLSearchParams {
         const idx = page.url.indexOf('?');
@@ -52,7 +65,7 @@
         };
 
         for (const [key, value] of params) {
-            const match = key.match(/^filter\[(\w+)]\[\]$/);
+            const match = key.match(/^filter\[(\w+)]\[]$/);
 
             if (match) {
                 const filterKey = match[1] as keyof AnimeFilterState;
@@ -113,11 +126,10 @@
 
     function onSearchChange(value: string) {
         filters.title = value;
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(applyFilters, 400);
+        debouncedApply();
     }
 
-    function onGenreSelect(item: string, mode: 'in' | 'notIn' | 'off') {
+    function onGenreSelect(item: string, mode: 'in' | 'notIn' | 'none') {
         if (mode === 'in') {
             filters.genreIn = [...filters.genreIn, item];
             filters.genreNotIn = filters.genreNotIn.filter((g) => g !== item);
@@ -128,6 +140,8 @@
             filters.genreIn = filters.genreIn.filter((g) => g !== item);
             filters.genreNotIn = filters.genreNotIn.filter((g) => g !== item);
         }
+
+        debouncedApply();
     }
 
     function onTagSelect(item: string, mode: 'in' | 'notIn' | 'off') {
@@ -141,6 +155,8 @@
             filters.tagIn = filters.tagIn.filter((t) => t !== item);
             filters.tagNotIn = filters.tagNotIn.filter((t) => t !== item);
         }
+
+        debouncedApply();
     }
 
     function onSeasonSelect(item: string, mode: 'in' | 'notIn' | 'off') {
@@ -154,6 +170,8 @@
             filters.seasonIn = filters.seasonIn.filter((s) => s !== item);
             filters.seasonNotIn = filters.seasonNotIn.filter((s) => s !== item);
         }
+
+        debouncedApply();
     }
 </script>
 
@@ -181,7 +199,6 @@
             selectedIn={filters.genreIn}
             selectedNotIn={filters.genreNotIn}
             onselect={onGenreSelect}
-            onclose={applyFilters}
         />
         <FilterDropdown
             label="Tag"
@@ -190,7 +207,6 @@
             selectedIn={filters.tagIn}
             selectedNotIn={filters.tagNotIn}
             onselect={onTagSelect}
-            onclose={applyFilters}
         />
         <FilterDropdown
             label="Season"
@@ -199,9 +215,8 @@
             selectedIn={filters.seasonIn}
             selectedNotIn={filters.seasonNotIn}
             onselect={onSeasonSelect}
-            onclose={applyFilters}
         />
-        {#if canReadDrafts}
+        {#if can('post.read.self')}
             <ButtonGroup.Root>
                 <Button
                     variant={publishFilter === 'published'
@@ -239,5 +254,16 @@
 
     {#if pagination}
         <Pagination links={pagination.links} />
+    {/if}
+
+    {#if can('post.create')}
+        <Fab>
+            {#snippet child({ props })}
+                <Link href={animeCreate().url} {...props}>
+                    <Plus class="size-6" />
+                    Add
+                </Link>
+            {/snippet}
+        </Fab>
     {/if}
 </div>
