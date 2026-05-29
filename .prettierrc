@@ -29,6 +29,12 @@
             }
         },
         {
+            "files": "resources/js/types/typescript-transformer-manifest.json",
+            "options": {
+                "tabWidth": 4
+            }
+        },
+        {
             "files": "**/*.svelte",
             "options": {
                 "parser": "svelte"
