@@ -10,13 +10,14 @@
 </script>
 
 <script lang="ts">
-    import { page } from '@inertiajs/svelte';
-
-    let data = $derived(page.props);
+    let {
+        items,
+        canCreate,
+    }: App.Data.Anime.AnimeAZResponse = $props();
 </script>
 
 <svelte:head>
     <title>Anime A-Z</title>
 </svelte:head>
 
-<pre class="p-4 text-xs">{JSON.stringify(data, null, 2)}</pre>
+<pre class="p-4 text-xs">{JSON.stringify({ items, canCreate }, null, 2)}</pre>

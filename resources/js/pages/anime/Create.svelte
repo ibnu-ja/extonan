@@ -10,13 +10,16 @@
 </script>
 
 <script lang="ts">
-    import { page } from '@inertiajs/svelte';
+    type CreatePageProps =
+        | ({ anime?: undefined } & App.Data.Anime.AnimeFormData)
+        | { anime: App.Data.Anime.AnimeFormData };
 
-    let data = $derived(page.props);
+    let props: CreatePageProps = $props();
+    let pageTitle = $derived(props.anime ? 'Edit Anime' : 'Create Anime');
 </script>
 
 <svelte:head>
-    <title>{data.anime ? 'Edit Anime' : 'Create Anime'}</title>
+    <title>{pageTitle}</title>
 </svelte:head>
 
-<pre class="p-4 text-xs">{JSON.stringify(data, null, 2)}</pre>
+<pre class="p-4 text-xs">{JSON.stringify(props, null, 2)}</pre>
