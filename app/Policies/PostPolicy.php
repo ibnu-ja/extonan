@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Models\BasePost;
 use App\Models\User;
 
@@ -10,7 +11,7 @@ class PostPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(?User $user): bool
+    public function viewAny(): bool
     {
         return true;
     }
@@ -20,11 +21,11 @@ class PostPolicy
      */
     public function view(?User $user, BasePost $post): bool
     {
-        if ($user?->can('post.read.any') || $post->isPublished()) {
+        if ($user?->can(Permission::POST_READ_ANY->value) || $post->isPublished()) {
             return true;
         }
 
-        if ($user?->can('post.read.self') && $user?->id === $post->author_id && $post->isPublished() === false) {
+        if ($user?->can(Permission::POST_READ_SELF->value) && $user?->id === $post->author_id && $post->isPublished() === false) {
             return true;
         }
 
@@ -36,7 +37,7 @@ class PostPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('post.create');
+        return $user->can(Permission::POST_CREATE->value);
     }
 
     /**
@@ -44,11 +45,11 @@ class PostPolicy
      */
     public function update(User $user, BasePost $post): bool
     {
-        if ($user->can('post.update.any')) {
+        if ($user->can(Permission::POST_UPDATE_ANY->value)) {
             return true;
         }
 
-        return $user->can('post.update.self') && $user->id === $post->author_id;
+        return $user->can(Permission::POST_UPDATE_SELF->value) && $user->id === $post->author_id;
     }
 
     /**
@@ -56,11 +57,11 @@ class PostPolicy
      */
     public function delete(User $user, BasePost $post): bool
     {
-        if ($user->can('post.delete.any')) {
+        if ($user->can(Permission::POST_DELETE_ANY->value)) {
             return true;
         }
 
-        return $user->can('post.delete.self') && $user->id === $post->author_id;
+        return $user->can(Permission::POST_DELETE_SELF->value) && $user->id === $post->author_id;
     }
 
     /**
@@ -69,7 +70,7 @@ class PostPolicy
     public function publish(User $user, ?BasePost $post = null): bool
     {
         // if post is null means it's creating and self-publish
-        if ($post == null && $user->can('post.publish.self') || $user->can('post.publish.any')) {
+        if ($post == null && $user->can(Permission::POST_PUBLISH_SELF->value) || $user->can(Permission::POST_PUBLISH_ANY->value)) {
             return true;
         }
 

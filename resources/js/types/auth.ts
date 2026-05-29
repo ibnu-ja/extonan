@@ -12,7 +12,7 @@ export type User = {
 
 export type Auth = {
     user: User;
-    permissions?: string[];
+    permissions?: App.Enums.Permission[];
     roles?: string[];
 };
 

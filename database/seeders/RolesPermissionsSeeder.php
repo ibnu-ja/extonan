@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Permission;
+use App\Enums\Role;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission as SpatiePermission;
+use Spatie\Permission\Models\Role as SpatieRole;
 
 class RolesPermissionsSeeder extends Seeder
 {
@@ -13,46 +15,38 @@ class RolesPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        //        $roles = [
-        //            'admin',
-        //            'editor',
-        //            'author',
-        //            'contributor',
-        //            'subscriber'
-        //        ];
-
         $permissions = [
-            'post.create' => ['editor', 'author', 'contributor'],
-            'post.read.any' => ['editor'], // unpublished
-            'post.read.self' => ['editor', 'author', 'contributor'], // unpublished
-            'post.update.any' => ['editor'],
-            'post.update.self' => ['editor', 'author', 'contributor'],
-            'post.delete.any' => ['editor'],
-            'post.delete.self' => ['editor', 'author', 'contributor'],
-            'post.publish.self' => ['editor', 'author'],
-            'post.publish.any' => ['editor'],
+            Permission::POST_CREATE->value => [Role::EDITOR->value, Role::AUTHOR->value, Role::CONTRIBUTOR->value],
+            Permission::POST_READ_ANY->value => [Role::EDITOR->value], // unpublished
+            Permission::POST_READ_SELF->value => [Role::EDITOR->value, Role::AUTHOR->value, Role::CONTRIBUTOR->value], // unpublished
+            Permission::POST_UPDATE_ANY->value => [Role::EDITOR->value],
+            Permission::POST_UPDATE_SELF->value => [Role::EDITOR->value, Role::AUTHOR->value, Role::CONTRIBUTOR->value],
+            Permission::POST_DELETE_ANY->value => [Role::EDITOR->value],
+            Permission::POST_DELETE_SELF->value => [Role::EDITOR->value, Role::AUTHOR->value, Role::CONTRIBUTOR->value],
+            Permission::POST_PUBLISH_SELF->value => [Role::EDITOR->value, Role::AUTHOR->value],
+            Permission::POST_PUBLISH_ANY->value => [Role::EDITOR->value],
 
-            'user.invite' => [], // no specific roles mentioned
-            'user.read.any' => [], // no specific roles mentioned
-            'user.read.self' => ['editor', 'author', 'contributor'],
-            'user.delete.any' => [], // no specific roles mentioned
-            'user.delete.self' => ['editor', 'author', 'contributor'],
-            'user.edit.self' => [], // no specific roles mentioned
-            'user.edit.any' => [], // no specific roles mentioned
+            Permission::USER_INVITE->value => [], // no specific roles mentioned
+            Permission::USER_READ_ANY->value => [], // no specific roles mentioned
+            Permission::USER_READ_SELF->value => [Role::EDITOR->value, Role::AUTHOR->value, Role::CONTRIBUTOR->value],
+            Permission::USER_DELETE_ANY->value => [], // no specific roles mentioned
+            Permission::USER_DELETE_SELF->value => [Role::EDITOR->value, Role::AUTHOR->value, Role::CONTRIBUTOR->value],
+            Permission::USER_EDIT_SELF->value => [], // no specific roles mentioned
+            Permission::USER_EDIT_ANY->value => [], // no specific roles mentioned
         ];
 
         // Create permissions and assign them to roles
         foreach ($permissions as $permissionName => $assignedRoles) {
-            $permission = Permission::findOrCreate($permissionName);
+            $permission = SpatiePermission::findOrCreate($permissionName);
 
             foreach ($assignedRoles as $roleName) {
-                $role = Role::findOrCreate($roleName);
+                $role = SpatieRole::findOrCreate($roleName);
                 $role->givePermissionTo($permission);
             }
         }
 
         // Admin gets all permissions
-        $admin = Role::findOrCreate('admin');
-        $admin->syncPermissions(Permission::all());
+        $adminRole = SpatieRole::findOrCreate(Role::ADMIN->value);
+        $adminRole->syncPermissions(SpatiePermission::all());
     }
 }

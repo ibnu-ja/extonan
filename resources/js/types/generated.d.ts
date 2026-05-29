@@ -116,6 +116,26 @@ declare namespace App {
             };
         }
     }
+    namespace Enums {
+        export type Permission =
+            | 'post.create'
+            | 'post.read.any'
+            | 'post.read.self'
+            | 'post.update.any'
+            | 'post.update.self'
+            | 'post.delete.any'
+            | 'post.delete.self'
+            | 'post.publish.self'
+            | 'post.publish.any'
+            | 'user.invite'
+            | 'user.read.any'
+            | 'user.read.self'
+            | 'user.delete.any'
+            | 'user.delete.self'
+            | 'user.edit.self'
+            | 'user.edit.any';
+        export type Role = 'admin' | 'editor' | 'author' | 'contributor';
+    }
     namespace Http {
         namespace Requests {
             export type PostType = 'tv' | 'bd' | 'movie';
