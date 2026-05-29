@@ -87,7 +87,6 @@
 
     let filters = $state<AnimeFilterState>(parseFilterState());
     let sort = $state(pageSearchParams().get('sort') || 'title->romaji');
-    const canReadDrafts = $derived(can('post.read.self'));
     let publishFilter = $state<'published' | 'draft' | null>(
         (() => {
             const val = pageSearchParams().get('filter[is_published]');
@@ -217,7 +216,7 @@
             selectedNotIn={filters.seasonNotIn}
             onselect={onSeasonSelect}
         />
-        {#if canReadDrafts}
+        {#if can('post.read.self')}
             <ButtonGroup.Root>
                 <Button
                     variant={publishFilter === 'published'
