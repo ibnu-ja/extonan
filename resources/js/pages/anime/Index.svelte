@@ -27,7 +27,12 @@
 
     const { genres, tags, seasons, buildFilterQuery } = useAnime();
 
-    let searchTimeout: ReturnType<typeof setTimeout> | undefined;
+    let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+
+    function debouncedApply() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(applyFilters, 400);
+    }
 
     function pageSearchParams(): URLSearchParams {
         const idx = page.url.indexOf('?');
@@ -114,11 +119,10 @@
 
     function onSearchChange(value: string) {
         filters.title = value;
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(applyFilters, 400);
+        debouncedApply();
     }
 
-    function onGenreSelect(item: string, mode: 'in' | 'notIn' | 'off') {
+    function onGenreSelect(item: string, mode: 'in' | 'notIn' | 'none') {
         if (mode === 'in') {
             filters.genreIn = [...filters.genreIn, item];
             filters.genreNotIn = filters.genreNotIn.filter((g) => g !== item);
@@ -129,9 +133,11 @@
             filters.genreIn = filters.genreIn.filter((g) => g !== item);
             filters.genreNotIn = filters.genreNotIn.filter((g) => g !== item);
         }
+
+        debouncedApply();
     }
 
-    function onTagSelect(item: string, mode: 'in' | 'notIn' | 'off') {
+    function onTagSelect(item: string, mode: 'in' | 'notIn' | 'none') {
         if (mode === 'in') {
             filters.tagIn = [...filters.tagIn, item];
             filters.tagNotIn = filters.tagNotIn.filter((t) => t !== item);
@@ -142,9 +148,11 @@
             filters.tagIn = filters.tagIn.filter((t) => t !== item);
             filters.tagNotIn = filters.tagNotIn.filter((t) => t !== item);
         }
+
+        debouncedApply();
     }
 
-    function onSeasonSelect(item: string, mode: 'in' | 'notIn' | 'off') {
+    function onSeasonSelect(item: string, mode: 'in' | 'notIn' | 'none') {
         if (mode === 'in') {
             filters.seasonIn = [...filters.seasonIn, item];
             filters.seasonNotIn = filters.seasonNotIn.filter((s) => s !== item);
@@ -155,6 +163,8 @@
             filters.seasonIn = filters.seasonIn.filter((s) => s !== item);
             filters.seasonNotIn = filters.seasonNotIn.filter((s) => s !== item);
         }
+
+        debouncedApply();
     }
 </script>
 
@@ -182,7 +192,6 @@
             selectedIn={filters.genreIn}
             selectedNotIn={filters.genreNotIn}
             onselect={onGenreSelect}
-            onclose={applyFilters}
         />
         <FilterDropdown
             label="Tag"
@@ -191,7 +200,6 @@
             selectedIn={filters.tagIn}
             selectedNotIn={filters.tagNotIn}
             onselect={onTagSelect}
-            onclose={applyFilters}
         />
         <FilterDropdown
             label="Season"
@@ -200,7 +208,6 @@
             selectedIn={filters.seasonIn}
             selectedNotIn={filters.seasonNotIn}
             onselect={onSeasonSelect}
-            onclose={applyFilters}
         />
         {#if canReadDrafts}
             <ButtonGroup.Root>

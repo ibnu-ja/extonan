@@ -23,7 +23,7 @@
         activeKey?: string;
         singleSelect?: boolean;
         icon?: any;
-        onselect?: (item: string, mode: 'in' | 'notIn' | 'off') => void;
+        onselect?: (item: string, mode: 'in' | 'notIn' | 'none') => void;
         onclose?: () => void;
     } = $props();
 
@@ -40,7 +40,7 @@
 
     const activeCount = $derived(selectedIn.length + selectedNotIn.length);
 
-    function getItemMode(item: string): 'in' | 'notIn' | 'off' {
+    function getItemMode(item: string): 'in' | 'notIn' | 'none' {
         if (selectedIn.includes(item)) {
             return 'in';
         }
@@ -49,7 +49,7 @@
             return 'notIn';
         }
 
-        return 'off';
+        return 'none';
     }
 
     let prevOpen = false;
@@ -65,12 +65,12 @@
     function cycleMode(item: string) {
         const mode = getItemMode(item);
 
-        if (mode === 'off') {
+        if (mode === 'none') {
             onselect?.(item, 'in');
         } else if (mode === 'in') {
             onselect?.(item, 'notIn');
         } else {
-            onselect?.(item, 'off');
+            onselect?.(item, 'none');
         }
     }
 </script>
@@ -105,7 +105,7 @@
                 {/if}
                 {#each filtered as item (item)}
                     <Command.Item
-                        class={`${getItemMode(item) === 'in' ? 'bg-emerald-500/10 hover:bg-emerald-500/20 aria-selected:bg-emerald-500/20' : getItemMode(item) === 'notIn' ? 'bg-red-500/10 hover:bg-red-500/20 aria-selected:bg-red-500/20' : ''} px-4`}
+                        class={`${getItemMode(item) === 'in' ? 'bg-emerald-500/10 hover:bg-emerald-500/20 aria-selected:bg-emerald-500/20' : getItemMode(item) === 'notIn' ? 'bg-red-500/10 hover:bg-red-500/20 aria-selected:bg-red-500/20' : ''} rounded-none px-4`}
                         onSelect={() => cycleMode(item)}
                     >
                         <div class="flex w-full items-center gap-2">
