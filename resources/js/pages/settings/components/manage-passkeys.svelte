@@ -3,9 +3,9 @@
     import KeyRound from 'lucide-svelte/icons/key-round';
     import { destroy } from '@/actions/Laravel/Passkeys/Http/Controllers/PasskeyRegistrationController';
     import Heading from '@/components/heading.svelte';
-    import PasskeyItem from '@/components/passkey-item.svelte';
-    import PasskeyRegister from '@/components/passkey-register.svelte';
     import type { Passkey } from '@/types/auth';
+    import PasskeyItem from './passkey-item.svelte';
+    import PasskeyRegister from './passkey-register.svelte';
 
     export type Props = {
         canManagePasskeys?: boolean;

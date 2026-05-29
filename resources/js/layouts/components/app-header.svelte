@@ -28,7 +28,7 @@
         TooltipProvider,
         TooltipTrigger,
     } from '@/components/ui/tooltip';
-    import UserMenuContent from '@/components/user-menu-content.svelte';
+    import UserMenuContent from '@/layouts/components/user-menu-content.svelte';
     import { getInitials } from '@/lib/initials';
     import { toUrl } from '@/lib/utils';
     import { dashboard } from '@/routes';

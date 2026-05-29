@@ -13,8 +13,8 @@
 
 <script lang="ts">
     import AppHead from '@/components/app-head.svelte';
-    import AppearanceTabs from '@/components/appearance-tabs.svelte';
     import Heading from '@/components/heading.svelte';
+    import AppearanceTabs from './components/appearance-tabs.svelte';
 </script>
 
 <AppHead title="Appearance settings" />

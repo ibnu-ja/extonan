@@ -3,11 +3,11 @@
     import ShieldCheck from 'lucide-svelte/icons/shield-check';
     import { onDestroy } from 'svelte';
     import Heading from '@/components/heading.svelte';
-    import TwoFactorRecoveryCodes from '@/components/two-factor-recovery-codes.svelte';
-    import TwoFactorSetupModal from '@/components/two-factor-setup-modal.svelte';
     import { Button } from '@/components/ui/button';
     import { twoFactorAuthState } from '@/lib/two-factor-auth.svelte';
     import { disable, enable } from '@/routes/two-factor';
+    import TwoFactorRecoveryCodes from './two-factor-recovery-codes.svelte';
+    import TwoFactorSetupModal from './two-factor-setup-modal.svelte';
 
     export type Props = {
         canManageTwoFactor?: boolean;

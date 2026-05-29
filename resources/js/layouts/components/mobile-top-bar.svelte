@@ -1,5 +1,5 @@
 <script lang="ts">
-    import UserNav from '@/components/user-nav.svelte';
+    import UserNav from '@/layouts/components/user-nav.svelte';
 
     let {
         title = '',

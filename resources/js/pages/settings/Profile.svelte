@@ -15,7 +15,6 @@
     import { Form, page } from '@inertiajs/svelte';
     import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
     import AppHead from '@/components/app-head.svelte';
-    import DeleteUser from '@/components/delete-user.svelte';
     import Heading from '@/components/heading.svelte';
     import InputError from '@/components/input-error.svelte';
     import TextLink from '@/components/text-link.svelte';
@@ -23,6 +22,7 @@
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
     import { send } from '@/routes/verification';
+    import DeleteUser from './components/delete-user.svelte';
 
     const user = $derived(page.props.auth.user);
 </script>

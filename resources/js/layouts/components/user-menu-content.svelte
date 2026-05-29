@@ -9,7 +9,7 @@
         DropdownMenuLabel,
         DropdownMenuSeparator,
     } from '@/components/ui/dropdown-menu';
-    import UserInfo from '@/components/user-info.svelte';
+    import UserInfo from '@/layouts/components/user-info.svelte';
     import { toUrl } from '@/lib/utils';
     import { logout } from '@/routes';
     import { edit } from '@/routes/profile';

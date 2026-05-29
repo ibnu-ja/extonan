@@ -5,7 +5,6 @@
     import LockKeyhole from 'lucide-svelte/icons/lock-keyhole';
     import RefreshCw from 'lucide-svelte/icons/refresh-cw';
     import { onMount, tick } from 'svelte';
-    import AlertError from '@/components/alert-error.svelte';
     import { Button } from '@/components/ui/button';
     import {
         Card,
@@ -16,6 +15,7 @@
     } from '@/components/ui/card';
     import { twoFactorAuthState } from '@/lib/two-factor-auth.svelte';
     import { regenerateRecoveryCodes } from '@/routes/two-factor';
+    import AlertError from './alert-error.svelte';
 
     const twoFactorAuth = twoFactorAuthState();
     let isRecoveryCodesVisible = $state(false);

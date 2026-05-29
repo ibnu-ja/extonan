@@ -7,7 +7,7 @@
     import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
     import * as Sidebar from '@/components/ui/sidebar/index.js';
     import { useSidebar } from '@/components/ui/sidebar/index.js';
-    import UserInfo from '@/components/user-info.svelte';
+    import UserInfo from '@/layouts/components/user-info.svelte';
     import { toUrl } from '@/lib/utils';
     import { logout } from '@/routes';
     import { edit } from '@/routes/profile';

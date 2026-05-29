@@ -12,7 +12,7 @@
         DropdownMenuTrigger,
     } from '@/components/ui/dropdown-menu';
     import { SidebarTrigger } from '@/components/ui/sidebar';
-    import UserMenuContent from '@/components/user-menu-content.svelte';
+    import UserMenuContent from '@/layouts/components/user-menu-content.svelte';
     import { toUrl } from '@/lib/utils';
     import { dashboard, login, register as registerRoute } from '@/routes';
     import type { BreadcrumbItem } from '@/types';

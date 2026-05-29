@@ -4,7 +4,6 @@
     import Copy from 'lucide-svelte/icons/copy';
     import ScanLine from 'lucide-svelte/icons/scan-line';
     import { tick } from 'svelte';
-    import AlertError from '@/components/alert-error.svelte';
     import InputError from '@/components/input-error.svelte';
     import { Button } from '@/components/ui/button';
     import {
@@ -23,6 +22,7 @@
     import { twoFactorAuthState } from '@/lib/two-factor-auth.svelte';
     import { confirm } from '@/routes/two-factor';
     import type { TwoFactorConfigContent } from '@/types';
+    import AlertError from './alert-error.svelte';
 
     let {
         requiresConfirmation,

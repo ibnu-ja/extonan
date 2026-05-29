@@ -10,7 +10,7 @@
         DropdownMenuItem,
         DropdownMenuTrigger,
     } from '@/components/ui/dropdown-menu';
-    import UserMenuContent from '@/components/user-menu-content.svelte';
+    import UserMenuContent from '@/layouts/components/user-menu-content.svelte';
     import { toUrl } from '@/lib/utils';
     import { dashboard, login, register as registerRoute } from '@/routes';
 
