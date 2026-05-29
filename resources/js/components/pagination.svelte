@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Link, router } from '@inertiajs/svelte';
+    import { Link, page, router } from '@inertiajs/svelte';
     import {
         ChevronLeft,
         ChevronRight,
@@ -9,6 +9,7 @@
     import { Button } from '@/components/ui/button';
     import * as ButtonGroup from '@/components/ui/button-group';
     import * as Select from '@/components/ui/select';
+    import { useDisplay } from '@/lib/use-display.svelte';
 
     let {
         data,
@@ -29,9 +30,13 @@
         ),
     );
 
-    function pageUrl(page: number): string {
-        const url = new URL(window.location.href);
-        url.searchParams.set('page', String(page));
+    function pageUrl(pageNum: number): string {
+        // FIXME: page.url might be relative
+        const url = new URL(
+            page.url || '/',
+            typeof window !== 'undefined' ? window.location.origin : undefined,
+        );
+        url.searchParams.set('page', String(pageNum));
 
         return url.href;
     }
@@ -45,19 +50,15 @@
     $effect(() => {
         localStorage.setItem('perPage', String(selectValue));
     });
-    let isMobile = $state(false);
-    $effect(() => {
-        const mq = window.matchMedia('(max-width: 639px)');
-        isMobile = mq.matches;
-        function onChange(e: MediaQueryListEvent) {
-            isMobile = e.matches;
-        }
-        mq.addEventListener('change', onChange);
-
-        return () => mq.removeEventListener('change', onChange);
-    });
+    const { smAndDown } = useDisplay();
     let editingPage = $state(false);
     let pageInput = $state('1');
+    let inputEl: HTMLInputElement | undefined = $state();
+    $effect(() => {
+        if (editingPage) {
+            inputEl?.focus();
+        }
+    });
 
     function goToPage() {
         const p = parseInt(pageInput, 10);
@@ -79,7 +80,7 @@
 
 {#if lastPage > 1 || total > 14}
     <nav class="flex flex-col items-center gap-2 py-2">
-        {#if isMobile}
+        {#if smAndDown.current}
             <div class="flex items-center gap-1">
                 <Button
                     size="icon"
@@ -114,6 +115,7 @@
                                 type="number"
                                 class="w-8 bg-transparent text-center text-sm outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                 bind:value={pageInput}
+                                bind:this={inputEl}
                                 onkeydown={(e) => {
                                     if (e.key === 'Enter') {
                                         e.preventDefault();
@@ -129,7 +131,6 @@
                                     editingPage = false;
                                     pageInput = String(currentPage);
                                 }}
-                                autofocus
                             />
                         </Button>
                     {:else}
@@ -201,30 +202,63 @@
                     {/snippet}
                 </Button>
                 <ButtonGroup.Root>
-                    {#each pageLinks as link, i (i)}
-                        {#if link.label === '...'}
-                            <Button size="icon" disabled variant="outline"
-                                >...</Button
-                            >
-                        {:else}
-                            <Button
-                                size="icon"
-                                disabled={!link.url}
-                                variant={link.active ? 'default' : 'outline'}
-                            >
-                                {#snippet child({ props })}
-                                    <Link
-                                        href={link.url ??
-                                            pageUrl(Number(link.label))}
-                                        {...linkOpts}
-                                        {...props}
-                                    >
-                                        {link.label}
-                                    </Link>
-                                {/snippet}
-                            </Button>
-                        {/if}
-                    {/each}
+                    {#if editingPage}
+                        <Button size="icon" variant="outline">
+                            <input
+                                type="number"
+                                class="w-8 bg-transparent text-center text-sm outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                bind:value={pageInput}
+                                bind:this={inputEl}
+                                onkeydown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        goToPage();
+                                    }
+
+                                    if (e.key === 'Escape') {
+                                        editingPage = false;
+                                        pageInput = String(currentPage);
+                                    }
+                                }}
+                                onblur={() => {
+                                    editingPage = false;
+                                    pageInput = String(currentPage);
+                                }}
+                            />
+                        </Button>
+                    {:else}
+                        {#each pageLinks as link, i (i)}
+                            {#if link.label === '...'}
+                                <Button
+                                    size="icon"
+                                    variant="outline"
+                                    onclick={() => {
+                                        editingPage = true;
+                                        pageInput = String(currentPage);
+                                    }}>...</Button
+                                >
+                            {:else}
+                                <Button
+                                    size="icon"
+                                    disabled={!link.url}
+                                    variant={link.active
+                                        ? 'default'
+                                        : 'outline'}
+                                >
+                                    {#snippet child({ props })}
+                                        <Link
+                                            href={link.url ??
+                                                pageUrl(Number(link.label))}
+                                            {...linkOpts}
+                                            {...props}
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    {/snippet}
+                                </Button>
+                            {/if}
+                        {/each}
+                    {/if}
                 </ButtonGroup.Root>
                 <Button
                     size="icon"
@@ -258,7 +292,7 @@
         <div
             class="flex flex-col items-center gap-1 text-xs text-muted-foreground"
         >
-            <span>{from}–{to} of {total}</span>
+            <span>page {currentPage} of {lastPage}</span>
             <div class="flex items-center gap-2">
                 <span>Items per page</span>
                 <Select.Root
@@ -266,7 +300,9 @@
                     bind:value={userPerPage}
                     onValueChange={navigatePerPage}
                 >
-                    <Select.Trigger class="h-7 w-14 text-xs">
+                    <Select.Trigger
+                        class="h-7 w-14 border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3 outline-none flex items-center justify-between gap-1"
+                    >
                         {selectValue}
                     </Select.Trigger>
                     <Select.Content class="min-w-(--bits-trigger-width)">
@@ -276,7 +312,7 @@
                     </Select.Content>
                 </Select.Root>
             </div>
-            <span>page {currentPage} of {lastPage}</span>
+            <span>{from}–{to} of {total} items</span>
         </div>
     </nav>
 {/if}

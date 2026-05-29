@@ -9,6 +9,7 @@
     import AppSidebar from '@/layouts/components/app-sidebar.svelte';
     import BottomNavBar from '@/layouts/components/bottom-nav-bar.svelte';
     import MobileTopBar from '@/layouts/components/mobile-top-bar.svelte';
+    import { useDisplay } from '@/lib/use-display.svelte';
     import type { BreadcrumbItem } from '@/types';
 
     let {
@@ -21,27 +22,8 @@
 
     const isOpen = $derived(page.props.sidebarOpen);
     const title = $derived(breadcrumbs[breadcrumbs.length - 1]?.title ?? '');
-
-    let isMobile = $state(false);
+    const { mdAndDown } = useDisplay();
     let scrolled = $state(false);
-
-    $effect(() => {
-        if (typeof window === 'undefined') {
-            return;
-        }
-
-        const md = getComputedStyle(document.documentElement)
-            .getPropertyValue('--breakpoint-md')
-            .trim();
-        const mq = window.matchMedia(`(max-width: ${md})`);
-        isMobile = mq.matches;
-        const handler = (e: MediaQueryListEvent) => {
-            isMobile = e.matches;
-        };
-        mq.addEventListener('change', handler);
-
-        return () => mq.removeEventListener('change', handler);
-    });
 
     $effect(() => {
         if (typeof window === 'undefined') {
@@ -60,7 +42,7 @@
 <Sidebar.Provider open={isOpen}>
     <AppSidebar />
     <Sidebar.Inset class="flex flex-col pb-16 md:pb-0 overflow-x-hidden">
-        {#if isMobile}
+        {#if mdAndDown.current}
             <div class="h-16"></div>
             <MobileTopBar {title} {scrolled} />
         {:else}
@@ -68,7 +50,7 @@
         {/if}
         <div class="flex flex-1 flex-col">
             {#if title}
-                {#if isMobile}
+                {#if mdAndDown.current}
                     <div
                         class="px-4 pt-4 transition-opacity duration-200"
                         class:opacity-0={scrolled}
@@ -98,7 +80,7 @@
         </div>
         <AppFooter />
     </Sidebar.Inset>
-    {#if isMobile}
+    {#if mdAndDown.current}
         <BottomNavBar />
     {/if}
     <Toaster />

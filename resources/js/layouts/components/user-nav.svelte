@@ -11,14 +11,13 @@
         DropdownMenuTrigger,
     } from '@/components/ui/dropdown-menu';
     import UserMenuContent from '@/layouts/components/user-menu-content.svelte';
+    import { useDisplay } from '@/lib/use-display.svelte';
     import { toUrl } from '@/lib/utils';
     import { dashboard, login, register as registerRoute } from '@/routes';
 
     const auth = $derived(page.props.auth);
     const canRegister = $derived(page.props.canRegister as boolean | undefined);
-    const isMobile = $derived(
-        typeof window !== 'undefined' && window.innerWidth < 768,
-    );
+    const { mdAndDown } = useDisplay();
 </script>
 
 <div class="ml-auto flex items-center gap-2">
@@ -45,7 +44,7 @@
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" class="w-56">
                 <UserMenuContent user={auth.user}>
-                    {#if isMobile}
+                    {#if mdAndDown.current}
                         <DropdownMenuItem>
                             {#snippet child({ props })}
                                 <Link {...props} href={toUrl(dashboard())}>
