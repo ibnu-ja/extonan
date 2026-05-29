@@ -11,12 +11,7 @@
         latestEpisodes,
         latestMv,
         latestAlbum,
-    }: {
-        latestAnime: App.Data.AnimeSummaryData[];
-        latestEpisodes: App.Data.EpisodeSummaryData[];
-        latestMv: App.Data.MusicSummaryData[];
-        latestAlbum: App.Data.MusicSummaryData[];
-    } = $props();
+    }: App.Data.Home.HomePageResponse = $props();
 </script>
 
 <svelte:head>

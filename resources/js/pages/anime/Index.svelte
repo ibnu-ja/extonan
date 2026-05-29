@@ -19,47 +19,24 @@
     import Grid from './index/components/grid.svelte';
     import Pagination from './index/components/pagination.svelte';
 
-    type PaginationData = {
-        currentPage: number;
-        lastPage: number;
-        perPage: number;
-        total: number;
-        links: { url: string | null; label: string; active: boolean }[];
-    };
-
-    type AnimeItem = {
-        id: number;
-        title: Record<string, string | null>;
-        slug: Record<string, string | null>;
-        coverImage: {
-            extraLarge: string;
-            large: string;
-            medium: string;
-            color: string;
-        };
-        isPublished: boolean;
-        link: string;
-        permissions: { update: boolean; delete: boolean; publish: boolean };
-    };
-
-    const props = $derived(page.props as Record<string, unknown>);
-    const items = $derived((props.items as AnimeItem[]) ?? []);
-    const pagination = $derived(props.pagination as PaginationData | undefined);
+    let {
+        items = [],
+        pagination,
+        sortOptions = [],
+    }: App.Data.Anime.AnimeIndexResponse = $props();
 
     const { genres, tags, seasons, buildFilterQuery } = useAnime();
-    const sortOptions = $derived(
-        (page.props.sortOptions as { key: string; value: string }[]) ?? [],
-    );
 
     let searchTimeout: ReturnType<typeof setTimeout> | undefined;
 
+    function pageSearchParams(): URLSearchParams {
+        const idx = page.url.indexOf('?');
+
+        return idx >= 0 ? new URLSearchParams(page.url.slice(idx)) : new URLSearchParams();
+    }
+
     function parseFilterState(): AnimeFilterState {
-        const params = new URL(
-            page.url,
-            typeof window !== 'undefined'
-                ? window.location.origin
-                : 'http://localhost',
-        ).searchParams;
+        const params = pageSearchParams();
         const state: AnimeFilterState = {
             title: '',
             genreIn: [],
@@ -93,33 +70,17 @@
 
     let filters = $state<AnimeFilterState>(parseFilterState());
     let sort = $state(
-        new URL(
-            page.url,
-            typeof window !== 'undefined'
-                ? window.location.origin
-                : 'http://localhost',
-        ).searchParams.get('sort') || 'title->romaji',
-    );
-    const auth = $derived(
-        page.props.auth as { permissions?: string[]; roles?: string[] },
+        pageSearchParams().get('sort') || 'title->romaji',
     );
     const canReadDrafts = $derived(
-        auth?.permissions?.includes('post.read.self') ?? false,
-    );
-    const filterIsPublished = $derived(
-        new URL(
-            page.url,
-            typeof window !== 'undefined'
-                ? window.location.origin
-                : 'http://localhost',
-        ).searchParams.get('filter[is_published]'),
+        page.props.auth?.permissions?.includes('post.read.self') ?? false,
     );
     let publishFilter = $state<'published' | 'draft' | null>(
-        filterIsPublished === 'true'
-            ? 'published'
-            : filterIsPublished === 'false'
-              ? 'draft'
-              : null,
+        (() => {
+            const val = pageSearchParams().get('filter[is_published]');
+
+            return val === 'true' ? 'published' : val === 'false' ? 'draft' : null;
+        })(),
     );
 
     function applyFilters() {
