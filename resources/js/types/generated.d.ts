@@ -74,6 +74,16 @@ declare namespace App {
                 items: App.Data.Anime.AnimeListItemData[];
                 canCreate: boolean;
             };
+            export type AnimeFilterData = {
+                genreIn: string[];
+                genreNotIn: string[];
+                tagIn: string[];
+                tagNotIn: string[];
+                seasonIn: string[];
+                seasonNotIn: string[];
+                title: string | null;
+                isPublished: boolean | null;
+            };
             export type AnimeFormData = {
                 id: number | null;
                 title: Record<string, string | null>;
@@ -82,6 +92,10 @@ declare namespace App {
                 metadata: object | null;
                 isPublished: boolean;
                 canPublish: boolean;
+            };
+            export type AnimeIndexRequest = {
+                filter: App.Data.Anime.AnimeFilterData;
+                sort: string | null;
             };
             export type AnimeIndexResponse = {
                 items: App.Data.Anime.AnimeListItemData[];

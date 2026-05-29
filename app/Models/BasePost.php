@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Permission;
 use App\Observers\RecordAuthorObserver;
 use App\Observers\RecordPublishDateObserver;
 use Auth;
@@ -66,23 +67,18 @@ abstract class BasePost extends Model
 
         $query->when($user, function (Builder $q) use ($user) {
             // Check if user has the 'post.read.any' permission
-            $q->when($user->can('post.read.any', $this), function (Builder $q) {
+            $q->when(
+                $user->can(Permission::POST_READ_ANY->value),
                 // Editor sees all unpublished posts
-                $q->current();
-            }, function (Builder $q) use ($user) {
-                // Check if user has the 'post.read.self' permission
-                $q->when($user->can('post.read.self', $this), function (Builder $q) use ($user) {
+                fn (Builder $q) => $q->current(),
+                fn (Builder $q) => $q->when(
+                    // Check if user has the 'post.read.self' permission
+                    $user->can(Permission::POST_READ_SELF->value),
                     // Author and contributor see their own unpublished posts
-                    $q->published()->orWhere(function (Builder $q) use ($user) {
-                        return $q->current()->where('author_id', $user->getAuthIdentifier());
-                    });
-                });
-            });
-        }, function (Builder $q) {
+                    fn (Builder $q) => $q->published()->orWhere(fn (Builder $q) => $q->current()->where('author_id', $user->getAuthIdentifier())),
+                ),
+            );
             // Guest or user without permissions can only see published posts
-            $q->withoutDrafts();
-        });
-
-        // dd($query->toRawSql());
+        }, fn (Builder $q) => $q->withoutDrafts());
     }
 }

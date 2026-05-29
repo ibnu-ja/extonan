@@ -12,7 +12,7 @@
         onsortchange,
         onsearchchange,
     }: {
-        search?: string;
+        search?: string | null;
         sort?: string;
         sortOptions?: { key: string; value: string }[];
         onsortchange?: (value: string) => void;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Data\Anime\AnimeAZResponse;
 use App\Data\Anime\AnimeFormData;
+use App\Data\Anime\AnimeIndexRequest;
 use App\Data\Anime\AnimeIndexResponse;
 use App\Data\Anime\AnimeListItemData;
 use App\Data\Anime\AnimeShowResponse;
@@ -51,32 +52,19 @@ class AnimeController extends Controller implements HasMiddleware
             return redirect($redirectUrl);
         }
 
-        $validGenres = config('anime.genres', []);
-        $validTags = config('anime.tags', []);
-
-        $request->validate([
-            'filter.genre_in.*' => ['nullable', 'string', 'in:'.implode(',', $validGenres)],
-            'filter.genre_not_in.*' => ['nullable', 'string', 'in:'.implode(',', $validGenres)],
-            'filter.tag_in.*' => ['nullable', 'string', 'in:'.implode(',', $validTags)],
-            'filter.tag_not_in.*' => ['nullable', 'string', 'in:'.implode(',', $validTags)],
-            'filter.season_in.*' => ['nullable', 'string'],
-            'filter.season_not_in.*' => ['nullable', 'string'],
-            'filter.title' => ['nullable', 'string', 'max:255'],
-            'filter.is_published' => ['nullable', 'boolean'],
-            'sort' => ['nullable', 'string', 'in:title->romaji,-title->romaji,created_at,-created_at,updated_at,-updated_at'],
-        ]);
+        AnimeIndexRequest::from($request);
 
         $user = Auth::user();
 
         $paginator = QueryBuilder::for(Anime::visible())->allowedFilters(
-            AllowedFilter::scope('season_in'),
-            AllowedFilter::scope('season_not_in'),
-            AllowedFilter::scope('tag_in'),
-            AllowedFilter::scope('tag_not_in'),
-            AllowedFilter::scope('genre_in'),
-            AllowedFilter::scope('genre_not_in'),
+            AllowedFilter::scope('seasonIn'),
+            AllowedFilter::scope('seasonNotIn'),
+            AllowedFilter::scope('tagIn'),
+            AllowedFilter::scope('tagNotIn'),
+            AllowedFilter::scope('genreIn'),
+            AllowedFilter::scope('genreNotIn'),
             AllowedFilter::scope('title', 'searchTitle'),
-            AllowedFilter::exact('is_published'),
+            AllowedFilter::exact('isPublished', 'is_published'),
         )
             ->allowedSorts('title->romaji', 'created_at', 'updated_at')
             ->paginate(14)->appends(request()->query());

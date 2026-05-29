@@ -62,6 +62,7 @@
             tagNotIn: [],
             seasonIn: [],
             seasonNotIn: [],
+            isPublished: null,
         };
 
         for (const [key, value] of params) {
@@ -100,23 +101,18 @@
     );
 
     function applyFilters() {
-        const query: Record<string, unknown> = {};
-        const filter = buildFilterQuery(filters);
-
-        if (Object.keys(filter).length > 0) {
-            query.filter = filter;
-        }
-
-        if (sort) {
-            query.sort = sort;
-        }
-
-        if (publishFilter) {
-            query.filter = {
-                ...(query.filter as Record<string, unknown>),
-                is_published: publishFilter === 'published' ? true : false,
-            };
-        }
+        const query = buildFilterQuery({
+            filter: {
+                ...filters,
+                isPublished:
+                    publishFilter === 'published'
+                        ? true
+                        : publishFilter === 'draft'
+                          ? false
+                          : null,
+            },
+            sort: sort || null,
+        } satisfies App.Data.Anime.AnimeIndexRequest);
 
         router.get(animeIndex.url({ query } as RouteQueryOptions), undefined, {
             preserveState: true,
