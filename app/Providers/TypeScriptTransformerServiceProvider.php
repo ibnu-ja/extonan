@@ -10,17 +10,20 @@ use Spatie\TypeScriptTransformer\Transformers\EnumTransformer;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfigFactory;
 use Spatie\TypeScriptTransformer\Writers\GlobalNamespaceWriter;
 
-class TypeScriptTransformerServiceProvider extends BaseTypeScriptTransformerServiceProvider
-{
-    protected function configure(TypeScriptTransformerConfigFactory $config): void
+// build: composer install --no-dev skip spatie pkg. class not found = safe no-op
+if (class_exists(BaseTypeScriptTransformerServiceProvider::class)) {
+    class TypeScriptTransformerServiceProvider extends BaseTypeScriptTransformerServiceProvider
     {
-        $config
-            ->transformer(AttributedClassTransformer::class)
-            ->transformer(EnumTransformer::class)
-            ->transformDirectories(app_path())
-            ->outputDirectory(resource_path('js/types'))
-            ->writer(new GlobalNamespaceWriter('generated.d.ts'))
-            ->formatter(PrettierFormatter::class)
-            ->extension(new LaravelDataTypeScriptTransformerExtension);
+        protected function configure(TypeScriptTransformerConfigFactory $config): void
+        {
+            $config
+                ->transformer(AttributedClassTransformer::class)
+                ->transformer(EnumTransformer::class)
+                ->transformDirectories(app_path())
+                ->outputDirectory(resource_path('js/types'))
+                ->writer(new GlobalNamespaceWriter('generated.d.ts'))
+                ->formatter(PrettierFormatter::class)
+                ->extension(new LaravelDataTypeScriptTransformerExtension);
+        }
     }
 }

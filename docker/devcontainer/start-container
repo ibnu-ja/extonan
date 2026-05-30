@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-if [ "$SUPERVISOR_PHP_USER" != "root" ] && [ "$SUPERVISOR_PHP_USER" != "sail" ]; then
-    echo "You should set SUPERVISOR_PHP_USER to either 'sail' or 'root'."
+if [ "$SUPERVISOR_PHP_USER" != "root" ] && [ "$SUPERVISOR_PHP_USER" != "laravel" ]; then
+    echo "SUPERVISOR_PHP_USER must be 'root' or 'laravel'."
     exit 1
 fi
 
-if [ ! -z "$WWWUSER" ]; then
-    usermod -u $WWWUSER sail
+if [ ! -z "$PUID" ]; then
+    usermod -u $PUID laravel
 fi
 
 if [ ! -d /.composer ]; then
@@ -19,7 +19,7 @@ if [ $# -gt 0 ]; then
     if [ "$SUPERVISOR_PHP_USER" = "root" ]; then
         exec "$@"
     else
-        exec gosu $WWWUSER "$@"
+        exec gosu laravel "$@"
     fi
 else
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

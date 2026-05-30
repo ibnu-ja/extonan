@@ -1,0 +1,58 @@
+#!/usr/bin/env sh
+set -e
+
+container_mode=${CONTAINER_MODE:-"app"}
+running_migrations=${RUNNING_MIGRATIONS:-"false"}
+
+if [ "${SUPERVISOR_PHP_USER}" != "root" ] && [ "${SUPERVISOR_PHP_USER}" != "laravel" ]; then
+    echo "SUPERVISOR_PHP_USER must be 'root' or 'laravel'."
+    exit 1
+fi
+
+if [ "${SUPERVISOR_PHP_USER}" = "laravel" ] && [ -n "${PUID}" ]; then
+    usermod -u ${PUID} laravel 2>/dev/null || true
+    groupmod -g ${PGID:-${PUID}} laravel 2>/dev/null || true
+    chown -R laravel:laravel /app 2>/dev/null || true
+fi
+
+init() {
+    if [ "${running_migrations}" = "true" ]; then
+        php artisan migrate --isolated --force
+    fi
+    php artisan storage:link
+}
+
+if [ $# -gt 0 ]; then
+    if [ "${SUPERVISOR_PHP_USER}" = "root" ]; then
+        exec "$@"
+    else
+        exec su-exec laravel "$@"
+    fi
+fi
+
+init
+
+case "${container_mode}" in
+    app)
+        exec /usr/bin/supervisord -c /etc/supervisor/conf.d/octane.conf
+        ;;
+    horizon)
+        exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.horizon.conf
+        ;;
+    scheduler)
+        exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.scheduler.conf
+        ;;
+    worker)
+        exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.worker.conf
+        ;;
+    reverb)
+        exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.reverb.conf
+        ;;
+    ssr)
+        exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.ssr.conf
+        ;;
+    *)
+        echo "Invalid CONTAINER_MODE: ${container_mode}"
+        exit 1
+        ;;
+esac

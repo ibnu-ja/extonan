@@ -1,0 +1,85 @@
+# Podman deployment
+# Usage: podman kube play extonan.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: extonan
+  name: extonan
+spec:
+  containers:
+  - args:
+    - postgres
+    env:
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: extonan
+          key: DB_PASSWORD
+    - name: POSTGRES_DB
+      value: extonan
+    - name: POSTGRES_USER
+      value: extonan
+    image: docker.io/library/postgres:18-alpine
+    name: pgsql
+    ports:
+    - containerPort: 5432
+    volumeMounts:
+    - mountPath: /var/lib/postgresql
+      name: extonan-pgsql-data
+  - args:
+    - /opt/bitnami/scripts/redis/run.sh
+    env:
+    - name: REDIS_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: extonan
+          key: REDIS_PASSWORD
+    image: docker.io/bitnami/redis:latest
+    name: redis
+    securityContext:
+      runAsNonRoot: true
+  - args:
+    - /bin/sh
+    - -c
+    - /bin/meilisearch
+    image: docker.io/getmeili/meilisearch:latest
+    name: meilisearch
+  - args:
+    - bun
+    - bootstrap/ssr/ssr.js
+    env:
+    - name: INERTIA_SSR_URL
+      value: http://localhost:13714
+    image: extonan/ssr:latest
+    name: ssr
+  - envFrom:
+    - secretRef:
+        name: extonan
+    env:
+    - name: CONTAINER_MODE
+      value: app
+    image: extonan/app:latest
+    name: php
+    ports:
+    - containerPort: 80
+  - envFrom:
+    - secretRef:
+        name: extonan
+    env:
+    - name: CONTAINER_MODE
+      value: scheduler
+    image: extonan/app:latest
+    name: scheduler
+  - envFrom:
+    - secretRef:
+        name: extonan
+    env:
+    - name: CONTAINER_MODE
+      value: worker
+    image: extonan/app:latest
+    name: worker
+  volumes:
+  - name: extonan-pgsql-data
+    persistentVolumeClaim:
+      claimName: extonan-pgsql-data

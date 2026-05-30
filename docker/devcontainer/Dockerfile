@@ -1,6 +1,7 @@
 FROM docker.io/dunglas/frankenphp:php8.5-trixie
 
-ARG WWWGROUP
+ARG PUID=0
+ARG PGID=0
 ARG NODE_VERSION=24
 ARG MYSQL_CLIENT="default-mysql-client"
 ARG POSTGRES_VERSION=18
@@ -10,8 +11,8 @@ WORKDIR /var/www/html
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 ENV LANG=C.UTF-8
-ENV SUPERVISOR_PHP_COMMAND="/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan serve --host=0.0.0.0 --port=80"
-ENV SUPERVISOR_PHP_USER="sail"
+ENV SUPERVISOR_PHP_COMMAND="/usr/local/bin/php -d variables_order=EGPCS /var/www/html/artisan octane:start --server=frankenphp --host=0.0.0.0 --admin-port=2019 --port=80"
+ENV SUPERVISOR_PHP_USER="root"
 ENV PLAYWRIGHT_BROWSERS_PATH=0
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -51,8 +52,10 @@ RUN apt-get update && apt-get upgrade -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/frankenphp
-RUN groupadd --force -g $WWWGROUP sail
-RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
+RUN if [ "$PUID" != "0" ] && [ "$PGID" != "0" ]; then \
+        groupadd --force -g $PGID laravel && \
+        useradd -ms /bin/bash --no-user-group -g $PGID -u $PUID laravel; \
+    fi
 RUN git config --global --add safe.directory /var/www/html
 
 COPY start-container /usr/local/bin/start-container

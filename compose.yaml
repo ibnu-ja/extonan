@@ -1,23 +1,22 @@
 services:
     laravel.test:
         build:
-            context: docker/frankenphp-8.5
+            context: docker/devcontainer
             dockerfile: Dockerfile
             args:
-                WWWGROUP: '${WWWGROUP}'
-        image: 'sail/frankenphp:8.5-bookworm'
+                PUID: '${PUID:-0}'
+                PGID: '${PGID:-0}'
+        image: 'localhost/sail/frankenphp:8.5-bookworm'
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
             - '${APP_PORT:-80}:80'
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
         environment:
-            WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
-            SUPERVISOR_PHP_COMMAND: "/usr/local/bin/php -d variables_order=EGPCS /var/www/html/artisan octane:start --server=frankenphp --host=0.0.0.0 --admin-port=2019 --port='${APP_PORT:-80}'"
             XDG_CONFIG_HOME: /var/www/html/config
             XDG_DATA_HOME: /var/www/html/data
         volumes:
