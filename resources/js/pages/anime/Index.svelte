@@ -126,7 +126,7 @@
         debouncedApply();
     }
 
-    function onGenreSelect(item: string, mode: 'in' | 'notIn' | 'off') {
+    function onGenreSelect(item: string, mode: 'in' | 'notIn' | 'none') {
         if (mode === 'in') {
             filters.genreIn = [...filters.genreIn, item];
             filters.genreNotIn = filters.genreNotIn.filter((g) => g !== item);
@@ -141,7 +141,7 @@
         debouncedApply();
     }
 
-    function onTagSelect(item: string, mode: 'in' | 'notIn' | 'off') {
+    function onTagSelect(item: string, mode: 'in' | 'notIn' | 'none') {
         if (mode === 'in') {
             filters.tagIn = [...filters.tagIn, item];
             filters.tagNotIn = filters.tagNotIn.filter((t) => t !== item);
@@ -156,7 +156,7 @@
         debouncedApply();
     }
 
-    function onSeasonSelect(item: string, mode: 'in' | 'notIn' | 'off') {
+    function onSeasonSelect(item: string, mode: 'in' | 'notIn' | 'none') {
         if (mode === 'in') {
             filters.seasonIn = [...filters.seasonIn, item];
             filters.seasonNotIn = filters.seasonNotIn.filter((s) => s !== item);
