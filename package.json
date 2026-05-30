@@ -45,6 +45,7 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "embla-carousel-autoplay": "^8.6.0",
+        "embla-carousel-svelte": "^8.6.0",
         "embla-carousel-wheel-gestures": "^8.1.0",
         "laravel-vite-plugin": "^3.0.0",
         "lucide-svelte": "^0.468.0",
