@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+set -e
+
+container_mode=${CONTAINER_MODE:-"app"}
+
+case "${container_mode}" in
+    app)
+        php /app/artisan octane:status
+        ;;
+    horizon)
+        php /app/artisan horizon:status
+        ;;
+    scheduler|worker)
+        supervisorctl status
+        ;;
+    reverb)
+        supervisorctl status reverb
+        ;;
+    ssr)
+        supervisorctl status ssr
+        ;;
+    *)
+        exit 1
+        ;;
+esac
