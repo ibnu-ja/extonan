@@ -22,15 +22,15 @@ WORKDIR /app
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --no-autoloader --no-ansi --no-scripts --no-progress
 COPY . .
-RUN mkdir -p bootstrap/cache \
+RUN mkdir -p bootstrap/cache storage/framework/views \
     && composer dump-autoload --optimize --no-dev \
     && php artisan wayfinder:generate --with-form
 
-FROM docker.io/oven/bun:alpine AS bun_builder
+FROM docker.io/oven/bun:1-alpine AS bun_builder
 WORKDIR /app
-COPY --link bun.lock package.json ./
+COPY bun.lock package.json ./
 RUN bun install --frozen-lockfile
-COPY --link --from=composer /app /app
+COPY --from=composer /app /app
 RUN WAYFINDER_COMMAND=echo bun run build
 
 FROM docker.io/dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-alpine
@@ -77,33 +77,33 @@ RUN install-php-extensions \
 
 RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
-COPY --link --from=composer /usr/bin/composer /usr/bin/composer
-COPY --link --from=composer /app/bootstrap/cache /app/bootstrap/cache
-COPY --link docker/runtime/php.ini /usr/local/etc/php/conf.d/99-php.ini
-COPY --link docker/runtime/Caddyfile /etc/caddy/Caddyfile
-COPY --link docker/runtime/start-container /usr/local/bin/start-container
-COPY --link docker/runtime/healthcheck /usr/local/bin/healthcheck
-COPY --link docker/runtime/supervisord.conf /etc/supervisor/supervisord.conf
-COPY --link docker/runtime/octane.conf /etc/supervisor/conf.d/octane.conf
-COPY --link docker/runtime/supervisord.horizon.conf /etc/supervisor/conf.d/supervisord.horizon.conf
-COPY --link docker/runtime/supervisord.scheduler.conf /etc/supervisor/conf.d/supervisord.scheduler.conf
-COPY --link docker/runtime/supervisord.worker.conf /etc/supervisor/conf.d/supervisord.worker.conf
-COPY --link docker/runtime/supervisord.reverb.conf /etc/supervisor/conf.d/supervisord.reverb.conf
-COPY --link docker/runtime/supervisord.ssr.conf /etc/supervisor/conf.d/supervisord.ssr.conf
-COPY --link --from=composer /app/vendor /app/vendor
-COPY --link --from=bun_builder /app/public/build /app/public/build
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer /app/bootstrap/cache /app/bootstrap/cache
+COPY docker/runtime/php.ini /usr/local/etc/php/conf.d/99-php.ini
+COPY docker/runtime/Caddyfile /etc/caddy/Caddyfile
+COPY docker/runtime/start-container /usr/local/bin/start-container
+COPY docker/runtime/healthcheck /usr/local/bin/healthcheck
+COPY docker/runtime/supervisord.conf /etc/supervisor/supervisord.conf
+COPY docker/runtime/octane.conf /etc/supervisor/conf.d/octane.conf
+COPY docker/runtime/supervisord.horizon.conf /etc/supervisor/conf.d/supervisord.horizon.conf
+COPY docker/runtime/supervisord.scheduler.conf /etc/supervisor/conf.d/supervisord.scheduler.conf
+COPY docker/runtime/supervisord.worker.conf /etc/supervisor/conf.d/supervisord.worker.conf
+COPY docker/runtime/supervisord.reverb.conf /etc/supervisor/conf.d/supervisord.reverb.conf
+COPY docker/runtime/supervisord.ssr.conf /etc/supervisor/conf.d/supervisord.ssr.conf
+COPY --from=composer /app/vendor /app/vendor
+COPY --from=bun_builder /app/public/build /app/public/build
 
-COPY --link composer.json composer.lock ./
-COPY --link artisan ./
-COPY --link app/ app/
-COPY --link bootstrap/ bootstrap/
-COPY --link config/ config/
-COPY --link database/ database/
-COPY --link routes/ routes/
-COPY --link public/ public/
-COPY --link storage/ storage/
-COPY --link resources/views/ resources/views/
-COPY --link lang* ./
+COPY composer.json composer.lock ./
+COPY artisan ./
+COPY app/ app/
+COPY bootstrap/ bootstrap/
+COPY config/ config/
+COPY database/ database/
+COPY routes/ routes/
+COPY public/ public/
+COPY storage/app/public storage/app/public
+COPY resources/views/ resources/views/
+COPY lang* ./
 
 RUN mkdir -p \
     storage/framework/sessions \
