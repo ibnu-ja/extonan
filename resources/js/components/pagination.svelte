@@ -49,19 +49,7 @@
         return path + '?' + params.toString();
     }
 
-    let userPerPage = $state<string>(
-        (() => {
-            const urlPerPage = new URLSearchParams(
-                page.url?.split('?')[1] ?? '',
-            ).get('perPage');
-
-            if (urlPerPage) {
-                return urlPerPage;
-            }
-
-            return String(data.perPage);
-        })(),
-    );
+    let userPerPage = $derived(String(data.perPage));
 
     const { smAndDown } = useDisplay();
     let editingPage = $state(false);

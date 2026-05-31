@@ -2,7 +2,6 @@
 
 namespace App\Data\Anime;
 
-use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -17,6 +16,17 @@ class AnimeIndexRequest extends Data
         public ?string $sort = null,
         public ?int $perPage = null,
     ) {}
+
+    public static function prepareForPipeline(array $properties): array
+    {
+        $perPage = (int) ($properties['perPage'] ?? 0);
+
+        if (! in_array($perPage, self::PER_PAGE_VALUES, true)) {
+            $properties['perPage'] = 14;
+        }
+
+        return $properties;
+    }
 
     public static function rules(ValidationContext $context): array
     {
@@ -39,7 +49,7 @@ class AnimeIndexRequest extends Data
             'filter.title' => ['nullable', 'string', 'max:255'],
             'filter.isPublished' => ['nullable', 'boolean'],
             'sort' => ['nullable', 'string', 'in:title->romaji,-title->romaji,created_at,-created_at,updated_at,-updated_at'],
-            'perPage' => ['nullable', 'integer', Rule::in(self::PER_PAGE_VALUES)],
+            'perPage' => ['nullable', 'integer'],
         ];
     }
 }

@@ -51,7 +51,9 @@ class AnimeController extends Controller implements HasMiddleware
             return redirect($redirectUrl);
         }
 
-        AnimeIndexRequest::from($request);
+        $data = AnimeIndexRequest::from($request);
+
+        $request->merge(['perPage' => $data->perPage]);
 
         $user = Auth::user();
 
@@ -72,7 +74,7 @@ class AnimeController extends Controller implements HasMiddleware
                 'is_published', 'is_current', 'uuid', 'published_at',
                 'publisher_type', 'publisher_id',
             ])
-            ->paginate($request->integer('perPage'))->appends($request->except('page'));
+            ->paginate($data->perPage)->appends($request->except(['page']));
 
         return Inertia::render('anime/Index', [
             'anime' => PaginatedCollection::fromPaginator(
