@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Symfony\Component\HttpFoundation\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,6 +16,26 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+
+        switch (env('APP_ENV')) {
+            case 'production':
+                $middleware->trustProxies(
+                    at: '*',
+                    headers: Request::HEADER_X_FORWARDED_FOR |
+                        Request::HEADER_X_FORWARDED_HOST |
+                        Request::HEADER_X_FORWARDED_PORT |
+                        Request::HEADER_X_FORWARDED_PROTO,
+                );
+
+                break;
+
+            default:
+                $middleware->trustProxies(
+                    at: ['127.0.0.1', '::1'],
+                    headers: Request::HEADER_X_FORWARDED_FOR |
+                        Request::HEADER_X_FORWARDED_PROTO,
+                );
+        }
 
         $middleware->web(append: [
             HandleAppearance::class,
