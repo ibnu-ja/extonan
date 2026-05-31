@@ -3,8 +3,8 @@
 namespace App\Data;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 /**
  * @template TValue

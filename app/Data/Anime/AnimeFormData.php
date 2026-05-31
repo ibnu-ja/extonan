@@ -3,8 +3,8 @@
 namespace App\Data\Anime;
 
 use App\Models\Anime;
-use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class AnimeFormData extends Data

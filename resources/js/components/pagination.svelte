@@ -37,9 +37,10 @@
         const params = new URLSearchParams(search);
 
         if (!params.has('perPage')) {
-            const stored = typeof localStorage !== 'undefined'
-                ? localStorage.getItem('per_page')
-                : null;
+            const stored =
+                typeof localStorage !== 'undefined'
+                    ? localStorage.getItem('per_page')
+                    : null;
             params.set('perPage', stored ?? userPerPage);
         }
 

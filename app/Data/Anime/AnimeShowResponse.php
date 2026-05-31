@@ -4,9 +4,9 @@ namespace App\Data\Anime;
 
 use App\Data\EpisodeSummaryData;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
-use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class AnimeShowResponse extends Data

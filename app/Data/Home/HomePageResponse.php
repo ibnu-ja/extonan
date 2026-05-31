@@ -6,9 +6,9 @@ use App\Data\AnimeSummaryData;
 use App\Data\EpisodeSummaryData;
 use App\Data\MusicSummaryData;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
-use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class HomePageResponse extends Data

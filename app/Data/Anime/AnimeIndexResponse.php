@@ -5,9 +5,9 @@ namespace App\Data\Anime;
 use App\Data\LabelValue;
 use App\Data\PaginatedCollection;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
-use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class AnimeIndexResponse extends Data
