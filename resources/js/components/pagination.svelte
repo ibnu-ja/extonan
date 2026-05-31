@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" generics="T">
     import { Link, page, router } from '@inertiajs/svelte';
     import {
         ChevronLeft,
@@ -15,7 +15,7 @@
         data,
         only = [],
     }: {
-        data: App.Data.PaginatedCollection<any>;
+        data: App.Data.PaginatedCollection<T>;
         only?: string[];
     } = $props();
 
