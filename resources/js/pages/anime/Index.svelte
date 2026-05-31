@@ -97,7 +97,7 @@
         })(),
     );
 
-    let perPage = $state(anime?.perPage ?? 14);
+    let perPage = $derived(anime?.perPage ?? 14);
 
     function applyFilters() {
         const query = buildFilterQuery({
