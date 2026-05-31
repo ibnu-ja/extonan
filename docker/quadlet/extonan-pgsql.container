@@ -1,0 +1,17 @@
+[Unit]
+Description=extonan PostgreSQL Database
+
+[Container]
+Image=docker.io/library/postgres:18-alpine
+Pod=extonan.pod
+EnvironmentFile=extonan.env
+Volume=extonan-pgsql-data.volume:/var/lib/postgresql
+HealthCmd=pg_isready -U extonan
+HealthInterval=10s
+HealthRetries=5
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

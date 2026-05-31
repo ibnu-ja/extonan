@@ -1,0 +1,13 @@
+[Unit]
+Description=extonan Meilisearch
+
+[Container]
+Image=docker.io/getmeili/meilisearch:latest
+Pod=extonan.pod
+EnvironmentFile=extonan.env
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

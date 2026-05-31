@@ -1,0 +1,21 @@
+[Unit]
+Description=extonan Laravel App (FrankenPHP)
+After=extonan-pgsql.container extonan-redis.container extonan-meilisearch.container extonan-ssr.container
+Requires=extonan-pgsql.container extonan-redis.container extonan-meilisearch.container extonan-ssr.container
+
+[Container]
+Image=extonan/app:latest
+Pod=extonan.pod
+EnvironmentFile=extonan.env
+Volume=%h/extonan/storage:/app/storage:z
+HealthCmd=/usr/local/bin/healthcheck
+HealthInterval=10s
+HealthRetries=5
+HealthTimeout=3s
+HealthStartPeriod=10s
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=extonan SSR (Svelte)
+After=extonan.pod
+
+[Container]
+Image=extonan/ssr:latest
+Pod=extonan.pod
+EnvironmentFile=extonan.env
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

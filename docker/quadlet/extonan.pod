@@ -1,0 +1,11 @@
+[Unit]
+Description=extonan Pod
+
+[Service]
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+
+[Pod]
+PublishPort=8000:80

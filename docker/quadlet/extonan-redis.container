@@ -1,0 +1,13 @@
+[Unit]
+Description=extonan Redis Cache
+
+[Container]
+Image=docker.io/bitnami/redis:latest
+Pod=extonan.pod
+EnvironmentFile=extonan.env
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
