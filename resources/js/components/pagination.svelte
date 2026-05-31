@@ -31,14 +31,12 @@
     );
 
     function pageUrl(pageNum: number): string {
-        // FIXME: page.url might be relative
-        const url = new URL(
-            page.url || '/',
-            typeof window !== 'undefined' ? window.location.origin : undefined,
-        );
-        url.searchParams.set('page', String(pageNum));
+        const [path, search] = (page.url || '/').split('?');
+        const params = new URLSearchParams(search ?? '');
+        params.set('page', String(pageNum));
+        const qs = params.toString();
 
-        return url.href;
+        return qs ? `${path}?${qs}` : path;
     }
 
     let userPerPage = $state<string | undefined>(
@@ -71,10 +69,12 @@
     }
 
     function navigatePerPage(val: string) {
-        const url = new URL(pageUrl(1));
-        url.searchParams.set('perPage', val);
-        url.searchParams.set('page', '1');
-        router.get(url.href, undefined, linkOpts);
+        const [path, search] = pageUrl(1).split('?');
+        const params = new URLSearchParams(search ?? '');
+        params.set('perPage', val);
+        params.set('page', '1');
+        const qs = params.toString();
+        router.get(qs ? `${path}?${qs}` : path, undefined, linkOpts);
     }
 </script>
 
