@@ -28,7 +28,10 @@ yarn-error.log
 /.fleet
 /.idea
 /.nova
+/docker/quadlet/extonan.env
 /.vscode
 /.zed
+/config/*
+!/config/*.php
+!/config/**/*.php
 /data
-/config/caddy

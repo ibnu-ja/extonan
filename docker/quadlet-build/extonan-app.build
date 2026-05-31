@@ -1,0 +1,10 @@
+[Unit]
+Description=Build extonan Laravel App Image
+
+[Build]
+ImageTag=extonan/app:latest
+File=docker/app/Dockerfile
+SetWorkingDirectory=%h/extonan
+
+[Install]
+WantedBy=default.target

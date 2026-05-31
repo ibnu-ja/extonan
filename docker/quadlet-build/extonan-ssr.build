@@ -1,0 +1,10 @@
+[Unit]
+Description=Build extonan SSR Image
+
+[Build]
+ImageTag=extonan/ssr:latest
+File=docker/ssr/Dockerfile
+SetWorkingDirectory=%h/extonan
+
+[Install]
+WantedBy=default.target

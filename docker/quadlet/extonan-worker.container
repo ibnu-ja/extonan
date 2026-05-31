@@ -1,0 +1,17 @@
+[Unit]
+Description=extonan Laravel Queue Worker
+After=extonan.container
+Requires=extonan.container
+
+[Container]
+Image=extonan/app:latest
+Pod=extonan.pod
+Environment=CONTAINER_MODE=worker
+EnvironmentFile=extonan.env
+Volume=%h/extonan/storage:/app/storage:z
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
