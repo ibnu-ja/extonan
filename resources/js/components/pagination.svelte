@@ -31,22 +31,26 @@
     );
 
     function pageUrl(pageNum: number): string {
-        const [path, search] = (page.url || '/').split('?');
-        const params = new URLSearchParams(search ?? '');
+        const [path, search] = (page.url ?? '/').split('?');
+        const params = new URLSearchParams(search);
         params.set('page', String(pageNum));
-        const qs = params.toString();
 
-        return qs ? `${path}?${qs}` : path;
+        return path + '?' + params.toString();
     }
 
-    let userPerPage = $state<string | undefined>(
+    let userPerPage = $state<string>(
         typeof localStorage !== 'undefined'
-            ? (localStorage.getItem('perPage') ?? undefined)
-            : undefined,
+            ? (localStorage.getItem('perPage') ?? String(data.perPage))
+            : String(data.perPage),
     );
-    let selectValue = $derived(userPerPage ?? data.perPage);
+    function setCookie(name: string, value: string, days = 365) {
+        const maxAge = days * 24 * 60 * 60;
+        document.cookie = `${name}=${value};path=/;max-age=${maxAge};SameSite=Lax`;
+    }
+
     $effect(() => {
-        localStorage.setItem('perPage', String(selectValue));
+        localStorage.setItem('perPage', userPerPage);
+        setCookie('per_page', userPerPage);
     });
     const { smAndDown } = useDisplay();
     let editingPage = $state(false);
@@ -69,16 +73,15 @@
     }
 
     function navigatePerPage(val: string) {
-        const [path, search] = pageUrl(1).split('?');
-        const params = new URLSearchParams(search ?? '');
+        const [path, search] = (page.url ?? '/').split('?');
+        const params = new URLSearchParams(search);
         params.set('perPage', val);
         params.set('page', '1');
-        const qs = params.toString();
-        router.get(qs ? `${path}?${qs}` : path, undefined, linkOpts);
+        router.get(path + '?' + params.toString(), undefined, linkOpts);
     }
 </script>
 
-{#if lastPage > 1 || total > 14}
+{#if lastPage > 1 || total > perPage}
     <nav class="flex flex-col items-center gap-2 py-2">
         {#if smAndDown.current}
             <div class="flex items-center gap-1">
@@ -303,7 +306,7 @@
                     <Select.Trigger
                         class="h-7 w-14 border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3 outline-none flex items-center justify-between gap-1"
                     >
-                        {selectValue}
+                        {userPerPage}
                     </Select.Trigger>
                     <Select.Content class="min-w-(--bits-trigger-width)">
                         {#each [14, 25, 50, 100] as opt (opt)}
