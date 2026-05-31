@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\Anime\AnimeAZResponse;
 use App\Data\Anime\AnimeFormData;
 use App\Data\Anime\AnimeIndexRequest;
+use App\Data\Anime\AnimeIndexResponse;
 use App\Data\Anime\AnimeListItemData;
 use App\Data\Anime\AnimeShowResponse;
 use App\Data\EpisodeSummaryData;
@@ -16,7 +17,6 @@ use App\Models\Post;
 use App\Queries\AnimeSeasonsQuery;
 use Gate;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -40,7 +40,10 @@ class AnimeController extends Controller implements HasMiddleware
         ];
     }
 
-    public function index(Request $request): Application|RedirectResponse|Redirector|Response
+    /**
+     * @see AnimeIndexResponse
+     */
+    public function index(Request $request): RedirectResponse|Redirector|Response
     {
         if (! $request->has('sort')) {
             $query = $request->query();
