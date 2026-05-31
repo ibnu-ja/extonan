@@ -14,9 +14,11 @@
     let {
         data,
         only = [],
+        perPageValues = [14, 25, 50, 100],
     }: {
         data: App.Data.PaginatedCollection<T>;
         only?: string[];
+        perPageValues?: number[];
     } = $props();
 
     let { currentPage, lastPage, perPage, total, links } = $derived(data);
@@ -33,26 +35,32 @@
     function pageUrl(pageNum: number): string {
         const [path, search] = (page.url ?? '/').split('?');
         const params = new URLSearchParams(search);
+
+        if (!params.has('perPage')) {
+            const stored = typeof localStorage !== 'undefined'
+                ? localStorage.getItem('per_page')
+                : null;
+            params.set('perPage', stored ?? userPerPage);
+        }
+
         params.set('page', String(pageNum));
 
         return path + '?' + params.toString();
     }
 
     let userPerPage = $state<string>(
-        typeof localStorage !== 'undefined'
-            ? (localStorage.getItem('per_page') ?? String(data.perPage))
-            : String(data.perPage),
+        (() => {
+            const urlPerPage = new URLSearchParams(
+                page.url?.split('?')[1] ?? '',
+            ).get('perPage');
+
+            if (urlPerPage) {
+                return urlPerPage;
+            }
+
+            return String(data.perPage);
+        })(),
     );
-
-    function setCookie(name: string, value: string, days = 365) {
-        const maxAge = days * 24 * 60 * 60;
-        document.cookie = `${name}=${value};path=/;max-age=${maxAge};SameSite=Lax`;
-    }
-
-    function persistPerPage(val: string) {
-        localStorage.setItem('per_page', val);
-        setCookie('per_page', val);
-    }
 
     const { smAndDown } = useDisplay();
     let editingPage = $state(false);
@@ -75,10 +83,11 @@
     }
 
     function navigatePerPage(val: string) {
-        persistPerPage(val);
+        localStorage.setItem('per_page', val);
 
         const [path, search] = (page.url ?? '/').split('?');
         const params = new URLSearchParams(search);
+        params.set('perPage', val);
         params.set('page', '1');
         router.get(path + '?' + params.toString(), undefined, linkOpts);
     }
@@ -303,7 +312,7 @@
                 <span>Items per page</span>
                 <Select.Root
                     type="single"
-                    bind:value={userPerPage}
+                    value={userPerPage}
                     onValueChange={navigatePerPage}
                 >
                     <Select.Trigger
@@ -312,7 +321,7 @@
                         {userPerPage}
                     </Select.Trigger>
                     <Select.Content class="min-w-(--bits-trigger-width)">
-                        {#each [14, 25, 50, 100] as opt (opt)}
+                        {#each perPageValues as opt (opt)}
                             <Select.Item value={String(opt)}>{opt}</Select.Item>
                         {/each}
                     </Select.Content>

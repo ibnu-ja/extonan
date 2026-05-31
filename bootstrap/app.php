@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->encryptCookies(except: ['appearance', 'sidebar_state', 'per_page']);
+        $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
         switch (env('APP_ENV')) {
             case 'production':

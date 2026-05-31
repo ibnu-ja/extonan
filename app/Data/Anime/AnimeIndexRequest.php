@@ -2,16 +2,20 @@
 
 namespace App\Data\Anime;
 
-use Spatie\LaravelData\Attributes\TypeScript;
+use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class AnimeIndexRequest extends Data
 {
+    public const array PER_PAGE_VALUES = [14, 25, 50, 100];
+
     public function __construct(
         public AnimeFilterData $filter = new AnimeFilterData,
         public ?string $sort = null,
+        public ?int $perPage = null,
     ) {}
 
     public static function rules(ValidationContext $context): array
@@ -35,6 +39,7 @@ class AnimeIndexRequest extends Data
             'filter.title' => ['nullable', 'string', 'max:255'],
             'filter.isPublished' => ['nullable', 'boolean'],
             'sort' => ['nullable', 'string', 'in:title->romaji,-title->romaji,created_at,-created_at,updated_at,-updated_at'],
+            'perPage' => ['nullable', 'integer', Rule::in(self::PER_PAGE_VALUES)],
         ];
     }
 }

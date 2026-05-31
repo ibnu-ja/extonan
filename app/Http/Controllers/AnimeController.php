@@ -66,7 +66,13 @@ class AnimeController extends Controller implements HasMiddleware
             AllowedFilter::exact('isPublished', 'is_published'),
         )
             ->allowedSorts('title->romaji', 'created_at', 'updated_at')
-            ->paginate((int) $request->cookie('per_page', 14))->appends($request->except('page'));
+            ->select([
+                'id', 'title', 'slug', 'author_id', 'metadata',
+                'created_at', 'updated_at',
+                'is_published', 'is_current', 'uuid', 'published_at',
+                'publisher_type', 'publisher_id',
+            ])
+            ->paginate($request->integer('perPage'))->appends($request->except('page'));
 
         return Inertia::render('anime/Index', [
             'anime' => PaginatedCollection::fromPaginator(
@@ -93,6 +99,7 @@ class AnimeController extends Controller implements HasMiddleware
                     );
                 }));
             }),
+            'perPageValues' => Inertia::once(fn () => AnimeIndexRequest::PER_PAGE_VALUES),
         ]);
     }
 

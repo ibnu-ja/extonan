@@ -97,6 +97,7 @@ declare namespace App {
             export type AnimeIndexRequest = {
                 filter: App.Data.Anime.AnimeFilterData;
                 sort: string | null;
+                perPage: number | null;
             };
             export type AnimeIndexResponse = {
                 anime: App.Data.PaginatedCollection<App.Data.Anime.AnimeListItemData>;

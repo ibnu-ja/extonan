@@ -30,6 +30,11 @@
 
     let { anime, sortOptions = [] }: App.Data.Anime.AnimeIndexResponse =
         $props();
+    let perPageValues = $derived(
+        (page.props.perPageValues as number[]) ?? [14, 25, 50, 100],
+    );
+
+    // TODO: Show validation errors from page.props.errors
 
     const { genres, tags, seasons, buildFilterQuery } = useAnime();
     const { can } = useAuth();
@@ -109,6 +114,7 @@
                           : null,
             },
             sort: sort || null,
+            perPage: null,
         } satisfies App.Data.Anime.AnimeIndexRequest);
 
         router.get(animeIndex.url({ query } as RouteQueryOptions), undefined, {
@@ -247,7 +253,7 @@
     <Grid items={anime.data} />
 
     {#if anime}
-        <Pagination data={anime} only={['anime']} />
+        <Pagination data={anime} only={['anime']} {perPageValues} />
     {/if}
 
     {#if can('post.create')}
