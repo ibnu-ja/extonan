@@ -40,18 +40,20 @@
 
     let userPerPage = $state<string>(
         typeof localStorage !== 'undefined'
-            ? (localStorage.getItem('perPage') ?? String(data.perPage))
+            ? (localStorage.getItem('per_page') ?? String(data.perPage))
             : String(data.perPage),
     );
+
     function setCookie(name: string, value: string, days = 365) {
         const maxAge = days * 24 * 60 * 60;
         document.cookie = `${name}=${value};path=/;max-age=${maxAge};SameSite=Lax`;
     }
 
-    $effect(() => {
-        localStorage.setItem('perPage', userPerPage);
-        setCookie('per_page', userPerPage);
-    });
+    function persistPerPage(val: string) {
+        localStorage.setItem('per_page', val);
+        setCookie('per_page', val);
+    }
+
     const { smAndDown } = useDisplay();
     let editingPage = $state(false);
     let pageInput = $state('1');
@@ -73,6 +75,8 @@
     }
 
     function navigatePerPage(val: string) {
+        persistPerPage(val);
+
         const [path, search] = (page.url ?? '/').split('?');
         const params = new URLSearchParams(search);
         params.set('perPage', val);
