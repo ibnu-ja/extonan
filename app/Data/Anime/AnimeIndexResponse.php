@@ -26,5 +26,7 @@ class AnimeIndexResponse extends Data
         /** @var DataCollection<LabelValue> */
         #[DataCollectionOf(LabelValue::class)]
         public DataCollection $sortOptions,
+        /** @var int[] */
+        public array $perPageValues = [],
     ) {}
 }

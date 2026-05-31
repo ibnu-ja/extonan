@@ -105,6 +105,7 @@ declare namespace App {
                 genres: App.Data.LabelValue[];
                 tags: App.Data.LabelValue[];
                 sortOptions: App.Data.LabelValue[];
+                perPageValues: number[];
             };
             export type AnimeListItemData = {
                 id: number;

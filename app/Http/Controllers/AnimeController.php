@@ -82,27 +82,40 @@ class AnimeController extends Controller implements HasMiddleware
                 fn (Anime $a) => AnimeListItemData::fromModel($a, $user),
             ),
             'seasons' => Inertia::once(fn () => (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray()),
-            'genres' => Inertia::once(fn () => new DataCollection(LabelValue::class, collect(config('anime.genres', []))->map(fn (string $genre) => new LabelValue(
-                key: $genre,
-                value: __('anime.genres.'.$genre),
-            )))),
-            'tags' => Inertia::once(fn () => new DataCollection(LabelValue::class, collect(config('anime.tags', []))->map(fn (string $tag) => new LabelValue(
-                key: $tag,
-                value: __('anime.tags.'.$tag),
-            )))),
-            'sortOptions' => Inertia::once(function () {
-                return new DataCollection(LabelValue::class, collect(['title->romaji', '-title->romaji', 'created_at', '-created_at', 'updated_at', '-updated_at'])->map(function (string $sort) {
-                    $dir = str_starts_with($sort, '-') ? 'desc' : 'asc';
-                    $field = ltrim($sort, '-');
-
-                    return new LabelValue(
-                        key: $sort,
-                        value: __('anime.sort.'.$field).' '.__('anime.sort_dir.'.$dir),
-                    );
-                }));
-            }),
+            'genres' => Inertia::once(fn () => $this->getGenres()),
+            'tags' => Inertia::once(fn () => $this->getTags()),
+            'sortOptions' => Inertia::once(fn () => $this->getSortOptions()),
             'perPageValues' => Inertia::once(fn () => AnimeIndexRequest::PER_PAGE_VALUES),
         ]);
+    }
+
+    private function getGenres(): DataCollection
+    {
+        return new DataCollection(LabelValue::class, collect(config('anime.genres', []))->map(fn (string $genre) => new LabelValue(
+            key: $genre,
+            value: __('anime.genres.'.$genre),
+        )));
+    }
+
+    private function getTags(): DataCollection
+    {
+        return new DataCollection(LabelValue::class, collect(config('anime.tags', []))->map(fn (string $tag) => new LabelValue(
+            key: $tag,
+            value: __('anime.tags.'.$tag),
+        )));
+    }
+
+    private function getSortOptions(): DataCollection
+    {
+        return new DataCollection(LabelValue::class, collect(['title->romaji', '-title->romaji', 'created_at', '-created_at', 'updated_at', '-updated_at'])->map(function (string $sort) {
+            $dir = str_starts_with($sort, '-') ? 'desc' : 'asc';
+            $field = ltrim($sort, '-');
+
+            return new LabelValue(
+                key: $sort,
+                value: __('anime.sort.'.$field).' '.__('anime.sort_dir.'.$dir),
+            );
+        }));
     }
 
     public function create(Request $request): Response

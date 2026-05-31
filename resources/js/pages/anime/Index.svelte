@@ -28,11 +28,8 @@
     import FilterDropdown from './index/components/filter-dropdown.svelte';
     import Grid from './index/components/grid.svelte';
 
-    let { anime, sortOptions = [] }: App.Data.Anime.AnimeIndexResponse =
+    let { anime, sortOptions = [], perPageValues = [14, 25, 50, 100] }: App.Data.Anime.AnimeIndexResponse =
         $props();
-    let perPageValues = $derived(
-        (page.props.perPageValues as number[]) ?? [14, 25, 50, 100],
-    );
 
     // TODO: Show validation errors from page.props.errors
 
