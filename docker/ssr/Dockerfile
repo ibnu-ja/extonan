@@ -3,23 +3,22 @@ WORKDIR /app
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --no-autoloader --no-ansi --no-scripts --no-progress
 COPY . .
-RUN mkdir -p bootstrap/cache \
+RUN mkdir -p bootstrap/cache storage/framework/views \
     && composer dump-autoload --optimize --no-dev \
     && php artisan wayfinder:generate --with-form
 
-FROM docker.io/oven/bun:alpine AS bun_builder
+FROM docker.io/oven/bun:1-alpine AS bun_builder
 WORKDIR /app
-COPY --link bun.lock package.json ./
+COPY bun.lock package.json ./
 RUN bun install --frozen-lockfile
-COPY --link --from=wayfinder /app /app
+COPY --from=wayfinder /app /app
 RUN WAYFINDER_COMMAND=echo bun run build:ssr
 
-FROM docker.io/oven/bun:alpine
+FROM docker.io/oven/bun:1-alpine
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --link bun.lock package.json ./
-RUN bun install --frozen-lockfile
-COPY --link --from=bun_builder /app/bootstrap/ssr /app/bootstrap/ssr
-COPY --link --from=bun_builder /app/public /app/public
+COPY --from=bun_builder /app/node_modules /app/node_modules
+COPY --from=bun_builder /app/bootstrap/ssr /app/bootstrap/ssr
+COPY --from=bun_builder /app/public /app/public
 EXPOSE 13714
 CMD ["bun", "bootstrap/ssr/ssr.js"]
