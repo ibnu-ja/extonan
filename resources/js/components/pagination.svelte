@@ -79,7 +79,6 @@
 
         const [path, search] = (page.url ?? '/').split('?');
         const params = new URLSearchParams(search);
-        params.set('perPage', val);
         params.set('page', '1');
         router.get(path + '?' + params.toString(), undefined, linkOpts);
     }

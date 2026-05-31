@@ -97,8 +97,6 @@
         })(),
     );
 
-    let perPage = $derived(anime?.perPage ?? 14);
-
     function applyFilters() {
         const query = buildFilterQuery({
             filter: {
@@ -111,7 +109,6 @@
                           : null,
             },
             sort: sort || null,
-            perPage,
         } satisfies App.Data.Anime.AnimeIndexRequest);
 
         router.get(animeIndex.url({ query } as RouteQueryOptions), undefined, {

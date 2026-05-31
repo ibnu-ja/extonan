@@ -12,7 +12,6 @@ class AnimeIndexRequest extends Data
     public function __construct(
         public AnimeFilterData $filter = new AnimeFilterData,
         public ?string $sort = null,
-        public ?int $perPage = null,
     ) {}
 
     public static function rules(ValidationContext $context): array
@@ -36,7 +35,6 @@ class AnimeIndexRequest extends Data
             'filter.title' => ['nullable', 'string', 'max:255'],
             'filter.isPublished' => ['nullable', 'boolean'],
             'sort' => ['nullable', 'string', 'in:title->romaji,-title->romaji,created_at,-created_at,updated_at,-updated_at'],
-            'perPage' => ['nullable', 'integer', 'in:14,25,50,100'],
         ];
     }
 }

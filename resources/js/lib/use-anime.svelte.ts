@@ -16,10 +16,6 @@ export function buildFilterQuery(
         query.sort = request.sort;
     }
 
-    if (request.perPage != null) {
-        query.perPage = request.perPage;
-    }
-
     if (request.filter) {
         const filter: Record<string, unknown> = {};
 

@@ -66,7 +66,7 @@ class AnimeController extends Controller implements HasMiddleware
             AllowedFilter::exact('isPublished', 'is_published'),
         )
             ->allowedSorts('title->romaji', 'created_at', 'updated_at')
-            ->paginate($request->integer('perPage', (int) $request->cookie('per_page', 14)))->appends($request->except('page'));
+            ->paginate((int) $request->cookie('per_page', 14))->appends($request->except('page'));
 
         return Inertia::render('anime/Index', [
             'anime' => PaginatedCollection::fromPaginator(
