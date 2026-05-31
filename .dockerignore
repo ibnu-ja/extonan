@@ -1,8 +1,73 @@
+# git
 .git
+.gitattributes
+.gitignore
+
+# env
 .env
+.env.example
+
+# IDE / editor
+.idea
+.vscode
+.editorconfig
+.run
+
+# CI / devcontainer
+.github
+.devcontainer
+
+# agent / tooling configs
+.agents
+.ai
+.junie
+opencode.json
+skills-lock.json
+boost.json
+
+# dependencies
 vendor
 node_modules
-public/build
-bootstrap/cache/
+
+# build artifacts
+bootstrap/cache
+
+# tests
+tests
+phpunit.xml
 .phpunit.result.cache
+
+# docker
+docker
+compose.yaml
+
+# static analysis / formatting
+eslint.config.js
+.prettierignore
+.prettierrc
+pint.json
+.php-cs-fixer.php
+
+# misc
+.npmrc
+.editorconfig
+AGENTS.md
+README.md
+_ide_helper.php
+.phpstorm.meta.php
+.phpunit.cache
+
+# shell scripts
+reimport-scout
+sail
+start
+
+# temp / cache
 storage/*.key
+# storage/app/public
+storage/debugbar
+storage/logs/.gitkeep
+storage/framework/cache/data
+storage/framework/sessions
+storage/framework/views
+storage/framework/testing
