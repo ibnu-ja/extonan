@@ -40,10 +40,6 @@ tests
 phpunit.xml
 .phpunit.result.cache
 
-# docker
-docker
-compose.yaml
-
 # static analysis / formatting
 eslint.config.js
 .prettierignore
