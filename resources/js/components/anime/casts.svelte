@@ -17,9 +17,7 @@
                     alt={character.node?.name?.full ?? ''}
                     class="aspect-2/3 w-full object-cover"
                 />
-                <div
-                    class="col-span-3 flex flex-col justify-between px-3 py-2"
-                >
+                <div class="col-span-3 flex flex-col justify-between px-3 py-2">
                     <div class="text-sm font-medium">
                         {character.node?.name?.full}
                     </div>
