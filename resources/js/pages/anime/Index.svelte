@@ -65,7 +65,7 @@
         };
 
         for (const [key, value] of params) {
-            const match = key.match(/^filter\[(\w+)]\[]$/);
+            const match = key.match(/^filter\[(\w+)](?:\[\d*])?$/);
 
             if (match) {
                 const filterKey = match[1] as keyof AnimeFilterState;
