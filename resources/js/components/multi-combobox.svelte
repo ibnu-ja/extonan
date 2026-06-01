@@ -5,9 +5,10 @@
     import * as Command from '@/components/ui/command/index.js';
     import * as Drawer from '@/components/ui/drawer/index.js';
     import * as Popover from '@/components/ui/popover/index.js';
-    import type { LabelValue } from '@/lib/use-anime.svelte';
     import { useDisplay } from '@/lib/use-display.svelte';
     import { cn } from '@/lib/utils.js';
+
+    type Item = { key?: string; value?: string; name?: string };
 
     let {
         label = '',
@@ -17,11 +18,23 @@
         notFound = 'No results found.',
     }: {
         label?: string;
-        items: LabelValue[];
-        selected: string[];
+        items: Item[];
+        selected: (Item | string)[];
         placeholder?: string;
         notFound?: string;
     } = $props();
+
+    let norm = $derived(
+        selected.map((s) => (typeof s === 'string' ? { name: s } : s)),
+    );
+
+    function itemKey(item: Item): string {
+        return item.name ?? item.key ?? '';
+    }
+
+    function itemLabel(item: Item): string {
+        return item.name ?? item.value ?? itemKey(item);
+    }
 
     let open = $state(false);
     let search = $state('');
@@ -31,25 +44,35 @@
     const filtered = $derived(
         search
             ? items.filter((i) =>
-                  i.key.toLowerCase().includes(search.toLowerCase()),
+                  itemLabel(i).toLowerCase().includes(search.toLowerCase()),
               )
             : items,
     );
 
     function isSelected(key: string): boolean {
-        return selected.includes(key);
+        return norm.some((s) => s.name === key);
     }
 
     function toggle(key: string) {
+        const item = items.find((i) => itemKey(i) === key);
+
+        if (!item) {
+            return;
+        }
+
         if (isSelected(key)) {
-            selected = selected.filter((s) => s !== key);
+            selected = selected.filter((s) => {
+                const name = typeof s === 'string' ? s : s.name;
+
+                return name !== key;
+            });
         } else {
-            selected = [...selected, key];
+            selected = [...selected, item];
         }
     }
 </script>
 
-<div class="multi-combobox">
+<div class="multi-combobox w-full">
     {#if mdAndUp.current}
         <Popover.Root bind:open>
             <Popover.Trigger>
@@ -64,33 +87,32 @@
                         <div
                             class="flex flex-1 items-center gap-1 overflow-hidden"
                         >
-                            {#if selected.length === 0}
-                                <span class="text-muted-foreground truncate"
-                                    >{label}</span
-                                >
+                            {#if norm.length === 0}
+                                <span class="text-muted-foreground truncate">
+                                    {label}
+                                </span>
                             {:else}
-                                {#each selected.slice(0, 2) as key (key)}
+                                {#each norm.slice(0, 2) as s (itemKey(s))}
                                     <Badge
                                         variant="secondary"
                                         class="shrink-0 gap-1 max-w-28"
                                     >
                                         <span class="truncate"
-                                            >{items.find((i) => i.key === key)
-                                                ?.value ?? key}</span
+                                            >{itemLabel(s)}</span
                                         >
                                         <button
                                             type="button"
                                             class="ml-0.5 shrink-0 rounded-full outline-hidden hover:bg-muted-foreground/20"
-                                            onclick={() => toggle(key)}
+                                            onclick={() => toggle(itemKey(s))}
                                         >
                                             <X class="size-3" />
                                         </button>
                                     </Badge>
                                 {/each}
-                                {#if selected.length > 2}
-                                    <Badge variant="secondary" class="shrink-0"
-                                        >+{selected.length - 2}</Badge
-                                    >
+                                {#if norm.length > 2}
+                                    <Badge variant="secondary" class="shrink-0">
+                                        +{norm.length - 2}
+                                    </Badge>
                                 {/if}
                             {/if}
                         </div>
@@ -109,23 +131,26 @@
                         {#if filtered.length === 0}
                             <Command.Empty>{notFound}</Command.Empty>
                         {/if}
-                        {#each filtered as item (item.key)}
+                        {#each filtered as item (itemKey(item))}
                             <Command.Item
                                 class={cn(
                                     'rounded-none px-4',
-                                    isSelected(item.key) && 'bg-green-500/15',
+                                    isSelected(itemKey(item)) &&
+                                        'bg-green-500/15',
                                 )}
-                                onSelect={() => toggle(item.key)}
+                                onSelect={() => toggle(itemKey(item))}
                             >
                                 <div class="flex w-full items-center gap-2">
                                     <div
                                         class="flex size-4 items-center justify-center"
                                     >
-                                        {#if isSelected(item.key)}
+                                        {#if isSelected(itemKey(item))}
                                             <Check class="size-4" />
                                         {/if}
                                     </div>
-                                    <span class="flex-1">{item.value}</span>
+                                    <span class="flex-1">
+                                        {itemLabel(item)}
+                                    </span>
                                 </div>
                             </Command.Item>
                         {/each}
@@ -143,33 +168,30 @@
                     class="w-full justify-between gap-2 text-base md:text-sm"
                 >
                     <div class="flex flex-1 items-center gap-1 overflow-hidden">
-                        {#if selected.length === 0}
-                            <span class="text-muted-foreground truncate"
-                                >{label}</span
-                            >
+                        {#if norm.length === 0}
+                            <span class="text-muted-foreground truncate">
+                                {label}
+                            </span>
                         {:else}
-                            {#each selected.slice(0, 2) as key (key)}
+                            {#each norm.slice(0, 2) as s (itemKey(s))}
                                 <Badge
                                     variant="secondary"
                                     class="shrink-0 gap-1 max-w-28"
                                 >
-                                    <span class="truncate"
-                                        >{items.find((i) => i.key === key)
-                                            ?.value ?? key}</span
-                                    >
+                                    <span class="truncate">{itemLabel(s)}</span>
                                     <button
                                         type="button"
                                         class="ml-0.5 shrink-0 rounded-full outline-hidden hover:bg-muted-foreground/20"
-                                        onclick={() => toggle(key)}
+                                        onclick={() => toggle(itemKey(s))}
                                     >
                                         <X class="size-3" />
                                     </button>
                                 </Badge>
                             {/each}
-                            {#if selected.length > 2}
-                                <Badge variant="secondary" class="shrink-0"
-                                    >+{selected.length - 2}</Badge
-                                >
+                            {#if norm.length > 2}
+                                <Badge variant="secondary" class="shrink-0">
+                                    +{norm.length - 2}
+                                </Badge>
                             {/if}
                         {/if}
                     </div>
@@ -184,24 +206,26 @@
                             {#if filtered.length === 0}
                                 <Command.Empty>{notFound}</Command.Empty>
                             {/if}
-                            {#each filtered as item (item.key)}
+                            {#each filtered as item (itemKey(item))}
                                 <Command.Item
                                     class={cn(
                                         'rounded-none px-4',
-                                        isSelected(item.key) &&
+                                        isSelected(itemKey(item)) &&
                                             'bg-green-500/15',
                                     )}
-                                    onSelect={() => toggle(item.key)}
+                                    onSelect={() => toggle(itemKey(item))}
                                 >
                                     <div class="flex w-full items-center gap-2">
                                         <div
                                             class="flex size-4 items-center justify-center"
                                         >
-                                            {#if isSelected(item.key)}
+                                            {#if isSelected(itemKey(item))}
                                                 <Check class="size-4" />
                                             {/if}
                                         </div>
-                                        <span class="flex-1">{item.value}</span>
+                                        <span class="flex-1">
+                                            {itemLabel(item)}
+                                        </span>
                                     </div>
                                 </Command.Item>
                             {/each}

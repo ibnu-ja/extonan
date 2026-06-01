@@ -64,6 +64,7 @@ query ($id: Int, $idMal: Int) {
     }
     tags {
       category
+      description
       id
       isAdult
       isGeneralSpoiler
@@ -127,5 +128,33 @@ GRAPHQL;
         }
 
         return $response->json('data.Page.media') ?? [];
+    }
+
+    public function fetchMediaTags(): array
+    {
+        $query = <<<'GRAPHQL'
+query {
+  MediaTagCollection {
+    id
+    name
+    isAdult
+    category
+    description
+    isGeneralSpoiler
+    isMediaSpoiler
+    rank
+  }
+}
+GRAPHQL;
+
+        $response = Http::post(self::ANILIST_API, [
+            'query' => $query,
+        ]);
+
+        if ($response->failed()) {
+            return [];
+        }
+
+        return $response->json('data.MediaTagCollection') ?? [];
     }
 }

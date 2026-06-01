@@ -2,6 +2,7 @@
 
 namespace App\Data\Anilist;
 
+use App\Enums\Season;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -9,26 +10,26 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class AnilistMediaData extends Data
 {
     public function __construct(
-        public int $id,
-        public ?int $idMal,
-        public CoverImageData $coverImage,
-        public TitleData $title,
-        public FuzzyDateData $startDate,
-        public FuzzyDateData $endDate,
-        public ?int $episodes,
-        public ?string $description,
-        public ?string $bannerImage,
-        public ?string $season,
-        public ?int $seasonYear,
-        public ?int $seasonInt,
+        public ?int $id = null,
+        public ?int $idMal = null,
+        public ?CoverImageData $coverImage = null,
+        public ?TitleData $title = null,
+        public ?FuzzyDateData $startDate = null,
+        public ?FuzzyDateData $endDate = null,
+        public ?int $episodes = null,
+        public ?string $description = null,
+        public ?string $bannerImage = null,
+        public ?Season $season = null,
+        public ?int $seasonYear = null,
+        public ?int $seasonInt = null,
         /** @var string[] */
-        public array $genres,
+        public array $genres = [],
         /** @var TagData[] */
-        public array $tags,
-        /** @var array<string, mixed> */
-        public ?array $studios,
-        /** @var array<string, mixed> */
-        public ?array $characters,
+        public array $tags = [],
+        /** @var array<string, mixed>|null */
+        public ?array $studios = null,
+        /** @var array<string, mixed>|null */
+        public ?array $characters = null,
     ) {}
 
     public static function fromResponse(?array $data): ?self
@@ -47,18 +48,19 @@ class AnilistMediaData extends Data
             episodes: $data['episodes'] ?? null,
             description: $data['description'] ?? null,
             bannerImage: $data['bannerImage'] ?? null,
-            season: $data['season'] ?? null,
+            season: Season::tryFrom($data['season'] ?? ''),
             seasonYear: $data['seasonYear'] ?? null,
             seasonInt: $data['seasonInt'] ?? null,
             genres: $data['genres'] ?? [],
             tags: array_map(fn (array $t) => new TagData(
                 id: $t['id'],
                 name: $t['name'],
-                rank: $t['rank'],
+                rank: $t['rank'] ?? 0,
                 isAdult: $t['isAdult'],
-                category: $t['category'],
+                category: $t['category'] ?? '',
                 isMediaSpoiler: $t['isMediaSpoiler'],
                 isGeneralSpoiler: $t['isGeneralSpoiler'],
+                description: $t['description'] ?? null,
             ), $data['tags'] ?? []),
             studios: $data['studios'] ?? null,
             characters: $data['characters'] ?? null,
@@ -108,5 +110,6 @@ class TagData extends Data
         public string $category,
         public bool $isMediaSpoiler,
         public bool $isGeneralSpoiler,
+        public ?string $description = null,
     ) {}
 }

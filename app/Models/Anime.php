@@ -85,7 +85,7 @@ class Anime extends BasePost
         $query->whereExists(function ($query) use ($tags) {
             $query->select(DB::raw(1))
                 ->fromRaw('jsonb_array_elements(metadata->\'tags\') AS tag')
-                ->whereIn('tag->name', $tags);
+                ->whereIn('tag->>id', $tags);
         });
     }
 
@@ -97,7 +97,7 @@ class Anime extends BasePost
         $query->whereExists(function ($query) use ($tags) {
             $query->select(DB::raw(1))
                 ->fromRaw('jsonb_array_elements(metadata->\'tags\') AS tag')
-                ->whereNotIn('tag->name', $tags);
+                ->whereNotIn('tag->>id', $tags);
         });
     }
 

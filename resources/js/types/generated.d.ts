@@ -65,6 +65,11 @@ declare namespace App {
             delete: boolean;
             publish: boolean;
         };
+        export type TagItem = {
+            id: number;
+            name: string;
+            isAdult: boolean;
+        };
         export type UserSummaryData = {
             id: number;
             name: string | null;
@@ -72,22 +77,22 @@ declare namespace App {
         };
         namespace Anilist {
             export type AnilistMediaData = {
-                id: number;
+                id: number | null;
                 idMal: number | null;
-                coverImage: App.Data.Anilist.CoverImageData;
-                title: App.Data.Anilist.TitleData;
-                startDate: App.Data.Anilist.FuzzyDateData;
-                endDate: App.Data.Anilist.FuzzyDateData;
+                coverImage: App.Data.Anilist.CoverImageData | null;
+                title: App.Data.Anilist.TitleData | null;
+                startDate: App.Data.Anilist.FuzzyDateData | null;
+                endDate: App.Data.Anilist.FuzzyDateData | null;
                 episodes: number | null;
                 description: string | null;
                 bannerImage: string | null;
-                season: string | null;
+                season: App.Enums.Season | null;
                 seasonYear: number | null;
                 seasonInt: number | null;
                 genres: string[];
                 tags: App.Data.Anilist.TagData[];
-                studios: Record<string, any>;
-                characters: Record<string, any>;
+                studios: Record<string, any> | null;
+                characters: Record<string, any> | null;
             };
             export type CoverImageData = {
                 extraLarge: string;
@@ -108,6 +113,7 @@ declare namespace App {
                 category: string;
                 isMediaSpoiler: boolean;
                 isGeneralSpoiler: boolean;
+                description: string | null;
             };
             export type TitleData = {
                 romaji: string | null;
@@ -119,6 +125,13 @@ declare namespace App {
             export type AnimeAZResponse = {
                 items: App.Data.Anime.AnimeListItemData[];
                 canCreate: boolean;
+            };
+            export type AnimeCreateResponse = {
+                anime: App.Data.Anime.AnimeFormData | null;
+                genres: App.Data.LabelValue[];
+                tags: App.Data.TagItem[];
+                seasons: App.Enums.Season[];
+                anilistQuery: string;
             };
             export type AnimeFilterData = {
                 genreIn: string[];
@@ -135,7 +148,7 @@ declare namespace App {
                 title: Record<string, string | null>;
                 description: Record<string, string | null>;
                 anilistId: number | null;
-                metadata: object | null;
+                metadata: App.Data.Anilist.AnilistMediaData | null;
                 isPublished: boolean;
                 canPublish: boolean;
             };
@@ -148,7 +161,7 @@ declare namespace App {
                 anime: App.Data.PaginatedCollection<App.Data.Anime.AnimeListItemData>;
                 seasons: string[];
                 genres: App.Data.LabelValue[];
-                tags: App.Data.LabelValue[];
+                tags: App.Data.TagItem[];
                 sortOptions: App.Data.LabelValue[];
                 perPageValues: number[];
             };
@@ -170,7 +183,7 @@ declare namespace App {
                 title: Record<string, string | null>;
                 description: Record<string, string | null>;
                 anilistId: number | null;
-                metadata: Record<string, any> | null;
+                metadata: App.Data.Anilist.AnilistMediaData | null;
                 isPublished: boolean;
             };
         }

@@ -12,6 +12,7 @@
 <script lang="ts">
     import { useForm } from '@inertiajs/svelte';
     import { Select as SelectPrimitive } from 'bits-ui';
+    import { untrack } from 'svelte';
     import AnimeController from '@/actions/App/Http/Controllers/AnimeController';
     import AppHead from '@/components/app-head.svelte';
     import InputError from '@/components/input-error.svelte';
@@ -20,15 +21,18 @@
     import { Button } from '@/components/ui/button';
     import { Card, CardContent, CardTitle } from '@/components/ui/card';
     import { Input } from '@/components/ui/input';
+    import * as InputGroup from '@/components/ui/input-group/index.js';
     import { Label } from '@/components/ui/label';
     import * as Select from '@/components/ui/select/index.js';
     import { Switch } from '@/components/ui/switch';
     import { Textarea } from '@/components/ui/textarea';
     import { animeApi } from '@/lib/anilist.svelte';
     import { useDisplay } from '@/lib/use-display.svelte';
+    import { capitalize } from '@/lib/utils';
 
-    type MetadataData = App.Data.Anilist.AnilistMediaData;
     type FormData = App.Data.Anime.AnimeStoreData;
+
+    type Props = App.Data.Anime.AnimeCreateResponse;
 
     let {
         anime = null,
@@ -36,90 +40,44 @@
         tags = [],
         seasons = [],
         anilistQuery = '',
-    }: {
-        anime: App.Data.Anime.AnimeFormData | null;
-        genres: App.Data.LabelValue[];
-        tags: App.Data.LabelValue[];
-        seasons: string[];
-        anilistQuery?: string;
-    } = $props();
+    }: Props = $props();
 
     const { mdAndDown } = useDisplay();
     const isMobile = $derived(mdAndDown.current);
 
+    const nullMetadata: App.Data.Anilist.AnilistMediaData = {
+        id: null,
+        idMal: null,
+        coverImage: null,
+        title: null,
+        startDate: null,
+        endDate: null,
+        episodes: null,
+        description: null,
+        bannerImage: null,
+        season: null,
+        seasonYear: null,
+        seasonInt: null,
+        genres: [],
+        tags: [],
+        studios: null,
+        characters: null,
+    };
+
     const isEditing = $derived(Boolean(anime));
     const pageTitle = $derived(isEditing ? 'Edit Anime' : 'Create Anime');
 
-    const SEASONS: App.Enums.Season[] = ['WINTER', 'SPRING', 'SUMMER', 'FALL'];
-
-    const availableYears = $derived(
-        [
-            ...new Set(
-                seasons
-                    .map((s) => parseInt(s.split(' ').pop() ?? '', 10))
-                    .filter((y) => !isNaN(y)),
-            ),
-        ].sort((a, b) => b - a),
-    );
-
-    let anilistData = $state<MetadataData | null>(
-        anime?.metadata as MetadataData | null,
-    );
-
-    let selectedGenres = $state<string[]>(anilistData?.genres ?? []);
-    let selectedTags = $state<string[]>(
-        anilistData?.tags?.map((t) => t.name) ?? [],
-    );
-    let selectedSeasonValue = $state<string | undefined>(
-        anilistData?.season?.toUpperCase() ?? undefined,
-    );
-    let selectedYear = $state<string | undefined>(
-        String(anilistData?.seasonYear ?? ''),
-    );
-    let loading = $state(false);
-    let fetchError = $state<string | null>(null);
-
-    const form = useForm<FormData>({
+    const form = untrack(() => useForm<FormData>({
         title: anime?.title ?? { romaji: '', native: '', en: '', id: '' },
         description: anime?.description ?? { en: '', id: '' },
         anilistId: anime?.anilistId ?? null,
         isPublished: anime?.isPublished ?? false,
-        metadata: anime?.metadata as MetadataData | null,
-    });
+        metadata: anime?.metadata ?? { ...nullMetadata, genres: [], tags: [] },
+    }));
 
-    function buildMetadata(): MetadataData | null {
-        if (!anilistData) {
-            return null;
-        }
-
-        const data = anilistData;
-
-        return {
-            ...data,
-            genres: [...selectedGenres],
-            tags: selectedTags.map((name) => {
-                const existing = data.tags?.find((t) => t.name === name);
-
-                return (
-                    existing ?? {
-                        id: 0,
-                        name,
-                        rank: 0,
-                        isAdult: false,
-                        category: '',
-                        isMediaSpoiler: false,
-                        isGeneralSpoiler: false,
-                    }
-                );
-            }),
-            ...(selectedSeasonValue && selectedYear
-                ? {
-                      season: selectedSeasonValue,
-                      seasonYear: parseInt(selectedYear, 10),
-                  }
-                : {}),
-        };
-    }
+    let useMalId = $state(false);
+    let loading = $state(false);
+    let fetchError = $state<string | null>(null);
 
     async function fetchAnilist() {
         if (!form.anilistId || form.anilistId < 1) {
@@ -128,7 +86,7 @@
 
         loading = true;
         fetchError = null;
-        const result = await animeApi(form.anilistId, false, anilistQuery);
+        const result = await animeApi(form.anilistId, useMalId, anilistQuery);
 
         if (!result) {
             fetchError =
@@ -138,7 +96,7 @@
             return;
         }
 
-        anilistData = result;
+        form.metadata = result;
 
         form.title = {
             romaji: result.title?.romaji ?? form.title.romaji ?? '',
@@ -150,27 +108,18 @@
             en: result.description ?? form.description.en ?? '',
         };
         form.anilistId = result.id;
-
-        selectedGenres = [...(result.genres ?? [])];
-        selectedTags = (result.tags ?? []).map((t) => t.name);
-        selectedSeasonValue = result.season?.toUpperCase() ?? undefined;
-        selectedYear = String(result.seasonYear ?? '');
         loading = false;
     }
 
     function clearAnilist() {
-        anilistData = null;
+        form.metadata = { ...nullMetadata, genres: [], tags: [] };
         form.title = { romaji: '', native: '', en: '', id: '' };
         form.description = { en: '', id: '' };
         form.anilistId = null;
-        selectedGenres = [];
-        selectedTags = [];
-        selectedSeasonValue = undefined;
-        selectedYear = undefined;
         fetchError = null;
     }
 
-    async function submit(e: Event) {
+    function submit(e: Event) {
         e.preventDefault();
         const id = anime?.id;
 
@@ -178,22 +127,25 @@
             return;
         }
 
-        form.transform((data) => ({
-            ...data,
-            metadata: buildMetadata(),
-        }));
-
-        const options = { preserveScroll: true };
-
         if (isEditing) {
-            form.put(AnimeController.update(id!).url, options);
+            form.put(AnimeController.update(id!).url, { preserveScroll: true });
         } else {
-            form.post(AnimeController.store.url(), options);
+            form.post(AnimeController.store.url());
         }
     }
 </script>
 
 <AppHead title={pageTitle} />
+
+{#snippet card(content)}
+    {#if isMobile}
+        <div class="space-y-4">{@render content()}</div>
+    {:else}
+        <Card>
+            <CardContent class="space-y-4">{@render content()}</CardContent>
+        </Card>
+    {/if}
+{/snippet}
 
 {#snippet basicInfoContent()}
     <CardTitle>Basic Information</CardTitle>
@@ -250,49 +202,62 @@
 {#snippet metadataContent()}
     <CardTitle>AniList Metadata</CardTitle>
     <div class="grid gap-2">
-        <Label for="anilist_id">AniList ID / MAL ID</Label>
-        <div class="flex gap-2">
-            <div class="flex-1">
-                <Input
-                    id="anilist_id"
-                    type="number"
-                    min="1"
-                    bind:value={form.anilistId}
-                    placeholder="Enter AniList or MAL ID"
-                />
-            </div>
-            <Button
-                type="button"
-                onclick={fetchAnilist}
-                disabled={loading || !form.anilistId}
+        <Label for="anilist_id">Search Source</Label>
+        <InputGroup.Root>
+            <Select.Root
+                type="single"
+                value={useMalId ? 'MAL' : 'Anilist'}
+                onValueChange={(v) => (useMalId = v === 'MAL')}
             >
-                {loading ? 'Loading...' : 'Autofill'}
-            </Button>
-            {#if anilistData}
-                <Button type="button" variant="outline" onclick={clearAnilist}
-                    >Clear</Button
+                <Select.Trigger class="border-0 shadow-none rounded-none bg-transparent data-[size=default]:h-full w-auto min-w-0 px-2.5 text-foreground data-placeholder:text-foreground">
+                    <SelectPrimitive.Value />
+                </Select.Trigger>
+                <Select.Content>
+                    <Select.Item value="Anilist">AniList</Select.Item>
+                    <Select.Item value="MAL">MAL</Select.Item>
+                </Select.Content>
+            </Select.Root>
+            <InputGroup.Input
+                id="anilist_id"
+                type="number"
+                min="1"
+                bind:value={form.anilistId}
+                placeholder={useMalId ? 'MAL ID' : 'AniList ID'}
+            />
+            <InputGroup.Addon align="inline-end">
+                <InputGroup.Button
+                    onclick={fetchAnilist}
+                    disabled={loading || !form.anilistId}
+                    variant="secondary"
                 >
-            {/if}
-        </div>
+                    {loading ? 'Loading...' : 'Autofill'}
+                </InputGroup.Button>
+                {#if form.metadata?.id}
+                    <InputGroup.Button onclick={clearAnilist} variant="ghost">
+                        Clear
+                    </InputGroup.Button>
+                {/if}
+            </InputGroup.Addon>
+        </InputGroup.Root>
         <InputError message={fetchError ?? undefined} />
         <InputError message={form.errors.anilistId} />
     </div>
-    {#if anilistData}
-        {#if anilistData.coverImage?.extraLarge}
+    {#if form.metadata?.id}
+        {#if form.metadata.coverImage?.extraLarge}
             <img
-                src={anilistData.coverImage.extraLarge}
+                src={form.metadata.coverImage.extraLarge}
                 alt="Cover"
                 class="w-full rounded-lg object-cover"
             />
         {/if}
         <div class="flex flex-wrap gap-2">
-            {#if anilistData.episodes}
+            {#if form.metadata.episodes}
                 <Badge variant="secondary"
-                    >{anilistData.episodes} episodes</Badge
-                >
+                    >{form.metadata.episodes} episodes
+                </Badge>
             {/if}
-            {#if anilistData.studios?.edges?.length}
-                {#each anilistData.studios.edges.slice(0, 3) as edge (edge.node.id)}
+            {#if form.metadata.studios?.edges?.length}
+                {#each form.metadata.studios.edges.slice(0, 3) as edge (edge.node.id)}
                     <Badge variant="secondary">{edge.node.name}</Badge>
                 {/each}
             {/if}
@@ -301,13 +266,13 @@
 {/snippet}
 
 {#snippet classificationContent()}
-    <CardTitle>Classification Overrides</CardTitle>
+    <CardTitle>Classification</CardTitle>
     <div class="grid gap-2">
         <Label>Genres</Label>
         <MultiCombobox
             label="Select genres"
             items={genres}
-            bind:selected={selectedGenres}
+            bind:selected={form.metadata!.genres}
             placeholder="Search genres..."
         />
     </div>
@@ -316,43 +281,34 @@
         <MultiCombobox
             label="Select tags"
             items={tags}
-            bind:selected={selectedTags}
+            bind:selected={form.metadata!.tags}
             placeholder="Search tags..."
         />
     </div>
-    <div class="flex gap-4">
-        <div class="flex-1 grid gap-2">
-            <Label>Season</Label>
-            <Select.Root type="single" bind:value={selectedSeasonValue}>
-                <Select.Trigger class="w-full"
-                    ><SelectPrimitive.Value
-                        placeholder="Season"
-                    /></Select.Trigger
-                >
+    <div class="grid gap-2">
+        <Label>Season & Year</Label>
+        <InputGroup.Root>
+            <Select.Root type="single" value={form.metadata!.season ?? undefined} onValueChange={(v) => form.metadata!.season = v as App.Enums.Season}>
+                <Select.Trigger class="border-0 shadow-none rounded-none bg-transparent data-[size=default]:h-full w-auto min-w-0 px-2.5 text-foreground data-placeholder:text-foreground">
+                    <SelectPrimitive.Value placeholder="Season" />
+                </Select.Trigger>
                 <Select.Content>
-                    {#each SEASONS as s (s)}
-                        <Select.Item value={s} label={s}>{s}</Select.Item>
+                    {#each seasons as s (s)}
+                        <Select.Item value={s} label={capitalize(s)}>
+                            {capitalize(s)}
+                        </Select.Item>
                     {/each}
                 </Select.Content>
             </Select.Root>
-        </div>
-        <div class="flex-1 grid gap-2">
-            <Label>Year</Label>
-            <Select.Root type="single" bind:value={selectedYear}>
-                <Select.Trigger class="w-full"
-                    ><SelectPrimitive.Value
-                        placeholder="Year"
-                    /></Select.Trigger
-                >
-                <Select.Content class="max-h-72">
-                    {#each availableYears as y (y)}
-                        <Select.Item value={String(y)} label={String(y)}
-                            >{y}</Select.Item
-                        >
-                    {/each}
-                </Select.Content>
-            </Select.Root>
-        </div>
+            <InputGroup.Input
+                id="year"
+                type="number"
+                min="1900"
+                max="2100"
+                bind:value={form.metadata!.seasonYear}
+                placeholder="Year"
+            />
+        </InputGroup.Root>
     </div>
 {/snippet}
 
@@ -369,61 +325,19 @@
     <InputError message={form.errors.isPublished} />
 {/snippet}
 
-<div class="p-4 mx-auto max-w-5xl">
+<div class="p-4 md:mx-auto max-w-5xl">
     <form onsubmit={submit}>
         <div class="grid gap-4 md:gap-6 md:grid-cols-12">
             <div class="space-y-6 md:col-span-8">
-                {#if isMobile}
-                    <div class="space-y-4">
-                        {@render basicInfoContent()}
-                    </div>
-                {:else}
-                    <Card>
-                        <CardContent class="space-y-4">
-                            {@render basicInfoContent()}
-                        </CardContent>
-                    </Card>
-                {/if}
+                {@render card(basicInfoContent)}
             </div>
 
             <div
                 class="space-y-6 md:col-span-4 md:sticky md:top-4 md:self-start"
             >
-                {#if isMobile}
-                    <div class="space-y-4">
-                        {@render metadataContent()}
-                    </div>
-                {:else}
-                    <Card>
-                        <CardContent class="space-y-4">
-                            {@render metadataContent()}
-                        </CardContent>
-                    </Card>
-                {/if}
-
-                {#if isMobile}
-                    <div class="space-y-4">
-                        {@render classificationContent()}
-                    </div>
-                {:else}
-                    <Card>
-                        <CardContent class="space-y-4">
-                            {@render classificationContent()}
-                        </CardContent>
-                    </Card>
-                {/if}
-
-                {#if isMobile}
-                    <div class="space-y-4">
-                        {@render publishingContent()}
-                    </div>
-                {:else}
-                    <Card>
-                        <CardContent class="space-y-4">
-                            {@render publishingContent()}
-                        </CardContent>
-                    </Card>
-                {/if}
+                {@render card(metadataContent)}
+                {@render card(classificationContent)}
+                {@render card(publishingContent)}
 
                 <Button type="submit" disabled={form.processing} class="w-full">
                     {form.processing

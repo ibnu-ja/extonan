@@ -7,6 +7,10 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
+export function capitalize(s: string): string {
+    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+}
+
 export function toUrl(
     href: NonNullable<LinkComponentBaseProps['href']>,
 ): string {

@@ -2,6 +2,7 @@
 
 namespace App\Data\Anime;
 
+use App\Data\Anilist\AnilistMediaData;
 use App\Models\Anime;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -16,7 +17,7 @@ class AnimeFormData extends Data
         /** @var array<string, string|null> */
         public array $description,
         public ?int $anilistId,
-        public ?object $metadata,
+        public ?AnilistMediaData $metadata,
         public bool $isPublished,
         public bool $canPublish,
     ) {}
@@ -28,7 +29,7 @@ class AnimeFormData extends Data
             title: $anime->getTranslations('title'),
             description: $anime->getTranslations('description'),
             anilistId: $anime->anilist_id,
-            metadata: $anime->metadata,
+            metadata: $anime->metadata ? AnilistMediaData::from($anime->metadata) : null,
             isPublished: $anime->is_published,
             canPublish: $canPublish,
         );

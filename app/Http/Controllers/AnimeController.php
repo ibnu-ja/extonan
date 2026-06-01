@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Data\Anime\AnimeAZResponse;
+use App\Data\Anime\AnimeCreateResponse;
 use App\Data\Anime\AnimeFormData;
 use App\Data\Anime\AnimeIndexRequest;
 use App\Data\Anime\AnimeIndexResponse;
@@ -12,6 +13,8 @@ use App\Data\Anime\AnimeStoreData;
 use App\Data\EpisodeSummaryData;
 use App\Data\LabelValue;
 use App\Data\PaginatedCollection;
+use App\Data\TagItem;
+use App\Enums\Season;
 use App\Models\Anime;
 use App\Models\Post;
 use App\Queries\AnimeSeasonsQuery;
@@ -103,10 +106,23 @@ class AnimeController extends Controller implements HasMiddleware
 
     private function getTags(): DataCollection
     {
-        return new DataCollection(LabelValue::class, collect(config('anime.tags', []))->map(fn (string $tag) => new LabelValue(
-            key: $tag,
-            value: __('anime.tags.'.$tag),
-        )));
+        $path = storage_path('app/anilist-tags.json');
+
+        if (file_exists($path)) {
+            $tags = json_decode(file_get_contents($path), true);
+        } else {
+            $tags = collect(config('anime.tags', []))->map(fn (string $name) => [
+                'id' => 0,
+                'name' => $name,
+                'isAdult' => false,
+            ])->all();
+        }
+
+        return new DataCollection(TagItem::class, array_map(fn (array $t) => new TagItem(
+            id: $t['id'],
+            name: $t['name'],
+            isAdult: $t['isAdult'] ?? false,
+        ), $tags));
     }
 
     private function getSortOptions(): DataCollection
@@ -122,6 +138,9 @@ class AnimeController extends Controller implements HasMiddleware
         }));
     }
 
+    /**
+     * @see AnimeCreateResponse
+     */
     public function create(Request $request): Response
     {
         Gate::authorize('create', Anime::class);
@@ -130,7 +149,7 @@ class AnimeController extends Controller implements HasMiddleware
             'anime' => null,
             'genres' => Inertia::once(fn () => $this->getGenres()),
             'tags' => Inertia::once(fn () => $this->getTags()),
-            'seasons' => Inertia::once(fn () => (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray()),
+            'seasons' => Inertia::once(fn () => Season::cases()),
             'anilistQuery' => Inertia::once(fn () => app(AnilistService::class)->getAnimeQuery()),
         ]);
     }
@@ -170,6 +189,9 @@ class AnimeController extends Controller implements HasMiddleware
         ));
     }
 
+    /**
+     * @see AnimeCreateResponse
+     */
     public function edit(Anime $anime)
     {
         Gate::authorize('update', $anime);
@@ -178,7 +200,7 @@ class AnimeController extends Controller implements HasMiddleware
             'anime' => AnimeFormData::fromModel($anime, auth()->user()->can('publish', $anime)),
             'genres' => Inertia::once(fn () => $this->getGenres()),
             'tags' => Inertia::once(fn () => $this->getTags()),
-            'seasons' => Inertia::once(fn () => (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray()),
+            'seasons' => Inertia::once(fn () => Season::cases()),
             'anilistQuery' => Inertia::once(fn () => app(AnilistService::class)->getAnimeQuery()),
         ]);
     }

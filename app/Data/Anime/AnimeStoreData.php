@@ -2,6 +2,7 @@
 
 namespace App\Data\Anime;
 
+use App\Data\Anilist\AnilistMediaData;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Support\Validation\ValidationContext;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -15,8 +16,7 @@ class AnimeStoreData extends Data
         /** @var array<string, string|null> */
         public array $description,
         public ?int $anilistId,
-        /** @var array<string, mixed>|null */
-        public ?array $metadata,
+        public ?AnilistMediaData $metadata,
         public bool $isPublished,
     ) {}
 
@@ -27,7 +27,7 @@ class AnimeStoreData extends Data
             'title' => $this->title,
             'description' => $this->description,
             'anilist_id' => $this->anilistId,
-            'metadata' => $this->metadata ?? [],
+            'metadata' => $this->metadata?->toArray() ?? [],
             'is_published' => $this->isPublished,
         ];
     }
