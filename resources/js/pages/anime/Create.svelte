@@ -10,10 +10,11 @@
 </script>
 
 <script lang="ts">
-    import { useForm } from '@inertiajs/svelte';
-    import { Check, Send, X } from 'lucide-svelte';
+    import { router, useForm } from '@inertiajs/svelte';
+    import { Check, Send, Trash2, X } from 'lucide-svelte';
     import { untrack } from 'svelte';
     import AnimeController from '@/actions/App/Http/Controllers/AnimeController';
+    import Casts from '@/components/anime/casts.svelte';
     import AppHead from '@/components/app-head.svelte';
     import InputError from '@/components/input-error.svelte';
     import MultiCombobox from '@/components/multi-combobox.svelte';
@@ -85,6 +86,12 @@
     let loading = $state(false);
     let fetchError = $state<string | null>(null);
 
+    const languages: { label: string; value: 'en' | 'id' }[] = [
+        { label: 'English', value: 'en' },
+        { label: 'Indonesian', value: 'id' },
+    ];
+    let currentLang = $state<'en' | 'id'>('en');
+
     async function fetchAnilist() {
         if (loading || !form.anilistId || form.anilistId < 1) {
             return;
@@ -136,6 +143,16 @@
             form.post(AnimeController.store.url());
         }
     }
+
+    function deleteAnime() {
+        if (!anime?.id) {
+            return;
+        }
+
+        if (confirm('Are you sure you want to delete this anime?')) {
+            router.delete(AnimeController.destroy(anime.id).url);
+        }
+    }
 </script>
 
 <AppHead title={pageTitle} />
@@ -152,6 +169,46 @@
 
 {#snippet basicInfoContent()}
     <CardTitle>Basic Information</CardTitle>
+    <div class="grid gap-2">
+        <Label for="title_lang">Title</Label>
+        <InputGroup.Root>
+            <InputGroup.Addon>
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger>
+                        {#snippet child({ props: triggerProps })}
+                            <InputGroup.Button
+                                variant="default"
+                                {...triggerProps}
+                            >
+                                {languages.find((l) => l.value === currentLang)
+                                    ?.label ?? 'Language'}
+                            </InputGroup.Button>
+                        {/snippet}
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content>
+                        {#each languages as lang (lang.value)}
+                            <DropdownMenu.Item
+                                onclick={() => (currentLang = lang.value)}
+                            >
+                                <div class="flex w-full items-center gap-2">
+                                    {#if currentLang === lang.value}
+                                        <Check class="size-4" />
+                                    {/if}
+                                    <span>{lang.label}</span>
+                                </div>
+                            </DropdownMenu.Item>
+                        {/each}
+                    </DropdownMenu.Content>
+                </DropdownMenu.Root>
+            </InputGroup.Addon>
+            <InputGroup.Input
+                id="title_lang"
+                bind:value={form.title[currentLang]}
+                placeholder={`Title in ${languages.find((l) => l.value === currentLang)?.label}`}
+            />
+        </InputGroup.Root>
+        <InputError message={form.errors[`title.${currentLang}`]} />
+    </div>
     <div class="grid gap-2">
         <Label for="title_romaji">Title (Romaji)</Label>
         <Input
@@ -173,32 +230,26 @@
         <InputError message={form.errors['title.native']} />
     </div>
     <div class="grid gap-2">
-        <Label for="title_en">Title (English)</Label>
-        <Input
-            id="title_en"
-            bind:value={form.title.en}
-            placeholder="English title"
-        />
-        <InputError message={form.errors['title.en']} />
-    </div>
-    <div class="grid gap-2">
-        <Label for="title_id">Title (Indonesian)</Label>
-        <Input
-            id="title_id"
-            bind:value={form.title.id}
-            placeholder="Indonesian title"
-        />
-        <InputError message={form.errors['title.id']} />
-    </div>
-    <div class="grid gap-2">
-        <Label for="description">Description</Label>
+        <Label for="description_lang">Description</Label>
+        <div class="flex items-center gap-2">
+            {#each languages as lang (lang.value)}
+                <Button
+                    type="button"
+                    variant={currentLang === lang.value ? 'default' : 'outline'}
+                    size="sm"
+                    onclick={() => (currentLang = lang.value)}
+                >
+                    {lang.label}
+                </Button>
+            {/each}
+        </div>
         <Textarea
-            id="description"
-            bind:value={form.description.en}
+            id="description_lang"
+            bind:value={form.description[currentLang]}
             rows={6}
-            placeholder="Anime description"
+            placeholder={`Description in ${languages.find((l) => l.value === currentLang)?.label}`}
         />
-        <InputError message={form.errors['description.en']} />
+        <InputError message={form.errors[`description.${currentLang}`]} />
     </div>
 {/snippet}
 
@@ -286,14 +337,29 @@
             />
         {/if}
         <div class="flex flex-wrap gap-2">
+            {#if form.metadata.startDate?.year}
+                <Badge variant="secondary">
+                    {new Date(
+                        form.metadata.startDate.year,
+                        (form.metadata.startDate.month ?? 1) - 1,
+                        form.metadata.startDate.day ?? 1,
+                    ).toLocaleDateString('en-US', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                    })}
+                </Badge>
+            {/if}
             {#if form.metadata.episodes}
                 <Badge variant="secondary"
                     >{form.metadata.episodes} episodes
                 </Badge>
             {/if}
             {#if form.metadata.studios?.edges?.length}
-                {#each form.metadata.studios.edges.slice(0, 3) as edge (edge.node.id)}
-                    <Badge variant="secondary">{edge.node.name}</Badge>
+                {#each form.metadata.studios.edges.slice(0, 3) as edge (edge.node?.id)}
+                    {#if edge.node}
+                        <Badge variant="secondary">{edge.node.name}</Badge>
+                    {/if}
                 {/each}
             {/if}
         </div>
@@ -379,11 +445,20 @@
     <InputError message={form.errors.isPublished} />
 {/snippet}
 
+{#snippet castsContent()}
+    <CardTitle class="">Casts</CardTitle>
+    <Casts characters={form.metadata!.characters!.edges} />
+{/snippet}
+
 <div class="p-4 md:mx-auto max-w-5xl">
     <form onsubmit={submit}>
         <div class="grid gap-4 md:gap-6 md:grid-cols-12">
             <div class="space-y-6 md:col-span-8">
                 {@render card(basicInfoContent)}
+
+                {#if form.metadata?.characters?.edges?.length}
+                    {@render card(castsContent)}
+                {/if}
             </div>
 
             <div
@@ -394,6 +469,17 @@
                 {@render card(publishingContent)}
 
                 <div class="flex gap-2">
+                    {#if isEditing}
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            onclick={deleteAnime}
+                            disabled={form.processing}
+                        >
+                            <Trash2 class="size-4" />
+                        </Button>
+                    {/if}
                     {#if form.isDirty}
                         <Button
                             type="button"

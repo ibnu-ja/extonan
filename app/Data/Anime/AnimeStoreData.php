@@ -44,9 +44,7 @@ class AnimeStoreData extends Data
             'description.en' => 'nullable|string|max:10000',
             'description.id' => 'nullable|string|max:10000',
             'anilistId' => 'nullable|integer|min:1',
-            'metadata' => 'nullable|array',
-            'metadata.season' => 'nullable|string|in:WINTER,SPRING,SUMMER,FALL',
-            'metadata.seasonYear' => 'nullable|integer|min:1900|max:2100',
+            'metadata' => 'nullable',
             'isPublished' => 'required|boolean',
         ];
     }

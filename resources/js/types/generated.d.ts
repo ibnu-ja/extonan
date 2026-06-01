@@ -91,28 +91,81 @@ declare namespace App {
                 seasonInt: number | null;
                 genres: string[];
                 tags: App.Data.Anilist.TagData[];
-                studios: Record<string, any> | null;
-                characters: Record<string, any> | null;
+                studios: App.Data.Anilist.StudioConnectionData | null;
+                characters: App.Data.Anilist.CharacterConnectionData | null;
+            };
+            export type CharacterConnectionData = {
+                edges: App.Data.Anilist.CharacterEdgeData[];
+            };
+            export type CharacterData = {
+                id: number;
+                name: App.Data.Anilist.CharacterNameData | null;
+                image: App.Data.Anilist.CharacterImageData | null;
+            };
+            export type CharacterEdgeData = {
+                node: App.Data.Anilist.CharacterData | null;
+                role: App.Enums.CharacterRole | null;
+                voiceActors: App.Data.Anilist.StaffData[];
+            };
+            export type CharacterImageData = {
+                large: string | null;
+                medium: string | null;
+            };
+            export type CharacterNameData = {
+                first: string | null;
+                middle: string | null;
+                last: string | null;
+                full: string | null;
+                native: string | null;
             };
             export type CoverImageData = {
-                extraLarge: string;
-                large: string;
-                medium: string;
-                color: string;
+                extraLarge: string | null;
+                large: string | null;
+                medium: string | null;
+                color: string | null;
             };
             export type FuzzyDateData = {
                 year: number | null;
                 month: number | null;
                 day: number | null;
             };
+            export type StaffData = {
+                id: number;
+                name: App.Data.Anilist.StaffNameData | null;
+                image: App.Data.Anilist.StaffImageData | null;
+                languageV2: string | null;
+            };
+            export type StaffImageData = {
+                large: string | null;
+                medium: string | null;
+            };
+            export type StaffNameData = {
+                first: string | null;
+                middle: string | null;
+                last: string | null;
+                full: string | null;
+                native: string | null;
+            };
+            export type StudioConnectionData = {
+                edges: App.Data.Anilist.StudioEdgeData[];
+            };
+            export type StudioData = {
+                id: number;
+                name: string;
+                isAnimationStudio: boolean;
+            };
+            export type StudioEdgeData = {
+                node: App.Data.Anilist.StudioData | null;
+                isMain: boolean;
+            };
             export type TagData = {
                 id: number;
                 name: string;
-                rank: number;
-                isAdult: boolean;
-                category: string;
-                isMediaSpoiler: boolean;
-                isGeneralSpoiler: boolean;
+                rank: number | null;
+                isAdult: boolean | null;
+                category: string | null;
+                isMediaSpoiler: boolean | null;
+                isGeneralSpoiler: boolean | null;
                 description: string | null;
             };
             export type TitleData = {
@@ -197,6 +250,7 @@ declare namespace App {
         }
     }
     namespace Enums {
+        export type CharacterRole = 'MAIN' | 'SUPPORTING' | 'BACKGROUND';
         export type Permission =
             | 'post.create'
             | 'post.read.any'
