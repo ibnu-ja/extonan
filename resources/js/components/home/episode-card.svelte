@@ -4,7 +4,6 @@
     import TrashIcon from '@lucide/svelte/icons/trash';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
-    import type {} from '@/types/generated';
 
     let {
         title,

@@ -1,7 +1,6 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
     import { Badge } from '@/components/ui/badge';
-    import type {} from '@/types/generated';
 
     let {
         title,
