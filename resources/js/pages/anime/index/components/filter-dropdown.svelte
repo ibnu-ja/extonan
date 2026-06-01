@@ -3,7 +3,9 @@
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import * as Command from '@/components/ui/command/index.js';
+    import * as Drawer from '@/components/ui/drawer/index.js';
     import * as Popover from '@/components/ui/popover/index.js';
+    import { useDisplay } from '@/lib/use-display.svelte';
 
     let {
         label = '',
@@ -27,6 +29,8 @@
 
     let open = $state(false);
     let search = $state('');
+
+    const { mdAndUp } = useDisplay();
 
     const filtered = $derived(
         search
@@ -63,10 +67,58 @@
     }
 </script>
 
-<Popover.Root bind:open>
-    <Popover.Trigger>
-        {#snippet child({ props })}
-            <Button variant="outline" size="sm" {...props} class="gap-1">
+{#if mdAndUp.current}
+    <Popover.Root bind:open>
+        <Popover.Trigger>
+            {#snippet child({ props })}
+                <Button variant="outline" size="sm" {...props} class="gap-1">
+                    {#if Icon}<Icon class="size-4 shrink-0" />{/if}
+                    {singleSelect && activeKey ? activeKey : label}
+                    {#if !singleSelect && activeCount > 0}
+                        <Badge
+                            variant="secondary"
+                            class="ml-1 size-5 rounded-full p-0 text-xs"
+                            >{activeCount}</Badge
+                        >
+                    {/if}
+                </Button>
+            {/snippet}
+        </Popover.Trigger>
+        <Popover.Content class="w-64 p-0" align="start">
+            <Command.Root>
+                <Command.Input
+                    bind:value={search}
+                    placeholder={`Search ${label.toLowerCase()}...`}
+                />
+                <Command.List>
+                    {#if filtered.length === 0}
+                        <Command.Empty
+                            >No {label.toLowerCase()} found.</Command.Empty
+                        >
+                    {/if}
+                    {#each filtered as item (item)}
+                        <Command.Item
+                            class={`${getItemMode(item) === 'in' ? 'bg-emerald-500/10 hover:bg-emerald-500/20 aria-selected:bg-emerald-500/20' : getItemMode(item) === 'notIn' ? 'bg-red-500/10 hover:bg-red-500/20 aria-selected:bg-red-500/20' : ''} rounded-none px-4`}
+                            onSelect={() => cycleMode(item)}
+                        >
+                            <div class="flex w-full items-center gap-2">
+                                {#if getItemMode(item) === 'in'}
+                                    <Check class="size-4 text-emerald-500" />
+                                {:else if getItemMode(item) === 'notIn'}
+                                    <X class="size-4 text-red-500" />
+                                {/if}
+                                <span class="flex-1">{item}</span>
+                            </div>
+                        </Command.Item>
+                    {/each}
+                </Command.List>
+            </Command.Root>
+        </Popover.Content>
+    </Popover.Root>
+{:else}
+    <Drawer.Root bind:open>
+        <Drawer.Trigger>
+            <Button variant="outline" size="sm" class="gap-1">
                 {#if Icon}<Icon class="size-4 shrink-0" />{/if}
                 {singleSelect && activeKey ? activeKey : label}
                 {#if !singleSelect && activeCount > 0}
@@ -77,36 +129,38 @@
                     >
                 {/if}
             </Button>
-        {/snippet}
-    </Popover.Trigger>
-    <Popover.Content class="w-64 p-0" align="start">
-        <Command.Root>
-            <Command.Input
-                bind:value={search}
-                placeholder={`Search ${label.toLowerCase()}...`}
-            />
-            <Command.List>
-                {#if filtered.length === 0}
-                    <Command.Empty
-                        >No {label.toLowerCase()} found.</Command.Empty
-                    >
-                {/if}
-                {#each filtered as item (item)}
-                    <Command.Item
-                        class={`${getItemMode(item) === 'in' ? 'bg-emerald-500/10 hover:bg-emerald-500/20 aria-selected:bg-emerald-500/20' : getItemMode(item) === 'notIn' ? 'bg-red-500/10 hover:bg-red-500/20 aria-selected:bg-red-500/20' : ''} rounded-none px-4`}
-                        onSelect={() => cycleMode(item)}
-                    >
-                        <div class="flex w-full items-center gap-2">
-                            {#if getItemMode(item) === 'in'}
-                                <Check class="size-4 text-emerald-500" />
-                            {:else if getItemMode(item) === 'notIn'}
-                                <X class="size-4 text-red-500" />
-                            {/if}
-                            <span class="flex-1">{item}</span>
-                        </div>
-                    </Command.Item>
-                {/each}
-            </Command.List>
-        </Command.Root>
-    </Popover.Content>
-</Popover.Root>
+        </Drawer.Trigger>
+        <Drawer.Content>
+            <div class="mt-4 border-t">
+                <Command.Root>
+                    <Command.Input
+                        bind:value={search}
+                        placeholder={`Search ${label.toLowerCase()}...`}
+                    />
+                    <Command.List>
+                        {#if filtered.length === 0}
+                            <Command.Empty
+                                >No {label.toLowerCase()} found.</Command.Empty
+                            >
+                        {/if}
+                        {#each filtered as item (item)}
+                            <Command.Item
+                                class={`${getItemMode(item) === 'in' ? 'bg-emerald-500/10 hover:bg-emerald-500/20 aria-selected:bg-emerald-500/20' : getItemMode(item) === 'notIn' ? 'bg-red-500/10 hover:bg-red-500/20 aria-selected:bg-red-500/20' : ''} rounded-none px-4`}
+                                onSelect={() => cycleMode(item)}
+                            >
+                                <div class="flex w-full items-center gap-2">
+                                    {#if getItemMode(item) === 'in'}
+                                        <Check class="size-4 text-emerald-500" />
+                                    {:else if getItemMode(item) === 'notIn'}
+                                        <X class="size-4 text-red-500" />
+                                    {/if}
+                                    <span class="flex-1">{item}</span>
+                                </div>
+                            </Command.Item>
+                        {/each}
+                    </Command.List>
+                </Command.Root>
+            </div>
+        </Drawer.Content>
+    </Drawer.Root>
+{/if}
