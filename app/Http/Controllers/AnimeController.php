@@ -169,7 +169,9 @@ class AnimeController extends Controller implements HasMiddleware
 
         Anime::create($data->toModelArray());
 
-        return redirect()->route('anime.index')->with('toast', ['type' => 'success', 'message' => 'Anime '.($data->isPublished ? 'published' : 'draft saved').' successfully.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Anime '.($data->isPublished ? 'published' : 'draft saved').' successfully.']);
+
+        return redirect()->route('anime.index');
     }
 
     public function show(Anime $anime)
@@ -225,7 +227,9 @@ class AnimeController extends Controller implements HasMiddleware
         );
         $anime->update($modelData);
 
-        return redirect()->route('anime.show', $anime)->banner('Anime updated successfully.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Anime updated successfully.']);
+
+        return redirect()->route('anime.show', $anime);
     }
 
     public function destroy(Anime $anime)
@@ -233,7 +237,9 @@ class AnimeController extends Controller implements HasMiddleware
         Gate::authorize('delete', $anime);
         $anime->delete();
 
-        return redirect()->route('anime.index')->banner('Anime successfully deleted.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Anime successfully deleted.']);
+
+        return redirect()->route('anime.index');
     }
 
     public function az(): Response
