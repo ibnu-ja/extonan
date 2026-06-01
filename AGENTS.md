@@ -246,6 +246,10 @@ Use Wayfinder to generate TypeScript functions for Laravel routes. Import from `
 
 - IMPORTANT: Activate `inertia-svelte-development` when working with Inertia Svelte client-side patterns.
 
+## Svelte Check
+
+- If you have modified any Svelte files, run `bun run types:check` before finalizing changes to catch type errors and other Svelte-specific issues.
+
 === oddvalue/laravel-drafts rules ===
 
 ## Laravel Drafts
