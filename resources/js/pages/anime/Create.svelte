@@ -11,7 +11,7 @@
 
 <script lang="ts">
     import { useForm } from '@inertiajs/svelte';
-    import { Select as SelectPrimitive } from 'bits-ui';
+    import { Check, Send, X } from 'lucide-svelte';
     import { untrack } from 'svelte';
     import AnimeController from '@/actions/App/Http/Controllers/AnimeController';
     import AppHead from '@/components/app-head.svelte';
@@ -20,10 +20,10 @@
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent, CardTitle } from '@/components/ui/card';
+    import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
     import { Input } from '@/components/ui/input';
     import * as InputGroup from '@/components/ui/input-group/index.js';
     import { Label } from '@/components/ui/label';
-    import * as Select from '@/components/ui/select/index.js';
     import { Switch } from '@/components/ui/switch';
     import { Textarea } from '@/components/ui/textarea';
     import { animeApi } from '@/lib/anilist.svelte';
@@ -67,20 +67,26 @@
     const isEditing = $derived(Boolean(anime));
     const pageTitle = $derived(isEditing ? 'Edit Anime' : 'Create Anime');
 
-    const form = untrack(() => useForm<FormData>({
-        title: anime?.title ?? { romaji: '', native: '', en: '', id: '' },
-        description: anime?.description ?? { en: '', id: '' },
-        anilistId: anime?.anilistId ?? null,
-        isPublished: anime?.isPublished ?? false,
-        metadata: anime?.metadata ?? { ...nullMetadata, genres: [], tags: [] },
-    }));
+    const form = untrack(() =>
+        useForm<FormData>({
+            title: anime?.title ?? { romaji: '', native: '', en: '', id: '' },
+            description: anime?.description ?? { en: '', id: '' },
+            anilistId: anime?.anilistId ?? null,
+            isPublished: anime?.isPublished ?? false,
+            metadata: anime?.metadata ?? {
+                ...nullMetadata,
+                genres: [],
+                tags: [],
+            },
+        }),
+    );
 
     let useMalId = $state(false);
     let loading = $state(false);
     let fetchError = $state<string | null>(null);
 
     async function fetchAnilist() {
-        if (!form.anilistId || form.anilistId < 1) {
+        if (loading || !form.anilistId || form.anilistId < 1) {
             return;
         }
 
@@ -200,41 +206,70 @@
 {/snippet}
 
 {#snippet metadataContent()}
-    <CardTitle>AniList Metadata</CardTitle>
+    <CardTitle>Autofill</CardTitle>
     <div class="grid gap-2">
         <Label for="anilist_id">Search Source</Label>
         <InputGroup.Root>
-            <Select.Root
-                type="single"
-                value={useMalId ? 'MAL' : 'Anilist'}
-                onValueChange={(v) => (useMalId = v === 'MAL')}
-            >
-                <Select.Trigger class="border-0 shadow-none rounded-none bg-transparent data-[size=default]:h-full w-auto min-w-0 px-2.5 text-foreground data-placeholder:text-foreground">
-                    <SelectPrimitive.Value />
-                </Select.Trigger>
-                <Select.Content>
-                    <Select.Item value="Anilist">AniList</Select.Item>
-                    <Select.Item value="MAL">MAL</Select.Item>
-                </Select.Content>
-            </Select.Root>
+            <InputGroup.Addon>
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger>
+                        {#snippet child({ props: triggerProps })}
+                            <InputGroup.Button variant="default" {...triggerProps}>
+                                {useMalId ? 'MAL' : 'AniList'}
+                            </InputGroup.Button>
+                        {/snippet}
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content>
+                        <DropdownMenu.Item onclick={() => (useMalId = false)}>
+                            <div class="flex w-full items-center gap-2">
+                                {#if !useMalId}
+                                    <Check class="size-4" />
+                                {/if}
+                                <span>AniList</span>
+                            </div>
+                        </DropdownMenu.Item>
+                        <DropdownMenu.Item onclick={() => (useMalId = true)}>
+                            <div class="flex w-full items-center gap-2">
+                                {#if useMalId}
+                                    <Check class="size-4" />
+                                {/if}
+                                <span>MAL</span>
+                            </div>
+                        </DropdownMenu.Item>
+                    </DropdownMenu.Content>
+                </DropdownMenu.Root>
+            </InputGroup.Addon>
             <InputGroup.Input
                 id="anilist_id"
                 type="number"
                 min="1"
                 bind:value={form.anilistId}
                 placeholder={useMalId ? 'MAL ID' : 'AniList ID'}
+                onkeydown={(e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        fetchAnilist();
+                    }
+                }}
             />
             <InputGroup.Addon align="inline-end">
                 <InputGroup.Button
                     onclick={fetchAnilist}
-                    disabled={loading || !form.anilistId}
+                    aria-disabled={loading || !form.anilistId}
                     variant="secondary"
+                    size="icon-xs"
+                    aria-label="Autofill"
                 >
-                    {loading ? 'Loading...' : 'Autofill'}
+                    <Send class="size-4" />
                 </InputGroup.Button>
                 {#if form.metadata?.id}
-                    <InputGroup.Button onclick={clearAnilist} variant="ghost">
-                        Clear
+                    <InputGroup.Button
+                        onclick={clearAnilist}
+                        variant="ghost"
+                        size="icon-xs"
+                        aria-label="Clear"
+                    >
+                        <X class="size-4" />
                     </InputGroup.Button>
                 {/if}
             </InputGroup.Addon>
@@ -285,21 +320,37 @@
             placeholder="Search tags..."
         />
     </div>
+
     <div class="grid gap-2">
         <Label>Season & Year</Label>
         <InputGroup.Root>
-            <Select.Root type="single" value={form.metadata!.season ?? undefined} onValueChange={(v) => form.metadata!.season = v as App.Enums.Season}>
-                <Select.Trigger class="border-0 shadow-none rounded-none bg-transparent data-[size=default]:h-full w-auto min-w-0 px-2.5 text-foreground data-placeholder:text-foreground">
-                    <SelectPrimitive.Value placeholder="Season" />
-                </Select.Trigger>
-                <Select.Content>
-                    {#each seasons as s (s)}
-                        <Select.Item value={s} label={capitalize(s)}>
-                            {capitalize(s)}
-                        </Select.Item>
-                    {/each}
-                </Select.Content>
-            </Select.Root>
+            <InputGroup.Addon>
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger>
+                        {#snippet child({ props: triggerProps })}
+                            <InputGroup.Button variant="default" {...triggerProps}>
+                                {form.metadata!.season
+                                    ? capitalize(form.metadata!.season)
+                                    : 'Season'}
+                            </InputGroup.Button>
+                        {/snippet}
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content>
+                        {#each seasons as s (s)}
+                            <DropdownMenu.Item
+                                onclick={() => (form.metadata!.season = s)}
+                            >
+                                <div class="flex w-full items-center gap-2">
+                                    {#if form.metadata!.season === s}
+                                        <Check class="size-4" />
+                                    {/if}
+                                    <span>{capitalize(s)}</span>
+                                </div>
+                            </DropdownMenu.Item>
+                        {/each}
+                    </DropdownMenu.Content>
+                </DropdownMenu.Root>
+            </InputGroup.Addon>
             <InputGroup.Input
                 id="year"
                 type="number"

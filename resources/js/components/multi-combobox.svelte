@@ -72,7 +72,7 @@
     }
 </script>
 
-<div class="multi-combobox w-full">
+<div class="w-full">
     {#if mdAndUp.current}
         <Popover.Root bind:open>
             <Popover.Trigger>
@@ -84,38 +84,20 @@
                         {...props}
                         class="w-full justify-between gap-2 text-base md:text-sm"
                     >
-                        <div
-                            class="flex flex-1 items-center gap-1 overflow-hidden"
-                        >
-                            {#if norm.length === 0}
-                                <span class="text-muted-foreground truncate">
-                                    {label}
-                                </span>
-                            {:else}
-                                {#each norm.slice(0, 2) as s (itemKey(s))}
-                                    <Badge
-                                        variant="secondary"
-                                        class="shrink-0 gap-1 max-w-28"
-                                    >
-                                        <span class="truncate"
-                                            >{itemLabel(s)}</span
-                                        >
-                                        <button
-                                            type="button"
-                                            class="ml-0.5 shrink-0 rounded-full outline-hidden hover:bg-muted-foreground/20"
-                                            onclick={() => toggle(itemKey(s))}
-                                        >
-                                            <X class="size-3" />
-                                        </button>
-                                    </Badge>
-                                {/each}
-                                {#if norm.length > 2}
+                        {#if norm.length === 0}
+                            <span class="text-muted-foreground truncate">
+                                {label}
+                            </span>
+                        {:else}
+                            <div class="flex items-center gap-1 truncate">
+                                <span class="truncate">{itemLabel(norm[0])}</span>
+                                {#if norm.length > 1}
                                     <Badge variant="secondary" class="shrink-0">
-                                        +{norm.length - 2}
+                                        +{norm.length - 1}
                                     </Badge>
                                 {/if}
-                            {/if}
-                        </div>
+                            </div>
+                        {/if}
                         <ChevronsUpDown class="size-4 shrink-0 opacity-50" />
                     </Button>
                 {/snippet}
@@ -160,41 +142,27 @@
         </Popover.Root>
     {:else}
         <Drawer.Root bind:open>
-            <Drawer.Trigger>
+            <Drawer.Trigger class="w-full">
                 <Button
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
                     class="w-full justify-between gap-2 text-base md:text-sm"
                 >
-                    <div class="flex flex-1 items-center gap-1 overflow-hidden">
-                        {#if norm.length === 0}
-                            <span class="text-muted-foreground truncate">
-                                {label}
-                            </span>
-                        {:else}
-                            {#each norm.slice(0, 2) as s (itemKey(s))}
-                                <Badge
-                                    variant="secondary"
-                                    class="shrink-0 gap-1 max-w-28"
-                                >
-                                    <span class="truncate">{itemLabel(s)}</span>
-                                    <button
-                                        type="button"
-                                        class="ml-0.5 shrink-0 rounded-full outline-hidden hover:bg-muted-foreground/20"
-                                        onclick={() => toggle(itemKey(s))}
-                                    >
-                                        <X class="size-3" />
-                                    </button>
-                                </Badge>
-                            {/each}
-                            {#if norm.length > 2}
+                    {#if norm.length === 0}
+                        <span class="text-muted-foreground truncate">
+                            {label}
+                        </span>
+                    {:else}
+                        <div class="flex items-center gap-1 truncate">
+                            <span class="truncate">{itemLabel(norm[0])}</span>
+                            {#if norm.length > 1}
                                 <Badge variant="secondary" class="shrink-0">
-                                    +{norm.length - 2}
+                                    +{norm.length - 1}
                                 </Badge>
                             {/if}
-                        {/if}
-                    </div>
+                        </div>
+                    {/if}
                     <ChevronsUpDown class="size-4 shrink-0 opacity-50" />
                 </Button>
             </Drawer.Trigger>
