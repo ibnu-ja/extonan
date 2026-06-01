@@ -118,10 +118,7 @@
     }
 
     function clearAnilist() {
-        form.metadata = { ...nullMetadata, genres: [], tags: [] };
-        form.title = { romaji: '', native: '', en: '', id: '' };
-        form.description = { en: '', id: '' };
-        form.anilistId = null;
+        form.reset('metadata', 'title', 'description', 'anilistId');
         fetchError = null;
     }
 
@@ -214,7 +211,10 @@
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                         {#snippet child({ props: triggerProps })}
-                            <InputGroup.Button variant="default" {...triggerProps}>
+                            <InputGroup.Button
+                                variant="default"
+                                {...triggerProps}
+                            >
                                 {useMalId ? 'MAL' : 'AniList'}
                             </InputGroup.Button>
                         {/snippet}
@@ -328,7 +328,10 @@
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                         {#snippet child({ props: triggerProps })}
-                            <InputGroup.Button variant="default" {...triggerProps}>
+                            <InputGroup.Button
+                                variant="default"
+                                {...triggerProps}
+                            >
                                 {form.metadata!.season
                                     ? capitalize(form.metadata!.season)
                                     : 'Season'}
@@ -390,13 +393,32 @@
                 {@render card(classificationContent)}
                 {@render card(publishingContent)}
 
-                <Button type="submit" disabled={form.processing} class="w-full">
-                    {form.processing
-                        ? 'Saving...'
-                        : isEditing
-                          ? 'Update'
-                          : 'Save'}
-                </Button>
+                <div class="flex gap-2">
+                    {#if form.isDirty}
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onclick={() => {
+                                form.reset();
+                                fetchError = null;
+                            }}
+                            disabled={form.processing}
+                        >
+                            Reset
+                        </Button>
+                    {/if}
+                    <Button
+                        type="submit"
+                        disabled={form.processing}
+                        class="flex-1"
+                    >
+                        {form.processing
+                            ? 'Saving...'
+                            : isEditing
+                              ? 'Update'
+                              : 'Save'}
+                    </Button>
+                </div>
             </div>
         </div>
     </form>

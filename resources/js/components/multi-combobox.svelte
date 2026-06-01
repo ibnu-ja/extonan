@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Check, ChevronsUpDown, X } from 'lucide-svelte';
+    import { Check, ChevronsUpDown } from 'lucide-svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import * as Command from '@/components/ui/command/index.js';
@@ -90,7 +90,9 @@
                             </span>
                         {:else}
                             <div class="flex items-center gap-1 truncate">
-                                <span class="truncate">{itemLabel(norm[0])}</span>
+                                <span class="truncate">
+                                    {itemLabel(norm[0])}
+                                </span>
                                 {#if norm.length > 1}
                                     <Badge variant="secondary" class="shrink-0">
                                         +{norm.length - 1}

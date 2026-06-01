@@ -27,6 +27,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
@@ -106,17 +107,19 @@ class AnimeController extends Controller implements HasMiddleware
 
     private function getTags(): DataCollection
     {
-        $path = storage_path('app/anilist-tags.json');
+        $tags = Cache::remember('anilist-tags', 86400, function () {
+            $path = storage_path('app/anilist-tags.json');
 
-        if (file_exists($path)) {
-            $tags = json_decode(file_get_contents($path), true);
-        } else {
-            $tags = collect(config('anime.tags', []))->map(fn (string $name) => [
+            if (file_exists($path)) {
+                return json_decode(file_get_contents($path), true);
+            }
+
+            return collect(config('anime.tags', []))->map(fn (string $name) => [
                 'id' => 0,
                 'name' => $name,
                 'isAdult' => false,
             ])->all();
-        }
+        });
 
         return new DataCollection(TagItem::class, array_map(fn (array $t) => new TagItem(
             id: $t['id'],
