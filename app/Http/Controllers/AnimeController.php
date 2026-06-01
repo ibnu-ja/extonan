@@ -169,7 +169,7 @@ class AnimeController extends Controller implements HasMiddleware
 
         Anime::create($data->toModelArray());
 
-        return redirect()->route('anime.index')->banner('Anime '.($data->isPublished ? 'published' : 'draft saved').' successfully.');
+        return redirect()->route('anime.index')->with('toast', ['type' => 'success', 'message' => 'Anime '.($data->isPublished ? 'published' : 'draft saved').' successfully.']);
     }
 
     public function show(Anime $anime)
