@@ -8,13 +8,14 @@ use App\Data\Anime\AnimeIndexRequest;
 use App\Data\Anime\AnimeIndexResponse;
 use App\Data\Anime\AnimeListItemData;
 use App\Data\Anime\AnimeShowResponse;
+use App\Data\Anime\AnimeStoreData;
 use App\Data\EpisodeSummaryData;
 use App\Data\LabelValue;
 use App\Data\PaginatedCollection;
-use App\Http\Requests\StoreAnimeRequest;
 use App\Models\Anime;
 use App\Models\Post;
 use App\Queries\AnimeSeasonsQuery;
+use App\Services\AnilistService;
 use Gate;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\RedirectResponse;
@@ -125,27 +126,28 @@ class AnimeController extends Controller implements HasMiddleware
     {
         Gate::authorize('create', Anime::class);
 
-        return Inertia::render('anime/Create', new AnimeFormData(
-            id: null,
-            title: [],
-            description: [],
-            anilistId: null,
-            metadata: null,
-            isPublished: false,
-            canPublish: $request->user()->can('publish', Anime::class),
-        ));
+        return Inertia::render('anime/Create', [
+            'anime' => null,
+            'genres' => Inertia::once(fn () => $this->getGenres()),
+            'tags' => Inertia::once(fn () => $this->getTags()),
+            'seasons' => Inertia::once(fn () => (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray()),
+            'anilistQuery' => Inertia::once(fn () => app(AnilistService::class)->getAnimeQuery()),
+        ]);
     }
 
-    public function store(StoreAnimeRequest $request)
+    public function store(Request $request)
     {
         Gate::authorize('create', Anime::class);
-        if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class)) {
+
+        $data = AnimeStoreData::from($request);
+
+        if ($data->isPublished && $request->user()->cannot('publish', Anime::class)) {
             abort(403);
         }
 
-        Anime::create($request->validated());
+        Anime::create($data->toModelArray());
 
-        return redirect()->route('anime.index')->banner('Anime '.($request->boolean('is_published') ? 'published' : 'draft saved').' successfully.');
+        return redirect()->route('anime.index')->banner('Anime '.($data->isPublished ? 'published' : 'draft saved').' successfully.');
     }
 
     public function show(Anime $anime)
@@ -171,23 +173,32 @@ class AnimeController extends Controller implements HasMiddleware
     public function edit(Anime $anime)
     {
         Gate::authorize('update', $anime);
-        if (auth()->user()->cannot('update', $anime)) {
-            abort(403);
-        }
 
         return Inertia::render('anime/Create', [
             'anime' => AnimeFormData::fromModel($anime, auth()->user()->can('publish', $anime)),
+            'genres' => Inertia::once(fn () => $this->getGenres()),
+            'tags' => Inertia::once(fn () => $this->getTags()),
+            'seasons' => Inertia::once(fn () => (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray()),
+            'anilistQuery' => Inertia::once(fn () => app(AnilistService::class)->getAnimeQuery()),
         ]);
     }
 
-    public function update(StoreAnimeRequest $request, Anime $anime)
+    public function update(Request $request, Anime $anime)
     {
         Gate::authorize('update', $anime);
-        if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class)) {
+
+        $data = AnimeStoreData::from($request);
+
+        if ($data->isPublished && $request->user()->cannot('publish', Anime::class)) {
             abort(403);
         }
 
-        $anime->update($request->validated());
+        $modelData = $data->toModelArray();
+        $modelData['metadata'] = array_merge(
+            (array) ($anime->metadata ?? []),
+            $modelData['metadata']
+        );
+        $anime->update($modelData);
 
         return redirect()->route('anime.show', $anime)->banner('Anime updated successfully.');
     }

@@ -67,7 +67,9 @@
                             >
                                 <span class="flex-1">{opt.value}</span>
                                 {#if sort === opt.key}
-                                    <Check class="size-3 text-muted-foreground" />
+                                    <Check
+                                        class="size-3 text-muted-foreground"
+                                    />
                                 {/if}
                             </Command.Item>
                         {/each}
@@ -96,7 +98,9 @@
                                 >
                                     <span class="flex-1">{opt.value}</span>
                                     {#if sort === opt.key}
-                                        <Check class="size-3 text-muted-foreground" />
+                                        <Check
+                                            class="size-3 text-muted-foreground"
+                                        />
                                     {/if}
                                 </Command.Item>
                             {/each}

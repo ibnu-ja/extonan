@@ -67,9 +67,6 @@
                     </div>
                 {:else}
                     <div class="px-4 pt-6">
-                        {#if breadcrumbs.length > 1}
-                            <Breadcrumbs {breadcrumbs} />
-                        {/if}
                         <h1 class="text-3xl font-semibold font-heading">
                             {title}
                         </h1>

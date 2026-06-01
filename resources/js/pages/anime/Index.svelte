@@ -28,8 +28,11 @@
     import FilterDropdown from './index/components/filter-dropdown.svelte';
     import Grid from './index/components/grid.svelte';
 
-    let { anime, sortOptions = [], perPageValues = [14, 25, 50, 100] }: App.Data.Anime.AnimeIndexResponse =
-        $props();
+    let {
+        anime,
+        sortOptions = [],
+        perPageValues = [14, 25, 50, 100],
+    }: App.Data.Anime.AnimeIndexResponse = $props();
 
     // TODO: Show validation errors from page.props.errors
 
@@ -256,7 +259,7 @@
     {#if can('post.create')}
         <Fab>
             {#snippet child({ props })}
-                <Link href={animeCreate().url} {...props}>
+                <Link href={animeCreate().url} prefetch="hover" {...props}>
                     <Plus class="size-6" />
                     Add
                 </Link>

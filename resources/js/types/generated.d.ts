@@ -70,6 +70,51 @@ declare namespace App {
             name: string | null;
             avatar: string | null;
         };
+        namespace Anilist {
+            export type AnilistMediaData = {
+                id: number;
+                idMal: number | null;
+                coverImage: App.Data.Anilist.CoverImageData;
+                title: App.Data.Anilist.TitleData;
+                startDate: App.Data.Anilist.FuzzyDateData;
+                endDate: App.Data.Anilist.FuzzyDateData;
+                episodes: number | null;
+                description: string | null;
+                bannerImage: string | null;
+                season: string | null;
+                seasonYear: number | null;
+                seasonInt: number | null;
+                genres: string[];
+                tags: App.Data.Anilist.TagData[];
+                studios: Record<string, any>;
+                characters: Record<string, any>;
+            };
+            export type CoverImageData = {
+                extraLarge: string;
+                large: string;
+                medium: string;
+                color: string;
+            };
+            export type FuzzyDateData = {
+                year: number | null;
+                month: number | null;
+                day: number | null;
+            };
+            export type TagData = {
+                id: number;
+                name: string;
+                rank: number;
+                isAdult: boolean;
+                category: string;
+                isMediaSpoiler: boolean;
+                isGeneralSpoiler: boolean;
+            };
+            export type TitleData = {
+                romaji: string | null;
+                english: string | null;
+                native: string | null;
+            };
+        }
         namespace Anime {
             export type AnimeAZResponse = {
                 items: App.Data.Anime.AnimeListItemData[];
@@ -121,6 +166,13 @@ declare namespace App {
                 episodes: App.Data.EpisodeSummaryData[];
                 canCreateEpisode: boolean;
             };
+            export type AnimeStoreData = {
+                title: Record<string, string | null>;
+                description: Record<string, string | null>;
+                anilistId: number | null;
+                metadata: Record<string, any> | null;
+                isPublished: boolean;
+            };
         }
         namespace Home {
             export type HomePageResponse = {
@@ -150,6 +202,7 @@ declare namespace App {
             | 'user.edit.self'
             | 'user.edit.any';
         export type Role = 'admin' | 'editor' | 'author' | 'contributor';
+        export type Season = 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL';
     }
     namespace Http {
         namespace Requests {

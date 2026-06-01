@@ -150,7 +150,9 @@
                             >
                                 <div class="flex w-full items-center gap-2">
                                     {#if getItemMode(item) === 'in'}
-                                        <Check class="size-4 text-emerald-500" />
+                                        <Check
+                                            class="size-4 text-emerald-500"
+                                        />
                                     {:else if getItemMode(item) === 'notIn'}
                                         <X class="size-4 text-red-500" />
                                     {/if}
