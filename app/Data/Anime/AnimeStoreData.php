@@ -43,7 +43,7 @@ class AnimeStoreData extends Data
             'description' => 'required|array',
             'description.en' => 'nullable|string|max:10000',
             'description.id' => 'nullable|string|max:10000',
-            'anilistId' => 'nullable|integer|min:1',
+            'anilistId' => 'required|integer|min:1',
             'metadata' => 'nullable',
             'isPublished' => 'required|boolean',
         ];
@@ -52,7 +52,7 @@ class AnimeStoreData extends Data
     /** @param array<string, mixed> $properties */
     public static function prepareForPipeline(array $properties): array
     {
-        if (array_key_exists('isPublished', $properties)) {
+        if (array_key_exists('isPublished', $properties) && $properties['isPublished'] !== null) {
             $properties['isPublished'] = filter_var(
                 $properties['isPublished'],
                 FILTER_VALIDATE_BOOLEAN,

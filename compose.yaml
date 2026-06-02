@@ -6,7 +6,7 @@ services:
             args:
                 PUID: '${PUID:-0}'
                 PGID: '${PGID:-0}'
-        image: 'localhost/sail/frankenphp:8.5-bookworm'
+        image: 'localhost/extonan/devcontainer'
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:

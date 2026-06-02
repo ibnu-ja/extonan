@@ -70,12 +70,16 @@ class PostPolicy
     public function publish(User $user, ?BasePost $post = null): bool
     {
         // if post is null means it's creating and self-publish
-        if ($post == null && $user->can(Permission::POST_PUBLISH_SELF->value) || $user->can(Permission::POST_PUBLISH_ANY->value)) {
+        if ($post == null && $user->can(Permission::POST_PUBLISH_SELF->value)) {
+            return true;
+        }
+
+        if ($user->can(Permission::POST_PUBLISH_ANY->value)) {
             return true;
         }
 
         // when editing user should only able to publish its own post
-        return $user->id === $post?->author_id;
+        return $user->can(Permission::POST_PUBLISH_SELF->value) && $user->id === $post?->author_id;
     }
 
     // /**

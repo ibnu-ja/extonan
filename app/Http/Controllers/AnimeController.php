@@ -220,12 +220,7 @@ class AnimeController extends Controller implements HasMiddleware
             abort(403);
         }
 
-        $modelData = $data->toModelArray();
-        $modelData['metadata'] = array_merge(
-            (array) ($anime->metadata ?? []),
-            $modelData['metadata']
-        );
-        $anime->update($modelData);
+        $anime->update($data->toModelArray());
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Anime updated successfully.']);
 

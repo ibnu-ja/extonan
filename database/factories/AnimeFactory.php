@@ -15,8 +15,10 @@ class AnimeFactory extends Factory
 
     public function definition(): array
     {
+        $title = fake()->words(3, true);
+
         return [
-            'title' => ['en' => fake()->sentence(3), 'native' => fake()->sentence(3)],
+            'title' => ['en' => $title, 'romaji' => $title, 'native' => fake()->words(3, true)],
             'description' => ['en' => fake()->paragraph()],
             'anilist_id' => fake()->unique()->numberBetween(1, 99999),
             'author_id' => User::factory(),
