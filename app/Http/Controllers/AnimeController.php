@@ -17,9 +17,10 @@ use App\Data\TagItem;
 use App\Enums\Season;
 use App\Models\Anime;
 use App\Models\Post;
+use App\Models\User;
 use App\Queries\AnimeSeasonsQuery;
 use App\Services\AnilistService;
-use Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -157,15 +158,13 @@ class AnimeController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         Gate::authorize('create', Anime::class);
 
         $data = AnimeStoreData::from($request);
 
-        if ($data->isPublished && $request->user()->cannot('publish', Anime::class)) {
-            abort(403);
-        }
+        $this->authorizePublishIfRequested($data, $request->user());
 
         Anime::create($data->toModelArray());
 
@@ -180,7 +179,7 @@ class AnimeController extends Controller implements HasMiddleware
 
         $user = Auth::user();
         $anime->load([
-            'posts' => fn (MorphMany $query) => $query->orderByEpisodeAndNativeTitle()->visible()->with(['author'])->get(),
+            'posts' => fn (MorphMany $query) => $query->orderByEpisodeAndNativeTitle()->visible()->with(['author']),
             'author',
             'publisher',
         ]);
@@ -210,15 +209,13 @@ class AnimeController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function update(Request $request, Anime $anime)
+    public function update(Request $request, Anime $anime): RedirectResponse
     {
         Gate::authorize('update', $anime);
 
         $data = AnimeStoreData::from($request);
 
-        if ($data->isPublished && $request->user()->cannot('publish', Anime::class)) {
-            abort(403);
-        }
+        $this->authorizePublishIfRequested($data, $request->user());
 
         $anime->update($data->toModelArray());
 
@@ -227,7 +224,7 @@ class AnimeController extends Controller implements HasMiddleware
         return redirect()->route('anime.show', $anime);
     }
 
-    public function destroy(Anime $anime)
+    public function destroy(Anime $anime): RedirectResponse
     {
         Gate::authorize('delete', $anime);
         $anime->delete();
@@ -235,6 +232,13 @@ class AnimeController extends Controller implements HasMiddleware
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Anime successfully deleted.']);
 
         return redirect()->route('anime.index');
+    }
+
+    private function authorizePublishIfRequested(AnimeStoreData $data, User $user): void
+    {
+        if ($data->isPublished && $user->cannot('publish', Anime::class)) {
+            abort(403);
+        }
     }
 
     public function az(): Response
