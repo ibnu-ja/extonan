@@ -11,16 +11,14 @@ use App\Data\Anime\AnimeListItemData;
 use App\Data\Anime\AnimeShowResponse;
 use App\Data\Anime\AnimeStoreData;
 use App\Data\EpisodeSummaryData;
-use App\Data\LabelValue;
 use App\Data\PaginatedCollection;
-use App\Data\TagItem;
 use App\Enums\Season;
 use App\Models\Anime;
 use App\Models\Post;
 use App\Models\User;
 use App\Queries\AnimeSeasonsQuery;
 use App\Services\AnilistService;
-use Illuminate\Support\Facades\Gate;
+use App\Services\AnimeService;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,7 +26,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
@@ -38,6 +36,8 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class AnimeController extends Controller implements HasMiddleware
 {
+    public function __construct(private readonly AnimeService $animeService) {}
+
     public static function middleware(): array
     {
         return [
@@ -91,55 +91,11 @@ class AnimeController extends Controller implements HasMiddleware
                 fn (Anime $a) => AnimeListItemData::fromModel($a, $user),
             ),
             'seasons' => Inertia::once(fn () => (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray()),
-            'genres' => Inertia::once(fn () => $this->getGenres()),
-            'tags' => Inertia::once(fn () => $this->getTags()),
-            'sortOptions' => Inertia::once(fn () => $this->getSortOptions()),
+            'genres' => Inertia::once(fn () => $this->animeService->getGenres()),
+            'tags' => Inertia::once(fn () => $this->animeService->getTags()),
+            'sortOptions' => Inertia::once(fn () => $this->animeService->getSortOptions()),
             'perPageValues' => Inertia::once(fn () => AnimeIndexRequest::PER_PAGE_VALUES),
         ]);
-    }
-
-    private function getGenres(): DataCollection
-    {
-        return new DataCollection(LabelValue::class, collect(config('anime.genres', []))->map(fn (string $genre) => new LabelValue(
-            key: $genre,
-            value: __('anime.genres.'.$genre),
-        )));
-    }
-
-    private function getTags(): DataCollection
-    {
-        $tags = Cache::remember('anilist-tags', 86400, function () {
-            $path = storage_path('app/anilist-tags.json');
-
-            if (file_exists($path)) {
-                return json_decode(file_get_contents($path), true);
-            }
-
-            return collect(config('anime.tags', []))->map(fn (string $name) => [
-                'id' => 0,
-                'name' => $name,
-                'isAdult' => false,
-            ])->all();
-        });
-
-        return new DataCollection(TagItem::class, array_map(fn (array $t) => new TagItem(
-            id: $t['id'],
-            name: $t['name'],
-            isAdult: $t['isAdult'] ?? false,
-        ), $tags));
-    }
-
-    private function getSortOptions(): DataCollection
-    {
-        return new DataCollection(LabelValue::class, collect(['title->romaji', '-title->romaji', 'created_at', '-created_at', 'updated_at', '-updated_at'])->map(function (string $sort) {
-            $dir = str_starts_with($sort, '-') ? 'desc' : 'asc';
-            $field = ltrim($sort, '-');
-
-            return new LabelValue(
-                key: $sort,
-                value: __('anime.sort.'.$field).' '.__('anime.sort_dir.'.$dir),
-            );
-        }));
     }
 
     /**
@@ -151,8 +107,8 @@ class AnimeController extends Controller implements HasMiddleware
 
         return Inertia::render('anime/Create', [
             'anime' => null,
-            'genres' => Inertia::once(fn () => $this->getGenres()),
-            'tags' => Inertia::once(fn () => $this->getTags()),
+            'genres' => Inertia::once(fn () => $this->animeService->getGenres()),
+            'tags' => Inertia::once(fn () => $this->animeService->getTags()),
             'seasons' => Inertia::once(fn () => Season::cases()),
             'anilistQuery' => Inertia::once(fn () => app(AnilistService::class)->getAnimeQuery()),
         ]);
@@ -173,7 +129,7 @@ class AnimeController extends Controller implements HasMiddleware
         return redirect()->route('anime.index');
     }
 
-    public function show(Anime $anime)
+    public function show(Anime $anime): Response
     {
         Gate::authorize('view', $anime);
 
@@ -202,8 +158,8 @@ class AnimeController extends Controller implements HasMiddleware
 
         return Inertia::render('anime/Create', [
             'anime' => AnimeFormData::fromModel($anime, auth()->user()->can('publish', $anime)),
-            'genres' => Inertia::once(fn () => $this->getGenres()),
-            'tags' => Inertia::once(fn () => $this->getTags()),
+            'genres' => Inertia::once(fn () => $this->animeService->getGenres()),
+            'tags' => Inertia::once(fn () => $this->animeService->getTags()),
             'seasons' => Inertia::once(fn () => Season::cases()),
             'anilistQuery' => Inertia::once(fn () => app(AnilistService::class)->getAnimeQuery()),
         ]);
