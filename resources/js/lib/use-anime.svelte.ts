@@ -41,8 +41,17 @@ export function buildFilterQuery(
 
 export function useAnime() {
     const genres = $derived((page.props.genres as LabelValue[]) ?? []);
-    const tags = $derived((page.props.tags as LabelValue[]) ?? []);
+    const rawTags = $derived((page.props.tags as App.Data.TagItem[]) ?? []);
     const seasons = $derived((page.props.seasons as string[]) ?? []);
+
+    const tags = $derived(
+        rawTags
+            .filter((t) => !t.isAdult)
+            .map(
+                (t) =>
+                    ({ key: String(t.id), value: t.name }) satisfies LabelValue,
+            ),
+    );
 
     return {
         get genres() {

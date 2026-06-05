@@ -90,6 +90,16 @@
 
     let filters = $state<AnimeFilterState>(parseFilterState());
     let sort = $state(pageSearchParams().get('sort') || 'title->romaji');
+    let selectedTagNames = $derived(
+        filters.tagIn.map(
+            (id) => tags.find((t) => t.key === id)?.value ?? id,
+        ),
+    );
+    let selectedTagNotInNames = $derived(
+        filters.tagNotIn.map(
+            (id) => tags.find((t) => t.key === id)?.value ?? id,
+        ),
+    );
     let publishFilter = $state<'published' | 'draft' | null>(
         (() => {
             const val = pageSearchParams().get('filter[is_published]');
@@ -145,15 +155,17 @@
     }
 
     function onTagSelect(item: string, mode: 'in' | 'notIn' | 'none') {
+        const tagId = tags.find((t) => t.value === item)?.key ?? item;
+
         if (mode === 'in') {
-            filters.tagIn = [...filters.tagIn, item];
-            filters.tagNotIn = filters.tagNotIn.filter((t) => t !== item);
+            filters.tagIn = [...filters.tagIn, tagId];
+            filters.tagNotIn = filters.tagNotIn.filter((t) => t !== tagId);
         } else if (mode === 'notIn') {
-            filters.tagNotIn = [...filters.tagNotIn, item];
-            filters.tagIn = filters.tagIn.filter((t) => t !== item);
+            filters.tagNotIn = [...filters.tagNotIn, tagId];
+            filters.tagIn = filters.tagIn.filter((t) => t !== tagId);
         } else {
-            filters.tagIn = filters.tagIn.filter((t) => t !== item);
-            filters.tagNotIn = filters.tagNotIn.filter((t) => t !== item);
+            filters.tagIn = filters.tagIn.filter((t) => t !== tagId);
+            filters.tagNotIn = filters.tagNotIn.filter((t) => t !== tagId);
         }
 
         debouncedApply();
@@ -204,8 +216,8 @@
             label="Tag"
             icon={Tag}
             items={tags.map((g) => g.value)}
-            selectedIn={filters.tagIn}
-            selectedNotIn={filters.tagNotIn}
+            selectedIn={selectedTagNames}
+            selectedNotIn={selectedTagNotInNames}
             onselect={onTagSelect}
         />
         <FilterDropdown

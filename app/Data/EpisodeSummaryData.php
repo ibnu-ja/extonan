@@ -25,14 +25,15 @@ class EpisodeSummaryData extends Data
         public ?string $publishedAt,
         public bool $isPublished,
         public bool $isCurrent,
-        public string $link,
+        public int $animeId,
         public PermissionsData $permissions,
     ) {}
 
-    public static function fromModel(Post $post, ?User $user = null): self
+    public static function fromModel(Post $post, ?User $user = null, ?array $animeTitle = null, mixed $postable = null): self
     {
         $meta = $post->metadata;
         $thumbnail = $post->thumbnail;
+        $postable ??= $post->postable;
 
         return new self(
             id: $post->id,
@@ -46,12 +47,12 @@ class EpisodeSummaryData extends Data
                 medium: $thumbnail['medium'] ?? '',
                 color: $thumbnail['color'] ?? '',
             ) : null,
-            animeTitle: $post->postable?->getTranslations('title') ?? [],
+            animeTitle: $animeTitle ?? [],
             author: UserSummaryData::fromModel($post->author),
             publishedAt: $post->published_at?->toIso8601String(),
             isPublished: $post->is_published,
             isCurrent: $post->is_current,
-            link: route('post.show', [$post->postable, $post]),
+            animeId: $postable->id,
             permissions: PermissionsData::fromModel($post, $user),
         );
     }

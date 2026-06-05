@@ -2,6 +2,7 @@
     import { Link } from '@inertiajs/svelte';
     import { EyeOff, Pencil } from 'lucide-svelte';
     import { Badge } from '@/components/ui/badge';
+    import { show as animeShow } from '@/routes/anime';
 
     type Item = {
         id: number;
@@ -14,7 +15,6 @@
             color: string;
         };
         isPublished: boolean;
-        link: string;
         permissions: { update: boolean; delete: boolean; publish: boolean };
     };
 
@@ -33,7 +33,7 @@
 </script>
 
 <Link
-    href={item.link}
+    href={animeShow.url(item.id)}
     class="group relative block overflow-hidden rounded-xl bg-muted"
 >
     <div class="aspect-3/4 overflow-hidden">

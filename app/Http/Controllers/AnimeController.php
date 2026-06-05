@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\Anilist\AnilistMediaData;
 use App\Data\Anime\AnimeAZResponse;
 use App\Data\Anime\AnimeCreateResponse;
 use App\Data\Anime\AnimeFormData;
@@ -10,7 +11,7 @@ use App\Data\Anime\AnimeIndexResponse;
 use App\Data\Anime\AnimeListItemData;
 use App\Data\Anime\AnimeShowResponse;
 use App\Data\Anime\AnimeStoreData;
-use App\Data\EpisodeSummaryData;
+use App\Data\Anime\EpisodeShowData;
 use App\Data\PaginatedCollection;
 use App\Enums\Season;
 use App\Models\Anime;
@@ -142,10 +143,11 @@ class AnimeController extends Controller implements HasMiddleware
 
         return Inertia::render('anime/Show', new AnimeShowResponse(
             anime: AnimeListItemData::fromModel($anime, $user),
-            episodes: new DataCollection(EpisodeSummaryData::class, $anime->posts->map(
-                fn ($post) => EpisodeSummaryData::fromModel($post, $user)
+            episodes: new DataCollection(EpisodeShowData::class, $anime->posts->map(
+                fn ($post) => EpisodeShowData::fromModel($post, $anime, $user)
             )),
             canCreateEpisode: auth()->check() && auth()->user()?->can('create', Post::class),
+            metadata: $anime->metadata ? AnilistMediaData::from($anime->metadata) : null,
         ));
     }
 

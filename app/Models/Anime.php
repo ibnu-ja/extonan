@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Data\Anilist\AnilistMediaData;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
 use Laravel\Scout\Searchable;
@@ -12,6 +12,9 @@ use Spatie\Sluggable\HasTranslatableSlug;
 use Spatie\Sluggable\SlugOptions;
 use Spatie\Translatable\HasTranslations;
 
+/**
+ * @property-read AnilistMediaData|null $metadata
+ */
 class Anime extends BasePost
 {
     use HasDrafts, HasTranslatableSlug, HasTranslations, Searchable;
@@ -31,7 +34,7 @@ class Anime extends BasePost
     /**
      * @var string[]
      */
-    protected $appends = ['link', 'can'];
+    protected $appends = ['can'];
 
     protected $casts = ['metadata' => 'object'];
 
@@ -44,16 +47,6 @@ class Anime extends BasePost
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug')
             ->slugsShouldBeNoLongerThan(60);
-    }
-
-    /**
-     * Get the anime link
-     */
-    protected function link(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => route('anime.show', $this->attributes['id']),
-        );
     }
 
     public function posts(): MorphMany
@@ -77,27 +70,23 @@ class Anime extends BasePost
         $query->whereJsonContains('metadata->genres', $genres, not: true);
     }
 
-    /**
-     * @param  string  ...$tags
-     */
-    public function scopeTagIn(Builder $query, ...$tags): void
+    public function scopeTagIn(Builder $query, int ...$tags): void
     {
-        $query->whereExists(function ($query) use ($tags) {
-            $query->select(DB::raw(1))
-                ->fromRaw('jsonb_array_elements(metadata->\'tags\') AS tag')
-                ->whereIn('tag->>id', $tags);
-        });
+        foreach ($tags as $tag) {
+            $query->whereExists(function ($query) use ($tag) {
+                $query->select(DB::raw(1))
+                    ->fromRaw('jsonb_array_elements(metadata->\'tags\') as tag')
+                    ->whereRaw("(tag->>'id')::int = ?", [$tag]);
+            });
+        }
     }
 
-    /**
-     * @param  string  ...$tags
-     */
-    public function scopeTagNotIn(Builder $query, ...$tags): void
+    public function scopeTagNotIn(Builder $query, int ...$tags): void
     {
         $query->whereExists(function ($query) use ($tags) {
             $query->select(DB::raw(1))
-                ->fromRaw('jsonb_array_elements(metadata->\'tags\') AS tag')
-                ->whereNotIn('tag->>id', $tags);
+                ->fromRaw('jsonb_array_elements(metadata->\'tags\') as tag')
+                ->whereNotIn(DB::raw("(tag->>'id')::int"), $tags);
         });
     }
 

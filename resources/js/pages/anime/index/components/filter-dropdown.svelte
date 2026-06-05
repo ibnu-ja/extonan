@@ -118,17 +118,24 @@
 {:else}
     <Drawer.Root bind:open>
         <Drawer.Trigger>
-            <Button variant="outline" size="sm" class="gap-1">
-                {#if Icon}<Icon class="size-4 shrink-0" />{/if}
-                {singleSelect && activeKey ? activeKey : label}
-                {#if !singleSelect && activeCount > 0}
-                    <Badge
-                        variant="secondary"
-                        class="ml-1 size-5 rounded-full p-0 text-xs"
-                        >{activeCount}</Badge
-                    >
-                {/if}
-            </Button>
+            {#snippet child({ props })}
+                <Button
+                    variant="outline"
+                    size="sm"
+                    {...props}
+                    class="gap-1"
+                >
+                    {#if Icon}<Icon class="size-4 shrink-0" />{/if}
+                    {singleSelect && activeKey ? activeKey : label}
+                    {#if !singleSelect && activeCount > 0}
+                        <Badge
+                            variant="secondary"
+                            class="ml-1 size-5 rounded-full p-0 text-xs"
+                            >{activeCount}</Badge
+                        >
+                    {/if}
+                </Button>
+            {/snippet}
         </Drawer.Trigger>
         <Drawer.Content>
             <div class="mt-4 border-t">

@@ -24,12 +24,14 @@ class AnimeFormData extends Data
 
     public static function fromModel(Anime $anime, bool $canPublish): self
     {
+        $meta = $anime->metadata;
+
         return new self(
             id: $anime->id,
             title: $anime->getTranslations('title'),
             description: $anime->getTranslations('description'),
             anilistId: $anime->anilist_id,
-            metadata: $anime->metadata ? AnilistMediaData::from($anime->metadata) : null,
+            metadata: $meta ? AnilistMediaData::from($meta) : null,
             isPublished: $anime->is_published,
             canPublish: $canPublish,
         );

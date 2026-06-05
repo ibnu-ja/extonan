@@ -1,31 +1,32 @@
 <?php
 
-namespace App\Data;
+namespace App\Data\Anime;
 
+use App\Data\CoverImageData;
+use App\Data\PermissionsData;
+use App\Data\UserSummaryData;
 use App\Models\Post;
 use App\Models\User;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
-class MusicSummaryData extends Data
+class EpisodeShowData extends Data
 {
     public function __construct(
         public int $id,
         /** @var array<string, string|null> */
         public array $title,
-        /** @var array<string, string|null> */
-        public array $slug,
+        public ?string $epNo,
         public string $postType,
         public ?CoverImageData $thumbnail,
         public ?UserSummaryData $author,
         public ?string $publishedAt,
         public bool $isPublished,
-        public bool $isCurrent,
         public PermissionsData $permissions,
     ) {}
 
-    public static function fromModel(Post $post, ?User $user = null): self
+    public static function fromModel(Post $post, mixed $postable, ?User $user = null): self
     {
         $meta = $post->metadata;
         $thumbnail = $post->thumbnail;
@@ -33,8 +34,8 @@ class MusicSummaryData extends Data
         return new self(
             id: $post->id,
             title: $post->getTranslations('title'),
-            slug: $post->getTranslations('slug'),
-            postType: $meta->post_type ?? 'mv',
+            epNo: $meta->ep_no ?? null,
+            postType: $meta->post_type ?? 'tv',
             thumbnail: $thumbnail ? new CoverImageData(
                 extraLarge: $thumbnail['extraLarge'] ?? '',
                 large: $thumbnail['large'] ?? '',
@@ -44,7 +45,6 @@ class MusicSummaryData extends Data
             author: UserSummaryData::fromModel($post->author),
             publishedAt: $post->published_at?->toIso8601String(),
             isPublished: $post->is_published,
-            isCurrent: $post->is_current,
             permissions: PermissionsData::fromModel($post, $user),
         );
     }

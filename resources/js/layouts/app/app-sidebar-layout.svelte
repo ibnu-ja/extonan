@@ -1,6 +1,7 @@
 <script lang="ts">
     import { page } from '@inertiajs/svelte';
     import type { Snippet } from 'svelte';
+    import { scrollY } from 'svelte/reactivity/window';
     import Breadcrumbs from '@/components/breadcrumbs.svelte';
     import * as Sidebar from '@/components/ui/sidebar/index.js';
     import { Toaster } from '@/components/ui/sonner';
@@ -14,43 +15,34 @@
 
     let {
         breadcrumbs = [],
+        showHeading,
         children,
+        threshold = 60,
     }: {
         breadcrumbs?: BreadcrumbItem[];
+        showHeading?: boolean;
         children?: Snippet;
+        threshold?: number;
     } = $props();
 
     const isOpen = $derived(page.props.sidebarOpen);
     const title = $derived(breadcrumbs[breadcrumbs.length - 1]?.title ?? '');
     const { mdAndDown } = useDisplay();
-    let scrolled = $state(false);
-
-    $effect(() => {
-        if (typeof window === 'undefined') {
-            return;
-        }
-
-        const onScroll = () => {
-            scrolled = window.scrollY > 60;
-        };
-        window.addEventListener('scroll', onScroll, { passive: true });
-
-        return () => window.removeEventListener('scroll', onScroll);
-    });
+    let scrolled = $derived((scrollY.current ?? 0) > threshold);
 </script>
 
 <Sidebar.Provider open={isOpen}>
     <AppSidebar />
     <Sidebar.Inset class="flex flex-col pb-16 md:pb-0 overflow-x-hidden">
         {#if mdAndDown.current}
-            <div class="h-16"></div>
-            <MobileTopBar {title} {scrolled} />
+            {#if showHeading !== false}<div class="h-16"></div>{/if}
+            <MobileTopBar {title} {threshold} />
         {:else}
             <AppSidebarHeader {breadcrumbs} />
         {/if}
         <div class="flex flex-1 flex-col">
             {#if title}
-                {#if mdAndDown.current}
+                {#if showHeading !== false && mdAndDown.current}
                     <div
                         class="px-4 pt-4 transition-opacity duration-200"
                         class:opacity-0={scrolled}
@@ -65,7 +57,7 @@
                             </div>
                         {/if}
                     </div>
-                {:else}
+                {:else if showHeading !== false }
                     <div class="px-4 pt-6">
                         <h1 class="text-3xl font-semibold font-heading">
                             {title}

@@ -5,6 +5,7 @@
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { cn } from '@/lib/utils';
+    import { show as albumShow, edit as albumEdit } from '@/routes/album';
 
     let {
         title,
@@ -12,7 +13,7 @@
         author,
         publishedAt,
         isPublished,
-        link,
+        id,
         permissions,
         aspect = 'square',
     }: {
@@ -30,7 +31,7 @@
         } | null;
         publishedAt: string | null;
         isPublished: boolean;
-        link: string;
+        id: number;
         permissions: { update: boolean; delete: boolean; publish: boolean };
         aspect?: 'square' | 'video';
     } = $props();
@@ -49,7 +50,7 @@
     );
 </script>
 
-<Link href={link} class="flex flex-col gap-2">
+<Link href={albumShow.url(id)} class="flex flex-col gap-2">
     <div
         class={cn(
             'relative overflow-hidden rounded-lg bg-muted',
@@ -77,7 +78,7 @@
     </div>
     {#if permissions.update}
         <div class="flex gap-1">
-            <Button variant="ghost" size="icon" href={`${link}/edit`}>
+            <Button variant="ghost" size="icon" href={albumEdit.url(id)}>
                 <PencilIcon data-icon="inline-start" class="size-4" />
             </Button>
             <Button variant="ghost" size="icon">

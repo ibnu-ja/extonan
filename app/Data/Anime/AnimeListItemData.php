@@ -20,7 +20,6 @@ class AnimeListItemData extends Data
         public array $slug,
         public CoverImageData $coverImage,
         public bool $isPublished,
-        public string $link,
         public PermissionsData $permissions,
     ) {}
 
@@ -39,7 +38,6 @@ class AnimeListItemData extends Data
                 color: $meta->coverImage->color ?? '',
             ),
             isPublished: $anime->is_published,
-            link: route('anime.show', $anime),
             permissions: PermissionsData::fromModel($anime, $user),
         );
     }

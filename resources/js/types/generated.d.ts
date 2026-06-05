@@ -7,7 +7,6 @@ declare namespace App {
             genres: string[];
             bannerImage: string | null;
             coverImage: App.Data.CoverImageData;
-            link: string;
             permissions: App.Data.PermissionsData;
         };
         export type CoverImageData = {
@@ -28,7 +27,7 @@ declare namespace App {
             publishedAt: string | null;
             isPublished: boolean;
             isCurrent: boolean;
-            link: string;
+            animeId: number;
             permissions: App.Data.PermissionsData;
         };
         export type LabelValue = {
@@ -45,7 +44,6 @@ declare namespace App {
             publishedAt: string | null;
             isPublished: boolean;
             isCurrent: boolean;
-            link: string;
             permissions: App.Data.PermissionsData;
         };
         export type PaginatedCollection<TValue> = {
@@ -224,13 +222,13 @@ declare namespace App {
                 slug: Record<string, string | null>;
                 coverImage: App.Data.CoverImageData;
                 isPublished: boolean;
-                link: string;
                 permissions: App.Data.PermissionsData;
             };
             export type AnimeShowResponse = {
                 anime: App.Data.Anime.AnimeListItemData;
-                episodes: App.Data.EpisodeSummaryData[];
+                episodes: App.Data.Anime.EpisodeShowData[];
                 canCreateEpisode: boolean;
+                metadata: App.Data.Anilist.AnilistMediaData | null;
             };
             export type AnimeStoreData = {
                 title: Record<string, string | null>;
@@ -238,6 +236,17 @@ declare namespace App {
                 anilistId: number | null;
                 metadata: App.Data.Anilist.AnilistMediaData | null;
                 isPublished: boolean;
+            };
+            export type EpisodeShowData = {
+                id: number;
+                title: Record<string, string | null>;
+                epNo: string | null;
+                postType: string;
+                thumbnail: App.Data.CoverImageData | null;
+                author: App.Data.UserSummaryData | null;
+                publishedAt: string | null;
+                isPublished: boolean;
+                permissions: App.Data.PermissionsData;
             };
         }
         namespace Home {

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { setLayoutProps } from '@inertiajs/svelte';
     import Autoplay from 'embla-carousel-autoplay';
     import AnimeSlideCard from '@/components/home/anime-slide-card.svelte';
     import EpisodeCard from '@/components/home/episode-card.svelte';
@@ -12,6 +13,10 @@
         latestMv,
         latestAlbum,
     }: App.Data.Home.HomePageResponse = $props();
+
+    $effect(() => {
+        setLayoutProps({ showHeading: false });
+    });
 </script>
 
 <svelte:head>
@@ -32,7 +37,7 @@
                             genres={anime.genres}
                             bannerImage={anime.bannerImage}
                             coverImage={anime.coverImage}
-                            link={anime.link}
+                            id={anime.id}
                         />
                     </Carousel.Item>
                 {/each}
@@ -62,8 +67,8 @@
                     author={episode.author}
                     publishedAt={episode.publishedAt}
                     isPublished={episode.isPublished}
-                    link={episode.link}
-                    permissions={episode.permissions}
+                    id={episode.id}
+                    animeId={episode.animeId}
                 />
             {/each}
         </div>
@@ -92,7 +97,7 @@
                                 author={mv.author}
                                 publishedAt={mv.publishedAt}
                                 isPublished={mv.isPublished}
-                                link={mv.link}
+                                id={mv.id}
                                 permissions={mv.permissions}
                                 aspect="video"
                             />
@@ -132,7 +137,7 @@
                                 author={album.author}
                                 publishedAt={album.publishedAt}
                                 isPublished={album.isPublished}
-                                link={album.link}
+                                id={album.id}
                                 permissions={album.permissions}
                             />
                         </Carousel.Item>

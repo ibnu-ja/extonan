@@ -1,9 +1,7 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
-    import PencilIcon from '@lucide/svelte/icons/pencil';
-    import TrashIcon from '@lucide/svelte/icons/trash';
     import { Badge } from '@/components/ui/badge';
-    import { Button } from '@/components/ui/button';
+    import * as Item from '@/components/ui/item';
+    import { show as postShow } from '@/routes/post';
 
     let {
         title,
@@ -13,8 +11,8 @@
         author,
         publishedAt,
         isPublished,
-        link,
-        permissions,
+        id,
+        animeId,
     }: {
         title: Record<string, string | null>;
         epNo: string | null;
@@ -32,8 +30,8 @@
         } | null;
         publishedAt: string | null;
         isPublished: boolean;
-        link: string;
-        permissions: { update: boolean; delete: boolean; publish: boolean };
+        id: number;
+        animeId: number;
     } = $props();
 
     const displayTitle = $derived(
@@ -52,45 +50,26 @@
     );
 </script>
 
-<div class="flex min-w-0 gap-3 rounded-xl border bg-card p-3 shadow-sm">
-    {#if thumbnail}
-        <img
-            src={thumbnail.medium}
-            alt={displayTitle}
-            class="size-20 shrink-0 rounded-lg object-cover sm:size-24"
-            loading="lazy"
-        />
-    {/if}
-    <div class="flex min-w-0 flex-1 flex-col justify-between gap-1">
-        <div class="min-w-0">
-            <p class="truncate text-xs text-muted-foreground">
-                {animeDisplayTitle}
-            </p>
-            <Link
-                href={link}
-                class="font-heading block truncate font-medium hover:underline"
-            >
-                {episodeLabel}
-            </Link>
-            {#if !isPublished}
-                <Badge variant="destructive">Draft</Badge>
+<Item.Root variant="outline">
+    {#snippet child({ props })}
+        <a href={postShow.url({ anime: animeId, post: id })} {...props}>
+            {#if thumbnail}
+                <Item.Media variant="image">
+                    <img src={thumbnail.medium} alt={displayTitle} loading="lazy" />
+                </Item.Media>
             {/if}
-        </div>
-        <div class="flex items-center justify-between gap-2">
-            <p class="truncate text-xs text-muted-foreground">
-                {subtitle}{#if author}
-                    &bull; {author.name}{/if}
-            </p>
-            {#if permissions.update}
-                <div class="flex shrink-0 gap-1">
-                    <Button variant="ghost" size="icon" href={`${link}/edit`}>
-                        <PencilIcon data-icon="inline-start" class="size-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                        <TrashIcon data-icon="inline-start" class="size-4" />
-                    </Button>
-                </div>
-            {/if}
-        </div>
-    </div>
-</div>
+            <Item.Content>
+                <Item.Description>{animeDisplayTitle}</Item.Description>
+                <Item.Title>{episodeLabel}</Item.Title>
+                <Item.Description>
+                    {subtitle}{#if author} &bull; {author.name}{/if}
+                </Item.Description>
+            </Item.Content>
+            <Item.Actions>
+                {#if !isPublished}
+                    <Badge variant="destructive">Draft</Badge>
+                {/if}
+            </Item.Actions>
+        </a>
+    {/snippet}
+</Item.Root>

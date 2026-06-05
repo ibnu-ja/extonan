@@ -5,13 +5,17 @@
 
     let {
         breadcrumbs = [],
+        showHeading,
         children,
+        threshold,
     }: {
         breadcrumbs?: BreadcrumbItem[];
         children?: Snippet;
+        showHeading?: boolean;
+        threshold?: number;
     } = $props();
 </script>
 
-<AppLayout {breadcrumbs}>
+<AppLayout {showHeading} {breadcrumbs} {threshold}>
     {@render children?.()}
 </AppLayout>

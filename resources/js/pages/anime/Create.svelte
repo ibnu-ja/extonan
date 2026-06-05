@@ -450,7 +450,7 @@
     <Casts characters={form.metadata!.characters!.edges} />
 {/snippet}
 
-<div class="p-4 md:mx-auto max-w-5xl">
+<div class="p-4 md:mx-auto max-w-7xl">
     <form onsubmit={submit}>
         <div class="grid gap-4 md:gap-6 md:grid-cols-12">
             <div class="space-y-6 md:col-span-8">
