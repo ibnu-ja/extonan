@@ -80,9 +80,11 @@
     {:else}
         <Drawer.Root bind:open={sortOpen}>
             <Drawer.Trigger>
-                <Button variant="outline" size="icon-sm">
-                    <ArrowUpDown class="size-4" />
-                </Button>
+                {#snippet child({ props })}
+                    <Button variant="outline" size="icon-sm" {...props}>
+                        <ArrowUpDown class="size-4" />
+                    </Button>
+                {/snippet}
             </Drawer.Trigger>
             <Drawer.Content>
                 <div class="mt-4 border-t">

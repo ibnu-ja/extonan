@@ -1,9 +1,9 @@
 <script lang="ts">
+    import { Link } from '@inertiajs/svelte';
     import { AspectRatio } from '@/components/ui/aspect-ratio';
     import { Badge } from '@/components/ui/badge';
     import * as Card from '@/components/ui/card';
     import { t, formatDate } from '@/lib/locale.svelte';
-    import { Link } from '@inertiajs/svelte';
     import { show as postShow } from '@/routes/post';
 
     let {

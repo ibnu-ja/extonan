@@ -1,8 +1,8 @@
 <script lang="ts">
+    import { Link } from '@inertiajs/svelte';
     import { Badge } from '@/components/ui/badge';
     import * as Item from '@/components/ui/item';
     import { t, formatDate } from '@/lib/locale.svelte';
-    import { Link } from '@inertiajs/svelte';
     import { show as postShow } from '@/routes/post';
 
     let {

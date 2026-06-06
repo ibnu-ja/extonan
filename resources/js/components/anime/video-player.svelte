@@ -75,7 +75,11 @@ return 'Auto';
     }
 
     function togglePlayPause() {
-        video.paused ? video.play().catch(() => {}) : video.pause();
+        if (video.paused) {
+            video.play().catch(() => {});
+        } else {
+            video.pause();
+        }
     }
 
     function toggleMute() {
@@ -114,7 +118,7 @@ return 'Auto';
         if (!isFullscreen) {
             root.requestFullscreen?.();
             isFullscreen = true;
-            screen.orientation?.lock?.('landscape-primary').catch(() => {});
+            (screen.orientation as unknown as { lock?: (o: string) => Promise<void> })?.lock?.('landscape-primary').catch(() => {});
         } else {
             document.exitFullscreen?.();
             isFullscreen = false;
@@ -134,19 +138,6 @@ return 'Auto';
 
     function hideControlsFn() {
         controlsVisible = false;
-    }
-
-    function onKeydown(e: KeyboardEvent) {
-        if (e.code === 'Space') {
-            e.preventDefault();
-            togglePlayPause();
-        } else if (e.code === 'ArrowLeft') {
-            e.preventDefault();
-            skipBack();
-        } else if (e.code === 'ArrowRight') {
-            e.preventDefault();
-            skipForward();
-        }
     }
 
     const seekPercent = $derived(duration ? (currentTime / duration) * 100 : 0);
@@ -203,30 +194,53 @@ return 'Auto';
             }
         }
 
-        root?.focus();
-        showControlsFn();
+        function onMouseMove() {
+            showControlsFn();
+        }
+
+        function onMouseLeave() {
+            hideControlsFn();
+        }
+
+        function onKeyDown(e: KeyboardEvent) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                togglePlayPause();
+            } else if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                skipBack();
+            } else if (e.code === 'ArrowRight') {
+                e.preventDefault();
+                skipForward();
+            }
+        }
+
+        root.setAttribute('tabindex', '0');
+        root.addEventListener('mousemove', onMouseMove);
+        root.addEventListener('mouseleave', onMouseLeave);
+        root.addEventListener('keydown', onKeyDown);
+        root.focus();
+
+        return () => {
+            hls?.destroy();
+            root.removeEventListener('mousemove', onMouseMove);
+            root.removeEventListener('mouseleave', onMouseLeave);
+            root.removeEventListener('keydown', onKeyDown);
+        };
     });
 
     onDestroy(() => {
-        hls?.destroy();
-
         if (hideTimer) {
             clearTimeout(hideTimer);
         }
     });
 </script>
 
-<!-- svelte-ignore a11y_no_noninteractive_element_interactions a11y_no_noninteractive_tabindex -->
 <div
     bind:this={root}
     class="relative w-full select-none bg-background"
-    tabindex="0"
     role="application"
-    onmousemove={showControlsFn}
-    onmouseleave={hideControlsFn}
-    onkeydown={onKeydown}
 >
-    <!-- svelte-ignore a11y_no_media_autoplay a11y_no_noninteractive_element_interactions -->
     <video
         bind:this={video}
         class="w-full"

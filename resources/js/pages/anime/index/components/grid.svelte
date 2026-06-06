@@ -12,7 +12,6 @@
             color: string;
         };
         isPublished: boolean;
-        link: string;
         permissions: { update: boolean; delete: boolean; publish: boolean };
     };
 

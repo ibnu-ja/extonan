@@ -148,33 +148,36 @@
         </Popover.Root>
     {:else}
         <Drawer.Root bind:open>
-            <Drawer.Trigger class="w-full">
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    class="w-full justify-between gap-2 text-base md:text-sm"
-                >
-                    {#if norm.length === 0}
-                        <span class="text-muted-foreground truncate">
-                            {label}
-                        </span>
-                    {:else}
-                        <div class="flex items-center gap-1 truncate">
-                            <span class="truncate">{itemLabel(norm[0])}</span>
-                            {#if norm.length > 1}
-                                <Badge
-                                    variant="secondary"
-                                    size="xs"
-                                    class="shrink-0"
-                                >
-                                    +{norm.length - 1}
-                                </Badge>
-                            {/if}
-                        </div>
-                    {/if}
-                    <ChevronsUpDown class="size-4 shrink-0 opacity-50" />
-                </Button>
+            <Drawer.Trigger>
+                {#snippet child({ props })}
+                    <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        {...props}
+                        class="w-full justify-between gap-2 text-base md:text-sm"
+                    >
+                        {#if norm.length === 0}
+                            <span class="text-muted-foreground truncate">
+                                {label}
+                            </span>
+                        {:else}
+                            <div class="flex items-center gap-1 truncate">
+                                <span class="truncate">{itemLabel(norm[0])}</span>
+                                {#if norm.length > 1}
+                                    <Badge
+                                        variant="secondary"
+                                        size="xs"
+                                        class="shrink-0"
+                                    >
+                                        +{norm.length - 1}
+                                    </Badge>
+                                {/if}
+                            </div>
+                        {/if}
+                        <ChevronsUpDown class="size-4 shrink-0 opacity-50" />
+                    </Button>
+                {/snippet}
             </Drawer.Trigger>
             <Drawer.Content>
                 <div class="mt-4 border-t">

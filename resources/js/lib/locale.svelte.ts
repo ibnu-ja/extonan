@@ -1,4 +1,5 @@
 import { page } from '@inertiajs/svelte';
+import { SvelteDate } from 'svelte/reactivity';
 
 type Translatable = Record<string, string | null>;
 
@@ -27,7 +28,7 @@ export function formatDate(date: string | null): string {
         return '';
     }
 
-    return new Date(date).toLocaleDateString('en-GB', {
+    return new SvelteDate(date).toLocaleDateString('en-GB', {
         day: 'numeric',
         month: 'short',
         year: 'numeric',
