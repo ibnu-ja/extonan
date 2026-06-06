@@ -101,7 +101,7 @@ COPY config/ config/
 COPY database/ database/
 COPY routes/ routes/
 COPY public/ public/
-COPY storage/app/public storage/app/public
+COPY storage/app storage/app
 COPY resources/views/ resources/views/
 COPY lang* ./
 

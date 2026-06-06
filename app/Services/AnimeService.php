@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Data\LabelValue;
 use App\Data\TagItem;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Spatie\LaravelData\DataCollection;
 
@@ -19,11 +20,13 @@ class AnimeService
 
     public function getTags(): DataCollection
     {
-        $path = 'anilist-tags.json';
+        $tags = Cache::remember('anilist-tags', now()->addCentury(), function () {
+            $path = 'anilist-tags.json';
 
-        $tags = Storage::exists($path)
-            ? json_decode(Storage::get($path), true)
-            : [];
+            return Storage::exists($path)
+                ? json_decode(Storage::get($path), true)
+                : [];
+        });
 
         return new DataCollection(TagItem::class, array_map(fn (array $t) => new TagItem(
             id: $t['id'],
