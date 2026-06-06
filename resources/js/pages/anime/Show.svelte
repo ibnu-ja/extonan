@@ -1,18 +1,22 @@
 <script lang="ts">
-    import { Link, page, setLayoutProps } from '@inertiajs/svelte';
+    import { Link, setLayoutProps } from '@inertiajs/svelte';
     import Calendar from '@lucide/svelte/icons/calendar';
     import Clapperboard from '@lucide/svelte/icons/clapperboard';
     import Film from '@lucide/svelte/icons/film';
     import Hash from '@lucide/svelte/icons/hash';
     import Info from '@lucide/svelte/icons/info';
+    import LayoutGrid from '@lucide/svelte/icons/layout-grid';
+    import List from '@lucide/svelte/icons/list';
     import Banner from '@/components/anime/banner.svelte';
     import Casts from '@/components/anime/casts.svelte';
+    import EpisodeListItem from '@/components/anime/episode-list-item.svelte';
+    import EpisodeThumbnail from '@/components/anime/episode-thumbnail.svelte';
     import { Badge } from '@/components/ui/badge';
-    import * as Card from '@/components/ui/card';
     import * as Item from '@/components/ui/item';
     import * as Tabs from '@/components/ui/tabs';
+    import * as ToggleGroup from '@/components/ui/toggle-group';
+    import { t } from '@/lib/locale.svelte';
     import { index as animeIndex } from '@/routes/anime';
-    import { show as postShow } from '@/routes/post';
 
     let {
         anime,
@@ -20,12 +24,7 @@
         metadata,
     }: App.Data.Anime.AnimeShowResponse = $props();
 
-    let currentLang = $state<'en' | 'id'>(
-        (page.props.locale as 'en' | 'id') ?? 'en',
-    );
-    const displayTitle = $derived(
-        anime.title[currentLang] || anime.title.native || 'Untitled',
-    );
+    const displayTitle = $derived(t(anime.title));
 
     $effect(() => {
         setLayoutProps({
@@ -63,6 +62,9 @@
               })
             : null,
     );
+
+    let activeTab = $state('episodes');
+    let displayMode = $state<'thumbnail' | 'list'>('list');
 </script>
 
 <svelte:head>
@@ -72,86 +74,60 @@
 <Banner
     bannerImage={metadata?.bannerImage}
     coverImage={metadata?.coverImage?.extraLarge}
-    title={displayTitle}
+    title={anime.title}
     summary={metadata?.description}
     isDraft={!anime.isPublished}
 />
 
-<div class="p-4 w-full mx-auto lg:max-w-7xl xl:max-w-screen-2xl">
-    <div class="mt-6 grid gap-4 md:gap-6 md:grid-cols-12">
-        <div class="space-y-6 md:col-span-8">
-            <Tabs.Root value="episodes">
-                <Tabs.List>
-                    <Tabs.Trigger value="episodes">
-                        <Film data-icon="inline-start" />
-                        Episodes ({episodes.length})
-                    </Tabs.Trigger>
-                    {#if metadata?.characters?.edges?.length}
-                        <Tabs.Trigger value="casts">
-                            <Clapperboard data-icon="inline-start" />
-                            Casts
+<div class="w-full mx-auto lg:max-w-7xl xl:max-w-screen-2xl">
+    <div class="grid gap-4 md:gap-6 md:grid-cols-12">
+        <div class="space-y-6 md:col-span-8 lg:col-span-9">
+            <Tabs.Root bind:value={activeTab}>
+                <div class="flex items-center justify-between px-4">
+                    <Tabs.List>
+                        <Tabs.Trigger value="episodes">
+                            <Film data-icon="inline-start" />
+                            Episodes ({episodes.length})
                         </Tabs.Trigger>
+                        {#if metadata?.characters?.edges?.length}
+                            <Tabs.Trigger value="casts">
+                                <Clapperboard data-icon="inline-start" />
+                                Casts
+                            </Tabs.Trigger>
+                        {/if}
+                    </Tabs.List>
+                    {#if activeTab === 'episodes'}
+                        <ToggleGroup.Root
+                            type="single"
+                            variant="outline"
+                            size="sm"
+                            bind:value={displayMode}
+                        >
+                            <ToggleGroup.Item value="thumbnail" aria-label="Thumbnail view">
+                                <LayoutGrid class="size-4" />
+                            </ToggleGroup.Item>
+                            <ToggleGroup.Item value="list" aria-label="List view">
+                                <List class="size-4" />
+                            </ToggleGroup.Item>
+                        </ToggleGroup.Root>
                     {/if}
-                </Tabs.List>
+                </div>
 
                 <Tabs.Content value="episodes" class="mt-4">
                     {#if episodes.length > 0}
-                        <Item.Group>
-                            {#each episodes as episode (episode.id)}
-                                <Item.Root>
-                                    {#snippet child({ props })}
-                                        <a href={postShow.url({ anime: anime.id, post: episode.id })} {...props}>
-                                            <Item.Media variant="image">
-                                                {#if episode.thumbnail}
-                                                    <img
-                                                        src={episode.thumbnail
-                                                            .medium}
-                                                        alt=""
-                                                        class="size-10 rounded object-cover"
-                                                    />
-                                                {/if}
-                                            </Item.Media>
-                                            <Item.Content>
-                                                <Item.Title>
-                                                    {#if episode.epNo}
-                                                        EP {episode.epNo} -
-                                                    {/if}
-                                                    {episode.title.en ||
-                                                        episode.title.romaji ||
-                                                        episode.title.native ||
-                                                        'Untitled'}
-                                                </Item.Title>
-                                                <Item.Description>
-                                                    {#if episode.publishedAt}
-                                                        {new Date(
-                                                            episode.publishedAt,
-                                                        ).toLocaleDateString(
-                                                            'en-GB',
-                                                            {
-                                                                day: 'numeric',
-                                                                month: 'short',
-                                                                year: 'numeric',
-                                                            },
-                                                        )}
-                                                    {/if}
-                                                    {#if episode.author}
-                                                        &bull; {episode.author
-                                                            .name}
-                                                    {/if}
-                                                </Item.Description>
-                                            </Item.Content>
-                                            <Item.Actions>
-                                                {#if !episode.isPublished}
-                                                    <Badge variant="destructive"
-                                                        >Draft</Badge
-                                                    >
-                                                {/if}
-                                            </Item.Actions>
-                                        </a>
-                                    {/snippet}
-                                </Item.Root>
-                            {/each}
-                        </Item.Group>
+                        {#if displayMode === 'thumbnail'}
+                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:p-4">
+                                {#each episodes as episode (episode.id)}
+                                    <EpisodeThumbnail {episode} animeId={anime.id} />
+                                {/each}
+                            </div>
+                        {:else}
+                            <Item.Group class="px-4">
+                                {#each episodes as episode (episode.id)}
+                                    <EpisodeListItem {episode} animeId={anime.id} />
+                                {/each}
+                            </Item.Group>
+                        {/if}
                     {:else}
                         <p class="text-muted-foreground py-8 text-center">
                             No episodes available.
@@ -170,9 +146,39 @@
         </div>
 
         <div
-            class="flex flex-col gap-4 md:col-span-4 md:sticky md:top-4 md:self-start"
+            class="flex flex-col gap-4 md:col-span-4 lg:col-span-3 md:sticky md:top-4 md:self-start"
         >
-            <Item.Group>
+            {#if metadata?.genres?.length}
+                <div class="px-4 md:px-0">
+                    <h3 class="text-lg font-semibold font-heading mb-2">Genres</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {#each metadata.genres as genre (genre)}
+                            <Badge variant="secondary">
+                                {#snippet child({ props })}
+                                    <Link href={animeIndex({ query: { filter: { genreIn: [genre] } } })} {...props}>{genre}</Link>
+                                {/snippet}
+                            </Badge>
+                        {/each}
+                    </div>
+                </div>
+            {/if}
+
+            {#if metadata?.tags?.length}
+                <div class="px-4 md:px-0">
+                    <h3 class="text-lg font-semibold font-heading mb-2">Tags</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {#each metadata.tags as tag (tag.id)}
+                            <Badge variant="outline">
+                                {#snippet child({ props })}
+                                    <Link href={animeIndex({ query: { filter: { tagIn: [tag.id] } } })} {...props}>{tag.name}</Link>
+                                {/snippet}
+                            </Badge>
+                        {/each}
+                    </div>
+                </div>
+            {/if}
+
+            <Item.Group class="px-4">
                 {#if season}
                     <Item.Root>
                         <Item.Media variant="icon">
@@ -219,44 +225,6 @@
                     </Item.Root>
                 {/if}
             </Item.Group>
-
-            {#if metadata?.genres?.length}
-                <Card.Root>
-                    <Card.Header>
-                        <Card.Title>Genres</Card.Title>
-                    </Card.Header>
-                    <Card.Content>
-                        <div class="flex flex-wrap gap-2">
-                            {#each metadata.genres as genre (genre)}
-                                <Badge variant="secondary">
-                                    {#snippet child({ props })}
-                                        <Link href={animeIndex({ query: { filter: { genreIn: [genre] } } })} {...props}>{genre}</Link>
-                                    {/snippet}
-                                </Badge>
-                            {/each}
-                        </div>
-                    </Card.Content>
-                </Card.Root>
-            {/if}
-
-            {#if metadata?.tags?.length}
-                <Card.Root>
-                    <Card.Header>
-                        <Card.Title>Tags</Card.Title>
-                    </Card.Header>
-                    <Card.Content>
-                        <div class="flex flex-wrap gap-2">
-                            {#each metadata.tags as tag (tag.id)}
-                                <Badge variant="outline">
-                                    {#snippet child({ props })}
-                                        <Link href={animeIndex({ query: { filter: { tagIn: [tag.id] } } })} {...props}>{tag.name}</Link>
-                                    {/snippet}
-                                </Badge>
-                            {/each}
-                        </div>
-                    </Card.Content>
-                </Card.Root>
-            {/if}
 
             {#if !anime.isPublished}
                 <!-- TODO: implement FAB -->

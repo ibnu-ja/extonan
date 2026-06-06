@@ -50,7 +50,7 @@
     );
 </script>
 
-<Item.Root variant="outline">
+<Item.Root variant="outline" class="rounded-none md:rounded-lg">
     {#snippet child({ props })}
         <a href={postShow.url({ anime: animeId, post: id })} {...props}>
             {#if thumbnail}

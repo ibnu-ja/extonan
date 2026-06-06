@@ -1,5 +1,6 @@
 <script lang="ts">
     import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+    import { t } from '@/lib/locale.svelte';
 
     let {
         bannerImage,
@@ -10,12 +11,16 @@
     }: {
         bannerImage?: string | null;
         coverImage?: string | null;
-        title: string;
+        title: Record<string, string | null>;
         summary?: string | null;
         isDraft?: boolean;
     } = $props();
 
     let expanded = $state(false);
+
+    const displayTitle = $derived(t(title));
+    const nativeTitle = $derived(title.native ?? null);
+    const romajiTitle = $derived(title.romaji ?? null);
 </script>
 
 <div class="relative">
@@ -38,7 +43,7 @@
                 >
                     <img
                         src={coverImage}
-                        alt={title}
+                        alt={displayTitle}
                         class="w-full rounded-lg shadow-2xl"
                     />
                 </div>
@@ -46,11 +51,17 @@
 
             <div class="flex-1 min-w-0">
                 <h1 class="text-2xl md:text-4xl font-bold font-heading">
-                    {title}
+                    {displayTitle}
                     {#if isDraft}
                         <span class="ml-2 inline-block align-middle text-sm font-medium text-destructive">Draft</span>
                     {/if}
                 </h1>
+                {#if nativeTitle && nativeTitle !== displayTitle}
+                    <p class="text-lg text-muted-foreground mt-1">{nativeTitle}</p>
+                {/if}
+                {#if romajiTitle && romajiTitle !== displayTitle}
+                    <p class="text-sm text-muted-foreground mt-0.5">{romajiTitle}</p>
+                {/if}
                 {#if summary}
                     <div class="mt-3 text-sm text-muted-foreground">
                         <div
