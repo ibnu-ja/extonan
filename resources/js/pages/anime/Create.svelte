@@ -12,6 +12,7 @@
 <script lang="ts">
     import { router, useForm } from '@inertiajs/svelte';
     import { Check, Send, Trash2, X } from 'lucide-svelte';
+    import type { Snippet } from 'svelte';
     import { untrack } from 'svelte';
     import AnimeController from '@/actions/App/Http/Controllers/AnimeController';
     import Casts from '@/components/anime/casts.svelte';
@@ -157,7 +158,7 @@
 
 <AppHead title={pageTitle} />
 
-{#snippet card(content)}
+{#snippet card(content: Snippet)}
     {#if isMobile}
         <div class="space-y-4">{@render content()}</div>
     {:else}
@@ -450,7 +451,7 @@
     <Casts characters={form.metadata!.characters!.edges} />
 {/snippet}
 
-<div class="p-4 md:mx-auto max-w-7xl">
+<div class="p-4 w-full mx-auto max-w-400">
     <form onsubmit={submit}>
         <div class="grid gap-4 md:gap-6 md:grid-cols-12">
             <div class="space-y-6 md:col-span-8">

@@ -77,7 +77,7 @@
     isDraft={!anime.isPublished}
 />
 
-<div class="p-4 md:mx-auto max-w-7xl">
+<div class="p-4 w-full mx-auto lg:max-w-7xl xl:max-w-screen-2xl">
     <div class="mt-6 grid gap-4 md:gap-6 md:grid-cols-12">
         <div class="space-y-6 md:col-span-8">
             <Tabs.Root value="episodes">

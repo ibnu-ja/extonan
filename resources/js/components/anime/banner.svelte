@@ -29,7 +29,7 @@
     {/if}
 
     <div
-        class="relative mx-auto max-w-7xl px-4 pb-6 {bannerImage ? '-mt-16 md:-mt-24' : 'pt-6'}"
+        class="relative p-4 mx-auto lg:max-w-7xl xl:max-w-screen-2xl px-4 pb-6 {bannerImage ? '-mt-16 md:-mt-24' : 'pt-6'}"
     >
         <div class="flex flex-col md:flex-row gap-6 items-start">
             {#if coverImage}
