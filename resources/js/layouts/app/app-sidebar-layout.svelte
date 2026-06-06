@@ -57,7 +57,7 @@
                             </div>
                         {/if}
                     </div>
-                {:else if showHeading !== false }
+                {:else if showHeading !== false}
                     <div class="px-4 pt-6">
                         <h1 class="text-3xl font-semibold font-heading">
                             {title}

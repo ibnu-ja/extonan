@@ -20,7 +20,9 @@
 >
     <div
         class="absolute inset-0 transition-opacity duration-300"
-        style="opacity: {showGradient ? 1 : 0}; background: linear-gradient(to bottom, var(--background) 0%, color-mix(in srgb, var(--background) 80%, transparent) 50%, transparent 100%);"
+        style="opacity: {showGradient
+            ? 1
+            : 0}; background: linear-gradient(to bottom, var(--background) 0%, color-mix(in srgb, var(--background) 80%, transparent) 50%, transparent 100%);"
     ></div>
     <div
         class="absolute inset-0 bg-background transition-opacity duration-300"

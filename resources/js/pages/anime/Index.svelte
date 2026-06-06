@@ -91,9 +91,7 @@
     let filters = $state<AnimeFilterState>(parseFilterState());
     let sort = $state(pageSearchParams().get('sort') || 'title->romaji');
     let selectedTagNames = $derived(
-        filters.tagIn.map(
-            (id) => tags.find((t) => t.key === id)?.value ?? id,
-        ),
+        filters.tagIn.map((id) => tags.find((t) => t.key === id)?.value ?? id),
     );
     let selectedTagNotInNames = $derived(
         filters.tagNotIn.map(

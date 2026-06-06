@@ -23,7 +23,10 @@ export function t(
 }
 
 export function formatDate(date: string | null): string {
-    if (!date) return '';
+    if (!date) {
+        return '';
+    }
+
     return new Date(date).toLocaleDateString('en-GB', {
         day: 'numeric',
         month: 'short',

@@ -119,12 +119,7 @@
     <Drawer.Root bind:open>
         <Drawer.Trigger>
             {#snippet child({ props })}
-                <Button
-                    variant="outline"
-                    size="sm"
-                    {...props}
-                    class="gap-1"
-                >
+                <Button variant="outline" size="sm" {...props} class="gap-1">
                     {#if Icon}<Icon class="size-4 shrink-0" />{/if}
                     {singleSelect && activeKey ? activeKey : label}
                     {#if !singleSelect && activeCount > 0}

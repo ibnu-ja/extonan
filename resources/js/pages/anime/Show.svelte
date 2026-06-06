@@ -18,11 +18,8 @@
     import { t } from '@/lib/locale.svelte';
     import { index as animeIndex } from '@/routes/anime';
 
-    let {
-        anime,
-        episodes,
-        metadata,
-    }: App.Data.Anime.AnimeShowResponse = $props();
+    let { anime, episodes, metadata }: App.Data.Anime.AnimeShowResponse =
+        $props();
 
     const displayTitle = $derived(t(anime.title));
 
@@ -103,10 +100,16 @@
                             size="sm"
                             bind:value={displayMode}
                         >
-                            <ToggleGroup.Item value="thumbnail" aria-label="Thumbnail view">
+                            <ToggleGroup.Item
+                                value="thumbnail"
+                                aria-label="Thumbnail view"
+                            >
                                 <LayoutGrid class="size-4" />
                             </ToggleGroup.Item>
-                            <ToggleGroup.Item value="list" aria-label="List view">
+                            <ToggleGroup.Item
+                                value="list"
+                                aria-label="List view"
+                            >
                                 <List class="size-4" />
                             </ToggleGroup.Item>
                         </ToggleGroup.Root>
@@ -116,15 +119,23 @@
                 <Tabs.Content value="episodes" class="mt-4">
                     {#if episodes.length > 0}
                         {#if displayMode === 'thumbnail'}
-                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:p-4">
+                            <div
+                                class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:p-4"
+                            >
                                 {#each episodes as episode (episode.id)}
-                                    <EpisodeThumbnail {episode} animeId={anime.id} />
+                                    <EpisodeThumbnail
+                                        {episode}
+                                        animeId={anime.id}
+                                    />
                                 {/each}
                             </div>
                         {:else}
                             <Item.Group class="px-4">
                                 {#each episodes as episode (episode.id)}
-                                    <EpisodeListItem {episode} animeId={anime.id} />
+                                    <EpisodeListItem
+                                        {episode}
+                                        animeId={anime.id}
+                                    />
                                 {/each}
                             </Item.Group>
                         {/if}
@@ -150,12 +161,21 @@
         >
             {#if metadata?.genres?.length}
                 <div class="px-4 md:px-0">
-                    <h3 class="text-lg font-semibold font-heading mb-2">Genres</h3>
+                    <h3 class="text-lg font-semibold font-heading mb-2">
+                        Genres
+                    </h3>
                     <div class="flex flex-wrap gap-2">
                         {#each metadata.genres as genre (genre)}
                             <Badge variant="secondary">
                                 {#snippet child({ props })}
-                                    <Link href={animeIndex({ query: { filter: { genreIn: [genre] } } })} {...props}>{genre}</Link>
+                                    <Link
+                                        href={animeIndex({
+                                            query: {
+                                                filter: { genreIn: [genre] },
+                                            },
+                                        })}
+                                        {...props}>{genre}</Link
+                                    >
                                 {/snippet}
                             </Badge>
                         {/each}
@@ -165,12 +185,21 @@
 
             {#if metadata?.tags?.length}
                 <div class="px-4 md:px-0">
-                    <h3 class="text-lg font-semibold font-heading mb-2">Tags</h3>
+                    <h3 class="text-lg font-semibold font-heading mb-2">
+                        Tags
+                    </h3>
                     <div class="flex flex-wrap gap-2">
                         {#each metadata.tags as tag (tag.id)}
                             <Badge variant="outline">
                                 {#snippet child({ props })}
-                                    <Link href={animeIndex({ query: { filter: { tagIn: [tag.id] } } })} {...props}>{tag.name}</Link>
+                                    <Link
+                                        href={animeIndex({
+                                            query: {
+                                                filter: { tagIn: [tag.id] },
+                                            },
+                                        })}
+                                        {...props}>{tag.name}</Link
+                                    >
                                 {/snippet}
                             </Badge>
                         {/each}

@@ -248,6 +248,31 @@ declare namespace App {
                 isPublished: boolean;
                 permissions: App.Data.PermissionsData;
             };
+            export type PostShowData = {
+                id: number;
+                title: Record<string, string | null>;
+                description: Record<string, string | null>;
+                slug: Record<string, string | null>;
+                epNo: string | null;
+                postType: string;
+                thumbnail: App.Data.CoverImageData | null;
+                author: App.Data.UserSummaryData | null;
+                publishedAt: string | null;
+                isPublished: boolean;
+                permissions: App.Data.PermissionsData;
+                links: App.Data.Anime.ResourceData[];
+            };
+            export type PostShowResponse = {
+                anime: App.Data.Anime.AnimeListItemData;
+                episodes: App.Data.Anime.PostShowData[];
+                post: App.Data.Anime.PostShowData;
+            };
+            export type ResourceData = {
+                id: number;
+                name: string;
+                type: string;
+                value: Array<any>;
+            };
         }
         namespace Home {
             export type HomePageResponse = {

@@ -55,14 +55,19 @@
         <a href={postShow.url({ anime: animeId, post: id })} {...props}>
             {#if thumbnail}
                 <Item.Media variant="image">
-                    <img src={thumbnail.medium} alt={displayTitle} loading="lazy" />
+                    <img
+                        src={thumbnail.medium}
+                        alt={displayTitle}
+                        loading="lazy"
+                    />
                 </Item.Media>
             {/if}
             <Item.Content>
                 <Item.Description>{animeDisplayTitle}</Item.Description>
                 <Item.Title>{episodeLabel}</Item.Title>
                 <Item.Description>
-                    {subtitle}{#if author} &bull; {author.name}{/if}
+                    {subtitle}{#if author}
+                        &bull; {author.name}{/if}
                 </Item.Description>
             </Item.Content>
             <Item.Actions>

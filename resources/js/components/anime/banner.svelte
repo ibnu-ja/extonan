@@ -34,12 +34,16 @@
     {/if}
 
     <div
-        class="relative p-4 mx-auto lg:max-w-7xl xl:max-w-screen-2xl px-4 pb-6 {bannerImage ? '-mt-16 md:-mt-24' : 'pt-6'}"
+        class="relative p-4 mx-auto lg:max-w-7xl xl:max-w-screen-2xl px-4 pb-6 {bannerImage
+            ? '-mt-16 md:-mt-24'
+            : 'pt-6'}"
     >
         <div class="flex flex-col md:flex-row gap-6 items-start">
             {#if coverImage}
                 <div
-                    class="self-center md:self-auto shrink-0 w-40 md:w-55 {bannerImage ? '-mt-8 md:-mt-12' : ''}"
+                    class="self-center md:self-auto shrink-0 w-40 md:w-55 {bannerImage
+                        ? '-mt-8 md:-mt-12'
+                        : ''}"
                 >
                     <img
                         src={coverImage}
@@ -53,14 +57,21 @@
                 <h1 class="text-2xl md:text-4xl font-bold font-heading">
                     {displayTitle}
                     {#if isDraft}
-                        <span class="ml-2 inline-block align-middle text-sm font-medium text-destructive">Draft</span>
+                        <span
+                            class="ml-2 inline-block align-middle text-sm font-medium text-destructive"
+                            >Draft</span
+                        >
                     {/if}
                 </h1>
                 {#if nativeTitle && nativeTitle !== displayTitle}
-                    <p class="text-lg text-muted-foreground mt-1">{nativeTitle}</p>
+                    <p class="text-lg text-muted-foreground mt-1">
+                        {nativeTitle}
+                    </p>
                 {/if}
                 {#if romajiTitle && romajiTitle !== displayTitle}
-                    <p class="text-sm text-muted-foreground mt-0.5">{romajiTitle}</p>
+                    <p class="text-sm text-muted-foreground mt-0.5">
+                        {romajiTitle}
+                    </p>
                 {/if}
                 {#if summary}
                     <div class="mt-3 text-sm text-muted-foreground">

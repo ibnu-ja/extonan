@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\Anime\AnimeListItemData;
+use App\Data\Anime\PostShowData;
+use App\Data\Anime\PostShowResponse;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Anime;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -73,15 +75,21 @@ class PostController extends Controller implements HasMiddleware
 
     /**
      * Display the specified resource.
+     *
+     * @see PostShowResponse
      */
     public function show(Anime $anime, Post $post)
     {
         \Gate::authorize('view', $anime);
         \Gate::authorize('view', $post);
 
+        $anime->load(['posts' => fn (MorphMany $query) => $query->current()->orderByDesc('title->native')]);
+        $post->load(['author', 'links', 'media']);
+
         return Inertia::render('Anime/Post/Show', [
-            'anime' => $anime->load(['posts' => fn (MorphMany $query) => $query->current()->orderByDesc('title->native')]),
-            'post' => $post->load(['author', 'links' => fn (HasMany $query) => $query->orderBy('name'), 'media']),
+            'anime' => AnimeListItemData::fromModel($anime),
+            'episodes' => $anime->posts->map(fn (Post $p) => PostShowData::fromModel($p)),
+            'post' => PostShowData::fromModel($post),
         ]);
     }
 

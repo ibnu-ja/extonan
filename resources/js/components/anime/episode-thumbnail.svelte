@@ -15,7 +15,9 @@
 </script>
 
 <a href={postShow.url({ anime: animeId, post: episode.id })} class="group">
-    <Card.Root class="overflow-hidden py-0 gap-0 rounded-none md:rounded-xl transition-colors hover:bg-muted">
+    <Card.Root
+        class="overflow-hidden py-0 gap-0 rounded-none md:rounded-xl transition-colors hover:bg-muted"
+    >
         {#if episode.thumbnail}
             <AspectRatio ratio={16 / 9}>
                 <img
@@ -39,7 +41,9 @@
                 <div class="min-w-0 flex-1">
                     <p class="truncate text-sm font-medium">
                         {#if episode.epNo}
-                            <span class="text-muted-foreground">EP {episode.epNo} - </span>
+                            <span class="text-muted-foreground"
+                                >EP {episode.epNo} -
+                            </span>
                         {/if}
                         {t(episode.title)}
                     </p>

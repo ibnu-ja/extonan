@@ -1,6 +1,6 @@
 <script lang="ts">
-    import * as Item from '@/components/ui/item';
     import { Badge } from '@/components/ui/badge';
+    import * as Item from '@/components/ui/item';
     import { t, formatDate } from '@/lib/locale.svelte';
     import { show as postShow } from '@/routes/post';
 
@@ -27,11 +27,13 @@
             </Item.Media>
             <Item.Content>
                 <Item.Title>
-                    {#if episode.epNo}{episode.epNo} - {/if}{t(episode.title)}
+                    {#if episode.epNo}{episode.epNo} -
+                    {/if}{t(episode.title)}
                 </Item.Title>
                 <Item.Description>
                     {formatDate(episode.publishedAt)}
-                    {#if episode.author} &bull; {episode.author.name}{/if}
+                    {#if episode.author}
+                        &bull; {episode.author.name}{/if}
                 </Item.Description>
             </Item.Content>
             <Item.Actions>
