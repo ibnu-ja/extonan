@@ -122,7 +122,7 @@
     <hr />
 
     <div class="grid gap-6 px-4 py-6 md:grid-cols-12">
-        <div class="md:col-span-8 lg:col-span-9 space-y-6">
+        <div class="md:col-span-8 lg:col-span-8 space-y-6">
             {#if post.embed}
                 <!--eslint-disable-next-line svelte/no-at-html-tags-->
                 {@html post.embed.value[0]?.value}
@@ -212,7 +212,7 @@
             </div>
         </div>
 
-        <div class="md:col-span-4 lg:col-span-3">
+        <div class="md:col-span-4 lg:col-span-4">
             <div class="mb-3 px-0 md:px-4">
                 <h4 class="text-lg font-semibold font-heading">
                     Other Episodes
@@ -228,7 +228,7 @@
                         )}
                         <Item.Root class={isActive ? 'bg-muted' : ''} id={slug}>
                             {#snippet child({ props })}
-                                <a
+                                <Link
                                     href={postShow.url({
                                         anime: anime.id,
                                         post: episode.id,
@@ -253,7 +253,7 @@
                                             {formatDate(episode.publishedAt)}
                                         </Item.Description>
                                     </Item.Content>
-                                </a>
+                                </Link>
                             {/snippet}
                         </Item.Root>
                     {/each}
