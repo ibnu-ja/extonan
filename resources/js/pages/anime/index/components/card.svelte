@@ -2,7 +2,7 @@
     import { Link } from '@inertiajs/svelte';
     import { EyeOff, Pencil } from 'lucide-svelte';
     import { Badge } from '@/components/ui/badge';
-    import { show as animeShow } from '@/routes/anime';
+    import { edit as animeEdit, show as animeShow } from '@/routes/anime';
 
     type Item = {
         id: number;
@@ -67,7 +67,7 @@
             class="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100"
         >
             <Link
-                href={`/anime/${item.id}/edit`}
+                href={animeEdit.url(item.id)}
                 prefetch="hover"
                 class="inline-flex size-8 items-center justify-center rounded-lg border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
             >

@@ -2,6 +2,7 @@
     import { Badge } from '@/components/ui/badge';
     import * as Item from '@/components/ui/item';
     import { t, formatDate } from '@/lib/locale.svelte';
+    import { Link } from '@inertiajs/svelte';
     import { show as postShow } from '@/routes/post';
 
     let {
@@ -15,7 +16,7 @@
 
 <Item.Root class="rounded-none md:rounded-lg">
     {#snippet child({ props })}
-        <a href={postShow.url({ anime: animeId, post: episode.id })} {...props}>
+        <Link href={postShow.url({ anime: animeId, post: episode.id })} {...props}>
             <Item.Media variant="image">
                 {#if episode.thumbnail}
                     <img
@@ -41,6 +42,6 @@
                     <Badge variant="destructive">Draft</Badge>
                 {/if}
             </Item.Actions>
-        </a>
+        </Link>
     {/snippet}
 </Item.Root>

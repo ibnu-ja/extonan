@@ -3,6 +3,7 @@
     import { Badge } from '@/components/ui/badge';
     import * as Card from '@/components/ui/card';
     import { t, formatDate } from '@/lib/locale.svelte';
+    import { Link } from '@inertiajs/svelte';
     import { show as postShow } from '@/routes/post';
 
     let {
@@ -14,7 +15,7 @@
     } = $props();
 </script>
 
-<a href={postShow.url({ anime: animeId, post: episode.id })} class="group">
+<Link href={postShow.url({ anime: animeId, post: episode.id })} class="group">
     <Card.Root
         class="overflow-hidden py-0 gap-0 rounded-none md:rounded-xl transition-colors hover:bg-muted"
     >
@@ -59,4 +60,4 @@
             </div>
         </Card.Content>
     </Card.Root>
-</a>
+</Link>
