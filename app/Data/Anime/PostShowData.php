@@ -33,6 +33,10 @@ class PostShowData extends Data
         /** @var DataCollection<ResourceData> */
         #[DataCollectionOf(ResourceData::class)]
         public DataCollection $links,
+        /** @var DataCollection<ResourceData> */
+        #[DataCollectionOf(ResourceData::class)]
+        public DataCollection $saluran,
+        public ?ResourceData $embed = null,
     ) {}
 
     public static function fromModel(Post $post, ?User $user = null): self
@@ -60,6 +64,12 @@ class PostShowData extends Data
             links: new DataCollection(ResourceData::class, $post->links->sortBy('name')->map(
                 fn ($r) => ResourceData::fromModel($r),
             )),
+            saluran: new DataCollection(ResourceData::class, $post->saluran->map(
+                fn ($r) => ResourceData::fromModel($r),
+            )),
+            embed: $post->embeds->first()
+                ? ResourceData::fromModel($post->embeds->first())
+                : null,
         );
     }
 }

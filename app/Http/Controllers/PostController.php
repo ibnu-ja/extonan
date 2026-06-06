@@ -84,7 +84,7 @@ class PostController extends Controller implements HasMiddleware
         \Gate::authorize('view', $post);
 
         $anime->load(['posts' => fn (MorphMany $query) => $query->current()->orderByDesc('title->native')]);
-        $post->load(['author', 'links', 'media']);
+        $post->load(['author', 'links', 'saluran', 'embeds', 'media']);
 
         return Inertia::render('Anime/Post/Show', [
             'anime' => AnimeListItemData::fromModel($anime),

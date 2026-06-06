@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Link, setLayoutProps } from '@inertiajs/svelte';
     import ExternalLink from '@lucide/svelte/icons/external-link';
+    import VideoPlayer from '@/components/anime/video-player.svelte';
     import * as Accordion from '@/components/ui/accordion';
     import { Badge } from '@/components/ui/badge';
     import * as Item from '@/components/ui/item';
@@ -9,6 +10,12 @@
     import { show as postShow } from '@/routes/post';
 
     let { anime, episodes, post }: App.Data.Anime.PostShowResponse = $props();
+
+    let selectedSaluran = $state(
+        post.saluran.length > 0
+            ? (post.saluran[0].value[0]?.value ?? null)
+            : null,
+    );
 
     const displayTitle = $derived(
         post.postType === 'tv' && post.epNo
@@ -46,9 +53,7 @@
         }
     });
 
-    function getResolution(
-        name: string,
-    ): {
+    function getResolution(name: string): {
         label: string;
         variant: 'default' | 'secondary' | 'destructive' | 'outline';
     } | null {
@@ -118,7 +123,34 @@
 
     <div class="grid gap-6 px-4 py-6 md:grid-cols-12">
         <div class="md:col-span-8 lg:col-span-9 space-y-6">
-            {#if post.thumbnail}
+            {#if post.embed}
+                <!--eslint-disable-next-line svelte/no-at-html-tags-->
+                {@html post.embed.value[0]?.value}
+            {:else if post.saluran.length > 0 && selectedSaluran}
+                <VideoPlayer
+                    src={selectedSaluran}
+                    poster={post.thumbnail?.extraLarge}
+                />
+                {#if post.saluran.length > 1}
+                    <div class="flex flex-wrap gap-2">
+                        {#each post.saluran as saluranItem (saluranItem.id)}
+                            {#each saluranItem.value as stream (stream.value)}
+                                <button
+                                    class="rounded-md border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
+                                    class:bg-primary={selectedSaluran ===
+                                        stream.value}
+                                    class:text-primary-foreground={selectedSaluran ===
+                                        stream.value}
+                                    onclick={() =>
+                                        (selectedSaluran = stream.value)}
+                                >
+                                    {stream.name}
+                                </button>
+                            {/each}
+                        {/each}
+                    </div>
+                {/if}
+            {:else if post.thumbnail}
                 <img
                     src={post.thumbnail.extraLarge}
                     alt={displayTitle}

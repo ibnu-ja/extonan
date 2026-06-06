@@ -261,6 +261,8 @@ declare namespace App {
                 isPublished: boolean;
                 permissions: App.Data.PermissionsData;
                 links: App.Data.Anime.ResourceData[];
+                saluran: App.Data.Anime.ResourceData[];
+                embed: App.Data.Anime.ResourceData | null;
             };
             export type PostShowResponse = {
                 anime: App.Data.Anime.AnimeListItemData;
@@ -270,7 +272,7 @@ declare namespace App {
             export type ResourceData = {
                 id: number;
                 name: string;
-                type: string;
+                type: App.Enums.ResourceType;
                 value: Array<any>;
             };
         }
@@ -302,6 +304,7 @@ declare namespace App {
             | 'user.delete.self'
             | 'user.edit.self'
             | 'user.edit.any';
+        export type ResourceType = 'link' | 'saluran' | 'embed';
         export type Role = 'admin' | 'editor' | 'author' | 'contributor';
         export type Season = 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL';
     }

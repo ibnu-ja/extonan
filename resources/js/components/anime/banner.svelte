@@ -80,6 +80,7 @@
                             style="max-height: {expanded ? '4000px' : '4.5rem'}"
                         >
                             <div class="text-sm text-muted-foreground">
+                                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                                 {@html summary}
                             </div>
                             {#if !expanded}

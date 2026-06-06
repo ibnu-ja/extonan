@@ -2,6 +2,7 @@
 
 namespace App\Data\Anime;
 
+use App\Enums\ResourceType;
 use App\Models\Resource;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -12,7 +13,7 @@ class ResourceData extends Data
     public function __construct(
         public int $id,
         public string $name,
-        public string $type,
+        public ResourceType $type,
         /** @var array{name: string, value: string}> */
         public array $value,
     ) {}
@@ -22,7 +23,7 @@ class ResourceData extends Data
         return new self(
             id: $resource->id,
             name: $resource->name,
-            type: $resource->type,
+            type: ResourceType::from($resource->type),
             value: $resource->value,
         );
     }

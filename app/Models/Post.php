@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ResourceType;
 use App\Http\Requests\ShinraiPostType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -54,12 +55,17 @@ class Post extends BasePost
     public function links(): HasMany
     {
         //        natural sorting ->orderBy(DB::raw('LENGTH(name), name'))
-        return $this->resources()->where('type', '=', 'link');
+        return $this->resources()->where('type', '=', ResourceType::Link);
     }
 
     public function embeds(): HasMany
     {
-        return $this->resources()->where('type', '=', 'embed');
+        return $this->resources()->where('type', '=', ResourceType::Embed);
+    }
+
+    public function saluran(): HasMany
+    {
+        return $this->resources()->where('type', '=', ResourceType::Saluran);
     }
 
     public function thumbnail(): Attribute
