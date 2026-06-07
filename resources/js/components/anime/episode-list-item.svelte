@@ -16,7 +16,10 @@
 
 <Item.Root class="rounded-none md:rounded-lg">
     {#snippet child({ props })}
-        <Link href={postShow.url({ anime: animeId, post: episode.id })} {...props}>
+        <Link
+            href={postShow.url({ anime: animeId, post: episode.id })}
+            {...props}
+        >
             <Item.Media variant="image">
                 {#if episode.thumbnail}
                     <img

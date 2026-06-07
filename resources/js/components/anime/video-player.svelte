@@ -51,8 +51,8 @@
 
     function getQualityLabel(): string {
         if (selectedQuality === '-1') {
-return 'Auto';
-}
+            return 'Auto';
+        }
 
         const idx = parseInt(selectedQuality);
         const lvl = levels[idx];
@@ -118,7 +118,13 @@ return 'Auto';
         if (!isFullscreen) {
             root.requestFullscreen?.();
             isFullscreen = true;
-            (screen.orientation as unknown as { lock?: (o: string) => Promise<void> })?.lock?.('landscape-primary').catch(() => {});
+            (
+                screen.orientation as unknown as {
+                    lock?: (o: string) => Promise<void>;
+                }
+            )
+                ?.lock?.('landscape-primary')
+                .catch(() => {});
         } else {
             document.exitFullscreen?.();
             isFullscreen = false;
@@ -307,7 +313,9 @@ return 'Auto';
 
         <div class="mx-4 flex-1">
             <div class="relative flex h-1.5 w-full items-center">
-                <div class="bg-muted relative h-1.5 w-full overflow-hidden rounded-full">
+                <div
+                    class="bg-muted relative h-1.5 w-full overflow-hidden rounded-full"
+                >
                     <div
                         class="bg-primary absolute h-full rounded-full"
                         style="width: {seekPercent}%"
@@ -319,7 +327,8 @@ return 'Auto';
                     max={duration || 1}
                     step="0.1"
                     value={currentTime}
-                    oninput={(e) => onSeekChange([parseFloat(e.currentTarget.value)])}
+                    oninput={(e) =>
+                        onSeekChange([parseFloat(e.currentTarget.value)])}
                     class="absolute h-full w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-sm [&::-webkit-slider-thumb]:transition-[color,box-shadow] [&::-webkit-slider-thumb]:hover:ring-4 [&::-webkit-slider-thumb]:hover:ring-ring/50 [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:shadow-sm"
                 />
             </div>

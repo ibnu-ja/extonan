@@ -163,7 +163,9 @@
                             </span>
                         {:else}
                             <div class="flex items-center gap-1 truncate">
-                                <span class="truncate">{itemLabel(norm[0])}</span>
+                                <span class="truncate"
+                                    >{itemLabel(norm[0])}</span
+                                >
                                 {#if norm.length > 1}
                                     <Badge
                                         variant="secondary"
