@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Data\MediaData;
+use App\Data\MediaStoreData;
 use App\Data\PaginatedCollection;
 use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Plank\Mediable\Facades\ImageManipulator;
@@ -44,18 +44,11 @@ class MediaController extends Controller implements HasMiddleware
         );
     }
 
-    public function store(Request $request): DataCollection
+    public function store(MediaStoreData $data): DataCollection
     {
-        $validated = $request->validate([
-            'media' => 'array|required_without:url|nullable',
-            'media.*' => 'file|image|max:10000',
-            'url' => 'array|required_without:media|nullable',
-            'url.*' => 'string',
-        ]);
-
         $uploaded = [];
 
-        foreach ($validated['media'] ?? $validated['url'] ?? [] as $file) {
+        foreach ($data->media ?? $data->url ?? [] as $file) {
             $media = MediaUploader::fromSource($file)
                 ->toDirectory(date('Y-m'))
                 ->upload();

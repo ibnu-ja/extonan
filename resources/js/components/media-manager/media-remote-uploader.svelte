@@ -51,6 +51,8 @@
                 return;
             }
 
+            const body: App.Data.MediaStoreData = { url: validated, media: null };
+
             const xhr = new XMLHttpRequest();
             xhr.open('POST', mediaStore.url());
             xhr.setRequestHeader('Content-Type', 'application/json');
@@ -83,7 +85,7 @@
                     }
                 };
                 xhr.onerror = () => reject(new Error('Network error'));
-                xhr.send(JSON.stringify({ url: validated }));
+                xhr.send(JSON.stringify(body));
             });
         } catch (error) {
             if (error instanceof Error && !errors.length) {
