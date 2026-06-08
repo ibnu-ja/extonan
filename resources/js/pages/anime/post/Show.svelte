@@ -219,32 +219,55 @@
                         )}
                         <Item.Root class={isActive ? 'bg-muted' : ''} id={slug}>
                             {#snippet child({ props })}
-                                <Link
-                                    href={postShow.url({
-                                        anime: anime.id,
-                                        post: episode.id,
-                                    })}
-                                    {...props}
-                                >
-                                    <Item.Media variant="image">
-                                        {#if episode.thumbnail}
-                                            <img
-                                                src={episode.thumbnail.medium}
-                                                alt=""
-                                                class="size-10 rounded object-cover"
-                                            />
-                                        {/if}
-                                    </Item.Media>
-                                    <Item.Content>
-                                        <Item.Title>
-                                            {#if episode.epNo}Episode {episode.epNo}:
-                                            {/if} {t(episode.title)}
-                                        </Item.Title>
-                                        <Item.Description>
-                                            {formatDate(episode.publishedAt)}
-                                        </Item.Description>
-                                    </Item.Content>
-                                </Link>
+                                {#if isActive}
+                                    <div {...props}>
+                                        <Item.Media variant="image">
+                                            {#if episode.thumbnail}
+                                                <img
+                                                    src={episode.thumbnail.medium}
+                                                    alt=""
+                                                    class="size-10 rounded object-cover"
+                                                />
+                                            {/if}
+                                        </Item.Media>
+                                        <Item.Content>
+                                            <Item.Title>
+                                                {#if episode.epNo}Episode {episode.epNo}:
+                                                {/if} {t(episode.title)}
+                                            </Item.Title>
+                                            <Item.Description>
+                                                {formatDate(episode.publishedAt)}
+                                            </Item.Description>
+                                        </Item.Content>
+                                    </div>
+                                {:else}
+                                    <Link
+                                        href={postShow.url({
+                                            anime: anime.id,
+                                            post: episode.id,
+                                        })}
+                                        {...props}
+                                    >
+                                        <Item.Media variant="image">
+                                            {#if episode.thumbnail}
+                                                <img
+                                                    src={episode.thumbnail.medium}
+                                                    alt=""
+                                                    class="size-10 rounded object-cover"
+                                                />
+                                            {/if}
+                                        </Item.Media>
+                                        <Item.Content>
+                                            <Item.Title>
+                                                {#if episode.epNo}Episode {episode.epNo}:
+                                                {/if} {t(episode.title)}
+                                            </Item.Title>
+                                            <Item.Description>
+                                                {formatDate(episode.publishedAt)}
+                                            </Item.Description>
+                                        </Item.Content>
+                                    </Link>
+                                {/if}
                             {/snippet}
                         </Item.Root>
                     {/each}

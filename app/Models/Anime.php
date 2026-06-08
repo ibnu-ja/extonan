@@ -49,6 +49,11 @@ class Anime extends BasePost
             ->slugsShouldBeNoLongerThan(60);
     }
 
+    public function replicate(?array $except = null): static
+    {
+        return parent::replicate(array_merge($except ?? [], ['season', 'season_year']));
+    }
+
     public function posts(): MorphMany
     {
         return $this->morphMany(Post::class, 'postable');

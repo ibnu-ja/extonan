@@ -237,6 +237,14 @@ declare namespace App {
                 metadata: App.Data.Anilist.AnilistMediaData | null;
                 isPublished: boolean;
             };
+            export type EpisodeListItemData = {
+                id: number;
+                title: Record<string, string | null>;
+                slug: Record<string, string | null>;
+                epNo: string | null;
+                thumbnail: App.Data.CoverImageData | null;
+                publishedAt: string | null;
+            };
             export type EpisodeShowData = {
                 id: number;
                 title: Record<string, string | null>;
@@ -266,7 +274,7 @@ declare namespace App {
             };
             export type PostShowResponse = {
                 anime: App.Data.Anime.AnimeListItemData;
-                episodes: App.Data.Anime.PostShowData[];
+                episodes: App.Data.Anime.EpisodeListItemData[];
                 post: App.Data.Anime.PostShowData;
             };
             export type ResourceData = {

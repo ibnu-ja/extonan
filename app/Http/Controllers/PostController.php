@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Data\Anime\AnimeListItemData;
+use App\Data\Anime\EpisodeListItemData;
 use App\Data\Anime\PostShowData;
 use App\Data\Anime\PostShowResponse;
 use App\Http\Requests\StorePostRequest;
@@ -83,13 +84,15 @@ class PostController extends Controller implements HasMiddleware
         \Gate::authorize('view', $anime);
         \Gate::authorize('view', $post);
 
-        $anime->load(['posts' => fn (MorphMany $query) => $query->current()->orderByDesc('title->native')]);
-        $post->load(['author', 'links', 'saluran', 'embeds', 'media']);
+        $user = request()->user();
+
+        $anime->load(['posts' => fn (MorphMany $query) => $query->current()->with(['media.originalMedia.variants', 'media.variants'])->orderByEpisodeAndNativeTitle()]);
+        $post->load(['author', 'links', 'saluran', 'embeds', 'media.originalMedia.variants', 'media.variants']);
 
         return Inertia::render('anime/post/Show', [
-            'anime' => AnimeListItemData::fromModel($anime),
-            'episodes' => $anime->posts->map(fn (Post $p) => PostShowData::fromModel($p)),
-            'post' => PostShowData::fromModel($post),
+            'anime' => AnimeListItemData::fromModel($anime, $user),
+            'episodes' => $anime->posts->map(fn (Post $p) => EpisodeListItemData::fromModel($p)),
+            'post' => PostShowData::fromModel($post, $user),
         ]);
     }
 

@@ -12,8 +12,8 @@ class PostShowResponse extends Data
 {
     public function __construct(
         public AnimeListItemData $anime,
-        /** @var DataCollection<PostShowData> */
-        #[DataCollectionOf(PostShowData::class)]
+        /** @var DataCollection<EpisodeListItemData> */
+        #[DataCollectionOf(EpisodeListItemData::class)]
         public DataCollection $episodes,
         public PostShowData $post,
     ) {}

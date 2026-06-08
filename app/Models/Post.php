@@ -73,7 +73,9 @@ class Post extends BasePost
         return Attribute::make(
             function () {
                 if ($this->hasMedia('thumbnail')) {
-                    $this->loadMediaWithVariants('thumbnail');
+                    if (! $this->relationLoaded('media')) {
+                        $this->loadMediaWithVariants('thumbnail');
+                    }
                     $media = $this->firstMedia('thumbnail');
 
                     return [
