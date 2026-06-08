@@ -86,7 +86,7 @@ class PostController extends Controller implements HasMiddleware
         $anime->load(['posts' => fn (MorphMany $query) => $query->current()->orderByDesc('title->native')]);
         $post->load(['author', 'links', 'saluran', 'embeds', 'media']);
 
-        return Inertia::render('Anime/Post/Show', [
+        return Inertia::render('anime/post/Show', [
             'anime' => AnimeListItemData::fromModel($anime),
             'episodes' => $anime->posts->map(fn (Post $p) => PostShowData::fromModel($p)),
             'post' => PostShowData::fromModel($post),
