@@ -108,7 +108,9 @@
                     class="hidden"
                     onchange={onInputChange}
                 />
-                <h4 class="font-heading text-lg font-semibold">Drop File(s) to Upload</h4>
+                <h4 class="font-heading text-lg font-semibold">
+                    Drop File(s) to Upload
+                </h4>
                 {#if !active}
                     <p class="text-xs text-muted-foreground mb-3">or</p>
                     <Button variant="outline" size="sm" onclick={selectNewFile}>

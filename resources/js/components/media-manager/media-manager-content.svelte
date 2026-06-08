@@ -50,19 +50,36 @@
                         <Sidebar.Group>
                             <Sidebar.GroupContent>
                                 <div class="p-2">
-                                    <h5 class="font-heading text-lg font-semibold">Media Details</h5>
+                                    <h5
+                                        class="font-heading text-lg font-semibold"
+                                    >
+                                        Media Details
+                                    </h5>
                                     <ul class="mt-2 space-y-1 text-sm">
                                         <li>
-                                            <span class="font-medium">Filename: </span>
-                                            <span class="text-muted-foreground break-all">{selectedMedia.filename}.{selectedMedia.extension}</span>
+                                            <span class="font-medium"
+                                                >Filename:
+                                            </span>
+                                            <span
+                                                class="text-muted-foreground break-all"
+                                                >{selectedMedia.filename}.{selectedMedia.extension}</span
+                                            >
                                         </li>
                                         <li>
-                                            <span class="font-medium">Created: </span>
-                                            <span class="text-muted-foreground">{selectedMedia.createdAt}</span>
+                                            <span class="font-medium"
+                                                >Created:
+                                            </span>
+                                            <span class="text-muted-foreground"
+                                                >{selectedMedia.createdAt}</span
+                                            >
                                         </li>
                                         <li>
-                                            <span class="font-medium">Size: </span>
-                                            <span class="text-muted-foreground">{selectedMedia.size} bytes</span>
+                                            <span class="font-medium"
+                                                >Size:
+                                            </span>
+                                            <span class="text-muted-foreground"
+                                                >{selectedMedia.size} bytes</span
+                                            >
                                         </li>
                                     </ul>
                                     {#if ondeleteMedia}
@@ -70,21 +87,28 @@
                                             variant="destructive"
                                             size="sm"
                                             class="mt-2 w-full"
-                                            onclick={() => ondeleteMedia(selectedMedia)}
+                                            onclick={() =>
+                                                ondeleteMedia(selectedMedia)}
                                         >
                                             Delete
                                         </Button>
                                     {/if}
                                     {#if selectedMedia.url}
                                         <div class="mt-2 space-y-1">
-                                            <p class="text-xs font-medium text-muted-foreground">Links</p>
+                                            <p
+                                                class="text-xs font-medium text-muted-foreground"
+                                            >
+                                                Links
+                                            </p>
                                             <a
                                                 href={selectedMedia.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 class="inline-flex items-center gap-1 text-xs text-primary underline-offset-4 hover:underline"
                                             >
-                                                <ExternalLink class="size-3 shrink-0" />
+                                                <ExternalLink
+                                                    class="size-3 shrink-0"
+                                                />
                                                 original
                                             </a>
                                             {#if selectedMedia.mediumUrl}
@@ -94,7 +118,9 @@
                                                     rel="noopener noreferrer"
                                                     class="inline-flex items-center gap-1 text-xs text-primary underline-offset-4 hover:underline"
                                                 >
-                                                    <ExternalLink class="size-3 shrink-0" />
+                                                    <ExternalLink
+                                                        class="size-3 shrink-0"
+                                                    />
                                                     medium
                                                 </a>
                                             {/if}
@@ -105,7 +131,9 @@
                                                     rel="noopener noreferrer"
                                                     class="inline-flex items-center gap-1 text-xs text-primary underline-offset-4 hover:underline"
                                                 >
-                                                    <ExternalLink class="size-3 shrink-0" />
+                                                    <ExternalLink
+                                                        class="size-3 shrink-0"
+                                                    />
                                                     large
                                                 </a>
                                             {/if}
@@ -118,8 +146,16 @@
                         <Sidebar.Group>
                             <Sidebar.GroupContent>
                                 <div class="p-2">
-                                    <h5 class="font-heading text-lg font-semibold">Media Details</h5>
-                                    <p class="mt-2 text-sm text-muted-foreground">No file selected</p>
+                                    <h5
+                                        class="font-heading text-lg font-semibold"
+                                    >
+                                        Media Details
+                                    </h5>
+                                    <p
+                                        class="mt-2 text-sm text-muted-foreground"
+                                    >
+                                        No file selected
+                                    </p>
                                 </div>
                             </Sidebar.GroupContent>
                         </Sidebar.Group>
@@ -159,7 +195,9 @@
                                 </Breadcrumb.Item>
                                 <Breadcrumb.Separator />
                                 <Breadcrumb.Item>
-                                    <Breadcrumb.Page>{headerTitle}</Breadcrumb.Page>
+                                    <Breadcrumb.Page
+                                        >{headerTitle}</Breadcrumb.Page
+                                    >
                                 </Breadcrumb.Item>
                             </Breadcrumb.List>
                         </Breadcrumb.Root>

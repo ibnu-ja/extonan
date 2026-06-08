@@ -1,6 +1,10 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { index as mediaIndex, getMonthsWithCounts as mediaMonthsWithCounts, destroy as mediaDestroy } from '@/actions/App/Http/Controllers/MediaController';
+    import {
+        index as mediaIndex,
+        getMonthsWithCounts as mediaMonthsWithCounts,
+        destroy as mediaDestroy,
+    } from '@/actions/App/Http/Controllers/MediaController';
     import * as AlertDialog from '@/components/ui/alert-dialog';
     import * as Sidebar from '@/components/ui/sidebar';
     import * as Tabs from '@/components/ui/tabs';
@@ -28,7 +32,9 @@
         disabled?: boolean;
         header?: Snippet<[{ title: string; onOpen: () => void }]>;
         _trigger?: Snippet<[{ hasValue: boolean; onclick: () => void }]>;
-        preview?: Snippet<[{ value: App.Data.MediaData | App.Data.MediaData[] | null }]>;
+        preview?: Snippet<
+            [{ value: App.Data.MediaData | App.Data.MediaData[] | null }]
+        >;
         empty?: Snippet;
         _sidebarInfo?: Snippet;
         _sidebarNav?: Snippet;
@@ -69,21 +75,29 @@
             return;
         }
 
-        await fetch(mediaDestroy.url(deleteTarget.id), { method: 'DELETE' });
+        const deletedId = deleteTarget.id;
+
+        await fetch(mediaDestroy.url(deletedId), { method: 'DELETE' });
         await fetchMedia();
         await fetchMonthsWithCounts();
 
-        if (latestSelected?.id === deleteTarget.id) {
+        if (latestSelected?.id === deletedId) {
             latestSelected = null;
         }
 
         deleteTarget = null;
+        window.dispatchEvent(new CustomEvent('media-refresh', { detail: { deletedId } }));
     }
 
     function openDialog() {
         dialogOpen = true;
         selectedMonth = '';
-        latestSelected = value != null ? (Array.isArray(value) ? value[0] ?? null : value) : null;
+        latestSelected =
+            value != null
+                ? Array.isArray(value)
+                    ? (value[0] ?? null)
+                    : value
+                : null;
         fetchMonthsWithCounts();
         fetchMedia();
     }
@@ -96,6 +110,30 @@
         if (dialogOpen) {
             fetchMedia();
         }
+    });
+
+    $effect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        function onRefresh(e: Event) {
+            const { deletedId } = (e as CustomEvent).detail ?? {};
+            fetchMedia();
+            fetchMonthsWithCounts();
+
+            if (deletedId !== undefined && value != null) {
+                if (Array.isArray(value)) {
+                    value = value.filter((v) => v.id !== deletedId);
+                } else if (value.id === deletedId) {
+                    value = null;
+                }
+            }
+        }
+
+        window.addEventListener('media-refresh', onRefresh);
+
+        return () => window.removeEventListener('media-refresh', onRefresh);
     });
 </script>
 
@@ -113,8 +151,8 @@
     bind:open={dialogOpen}
     headerTitle={selectedMonth || 'All'}
     onreset={() => {
- selectedMonth = ''; 
-}}
+        selectedMonth = '';
+    }}
     selectedMedia={latestSelected}
     ondeleteMedia={(item) => (deleteTarget = item)}
 >
@@ -132,7 +170,10 @@
                             {#snippet child({ props })}
                                 <a href="##" {...props}>
                                     <span>{month}</span>
-                                    <span class="ms-auto text-xs text-muted-foreground">{count}</span>
+                                    <span
+                                        class="ms-auto text-xs text-muted-foreground"
+                                        >{count}</span
+                                    >
                                 </a>
                             {/snippet}
                         </Sidebar.MenuButton>
@@ -199,17 +240,20 @@
         }}
     >
         <AlertDialog.Portal>
-            <AlertDialog.Overlay />
-            <AlertDialog.Content>
+            <AlertDialog.Overlay class="z-[60]" />
+            <AlertDialog.Content class="z-[60]">
                 <AlertDialog.Header>
                     <AlertDialog.Title>Are you sure?</AlertDialog.Title>
                     <AlertDialog.Description>
-                        This action cannot be undone. This will permanently delete this media item.
+                        This action cannot be undone. This will permanently
+                        delete this media item.
                     </AlertDialog.Description>
                 </AlertDialog.Header>
                 <AlertDialog.Footer>
                     <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-                    <AlertDialog.Action onclick={confirmDelete}>Delete</AlertDialog.Action>
+                    <AlertDialog.Action onclick={confirmDelete}
+                        >Delete</AlertDialog.Action
+                    >
                 </AlertDialog.Footer>
             </AlertDialog.Content>
         </AlertDialog.Portal>

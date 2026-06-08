@@ -22,7 +22,9 @@
         header?: Snippet<[{ title: string; onOpen: () => void }]>;
         trigger?: Snippet<[{ hasValue: boolean; onclick: () => void }]>;
         onOpen?: () => void;
-        preview?: Snippet<[{ value: App.Data.MediaData | App.Data.MediaData[] | null }]>;
+        preview?: Snippet<
+            [{ value: App.Data.MediaData | App.Data.MediaData[] | null }]
+        >;
         empty?: Snippet;
         children?: Snippet;
     } = $props();
