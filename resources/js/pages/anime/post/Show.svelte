@@ -94,7 +94,13 @@
 </svelte:head>
 
 <div class="w-full mx-auto lg:max-w-7xl xl:max-w-screen-2xl">
-    <div class="px-4 py-6">
+    <div class="px-4 py-6 pt-16 md:pt-6">
+        <a
+            href={animeShow.url(anime.id)}
+            class="hover:text-foreground transition-colors text-sm text-muted-foreground md:hidden"
+        >
+            {animeTitle}
+        </a>
         <h1 class="text-2xl md:text-4xl font-bold font-heading mt-1">
             {displayTitle}
             {#if !post.isPublished}
@@ -211,7 +217,7 @@
             </div>
 
             <div class="max-h-128 overflow-y-auto px-0 md:px-4">
-                <Item.Group>
+                <Item.Group class="px-0 md:px-4">
                     {#each episodes as episode (episode.id)}
                         {@const isActive = episode.id === post.id}
                         {@const slug = Object.values(episode.slug).find(

@@ -32,7 +32,7 @@
         class="absolute inset-x-0 bottom-0 h-px bg-border transition-opacity duration-300"
         style="opacity: {scrolled ? 1 : 0};"
     ></div>
-    <div class="relative flex flex-1 items-center gap-2 px-4">
+    <div class="relative flex flex-1 items-center gap-2">
         <div class="flex flex-1 flex-col justify-center min-w-0">
             <h1
                 class="transition-opacity duration-200 truncate text-base font-semibold font-heading"

@@ -1,16 +1,7 @@
-<script module lang="ts">
-    import { index as animeIndex } from '@/routes/anime';
-
-    export const layout = {
-        breadcrumbs: [
-            { title: 'Anime', href: animeIndex().url },
-            { title: 'Create Episode', href: '' },
-        ],
-    };
-</script>
-
 <script lang="ts">
-    import { router, useForm } from '@inertiajs/svelte';
+    import { router, setLayoutProps, useForm } from '@inertiajs/svelte';
+    import { index as animeIndex, show as animeShow } from '@/routes/anime';
+    import { t } from '@/lib/locale.svelte';
     import Check from 'lucide-svelte/icons/check';
     import ChevronDown from 'lucide-svelte/icons/chevron-down';
     import ChevronUp from 'lucide-svelte/icons/chevron-up';
@@ -84,6 +75,16 @@
             thumbnailItem: post?.thumbnailItem ?? null,
         }),
     );
+
+    $effect(() => {
+        setLayoutProps({
+            breadcrumbs: [
+                { title: 'Anime', href: animeIndex() },
+                { title: t(anime.title), href: animeShow.url(anime.id) },
+                { title: pageTitle, href: '' },
+            ],
+        });
+    });
 
     $effect(() => {
         if (post?.thumbnailItem && !thumbnailMedia) {

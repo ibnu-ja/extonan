@@ -36,7 +36,6 @@
     <Sidebar.Inset class="flex flex-col pb-16 md:pb-0 overflow-x-hidden">
         {#if mdAndDown.current}
             {#if showHeading !== false}<div class="h-16"></div>{/if}
-            <MobileTopBar {title} {threshold} />
         {:else}
             <AppSidebarHeader {breadcrumbs} />
         {/if}
@@ -70,6 +69,7 @@
         <AppFooter />
     </Sidebar.Inset>
     {#if mdAndDown.current}
+        <MobileTopBar {title} {threshold} />
         <BottomNavBar />
     {/if}
     <Toaster />
