@@ -12,6 +12,7 @@ use Illuminate\Routing\Controllers\Middleware;
 use Plank\Mediable\Facades\ImageManipulator;
 use Plank\Mediable\Facades\MediaUploader;
 use Plank\Mediable\Media;
+use Spatie\LaravelData\DataCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
