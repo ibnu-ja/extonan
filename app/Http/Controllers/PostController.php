@@ -2,25 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\Anilist\AnilistMediaData;
 use App\Data\Anime\AnimeListItemData;
 use App\Data\Anime\EpisodeListItemData;
+use App\Data\Anime\PostCreateResponse;
+use App\Data\Anime\PostFormData;
 use App\Data\Anime\PostShowData;
 use App\Data\Anime\PostShowResponse;
-use App\Http\Requests\StorePostRequest;
+use App\Data\Anime\PostStoreData;
 use App\Models\Anime;
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
 
 class PostController extends Controller implements HasMiddleware
 {
-    /**
-     * Get the middleware that should be assigned to the controller.
-     */
     public static function middleware(): array
     {
         return [
@@ -28,63 +32,55 @@ class PostController extends Controller implements HasMiddleware
             WithDraftsMiddleware::class,
         ];
     }
-    //    /**
-    //     * Display a listing of the resource.
-    //     */
-    //    public function index()
-    //    {
-    //        //
-    //    }
 
     /**
-     * Show the form for creating a new resource.
+     * @see PostCreateResponse
      */
     public function create(Anime $anime): Response
     {
-        \Gate::authorize('create', Post::class);
+        Gate::authorize('create', Post::class);
 
-        return Inertia::render('Anime/Post/Create', [
-            'anime' => $anime,
-            'canPublish' => request()->user()->can('publish', Post::class),
-        ]);
+        return Inertia::render('anime/post/Create', new PostCreateResponse(
+            anime: AnimeListItemData::fromModel($anime, Auth::user()),
+            canPublish: Auth::user()?->can('publish', Post::class) ?? false,
+            metadata: $anime->metadata ? AnilistMediaData::from($anime->metadata) : null,
+        ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Anime $anime, StorePostRequest $request)
+    public function store(Request $request, Anime $anime): RedirectResponse
     {
-        // if user wants to publish but does not have capability to publish
-        // or user cannot create
-        \Gate::authorize('create', Post::class);
-        if ($request->boolean('is_published') && $request->user()->cannot('publish', Post::class)) {
-            abort(403);
+        Gate::authorize('create', Post::class);
+
+        $data = PostStoreData::from($request);
+
+        $this->authorizePublishIfRequested($data);
+
+        $post = $anime->posts()->create($data->toModelArray());
+
+        if ($data->links !== null) {
+            $post->resources()->createMany($data->links);
         }
-        //        return $request->all();
-        $post = $anime->posts()->create($request->validated());
 
-        $post->resources()->createMany($request->validated()['links']);
-
-        if (! is_null($request->validated()['thumbnail_item'])) {
-            $post->syncMedia($request->validated()['thumbnail_item']['id'], 'thumbnail');
+        if ($data->thumbnailItem !== null) {
+            $post->syncMedia($data->thumbnailItem['id'], 'thumbnail');
         } else {
             $post->detachMediaTags('thumbnail');
         }
 
-        return redirect()->route('post.show', [$anime, $post])->banner('Episode created successfully!');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Episode created successfully!']);
+
+        return redirect()->route('post.show', [$anime, $post]);
     }
 
     /**
-     * Display the specified resource.
-     *
      * @see PostShowResponse
      */
-    public function show(Anime $anime, Post $post)
+    public function show(Anime $anime, Post $post): Response
     {
-        \Gate::authorize('view', $anime);
-        \Gate::authorize('view', $post);
+        Gate::authorize('view', $anime);
+        Gate::authorize('view', $post);
 
-        $user = request()->user();
+        $user = Auth::user();
 
         $anime->load(['posts' => fn (MorphMany $query) => $query->current()->with(['media.originalMedia.variants', 'media.variants'])->orderByEpisodeAndNativeTitle()]);
         $post->load(['author', 'links', 'saluran', 'embeds', 'media.originalMedia.variants', 'media.variants']);
@@ -97,63 +93,69 @@ class PostController extends Controller implements HasMiddleware
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * @see PostCreateResponse
      */
-    public function edit(Anime $anime, Post $post)
+    public function edit(Anime $anime, Post $post): Response
     {
-        \Gate::authorize('update', $post);
+        Gate::authorize('update', $post);
 
-        return Inertia::render('Anime/Post/Create', [
-            'anime' => $anime,
-            'post' => $post->load(['author', 'links', 'media'])->append('thumbnail_item'),
-            'canPublish' => request()->user()->can('publish', $post),
-        ]);
+        $user = Auth::user();
+
+        return Inertia::render('anime/post/Create', new PostCreateResponse(
+            anime: AnimeListItemData::fromModel($anime, $user),
+            post: PostFormData::fromModel($post, $user?->can('publish', $post) ?? false),
+            canPublish: $user?->can('publish', $post) ?? false,
+            metadata: $anime->metadata ? AnilistMediaData::from($anime->metadata) : null,
+        ));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Anime $anime, Post $post, StorePostRequest $request)
+    public function update(Request $request, Anime $anime, Post $post): RedirectResponse
     {
-        \Gate::authorize('update', $post);
-        if ($request->boolean('is_published') && $request->user()->cannot('publish', Post::class)) {
-            abort(403);
-        }
-        $validated = $request->validated();
+        Gate::authorize('update', $post);
 
-        $linksss = collect($validated['links'])->map(function ($item) {
-            return array_filter([
-                'id' => $item['id'] ?? null,  // This will return null if 'id' does not exist, making the key potentially removable
+        $data = PostStoreData::from($request);
+
+        $this->authorizePublishIfRequested($data);
+
+        $post->update($data->toModelArray());
+
+        if ($data->links !== null) {
+            $links = collect($data->links)->map(fn ($item) => array_filter([
+                'id' => $item['id'] ?? null,
                 'name' => $item['name'],
                 'type' => $item['type'],
                 'value' => json_encode($item['value']),
-            ], function ($value, $key) {
-                // Filter out the 'id' key if the value is null
-                return ! (is_null($value) && $key === 'id');
-            }, ARRAY_FILTER_USE_BOTH);
-        });
+            ], fn ($value, $key) => ! (is_null($value) && $key === 'id'), ARRAY_FILTER_USE_BOTH));
 
-        $post->update($validated);
+            $post->links()->upsert($links->toArray(), uniqueBy: ['id'], update: ['name', 'value']);
+        }
 
-        $post->links()->upsert($linksss->toArray(), uniqueBy: ['id'], update: ['name', 'value']);
-
-        if (! is_null($request->validated()['thumbnail_item'])) {
-            $post->syncMedia($request->validated()['thumbnail_item']['id'], 'thumbnail');
+        if ($data->thumbnailItem !== null) {
+            $post->syncMedia($data->thumbnailItem['id'], 'thumbnail');
         } else {
             $post->detachMediaTags('thumbnail');
         }
 
-        return redirect()->back()->banner('Episode updated successfully!');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Episode updated successfully!']);
+
+        return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Anime $anime, Post $post)
+    public function destroy(Anime $anime, Post $post): RedirectResponse
     {
-        \Gate::authorize('delete', $post);
+        Gate::authorize('delete', $post);
+
         $post->delete();
 
-        return redirect()->route('anime.show', $anime)->banner('Episode deleted successfully!');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Episode deleted successfully!']);
+
+        return redirect()->route('anime.show', $anime);
+    }
+
+    private function authorizePublishIfRequested(PostStoreData $data): void
+    {
+        if ($data->isPublished && Auth::user()?->cannot('publish', Post::class)) {
+            abort(403);
+        }
     }
 }

@@ -273,6 +273,31 @@ declare namespace App {
                 isPublished: boolean;
                 permissions: App.Data.PermissionsData;
             };
+            export type PostCreateResponse = {
+                anime: App.Data.Anime.AnimeListItemData;
+                post: App.Data.Anime.PostFormData | null;
+                canPublish: boolean;
+                metadata: App.Data.Anilist.AnilistMediaData | null;
+            };
+            export type PostFormData = {
+                id: number | null;
+                title: Record<string, string | null>;
+                description: Record<string, string | null>;
+                postType: string;
+                epNo: string | null;
+                isPublished: boolean;
+                canPublish: boolean;
+                links: {
+                    id?: number;
+                    name: string;
+                    type: string;
+                    value: {
+                        name: string;
+                        value: string;
+                    }[];
+                }[];
+                thumbnailItem: Array<any> | null;
+            };
             export type PostShowData = {
                 id: number;
                 title: Record<string, string | null>;
@@ -293,6 +318,27 @@ declare namespace App {
                 anime: App.Data.Anime.AnimeListItemData;
                 episodes: App.Data.Anime.EpisodeListItemData[];
                 post: App.Data.Anime.PostShowData;
+            };
+            export type PostStoreData = {
+                title: Record<string, string | null>;
+                description: Record<string, string | null>;
+                postType: string;
+                epNo: string | null;
+                isPublished: boolean;
+                links:
+                    | {
+                          id?: number;
+                          name: string;
+                          type: string;
+                          value: {
+                              name: string;
+                              value: string;
+                          }[];
+                      }[]
+                    | null;
+                thumbnailItem: {
+                    id: number;
+                } | null;
             };
             export type ResourceData = {
                 id: number;
