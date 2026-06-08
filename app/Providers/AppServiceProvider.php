@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Intervention\Image\Image;
+use Plank\Mediable\Facades\ImageManipulator;
+use Plank\Mediable\ImageManipulation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(BasePost::class, PostPolicy::class);
 
         $this->configureDefaults();
+        $this->configureMediaVariants();
     }
 
     /**
@@ -50,6 +54,26 @@ class AppServiceProvider extends ServiceProvider
                 ->symbols()
                 ->uncompromised()
             : null,
+        );
+    }
+
+    /**
+     * Configure media image variants for plank/laravel-mediable.
+     */
+    protected function configureMediaVariants(): void
+    {
+        ImageManipulator::defineVariant(
+            'medium',
+            ImageManipulation::make(function (Image $image) {
+                $image->scaleDown(width: 300);
+            })
+        );
+
+        ImageManipulator::defineVariant(
+            'large',
+            ImageManipulation::make(function (Image $image) {
+                $image->scaleDown(width: 600);
+            })
         );
     }
 }
