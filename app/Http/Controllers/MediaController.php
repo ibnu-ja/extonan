@@ -7,6 +7,8 @@ use App\Data\PaginationData;
 use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Plank\Mediable\Facades\ImageManipulator;
 use Plank\Mediable\Facades\MediaUploader;
 use Plank\Mediable\Media;
@@ -14,8 +16,15 @@ use Spatie\LaravelData\DataCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class MediaController extends Controller
+class MediaController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth'),
+        ];
+    }
+
     public function __construct(private readonly MediaService $media) {}
 
     public function index(): array
