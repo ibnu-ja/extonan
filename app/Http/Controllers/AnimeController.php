@@ -86,13 +86,7 @@ class AnimeController extends Controller implements HasMiddleware
 
         return Inertia::render('anime/Index', new AnimeIndexResponse(
             items: new DataCollection(AnimeListItemData::class, $items),
-            pagination: new PaginationData(
-                currentPage: $paginator->currentPage(),
-                lastPage: $paginator->lastPage(),
-                perPage: $paginator->perPage(),
-                total: $paginator->total(),
-                links: $paginator->linkCollection()->toArray(),
-            ),
+            pagination: PaginationData::fromPaginator($paginator),
             seasons: (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray(),
             canCreate: auth()->check() && auth()->user()?->can('create', Post::class),
             genres: new DataCollection(LabelValue::class, collect(config('anime.genres', []))->map(fn (string $genre) => new LabelValue(

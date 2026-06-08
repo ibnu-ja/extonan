@@ -2,73 +2,80 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Data\MediaData;
+use App\Data\PaginationData;
+use App\Services\MediaService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Plank\Mediable\Facades\ImageManipulator;
 use Plank\Mediable\Facades\MediaUploader;
 use Plank\Mediable\Media;
+use Spatie\LaravelData\DataCollection;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class MediaController extends Controller
 {
-    public function index(Request $request): LengthAwarePaginator
+    public function __construct(private readonly MediaService $media) {}
+
+    public function index(): array
     {
-        $validated = $request->validate([
-            'dir' => 'sometimes|nullable|date_format:Y-m',
-        ]);
-
-        // $dir = $validated['dir'] ?? date('Y-m', strtotime("-1 month"));
-        // $dir = $validated['dir'] ?? date('Y-m');
-        $dir = $validated['dir'] ?? null;
-
-        $media = Media::when($dir, function (Builder $query, string $dir) {
-            return $query->where('directory', $dir);
-        })
+        $paginator = QueryBuilder::for(Media::class)
+            ->allowedFilters(
+                AllowedFilter::exact('month', 'directory'),
+            )
+            ->allowedSorts('created_at', 'filename')
             ->whereIn('aggregate_type', [Media::TYPE_IMAGE, Media::TYPE_IMAGE_VECTOR])
             ->whereNull('variant_name')
-            ->latest('created_at')
+            ->defaultSort('-created_at')
             ->paginate();
 
-        return $media;
+        return [
+            'items' => new DataCollection(MediaData::class, array_map(fn (Media $media) => MediaData::fromModel($media), $paginator->items())),
+            'pagination' => PaginationData::fromPaginator($paginator),
+        ];
     }
 
-    public function store(Request $request): void
+    public function store(Request $request): DataCollection
     {
         $validated = $request->validate([
             'media' => 'array|required_without:url|nullable',
-            'media.*' => 'file|image|max:10000|',
+            'media.*' => 'file|image|max:10000',
             'url' => 'array|required_without:media|nullable',
             'url.*' => 'string',
         ]);
 
-        $files = $validated['media'] ?? $validated['url'];
+        $uploaded = [];
 
-        foreach ($files as $file) {
+        foreach ($validated['media'] ?? $validated['url'] ?? [] as $file) {
             $media = MediaUploader::fromSource($file)
                 ->toDirectory(date('Y-m'))
-                // ->toDirectory(date('Y-m', strtotime("-1 month")))
                 ->upload();
 
-            $variant = ['medium', 'large'];
-
-            foreach ($variant as $v) {
-                ImageManipulator::createImageVariant($media, $v);
+            foreach (['medium', 'large'] as $variant) {
+                ImageManipulator::createImageVariant($media, $variant);
             }
-            // using jobs, php artisan queue:work
-            // CreateImageVariants::dispatch($media, ['thumb', 'medium', 'large']);
+
+            $uploaded[] = $media;
         }
+
+        return new DataCollection(MediaData::class, array_map(fn (Media $media) => MediaData::fromModel($media), $uploaded));
     }
 
-    public function getMonths(): Collection
+    public function getMonths(): array
     {
-        $months = Media::select('directory')->distinct()->get()->pluck('directory');
-
-        return $months;
+        return $this->media->getMonths();
     }
 
-    public function destroy(Media $media): bool
+    public function getMonthsWithCounts(): array
     {
-        return $media->delete();
+        return $this->media->getMonthsWithCounts();
+    }
+
+    public function destroy(Media $media): JsonResponse
+    {
+        $media->delete();
+
+        return response()->json(['message' => 'Media deleted successfully.']);
     }
 }

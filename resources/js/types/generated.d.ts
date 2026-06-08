@@ -35,6 +35,19 @@ declare namespace App {
             key: string;
             value: string;
         };
+        export type MediaData = {
+            id: number;
+            filename: string;
+            extension: string;
+            directory: string;
+            url: string;
+            mediumUrl: string | null;
+            largeUrl: string | null;
+            size: number;
+            mimeType: string;
+            aggregateType: string;
+            createdAt: string;
+        };
         export type MusicSummaryData = {
             id: number;
             title: Record<string, string | null>;
