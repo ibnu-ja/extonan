@@ -19,14 +19,14 @@
 
     const displayTitle = $derived(
         post.postType === 'tv' && post.epNo
-            ? `${post.epNo} - ${t(post.title)}`
+            ? `Episode ${post.epNo}: ${t(post.title)}`
             : t(post.title),
     );
     const animeTitle = $derived(t(anime.title));
 
     const formattedTitle = $derived(
         post.postType === 'tv' && post.epNo
-            ? `${animeTitle} - ${post.epNo}`
+            ? `${animeTitle} Episode ${post.epNo}`
             : displayTitle,
     );
 
@@ -90,20 +90,11 @@
 </script>
 
 <svelte:head>
-    <title>{formattedTitle}</title>
+    <title>{formattedTitle} - extonan</title>
 </svelte:head>
 
 <div class="w-full mx-auto lg:max-w-7xl xl:max-w-screen-2xl">
     <div class="px-4 py-6">
-        <Link
-            href={postShow.url({ anime: anime.id, post: post.id })}
-            class="text-muted-foreground hover:text-foreground text-sm font-medium"
-        >
-            {animeTitle}
-        </Link>
-        {#if post.epNo}
-            <span class="text-muted-foreground text-sm"> - {post.epNo}</span>
-        {/if}
         <h1 class="text-2xl md:text-4xl font-bold font-heading mt-1">
             {displayTitle}
             {#if !post.isPublished}
@@ -246,8 +237,8 @@
                                     </Item.Media>
                                     <Item.Content>
                                         <Item.Title>
-                                            {#if episode.epNo}{episode.epNo} -
-                                            {/if}{t(episode.title)}
+                                            {#if episode.epNo}Episode {episode.epNo}:
+                                            {/if} {t(episode.title)}
                                         </Item.Title>
                                         <Item.Description>
                                             {formatDate(episode.publishedAt)}

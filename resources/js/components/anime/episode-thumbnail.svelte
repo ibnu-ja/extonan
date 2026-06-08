@@ -43,7 +43,7 @@
                     <p class="truncate text-sm font-medium">
                         {#if episode.epNo}
                             <span class="text-muted-foreground"
-                                >EP {episode.epNo} -
+                                >EP {episode.epNo}:
                             </span>
                         {/if}
                         {t(episode.title)}
