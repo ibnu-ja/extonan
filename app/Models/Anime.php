@@ -73,20 +73,16 @@ class Anime extends BasePost
     public function scopeTagIn(Builder $query, int ...$tags): void
     {
         foreach ($tags as $tag) {
-            $query->whereExists(function ($query) use ($tag) {
-                $query->select(DB::raw(1))
-                    ->fromRaw('jsonb_array_elements(metadata->\'tags\') as tag')
-                    ->whereRaw("(tag->>'id')::int = ?", [$tag]);
-            });
+            $query->whereJsonContains('metadata->tags', ['id' => $tag]);
         }
     }
 
     public function scopeTagNotIn(Builder $query, int ...$tags): void
     {
-        $query->whereExists(function ($query) use ($tags) {
-            $query->select(DB::raw(1))
-                ->fromRaw('jsonb_array_elements(metadata->\'tags\') as tag')
-                ->whereNotIn(DB::raw("(tag->>'id')::int"), $tags);
+        $query->whereNot(function (Builder $query) use ($tags): void {
+            foreach ($tags as $tag) {
+                $query->orWhereJsonContains('metadata->tags', ['id' => $tag]);
+            }
         });
     }
 
@@ -97,12 +93,12 @@ class Anime extends BasePost
 
     public function scopeSeasonIn(Builder $query, ...$seasons): void
     {
-        $query->whereIn(DB::raw('CONCAT(metadata->>\'season\', \' \', metadata->>\'seasonYear\')'), $seasons);
+        $query->whereIn(DB::raw('CONCAT(INITCAP(season), \' \', season_year)'), $seasons);
     }
 
     public function scopeSeasonNotIn(Builder $query, ...$seasons): void
     {
-        $query->whereNotIn(DB::raw('CONCAT(metadata->>\'season\', \' \', metadata->>\'seasonYear\')'), $seasons);
+        $query->whereNotIn(DB::raw('CONCAT(INITCAP(season), \' \', season_year)'), $seasons);
     }
 
     /**
