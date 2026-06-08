@@ -48,6 +48,10 @@ declare namespace App {
             aggregateType: string;
             createdAt: string;
         };
+        export type MediaStoreData = {
+            media: Array<any> | null;
+            url: Array<any> | null;
+        };
         export type MusicSummaryData = {
             id: number;
             title: Record<string, string | null>;
