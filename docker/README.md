@@ -5,10 +5,22 @@
 ### Build
 
 ```bash
-podman build -f docker/app/Dockerfile -t extonan/app .
+# with git metadata
+podman build \
+  --build-arg APP_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo dev) \
+  --build-arg APP_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown) \
+  --build-arg APP_COMMIT_HASH=$(git rev-parse --short HEAD 2>/dev/null || echo unknown) \
+  --build-arg APP_REPO_URL=$(git remote get-url origin 2>/dev/null || echo "") \
+  -f docker/app/Dockerfile -t extonan/app .
 
 # or build with custom PUID/PGID
-podman build --build-arg PUID=$(id -u) --build-arg PGID=$(id -g) \
+podman build \
+  --build-arg PUID=$(id -u) \
+  --build-arg PGID=$(id -g) \
+  --build-arg APP_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo dev) \
+  --build-arg APP_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown) \
+  --build-arg APP_COMMIT_HASH=$(git rev-parse --short HEAD 2>/dev/null || echo unknown) \
+  --build-arg APP_REPO_URL=$(git remote get-url origin 2>/dev/null || echo "") \
   -f docker/app/Dockerfile -t extonan/app .
 
 podman build -f docker/ssr/Dockerfile -t extonan/ssr .
