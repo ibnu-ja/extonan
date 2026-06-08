@@ -51,7 +51,10 @@
                 return;
             }
 
-            const body: App.Data.MediaStoreData = { url: validated, media: null };
+            const body: App.Data.MediaStoreData = {
+                url: validated,
+                media: null,
+            };
 
             const xhr = new XMLHttpRequest();
             xhr.open('POST', mediaStore.url());
