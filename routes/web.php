@@ -15,13 +15,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('media', [MediaController::class, 'index'])->name('media.index');
-    Route::get('media-months', [MediaController::class, 'getMonths'])->name('media.months');
-    Route::get('media-months-counts', [MediaController::class, 'getMonthsWithCounts'])->name('media.months-counts');
-    Route::post('media', [MediaController::class, 'store'])->name('media.store');
-    Route::delete('media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
-});
+Route::get('media', [MediaController::class, 'index'])->name('media.index');
+Route::get('media-months', [MediaController::class, 'getMonths'])->name('media.months');
+Route::get('media-months-counts', [MediaController::class, 'getMonthsWithCounts'])->name('media.months-counts');
+Route::post('media', [MediaController::class, 'store'])->name('media.store');
+Route::delete('media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
 
 Route::get('playground', function () {
     abort_unless(config('app.debug'), 404);
