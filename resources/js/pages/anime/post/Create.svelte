@@ -27,10 +27,10 @@
     import * as Card from '@/components/ui/card/index.js';
     import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
     import { Input } from '@/components/ui/input';
+    import * as InputGroup from '@/components/ui/input-group/index.js';
     import { Label } from '@/components/ui/label';
     import { Switch } from '@/components/ui/switch';
     import { Textarea } from '@/components/ui/textarea';
-    import * as InputGroup from '@/components/ui/input-group/index.js';
     import { useDisplay } from '@/lib/use-display.svelte';
 
     type PostFormData = App.Data.Anime.PostFormData;

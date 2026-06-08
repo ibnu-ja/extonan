@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Data\MediaData;
-use App\Data\PaginationData;
+use App\Data\PaginatedCollection;
 use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Plank\Mediable\Facades\ImageManipulator;
 use Plank\Mediable\Facades\MediaUploader;
 use Plank\Mediable\Media;
-use Spatie\LaravelData\DataCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -18,7 +17,7 @@ class MediaController extends Controller
 {
     public function __construct(private readonly MediaService $media) {}
 
-    public function index(): array
+    public function index(): PaginatedCollection
     {
         $paginator = QueryBuilder::for(Media::class)
             ->allowedFilters(
@@ -30,10 +29,10 @@ class MediaController extends Controller
             ->defaultSort('-created_at')
             ->paginate();
 
-        return [
-            'items' => new DataCollection(MediaData::class, array_map(fn (Media $media) => MediaData::fromModel($media), $paginator->items())),
-            'pagination' => PaginationData::fromPaginator($paginator),
-        ];
+        return PaginatedCollection::fromPaginator(
+            $paginator,
+            fn (Media $media) => MediaData::fromModel($media),
+        );
     }
 
     public function store(Request $request): DataCollection

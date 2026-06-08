@@ -41,10 +41,7 @@
     let monthsWithCounts = $state<{ month: string; count: number }[]>([]);
     let latestSelected = $state<App.Data.MediaData | null>(null);
     let deleteTarget = $state<App.Data.MediaData | null>(null);
-    type MediaResponse = {
-        items: App.Data.MediaData[];
-        pagination: App.Data.PaginationData;
-    };
+    type MediaResponse = App.Data.PaginatedCollection<App.Data.MediaData>;
 
     let media = $state<MediaResponse | null>(null);
 

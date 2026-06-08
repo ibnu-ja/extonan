@@ -5,10 +5,7 @@
     import { Button } from '@/components/ui/button';
     import { Spinner } from '@/components/ui/spinner';
 
-    type MediaResponse = {
-        items: App.Data.MediaData[];
-        pagination: App.Data.PaginationData;
-    };
+    type MediaResponse = App.Data.PaginatedCollection<App.Data.MediaData>;
 
     let {
         media,
@@ -29,27 +26,25 @@
     async function loadMore() {
         if (
             !currentMedia ||
-            currentMedia.pagination.currentPage >=
-                currentMedia.pagination.lastPage
+            currentMedia.currentPage >= currentMedia.lastPage
         ) {
             return;
         }
 
-        loading = true;
-        const nextPage = currentMedia.pagination.currentPage + 1;
+        const nextPage = currentMedia.currentPage + 1;
         const response = await fetch(
             mediaIndex.url({ query: { page: String(nextPage) } }),
         );
         const data: MediaResponse = await response.json();
         currentMedia = data;
-        loaded = [...loaded, ...data.items];
+        loaded = [...loaded, ...data.data];
         loading = false;
     }
 
     $effect(() => {
         if (media) {
             currentMedia = media;
-            loaded = media.items;
+            loaded = media.data;
         }
     });
 
@@ -159,7 +154,7 @@
         {/each}
     </div>
 
-    {#if currentMedia && currentMedia.pagination.currentPage < currentMedia.pagination.lastPage}
+    {#if currentMedia && currentMedia.currentPage < currentMedia.lastPage}
         <div class="flex justify-center">
             <Button
                 variant="ghost"
