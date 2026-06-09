@@ -1,9 +1,14 @@
-FROM docker.io/library/composer:latest AS wayfinder
+ARG COMPOSER_VERSION=2.8
+
+FROM docker.io/library/composer:${COMPOSER_VERSION} AS wayfinder
 WORKDIR /app
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --no-autoloader --no-ansi --no-scripts --no-progress
 COPY . .
-RUN mkdir -p bootstrap/cache storage/framework/views \
+RUN apk add --no-cache zlib-dev libpng-dev libjpeg-turbo-dev freetype-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd \
+    && mkdir -p bootstrap/cache storage/framework/views \
     && composer dump-autoload --optimize --no-dev \
     && php artisan wayfinder:generate --with-form
 
