@@ -26,6 +26,10 @@ podman build \
 podman build -f docker/ssr/Dockerfile -t extonan/ssr .
 ```
 
+### Bucket
+
+Default disk: `rustfs`. Configure `extonan.secret.json`
+
 ### Secrets
 
 ```bash
@@ -38,7 +42,8 @@ podman secret create extonan extonan.secret.json
 
 ```bash
 podman volume create extonan-pgsql-data
-podman kube play --publish 8000:80 extonan.yaml
+podman volume create extonan-rustfs-data
+podman kube play --publish 8000:80 --publish 9000:9000 --publish 9001:9001 extonan.yaml
 podman run --rm --pod extonan extonan/app php artisan migrate
 ```
 
@@ -55,7 +60,7 @@ systemctl --user start extonan-app-build.service
 systemctl --user start extonan-ssr-build.service
 ```
 
-### Deployment
+### Deploy
 
 ```bash
 cp docker/quadlet/extonan.env.example docker/quadlet/extonan.env
@@ -63,6 +68,10 @@ cp docker/quadlet/extonan.env.example docker/quadlet/extonan.env
 podman quadlet install --replace docker/quadlet/
 systemctl --user start extonan-pod.service
 ```
+
+### RustFS Bucket
+
+Same as Podman Kube.
 
 ## Compose
 

@@ -27,7 +27,6 @@ return [
     | Supported drivers: "local", "ftp", "sftp", "s3"
     |
     */
-
     'disks' => [
 
         'local' => [
@@ -39,10 +38,43 @@ return [
         ],
 
         'public' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            'driver' => 's3',
+            'key' => env('RUSTFS_ACCESS_KEY'),
+            'secret' => env('RUSTFS_SECRET_KEY'),
+            'region' => env('RUSTFS_REGION', 'us-east-1'),
+            'bucket' => env('RUSTFS_BUCKET', 'extonan'),
+            'url' => rtrim(env('RUSTFS_URL'), '/').'/'.env('RUSTFS_BUCKET', 'extonan'),
+            'endpoint' => env('RUSTFS_ENDPOINT', 'http://rustfs:9000'),
+            'use_path_style_endpoint' => true,
+            'root' => 'public',
             'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'rustfs' => [
+            'driver' => 's3',
+            'key' => env('RUSTFS_ACCESS_KEY', 'rustfsadmin'),
+            'secret' => env('RUSTFS_SECRET_KEY', 'rustfsadmin'),
+            'region' => env('RUSTFS_REGION', 'us-east-1'),
+            'bucket' => env('RUSTFS_BUCKET', 'extonan'),
+            'url' => rtrim(env('RUSTFS_URL'), '/').'/'.env('RUSTFS_BUCKET', 'extonan'),
+            'endpoint' => env('RUSTFS_ENDPOINT', 'http://rustfs:9000'),
+            'use_path_style_endpoint' => true,
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'private' => [
+            'driver' => 's3',
+            'key' => env('RUSTFS_ACCESS_KEY'),
+            'secret' => env('RUSTFS_SECRET_KEY'),
+            'region' => env('RUSTFS_REGION', 'us-east-1'),
+            'bucket' => env('RUSTFS_BUCKET', 'extonan'),
+            'url' => rtrim(env('RUSTFS_URL'), '/').'/'.env('RUSTFS_BUCKET', 'extonan'),
+            'endpoint' => env('RUSTFS_ENDPOINT', 'http://rustfs:9000'),
+            'use_path_style_endpoint' => true,
+            'root' => 'private',
             'throw' => false,
             'report' => false,
         ],

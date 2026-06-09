@@ -27,7 +27,7 @@ services:
             - pgsql
             - redis
             - meilisearch
-            - minio
+            - rustfs
             - selenium
     pgsql:
         image: 'docker.io/library/postgres:18-alpine'
@@ -83,25 +83,24 @@ services:
                 - 'http://127.0.0.1:7700/health'
             retries: 3
             timeout: 5s
-    minio:
-        image: 'docker.io/minio/minio:latest'
+    rustfs:
+        image: 'docker.io/rustfs/rustfs:latest'
         ports:
-            - '${FORWARD_MINIO_PORT:-9000}:9000'
-            - '${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900'
+            - '${FORWARD_RUSTFS_PORT:-9000}:9000'
+            - '${FORWARD_RUSTFS_CONSOLE_PORT:-9001}:9001'
         environment:
-            MINIO_ROOT_USER: sail
-            MINIO_ROOT_PASSWORD: password
+            RUSTFS_ACCESS_KEY: '${RUSTFS_ACCESS_KEY:-rustfsadmin}'
+            RUSTFS_SECRET_KEY: '${RUSTFS_SECRET_KEY:-rustfsadmin}'
         volumes:
-            - 'sail-minio:/data'
+            - 'sail-rustfs:/data'
         networks:
             - sail
-        command: 'minio server /data --console-address ":8900"'
         healthcheck:
             test:
                 - CMD
-                - mc
-                - ready
-                - local
+                - curl
+                - '-f'
+                - 'http://localhost:9000/minio/health/live'
             retries: 3
             timeout: 5s
     selenium:
@@ -122,5 +121,5 @@ volumes:
         driver: local
     sail-meilisearch:
         driver: local
-    sail-minio:
+    sail-rustfs:
         driver: local
