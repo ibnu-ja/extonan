@@ -39,8 +39,8 @@ return [
 
         'public' => [
             'driver' => 's3',
-            'key' => env('RUSTFS_ACCESS_KEY'),
-            'secret' => env('RUSTFS_SECRET_KEY'),
+            'key' => env('RUSTFS_ACCESS_KEY', 'rustfsadmin'),
+            'secret' => env('RUSTFS_SECRET_KEY', 'rustfsadmin'),
             'region' => env('RUSTFS_REGION', 'us-east-1'),
             'bucket' => env('RUSTFS_BUCKET', 'extonan'),
             'url' => rtrim(env('RUSTFS_URL'), '/').'/'.env('RUSTFS_BUCKET', 'extonan'),
@@ -67,8 +67,8 @@ return [
 
         'private' => [
             'driver' => 's3',
-            'key' => env('RUSTFS_ACCESS_KEY'),
-            'secret' => env('RUSTFS_SECRET_KEY'),
+            'key' => env('RUSTFS_ACCESS_KEY', 'rustfsadmin'),
+            'secret' => env('RUSTFS_SECRET_KEY', 'rustfsadmin'),
             'region' => env('RUSTFS_REGION', 'us-east-1'),
             'bucket' => env('RUSTFS_BUCKET', 'extonan'),
             'url' => rtrim(env('RUSTFS_URL'), '/').'/'.env('RUSTFS_BUCKET', 'extonan'),
