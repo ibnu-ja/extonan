@@ -24,7 +24,7 @@ Route::delete('media/{media}', [MediaController::class, 'destroy'])->name('media
 Route::get('playground', function () {
     abort_unless(config('app.debug'), 404);
 
-    return Inertia::render('Media/Playground');
+    return Inertia::render('Playground');
 })->name('playground');
 
 Route::resource('/anime', AnimeController::class);
