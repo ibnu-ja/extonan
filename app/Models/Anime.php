@@ -77,18 +77,14 @@ class Anime extends BasePost
 
     public function scopeTagIn(Builder $query, int ...$tags): void
     {
-        foreach ($tags as $tag) {
-            $query->whereJsonContains('metadata->tags', ['id' => $tag]);
-        }
+        $query->whereJsonContains('metadata->tags', array_map(fn (int $tag): array => ['id' => $tag], $tags));
     }
 
     public function scopeTagNotIn(Builder $query, int ...$tags): void
     {
-        $query->whereNot(function (Builder $query) use ($tags): void {
-            foreach ($tags as $tag) {
-                $query->orWhereJsonContains('metadata->tags', ['id' => $tag]);
-            }
-        });
+        foreach ($tags as $tag) {
+            $query->whereJsonContains('metadata->tags', [['id' => $tag]], not: true);
+        }
     }
 
     public function scopeTitle(Builder $query, string $title): void
