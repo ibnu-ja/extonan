@@ -110,6 +110,13 @@
         })(),
     );
 
+    const hasActiveFilters = $derived(filters.title !== '');
+
+    function clearSearch() {
+        filters.title = '';
+        applyFilters();
+    }
+
     function applyFilters() {
         const query = buildFilterQuery({
             filter: {
@@ -183,6 +190,24 @@
 
         debouncedApply();
     }
+
+    function clearGenreFilters() {
+        filters.genreIn = [];
+        filters.genreNotIn = [];
+        applyFilters();
+    }
+
+    function clearTagFilters() {
+        filters.tagIn = [];
+        filters.tagNotIn = [];
+        applyFilters();
+    }
+
+    function clearSeasonFilters() {
+        filters.seasonIn = [];
+        filters.seasonNotIn = [];
+        applyFilters();
+    }
 </script>
 
 <svelte:head>
@@ -194,11 +219,13 @@
         bind:search={filters.title}
         {sort}
         {sortOptions}
+        {hasActiveFilters}
         onsortchange={(v) => {
             sort = v;
             applyFilters();
         }}
         onsearchchange={onSearchChange}
+        onclear={clearSearch}
     />
 
     <div class="flex flex-wrap items-center gap-2">
@@ -209,6 +236,7 @@
             selectedIn={filters.genreIn}
             selectedNotIn={filters.genreNotIn}
             onselect={onGenreSelect}
+            onclear={clearGenreFilters}
         />
         <FilterDropdown
             label="Tag"
@@ -216,7 +244,9 @@
             items={tags.map((g) => g.value)}
             selectedIn={selectedTagNames}
             selectedNotIn={selectedTagNotInNames}
+            sortActive
             onselect={onTagSelect}
+            onclear={clearTagFilters}
         />
         <FilterDropdown
             label="Season"
@@ -225,6 +255,7 @@
             selectedIn={filters.seasonIn}
             selectedNotIn={filters.seasonNotIn}
             onselect={onSeasonSelect}
+            onclear={clearSeasonFilters}
         />
         {#if can('post.read.self')}
             <ButtonGroup.Root>

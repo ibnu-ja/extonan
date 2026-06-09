@@ -29,9 +29,11 @@
     let video: HTMLVideoElement;
 
     let isPlaying = $state(false);
+    // svelte-ignore state_referenced_locally
     let isMuted = $state(muted);
     let duration = $state(0);
     let currentTime = $state(0);
+    // svelte-ignore state_referenced_locally
     let volume = $state(muted ? 0 : 100);
     let levels: Level[] = $state([]);
     let hlsReady = $state(false);

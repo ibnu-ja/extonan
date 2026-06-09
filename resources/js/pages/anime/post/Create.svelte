@@ -1,7 +1,5 @@
 <script lang="ts">
     import { router, setLayoutProps, useForm } from '@inertiajs/svelte';
-    import { index as animeIndex, show as animeShow } from '@/routes/anime';
-    import { t } from '@/lib/locale.svelte';
     import Check from 'lucide-svelte/icons/check';
     import ChevronDown from 'lucide-svelte/icons/chevron-down';
     import ChevronUp from 'lucide-svelte/icons/chevron-up';
@@ -10,6 +8,7 @@
     import Plus from 'lucide-svelte/icons/plus';
     import Send from 'lucide-svelte/icons/send';
     import Trash2 from 'lucide-svelte/icons/trash-2';
+    import type { Snippet } from 'svelte';
     import PostController from '@/actions/App/Http/Controllers/PostController';
     import AppHead from '@/components/app-head.svelte';
     import InputError from '@/components/input-error.svelte';
@@ -24,8 +23,9 @@
     import { Label } from '@/components/ui/label';
     import { Switch } from '@/components/ui/switch';
     import { Textarea } from '@/components/ui/textarea';
+    import { t } from '@/lib/locale.svelte';
     import { useDisplay } from '@/lib/use-display.svelte';
-    import type { Snippet } from 'svelte';
+    import { index as animeIndex, show as animeShow } from '@/routes/anime';
 
     type PostFormData = App.Data.Anime.PostFormData;
     type AnilistMediaData = App.Data.Anilist.AnilistMediaData;
@@ -62,6 +62,7 @@
         { value: 'movie', label: 'Movie' },
     ];
 
+    // svelte-ignore state_referenced_locally
     const form = $state(
         useForm<PostFormData>({
             id: post?.id ?? null,

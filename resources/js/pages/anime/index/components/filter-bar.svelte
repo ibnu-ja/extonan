@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { Search, ArrowUpDown, Check } from 'lucide-svelte';
+    import { Search, ArrowUpDown, Check, X } from 'lucide-svelte';
     import { Button } from '@/components/ui/button';
     import * as Command from '@/components/ui/command/index.js';
     import * as Drawer from '@/components/ui/drawer/index.js';
-    import { Input } from '@/components/ui/input';
+    import * as InputGroup from '@/components/ui/input-group/index.js';
     import * as Popover from '@/components/ui/popover/index.js';
     import { useDisplay } from '@/lib/use-display.svelte';
 
@@ -11,14 +11,20 @@
         search = $bindable(''),
         sort = '',
         sortOptions = [],
+        clearable = true,
+        hasActiveFilters = false,
         onsortchange,
         onsearchchange,
+        onclear,
     }: {
         search?: string | null;
         sort?: string;
         sortOptions?: { key: string; value: string }[];
+        clearable?: boolean;
+        hasActiveFilters?: boolean;
         onsortchange?: (value: string) => void;
         onsearchchange?: (value: string) => void;
+        onclear?: () => void;
     } = $props();
 
     let sortOpen = $state(false);
@@ -27,24 +33,26 @@
 </script>
 
 <div class="flex items-center gap-2">
-    <form
-        class="relative flex-1"
-        onsubmit={(e) => e.preventDefault()}
-        role="search"
-    >
-        <Search
-            class="text-muted-foreground absolute left-3 top-1/2 size-4 -translate-y-1/2"
-        />
-        <Input
-            class="pl-9"
+    <InputGroup.Root class="flex-1">
+        <InputGroup.Addon>
+            <Search class="text-muted-foreground size-4" />
+        </InputGroup.Addon>
+        <InputGroup.Input
             placeholder="Search anime..."
-            value={search}
+            bind:value={search}
             name="search"
             autocomplete="on"
             oninput={(e) =>
                 onsearchchange?.((e.target as HTMLInputElement).value)}
         />
-    </form>
+        {#if clearable && hasActiveFilters}
+            <InputGroup.Addon align="inline-end">
+                <InputGroup.Button variant="ghost" size="icon-xs" onclick={() => onclear?.()}>
+                    <X class="size-3" />
+                </InputGroup.Button>
+            </InputGroup.Addon>
+        {/if}
+    </InputGroup.Root>
     {#if mdAndUp.current}
         <Popover.Root bind:open={sortOpen}>
             <Popover.Trigger>

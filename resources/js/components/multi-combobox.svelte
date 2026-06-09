@@ -96,7 +96,6 @@
                                 {#if norm.length > 1}
                                     <Badge
                                         variant="secondary"
-                                        size="xs"
                                         class="shrink-0"
                                     >
                                         +{norm.length - 1}
@@ -169,7 +168,6 @@
                                 {#if norm.length > 1}
                                     <Badge
                                         variant="secondary"
-                                        size="xs"
                                         class="shrink-0"
                                     >
                                         +{norm.length - 1}

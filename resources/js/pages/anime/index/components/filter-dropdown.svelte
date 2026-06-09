@@ -14,8 +14,11 @@
         selectedNotIn = [],
         activeKey = '',
         singleSelect = false,
+        sortActive = false,
+        clearable = true,
         icon: Icon,
         onselect,
+        onclear,
     }: {
         label?: string;
         items: string[];
@@ -23,21 +26,43 @@
         selectedNotIn?: string[];
         activeKey?: string;
         singleSelect?: boolean;
+        sortActive?: boolean;
+        clearable?: boolean;
         icon?: any;
         onselect?: (item: string, mode: 'in' | 'notIn' | 'none') => void;
+        onclear?: () => void;
     } = $props();
 
     let open = $state(false);
     let search = $state('');
+    let sorted = $state<string[]>([]);
 
     const { mdAndUp } = useDisplay();
 
+    $effect(() => {
+        if (open) return;
+
+        if (sortActive && items.length > 0) {
+            const active = items.filter(
+                (i) => selectedIn.includes(i) || selectedNotIn.includes(i),
+            );
+            const inactive = items.filter(
+                (i) => !selectedIn.includes(i) && !selectedNotIn.includes(i),
+            );
+            sorted = [...active, ...inactive];
+        } else {
+            sorted = items;
+        }
+    });
+
     const filtered = $derived(
         search
-            ? items.filter((i) =>
+            ? (sortActive ? sorted : items).filter((i) =>
                   i.toLowerCase().includes(search.toLowerCase()),
               )
-            : items,
+            : sortActive
+              ? sorted
+              : items,
     );
 
     const activeCount = $derived(selectedIn.length + selectedNotIn.length);
@@ -86,10 +111,22 @@
         </Popover.Trigger>
         <Popover.Content class="w-64 p-0" align="start">
             <Command.Root>
-                <Command.Input
-                    bind:value={search}
-                    placeholder={`Search ${label.toLowerCase()}...`}
-                />
+                <div class="relative">
+                    <Command.Input
+                        bind:value={search}
+                        placeholder={`Search ${label.toLowerCase()}...`}
+                    />
+                    {#if clearable && activeCount > 0}
+                        <Button
+                            variant="ghost"
+                            size="icon-xs"
+                            class="absolute right-1 top-1/2 -translate-y-1/2"
+                            onclick={() => onclear?.()}
+                        >
+                            <X class="size-3" />
+                        </Button>
+                    {/if}
+                </div>
                 <Command.List>
                     {#if filtered.length === 0}
                         <Command.Empty
@@ -135,10 +172,22 @@
         <Drawer.Content>
             <div class="mt-4 border-t">
                 <Command.Root>
-                    <Command.Input
-                        bind:value={search}
-                        placeholder={`Search ${label.toLowerCase()}...`}
-                    />
+                    <div class="relative">
+                        <Command.Input
+                            bind:value={search}
+                            placeholder={`Search ${label.toLowerCase()}...`}
+                        />
+                        {#if clearable && activeCount > 0}
+                            <Button
+                                variant="ghost"
+                                size="icon-xs"
+                                class="absolute right-1 top-1/2 -translate-y-1/2"
+                                onclick={() => onclear?.()}
+                            >
+                                <X class="size-3" />
+                            </Button>
+                        {/if}
+                    </div>
                     <Command.List>
                         {#if filtered.length === 0}
                             <Command.Empty

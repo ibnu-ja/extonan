@@ -11,6 +11,7 @@
 
     let { anime, episodes, post }: App.Data.Anime.PostShowResponse = $props();
 
+    // svelte-ignore state_referenced_locally
     let selectedSaluran = $state(
         post.saluran.length > 0
             ? (post.saluran[0].value[0]?.value ?? null)
