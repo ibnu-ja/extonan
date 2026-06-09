@@ -79,7 +79,28 @@ spec:
       value: worker
     image: extonan/app:latest
     name: worker
+  - args:
+    - rustfs
+    image: docker.io/rustfs/rustfs:latest
+    name: rustfs
+    env:
+    - name: RUSTFS_ACCESS_KEY
+      value: rustfsadmin
+    - name: RUSTFS_SECRET_KEY
+      valueFrom:
+        secretKeyRef:
+          name: extonan
+          key: RUSTFS_SECRET_KEY
+    ports:
+    - containerPort: 9000
+    - containerPort: 9001
+    volumeMounts:
+    - mountPath: /data
+      name: extonan-rustfs-data
   volumes:
   - name: extonan-pgsql-data
     persistentVolumeClaim:
       claimName: extonan-pgsql-data
+  - name: extonan-rustfs-data
+    persistentVolumeClaim:
+      claimName: extonan-rustfs-data

@@ -63,7 +63,8 @@ start
 
 # temp / cache
 storage/*.key
-# storage/app/public
+storage/app/public
+storage/app/private
 storage/debugbar
 storage/logs/.gitkeep
 storage/framework/cache/data

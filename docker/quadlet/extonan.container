@@ -1,7 +1,7 @@
 [Unit]
 Description=extonan Laravel App (FrankenPHP)
-After=extonan-pgsql.container extonan-redis.container extonan-meilisearch.container extonan-ssr.container
-Requires=extonan-pgsql.container extonan-redis.container extonan-meilisearch.container extonan-ssr.container
+After=extonan-pgsql.container extonan-redis.container extonan-meilisearch.container extonan-ssr.container extonan-rustfs.container
+Requires=extonan-pgsql.container extonan-redis.container extonan-meilisearch.container extonan-ssr.container extonan-rustfs.container
 
 [Container]
 Image=extonan/app:latest

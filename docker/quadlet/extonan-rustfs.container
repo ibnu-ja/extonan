@@ -1,0 +1,14 @@
+[Unit]
+Description=extonan RustFS Object Storage
+
+[Container]
+Image=docker.io/rustfs/rustfs:latest
+Pod=extonan.pod
+EnvironmentFile=extonan.env
+Volume=extonan-rustfs-data.volume:/data:z
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
