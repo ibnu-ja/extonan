@@ -5,7 +5,7 @@ Description=extonan RustFS Object Storage
 Image=docker.io/rustfs/rustfs:latest
 Pod=extonan.pod
 EnvironmentFile=extonan.env
-Volume=extonan-rustfs-data.volume:/data:z
+Volume=extonan-rustfs-data.volume:/data
 
 [Service]
 Restart=always
