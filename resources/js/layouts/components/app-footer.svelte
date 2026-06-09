@@ -14,20 +14,15 @@
             title: 'Discord',
             icon: siDiscord.path,
         },
-        {
-            url: 'https://github.com/shinrai',
-            title: 'GitHub',
-            icon: siGithub.path,
-        },
     ];
 
     const props = $derived(page.props as Record<string, unknown>);
     const appVersion = $derived(props.appVersion as string);
     const appBranch = $derived(props.appBranch as string);
     const appCommitHash = $derived(props.appCommitHash as string);
-    const appGitOriginRepo = $derived((props.appGitOriginRepo as string) ?? '');
+    const appGitRepoUrl = $derived((props.appGitRepoUrl as string) ?? '');
 
-    const repoBase = $derived(appGitOriginRepo.replace(/\.git$/, ''));
+    const repoBase = $derived(appGitRepoUrl.replace(/\.git$/, ''));
     const branchURL = $derived(`${repoBase}/tree/${appBranch}`);
     const commitURL = $derived(`${repoBase}/commit/${appCommitHash}`);
     const year = $derived(new Date().getFullYear());
@@ -74,7 +69,7 @@
                 href={commitURL}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="underline hover:text-foreground">{appCommitHash}</a
+                class="underline hover:text-foreground">#{appCommitHash}</a
             >)
         </p>
         <p>Copyright &copy; {year} IJI All Rights Reserved.</p>
