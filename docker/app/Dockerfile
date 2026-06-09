@@ -113,7 +113,7 @@ COPY database/ database/
 COPY routes/ routes/
 COPY public/ public/
 COPY resources/views/ resources/views/
-COPY lang* ./
+COPY lang/ lang/
 
 RUN mkdir -p \
     storage/framework/sessions \
