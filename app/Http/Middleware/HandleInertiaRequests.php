@@ -52,7 +52,7 @@ class HandleInertiaRequests extends Middleware
             'appVersion' => $git->getLatestTag(),
             'appBranch' => $git->getAppBranch(),
             'appCommitHash' => $git->getAppCommitHash(),
-            'appGitOriginRepo' => $git->getRepoUrl(),
+            'appGitRepoUrl' => $git->getRepoHttpsUrl(),
         ];
     }
 }
