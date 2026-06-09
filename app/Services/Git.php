@@ -4,10 +4,18 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Process;
 
+/**
+ * todo: barangkali create interface/facade atau abstract class, implementation is github
+ */
 final readonly class Git
 {
+    private const string CACHE_KEY_PREFIX = 'git_';
+
+    private const int CACHE_TTL = 86400 * 7;
+
     private const array PROVIDERS = [
         'github' => '/github\.com/i',
         'gitlab' => '/gitlab\.(com|org)/i',
@@ -28,22 +36,22 @@ final readonly class Git
 
     public function getLatestTag(): string
     {
-        return $this->envOrFallback('APP_VERSION', 'describe --tags --abbrev=0');
+        return $this->remember('latest_tag', fn (): string => $this->fromConfigOrGit('describe --tags --abbrev=0', 'git.app_version'));
     }
 
     public function getAppBranch(): string
     {
-        return $this->envOrFallback('APP_BRANCH', 'rev-parse --abbrev-ref HEAD');
+        return $this->remember('branch', fn (): string => $this->fromConfigOrGit('rev-parse --abbrev-ref HEAD', 'git.app_branch'));
     }
 
     public function getAppCommitHash(): string
     {
-        return $this->envOrFallback('APP_COMMIT_HASH', 'rev-parse --short HEAD');
+        return $this->remember('commit_hash', fn (): string => $this->fromConfigOrGit('rev-parse --short HEAD', 'git.app_commit_hash'));
     }
 
     public function getRepoUrl(): ?string
     {
-        return $this->envOrFallback('APP_REPO_URL', 'remote get-url origin');
+        return $this->remember('repo_url', fn (): ?string => $this->fromConfigOrGit('remote get-url origin', 'git.app_repo_url'));
     }
 
     public function getRepoProvider(): string
@@ -96,15 +104,41 @@ final readonly class Git
         return null;
     }
 
-    private function envOrFallback(string $envKey, string $gitCommand): string
+    public function flush(): void
     {
-        $env = env($envKey);
-        if ($env !== null && $env !== '') {
-            return $env;
+        Cache::tags('git')->flush();
+    }
+
+    private function remember(string $key, \Closure $callback): mixed
+    {
+        return Cache::tags('git')->remember(
+            self::CACHE_KEY_PREFIX.$key,
+            self::CACHE_TTL,
+            $callback,
+        );
+    }
+
+    private function fromConfigOrGit(string $command, string $configKey): string
+    {
+        try {
+            $value = $this->gitCommand($command);
+
+            if ($value !== null && $value !== '') {
+                return $value;
+            }
+        } catch (\Throwable) {
+            // git not available
         }
 
-        return trim(
-            Process::path(base_path())->run(['git', ...explode(' ', $gitCommand)])->output(),
+        return config($configKey) ?? '';
+    }
+
+    private function gitCommand(string $command): ?string
+    {
+        $result = trim(
+            Process::path(base_path())->run(['git', ...explode(' ', $command)])->output(),
         );
+
+        return $result !== '' ? $result : null;
     }
 }
