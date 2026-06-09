@@ -6,6 +6,7 @@ use App\Services\AnilistService;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 #[Signature('anilist:fetch-tags')]
 #[Description('Fetch MediaTagCollection from AniList and cache it locally')]
@@ -23,10 +24,9 @@ class AnilistFetchTags extends Command
             return self::FAILURE;
         }
 
-        $path = storage_path('app/anilist-tags.json');
-        file_put_contents($path, json_encode($tags, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        Storage::disk('private')->put('anilist-tags.json', json_encode($tags, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
-        $this->info(sprintf('Saved %d tags to %s', count($tags), $path));
+        $this->info(sprintf('Saved %d tags to default disk', count($tags)));
 
         return self::SUCCESS;
     }

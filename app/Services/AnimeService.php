@@ -23,8 +23,8 @@ class AnimeService
         $tags = Cache::remember('anilist-tags', now()->addCentury(), function () {
             $path = 'anilist-tags.json';
 
-            return Storage::exists($path)
-                ? json_decode(Storage::get($path), true)
+            return Storage::disk('private')->exists($path)
+                ? json_decode(Storage::disk('private')->get($path), true)
                 : [];
         });
 
