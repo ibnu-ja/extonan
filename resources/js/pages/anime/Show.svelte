@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Link, setLayoutProps } from '@inertiajs/svelte';
+    import { Link, router, setLayoutProps } from '@inertiajs/svelte';
     import Calendar from '@lucide/svelte/icons/calendar';
     import Clapperboard from '@lucide/svelte/icons/clapperboard';
     import Film from '@lucide/svelte/icons/film';
@@ -7,16 +7,28 @@
     import Info from '@lucide/svelte/icons/info';
     import LayoutGrid from '@lucide/svelte/icons/layout-grid';
     import List from '@lucide/svelte/icons/list';
+    import Pencil from 'lucide-svelte/icons/pencil';
+    import Plus from 'lucide-svelte/icons/plus';
+    import Send from 'lucide-svelte/icons/send';
+    import Star from 'lucide-svelte/icons/star';
+    import Trash2 from 'lucide-svelte/icons/trash-2';
     import Banner from '@/components/anime/banner.svelte';
     import Casts from '@/components/anime/casts.svelte';
     import EpisodeListItem from '@/components/anime/episode-list-item.svelte';
     import EpisodeThumbnail from '@/components/anime/episode-thumbnail.svelte';
     import { Badge } from '@/components/ui/badge';
     import * as Item from '@/components/ui/item';
+    import * as SpeedDial from '@/components/ui/speed-dial/index.js';
     import * as Tabs from '@/components/ui/tabs';
     import * as ToggleGroup from '@/components/ui/toggle-group';
     import { t } from '@/lib/locale.svelte';
-    import { index as animeIndex } from '@/routes/anime';
+    import {
+        index as animeIndex,
+        edit as animeEdit,
+        destroy as animeDestroy,
+        update as animeUpdate,
+    } from '@/routes/anime';
+    import { create as postCreate } from '@/routes/post';
 
     let { anime, episodes, metadata }: App.Data.Anime.AnimeShowResponse =
         $props();
@@ -144,8 +156,6 @@
                             No episodes available.
                         </p>
                     {/if}
-
-                    <!-- TODO: create FAB -->
                 </Tabs.Content>
 
                 {#if metadata?.characters?.edges?.length}
@@ -261,3 +271,46 @@
         </div>
     </div>
 </div>
+
+<SpeedDial.Root>
+    <SpeedDial.Trigger />
+    <SpeedDial.Content>
+        <SpeedDial.Item
+            variant="default"
+            onclick={() => router.visit(animeEdit(anime.id).url)}
+        >
+            <Pencil class="size-4" />
+            Edit
+        </SpeedDial.Item>
+        <SpeedDial.Item
+            variant="destructive"
+            onclick={() => {
+                if (confirm('Delete this anime?')) {
+                    router.delete(animeDestroy(anime.id).url);
+                }
+            }}
+        >
+            <Trash2 class="size-4" />
+            Delete
+        </SpeedDial.Item>
+        <SpeedDial.Item
+            variant="secondary"
+            onclick={() => router.visit(postCreate(anime.id).url)}
+        >
+            <Plus class="size-4" />
+            Add Episode
+        </SpeedDial.Item>
+        {#if !anime.isPublished}
+            <SpeedDial.Item
+                variant="default"
+                onclick={() =>
+                    router.patch(animeUpdate(anime.id).url, {
+                        isPublished: true,
+                    })}
+            >
+                <Send class="size-4" />
+                Publish
+            </SpeedDial.Item>
+        {/if}
+    </SpeedDial.Content>
+</SpeedDial.Root>

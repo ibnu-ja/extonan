@@ -1,16 +1,5 @@
-<script module lang="ts">
-    import { index as animeIndex } from '@/routes/anime';
-
-    export const layout = {
-        breadcrumbs: [
-            { title: 'Anime', href: animeIndex().url },
-            { title: 'Create', href: '' },
-        ],
-    };
-</script>
-
 <script lang="ts">
-    import { router, useForm } from '@inertiajs/svelte';
+    import { router, setLayoutProps, useForm } from '@inertiajs/svelte';
     import { Check, Send, Trash2, X } from 'lucide-svelte';
     import type { Snippet } from 'svelte';
     import { untrack } from 'svelte';
@@ -29,8 +18,10 @@
     import { Switch } from '@/components/ui/switch';
     import { Textarea } from '@/components/ui/textarea';
     import { animeApi } from '@/lib/anilist.svelte';
+    import { t } from '@/lib/locale.svelte';
     import { useDisplay } from '@/lib/use-display.svelte';
     import { capitalize } from '@/lib/utils';
+    import { index as animeIndex, show as animeShow } from '@/routes/anime';
 
     type FormData = App.Data.Anime.AnimeStoreData;
 
@@ -67,7 +58,30 @@
     };
 
     const isEditing = $derived(Boolean(anime));
-    const pageTitle = $derived(isEditing ? 'Edit Anime' : 'Create Anime');
+    const pageTitle = $derived(
+        isEditing && anime ? `Editing ${t(anime.title)}` : 'Create Anime',
+    );
+
+    $effect(() => {
+        if (isEditing && anime) {
+            setLayoutProps({
+                title: `Editing ${t(anime.title)}`,
+                breadcrumbs: [
+                    { title: 'Anime', href: animeIndex().url },
+                    { title: t(anime.title), href: animeShow.url(anime.id!) },
+                    { title: 'Edit', href: '' },
+                ],
+            });
+        } else {
+            setLayoutProps({
+                title: 'Create Anime',
+                breadcrumbs: [
+                    { title: 'Anime', href: animeIndex().url },
+                    { title: 'Create', href: '' },
+                ],
+            });
+        }
+    });
 
     const form = untrack(() =>
         useForm<FormData>({

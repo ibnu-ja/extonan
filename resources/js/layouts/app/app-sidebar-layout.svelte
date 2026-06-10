@@ -16,17 +16,21 @@
     let {
         breadcrumbs = [],
         showHeading,
+        title: explicitTitle,
         children,
         threshold = 60,
     }: {
         breadcrumbs?: BreadcrumbItem[];
         showHeading?: boolean;
+        title?: string;
         children?: Snippet;
         threshold?: number;
     } = $props();
 
     const isOpen = $derived(page.props.sidebarOpen);
-    const title = $derived(breadcrumbs[breadcrumbs.length - 1]?.title ?? '');
+    const title = $derived(
+        explicitTitle ?? breadcrumbs[breadcrumbs.length - 1]?.title ?? '',
+    );
     const { mdAndDown } = useDisplay();
     let scrolled = $derived((scrollY.current ?? 0) > threshold);
 </script>

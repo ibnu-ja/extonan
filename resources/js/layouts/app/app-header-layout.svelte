@@ -9,13 +9,17 @@
 
     let {
         breadcrumbs = [],
+        title: explicitTitle,
         children,
     }: {
         breadcrumbs?: BreadcrumbItem[];
+        title?: string;
         children?: Snippet;
     } = $props();
 
-    const title = $derived(breadcrumbs[breadcrumbs.length - 1]?.title ?? '');
+    const title = $derived(
+        explicitTitle ?? breadcrumbs[breadcrumbs.length - 1]?.title ?? '',
+    );
 </script>
 
 <AppShell variant="header">

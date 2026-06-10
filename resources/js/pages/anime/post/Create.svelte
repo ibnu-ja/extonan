@@ -49,8 +49,15 @@
     const isMobile = $derived(mdAndDown.current);
 
     const isEditing = $derived(Boolean(post));
+    const postTitle = $derived(
+        post
+            ? post.postType === 'tv' && post.epNo
+                ? `Episode ${post.epNo}: ${t(post.title)}`
+                : t(post.title)
+            : null,
+    );
     const pageTitle = $derived(
-        isEditing ? `Editing Episode` : 'Create Episode',
+        isEditing && postTitle ? `Editing ${postTitle}` : 'Create Episode',
     );
 
     let currentLang = $state<'en' | 'id'>('en');
@@ -84,13 +91,26 @@
     );
 
     $effect(() => {
-        setLayoutProps({
-            breadcrumbs: [
-                { title: 'Anime', href: animeIndex() },
-                { title: t(anime.title), href: animeShow.url(anime.id) },
-                { title: pageTitle, href: '' },
-            ],
-        });
+        if (postTitle) {
+            setLayoutProps({
+                title: `Editing ${postTitle}`,
+                breadcrumbs: [
+                    { title: 'Anime', href: animeIndex() },
+                    { title: t(anime.title), href: animeShow.url(anime.id) },
+                    { title: postTitle, href: '' },
+                    { title: 'Edit', href: '' },
+                ],
+            });
+        } else {
+            setLayoutProps({
+                title: 'Create Episode',
+                breadcrumbs: [
+                    { title: 'Anime', href: animeIndex() },
+                    { title: t(anime.title), href: animeShow.url(anime.id) },
+                    { title: 'Create Episode', href: '' },
+                ],
+            });
+        }
     });
 
     $effect(() => {
@@ -107,9 +127,7 @@
     });
 
     const title = $derived(
-        isEditing
-            ? `Editing ${post?.epNo ? 'Ep ' + post.epNo : 'Episode'}`
-            : 'Create Episode',
+        isEditing && postTitle ? `Editing ${postTitle}` : 'Create Episode',
     );
 
     function submit(e: Event) {
