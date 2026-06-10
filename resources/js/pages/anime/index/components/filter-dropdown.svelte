@@ -40,7 +40,9 @@
     const { mdAndUp } = useDisplay();
 
     $effect(() => {
-        if (open) return;
+        if (open) {
+return;
+}
 
         if (sortActive && items.length > 0) {
             const active = items.filter(
