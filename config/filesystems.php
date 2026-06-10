@@ -43,9 +43,15 @@ return [
             'secret' => env('RUSTFS_SECRET_KEY', 'rustfsadmin'),
             'region' => env('RUSTFS_REGION', 'us-east-1'),
             'bucket' => env('RUSTFS_BUCKET', 'extonan'),
-            'url' => rtrim(env('RUSTFS_URL'), '/').'/'.env('RUSTFS_BUCKET', 'extonan'),
+            'url' => env('RUSTFS_URL')
+                ? rtrim(env('RUSTFS_URL'), '/').'/'.env('RUSTFS_BUCKET', 'extonan')
+                : preg_replace(
+                    '#^(https?://)(.+)$#',
+                    '$1'.env('RUSTFS_BUCKET', 'extonan').'.$2',
+                    rtrim(env('RUSTFS_ENDPOINT', 'http://rustfs:9000'), '/')
+                ),
             'endpoint' => env('RUSTFS_ENDPOINT', 'http://rustfs:9000'),
-            'use_path_style_endpoint' => true,
+            'use_path_style_endpoint' => (bool) env('RUSTFS_URL', false),
             'root' => 'public',
             'visibility' => 'public',
             'throw' => false,
@@ -58,9 +64,15 @@ return [
             'secret' => env('RUSTFS_SECRET_KEY', 'rustfsadmin'),
             'region' => env('RUSTFS_REGION', 'us-east-1'),
             'bucket' => env('RUSTFS_BUCKET', 'extonan'),
-            'url' => rtrim(env('RUSTFS_URL'), '/').'/'.env('RUSTFS_BUCKET', 'extonan'),
+            'url' => env('RUSTFS_URL')
+                ? rtrim(env('RUSTFS_URL'), '/').'/'.env('RUSTFS_BUCKET', 'extonan')
+                : preg_replace(
+                    '#^(https?://)(.+)$#',
+                    '$1'.env('RUSTFS_BUCKET', 'extonan').'.$2',
+                    rtrim(env('RUSTFS_ENDPOINT', 'http://rustfs:9000'), '/')
+                ),
             'endpoint' => env('RUSTFS_ENDPOINT', 'http://rustfs:9000'),
-            'use_path_style_endpoint' => true,
+            'use_path_style_endpoint' => (bool) env('RUSTFS_URL', false),
             'throw' => false,
             'report' => false,
         ],
@@ -71,9 +83,15 @@ return [
             'secret' => env('RUSTFS_SECRET_KEY', 'rustfsadmin'),
             'region' => env('RUSTFS_REGION', 'us-east-1'),
             'bucket' => env('RUSTFS_BUCKET', 'extonan'),
-            'url' => rtrim(env('RUSTFS_URL'), '/').'/'.env('RUSTFS_BUCKET', 'extonan'),
+            'url' => env('RUSTFS_URL')
+                ? rtrim(env('RUSTFS_URL'), '/').'/'.env('RUSTFS_BUCKET', 'extonan')
+                : preg_replace(
+                    '#^(https?://)(.+)$#',
+                    '$1'.env('RUSTFS_BUCKET', 'extonan').'.$2',
+                    rtrim(env('RUSTFS_ENDPOINT', 'http://rustfs:9000'), '/')
+                ),
             'endpoint' => env('RUSTFS_ENDPOINT', 'http://rustfs:9000'),
-            'use_path_style_endpoint' => true,
+            'use_path_style_endpoint' => (bool) env('RUSTFS_URL', false),
             'root' => 'private',
             'throw' => false,
             'report' => false,
