@@ -16,7 +16,13 @@
     import MediaManagerTrigger from '@/components/media-manager/media-manager-trigger.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
-    import { Card, CardContent, CardHeader, CardTitle, CardAction } from '@/components/ui/card';
+    import {
+        Card,
+        CardContent,
+        CardHeader,
+        CardTitle,
+        CardAction,
+    } from '@/components/ui/card';
     import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
     import { Input } from '@/components/ui/input';
     import * as InputGroup from '@/components/ui/input-group/index.js';
@@ -89,7 +95,8 @@
 
     $effect(() => {
         if (post?.thumbnailItem && !thumbnailMedia) {
-            thumbnailMedia = post.thumbnailItem as unknown as App.Data.MediaData;
+            thumbnailMedia =
+                post.thumbnailItem as unknown as App.Data.MediaData;
         }
     });
 
@@ -212,12 +219,9 @@
                         <DropdownMenu.Content class="min-w-40">
                             {#each postTypes as type (type.value)}
                                 <DropdownMenu.Item
-                                    onclick={() =>
-                                        (form.postType = type.value)}
+                                    onclick={() => (form.postType = type.value)}
                                 >
-                                    <div
-                                        class="flex w-full items-center gap-2"
-                                    >
+                                    <div class="flex w-full items-center gap-2">
                                         {#if form.postType === type.value}
                                             <Check class="size-4" />
                                         {/if}
@@ -255,12 +259,9 @@
                         <DropdownMenu.Content>
                             {#each languages as lang (lang.value)}
                                 <DropdownMenu.Item
-                                    onclick={() =>
-                                        (currentLang = lang.value)}
+                                    onclick={() => (currentLang = lang.value)}
                                 >
-                                    <div
-                                        class="flex w-full items-center gap-2"
-                                    >
+                                    <div class="flex w-full items-center gap-2">
                                         {#if currentLang === lang.value}
                                             <Check class="size-4" />
                                         {/if}
@@ -277,9 +278,7 @@
                     placeholder={`Title in ${languages.find((l) => l.value === currentLang)?.label}`}
                 />
             </InputGroup.Root>
-            <InputError
-                message={form.errors[`title.${currentLang}`]}
-            />
+            <InputError message={form.errors[`title.${currentLang}`]} />
         </div>
     </div>
     <div class="grid gap-2">
@@ -337,9 +336,7 @@
     <div class="flex flex-col gap-4">
         {#each form.links as resource, i (i)}
             <div class="rounded-lg border p-4 space-y-3">
-                <div
-                    class="flex items-center justify-between"
-                >
+                <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <Button
                             variant="ghost"
@@ -357,8 +354,7 @@
                         >
                             <Trash2 class="size-4" />
                         </Button>
-                        <span class="text-sm font-medium">{resource.name}</span
-                        >
+                        <span class="text-sm font-medium">{resource.name}</span>
                     </div>
                     <Button
                         variant="ghost"
@@ -373,7 +369,9 @@
                     <p class="text-sm text-muted-foreground">No data.</p>
                 {:else}
                     {#each resource.value as link, j (j)}
-                        <div class="grid grid-cols-[80px_1fr] gap-2 items-start">
+                        <div
+                            class="grid grid-cols-[80px_1fr] gap-2 items-start"
+                        >
                             <Label class="mt-2 text-muted-foreground">
                                 Name
                             </Label>
@@ -382,7 +380,9 @@
                                 placeholder="Gudang"
                             />
                         </div>
-                        <div class="grid grid-cols-[80px_1fr] gap-2 items-start">
+                        <div
+                            class="grid grid-cols-[80px_1fr] gap-2 items-start"
+                        >
                             <Label class="mt-2 text-muted-foreground">
                                 Link
                             </Label>
@@ -414,10 +414,7 @@
 {#snippet thumbnailContent()}
     <div class="flex items-center justify-between">
         <CardTitle>Thumbnail</CardTitle>
-        <MediaManager
-            title="Thumbnail"
-            bind:value={thumbnailMedia}
-        >
+        <MediaManager title="Thumbnail" bind:value={thumbnailMedia}>
             {#snippet header({ title: _title, onOpen })}
                 <MediaManagerTrigger
                     hasValue={thumbnailMedia !== null}
@@ -434,9 +431,7 @@
             class="h-20 w-20 rounded object-cover"
         />
     {:else}
-        <p class="text-sm text-muted-foreground">
-            Click to open media picker
-        </p>
+        <p class="text-sm text-muted-foreground">Click to open media picker</p>
     {/if}
 {/snippet}
 
@@ -464,9 +459,7 @@
         />
     {/if}
     <div>
-        <p class="text-sm font-medium leading-none mb-1">
-            Title
-        </p>
+        <p class="text-sm font-medium leading-none mb-1">Title</p>
         <a
             href="/anime/{anime.id}"
             class="text-sm text-primary underline-offset-4 hover:underline"
@@ -475,9 +468,7 @@
         </a>
     </div>
     <div>
-        <p class="text-sm font-medium leading-none mb-2">
-            Links
-        </p>
+        <p class="text-sm font-medium leading-none mb-2">Links</p>
         <div class="flex gap-1">
             {#if metadata?.id}
                 <a
@@ -572,7 +563,9 @@
                     {#if canPublish && !post?.isPublished}
                         <Button
                             type="button"
-                            variant={post?.isPublished ? 'default' : 'secondary'}
+                            variant={post?.isPublished
+                                ? 'default'
+                                : 'secondary'}
                             onclick={publish}
                             disabled={form.processing}
                             class="flex-1"

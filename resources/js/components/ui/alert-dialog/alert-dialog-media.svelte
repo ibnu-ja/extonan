@@ -12,8 +12,8 @@
 
 <div
 	bind:this={ref}
-	data-slot="input-otp-group"
-	class={cn("has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40 has-aria-invalid:border-destructive rounded-4xl has-aria-invalid:ring-[3px] flex items-center", className)}
+	data-slot="alert-dialog-media"
+	class={cn("bg-muted mb-2 inline-flex size-16 items-center justify-center rounded-full sm:group-data-[size=default]/alert-dialog-content:row-span-2 *:[svg:not([class*='size-'])]:size-8", className)}
 	{...restProps}
 >
 	{@render children?.()}

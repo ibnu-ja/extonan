@@ -94,10 +94,7 @@
                                     {itemLabel(norm[0])}
                                 </span>
                                 {#if norm.length > 1}
-                                    <Badge
-                                        variant="secondary"
-                                        class="shrink-0"
-                                    >
+                                    <Badge variant="secondary" class="shrink-0">
                                         +{norm.length - 1}
                                     </Badge>
                                 {/if}
@@ -166,10 +163,7 @@
                                     >{itemLabel(norm[0])}</span
                                 >
                                 {#if norm.length > 1}
-                                    <Badge
-                                        variant="secondary"
-                                        class="shrink-0"
-                                    >
+                                    <Badge variant="secondary" class="shrink-0">
                                         +{norm.length - 1}
                                     </Badge>
                                 {/if}

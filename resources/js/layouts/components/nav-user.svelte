@@ -3,7 +3,6 @@
     import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
     import LogOutIcon from '@lucide/svelte/icons/log-out';
     import SettingsIcon from '@lucide/svelte/icons/settings';
-    import { Button } from '@/components/ui/button';
     import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
     import * as Sidebar from '@/components/ui/sidebar/index.js';
     import { useSidebar } from '@/components/ui/sidebar/index.js';
@@ -49,37 +48,23 @@
                     <DropdownMenu.Group>
                         <DropdownMenu.Item>
                             {#snippet child({ props })}
-                                <Button
-                                    variant="ghost"
-                                    class="w-full justify-start gap-2"
-                                >
-                                    {#snippet child({ props: btnProps })}
-                                        <Link
-                                            {...props}
-                                            {...btnProps}
-                                            href={toUrl(edit())}
-                                            prefetch
-                                        >
-                                            <SettingsIcon class="size-4" />
-                                            Settings
-                                        </Link>
-                                    {/snippet}
-                                </Button>
+                                <Link {...props} href={toUrl(edit())} prefetch>
+                                    <SettingsIcon class="size-4" />
+                                    Settings
+                                </Link>
                             {/snippet}
                         </DropdownMenu.Item>
                     </DropdownMenu.Group>
                     <DropdownMenu.Separator />
                     <DropdownMenu.Item class="w-full">
                         {#snippet child({ props })}
-                            <Button
-                                variant="ghost"
-                                class="w-full justify-start gap-2"
+                            <button
                                 {...props}
                                 onclick={() => router.post(logout().url)}
                             >
                                 <LogOutIcon class="size-4" />
                                 Log out
-                            </Button>
+                            </button>
                         {/snippet}
                     </DropdownMenu.Item>
                 </DropdownMenu.Content>

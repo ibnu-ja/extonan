@@ -32,9 +32,9 @@
             <Item.Content>
                 <Item.Title>
                     {#if episode.epNo}
-                            <span class="text-muted-foreground"
+                        <span class="text-muted-foreground"
                             >EP {episode.epNo}:
-                            </span>
+                        </span>
                     {/if}{t(episode.title)}
                 </Item.Title>
                 <Item.Description>

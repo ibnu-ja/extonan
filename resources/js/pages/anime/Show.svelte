@@ -130,7 +130,7 @@
                                 {/each}
                             </div>
                         {:else}
-            <Item.Group class="px-0 md:px-4">
+                            <Item.Group class="px-0 md:px-4">
                                 {#each episodes as episode (episode.id)}
                                     <EpisodeListItem
                                         {episode}
@@ -207,7 +207,7 @@
                 </div>
             {/if}
 
-                            <Item.Group class="px-0 md:px-4">
+            <Item.Group class="px-0 md:px-4">
                 {#if season}
                     <Item.Root>
                         <Item.Media variant="icon">

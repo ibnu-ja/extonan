@@ -35,13 +35,9 @@
     <DropdownMenuSeparator />
 {/if}
 <DropdownMenuGroup>
-    <DropdownMenuItem class="w-full">
+    <DropdownMenuItem>
         {#snippet child({ props })}
-            <a
-                {...props}
-                href={toUrl(edit())}
-                class="flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground disabled:cursor-default"
-            >
+            <a {...props} href={toUrl(edit())}>
                 <Settings class="size-4" />
                 Settings
             </a>
@@ -49,15 +45,11 @@
     </DropdownMenuItem>
 </DropdownMenuGroup>
 <DropdownMenuSeparator />
-<DropdownMenuItem class="w-full">
-    {#snippet child({ props })}
-        <button
-            {...props}
-            onclick={() => router.post(logout().url)}
-            class="flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground disabled:cursor-default"
-        >
-            <LogOut class="size-4" />
-            Log out
-        </button>
-    {/snippet}
-</DropdownMenuItem>
+    <DropdownMenuItem class="w-full">
+        {#snippet child({ props })}
+            <button {...props} onclick={() => router.post(logout().url)}>
+                <LogOut class="size-4" />
+                Log out
+            </button>
+        {/snippet}
+    </DropdownMenuItem>

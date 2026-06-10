@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { HTMLAttributes } from "svelte/elements";
 	import { cn, type WithElementRef, type WithoutChildren } from "@/lib/utils.js";
-	import MoreHorizontalIcon from '@lucide/svelte/icons/more-horizontal';
+	import { HugeiconsIcon } from "@hugeicons/svelte"
+	import { MoreHorizontalCircle01Icon } from '@hugeicons/core-free-icons';
 
 	let {
 		ref = $bindable(null),
@@ -18,6 +19,6 @@
 	class={cn("size-5 [&>svg]:size-4 flex items-center justify-center", className)}
 	{...restProps}
 >
-	<MoreHorizontalIcon  />
+	<HugeiconsIcon icon={MoreHorizontalCircle01Icon} strokeWidth={2}  />
 	<span class="sr-only">More</span>
 </span>

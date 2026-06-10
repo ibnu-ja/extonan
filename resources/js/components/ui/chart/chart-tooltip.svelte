@@ -140,8 +140,7 @@
 						})}
 					{:else}
 						{#if itemConfig?.icon}
-							{@const Icon = itemConfig.icon}
-							<Icon />
+							<itemConfig.icon />
 						{:else if !hideIndicator}
 							<div
 								style="--color-bg: {indicatorColor}; --color-border: {indicatorColor};"

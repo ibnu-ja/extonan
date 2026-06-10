@@ -231,7 +231,8 @@
                                         <Item.Media variant="image">
                                             {#if episode.thumbnail}
                                                 <img
-                                                    src={episode.thumbnail.medium}
+                                                    src={episode.thumbnail
+                                                        .medium}
                                                     alt=""
                                                     class="size-10 rounded object-cover"
                                                 />
@@ -240,10 +241,13 @@
                                         <Item.Content>
                                             <Item.Title>
                                                 {#if episode.epNo}Episode {episode.epNo}:
-                                                {/if} {t(episode.title)}
+                                                {/if}
+                                                {t(episode.title)}
                                             </Item.Title>
                                             <Item.Description>
-                                                {formatDate(episode.publishedAt)}
+                                                {formatDate(
+                                                    episode.publishedAt,
+                                                )}
                                             </Item.Description>
                                         </Item.Content>
                                     </div>
@@ -258,7 +262,8 @@
                                         <Item.Media variant="image">
                                             {#if episode.thumbnail}
                                                 <img
-                                                    src={episode.thumbnail.medium}
+                                                    src={episode.thumbnail
+                                                        .medium}
                                                     alt=""
                                                     class="size-10 rounded object-cover"
                                                 />
@@ -267,10 +272,13 @@
                                         <Item.Content>
                                             <Item.Title>
                                                 {#if episode.epNo}Episode {episode.epNo}:
-                                                {/if} {t(episode.title)}
+                                                {/if}
+                                                {t(episode.title)}
                                             </Item.Title>
                                             <Item.Description>
-                                                {formatDate(episode.publishedAt)}
+                                                {formatDate(
+                                                    episode.publishedAt,
+                                                )}
                                             </Item.Description>
                                         </Item.Content>
                                     </Link>

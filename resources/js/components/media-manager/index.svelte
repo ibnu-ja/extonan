@@ -83,7 +83,9 @@
         }
 
         deleteTarget = null;
-        window.dispatchEvent(new CustomEvent('media-refresh', { detail: { deletedId } }));
+        window.dispatchEvent(
+            new CustomEvent('media-refresh', { detail: { deletedId } }),
+        );
     }
 
     function openDialog() {

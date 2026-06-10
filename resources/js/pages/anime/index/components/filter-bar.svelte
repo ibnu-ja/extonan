@@ -47,7 +47,11 @@
         />
         {#if clearable && hasActiveFilters}
             <InputGroup.Addon align="inline-end">
-                <InputGroup.Button variant="ghost" size="icon-xs" onclick={() => onclear?.()}>
+                <InputGroup.Button
+                    variant="ghost"
+                    size="icon-xs"
+                    onclick={() => onclear?.()}
+                >
                     <X class="size-3" />
                 </InputGroup.Button>
             </InputGroup.Addon>

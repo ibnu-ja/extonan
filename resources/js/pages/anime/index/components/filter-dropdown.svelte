@@ -41,8 +41,8 @@
 
     $effect(() => {
         if (open) {
-return;
-}
+            return;
+        }
 
         if (sortActive && items.length > 0) {
             const active = items.filter(
