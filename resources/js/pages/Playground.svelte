@@ -180,8 +180,8 @@
             Speed Dial
         </h2>
         <p class="text-muted-foreground text-sm">
-            FAB that expands action items above. Trigger toggles Plus/X with rotation.
-            Different button variants for each action.
+            FAB that expands action items above. Trigger toggles Plus/X with
+            rotation. Different button variants for each action.
         </p>
 
         <SpeedDial.Root>
@@ -206,11 +206,17 @@
                     <Share class="size-4" />
                     Share
                 </SpeedDial.Item>
-                <SpeedDial.Item variant="outline" onclick={() => console.log('Download')}>
+                <SpeedDial.Item
+                    variant="outline"
+                    onclick={() => console.log('Download')}
+                >
                     <Download class="size-4" />
                     Download
                 </SpeedDial.Item>
-                <SpeedDial.Item variant="ghost" onclick={() => console.log('Preview')}>
+                <SpeedDial.Item
+                    variant="ghost"
+                    onclick={() => console.log('Preview')}
+                >
                     <Eye class="size-4" />
                     Preview
                 </SpeedDial.Item>
@@ -223,13 +229,30 @@
 
         <div class="mt-4">
             <h3 class="font-heading text-lg font-semibold">Variants demo</h3>
-            <p class="text-muted-foreground text-xs mb-2">Each item uses a different button variant:</p>
+            <p class="text-muted-foreground text-xs mb-2">
+                Each item uses a different button variant:
+            </p>
             <div class="flex flex-wrap gap-2">
-                <span class="inline-flex items-center gap-1 rounded-md bg-primary px-2 py-0.5 text-xs text-primary-foreground">default</span>
-                <span class="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">secondary</span>
-                <span class="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs">outline</span>
-                <span class="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground">ghost</span>
-                <span class="inline-flex items-center gap-1 rounded-md bg-destructive/10 px-2 py-0.5 text-xs text-destructive">destructive</span>
+                <span
+                    class="inline-flex items-center gap-1 rounded-md bg-primary px-2 py-0.5 text-xs text-primary-foreground"
+                    >default</span
+                >
+                <span
+                    class="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 text-xs text-secondary-foreground"
+                    >secondary</span
+                >
+                <span
+                    class="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs"
+                    >outline</span
+                >
+                <span
+                    class="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground"
+                    >ghost</span
+                >
+                <span
+                    class="inline-flex items-center gap-1 rounded-md bg-destructive/10 px-2 py-0.5 text-xs text-destructive"
+                    >destructive</span
+                >
             </div>
         </div>
     </div>

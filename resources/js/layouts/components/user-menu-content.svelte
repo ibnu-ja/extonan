@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { router } from '@inertiajs/svelte';
+    import { router, Link } from '@inertiajs/svelte';
     import LogOut from 'lucide-svelte/icons/log-out';
     import Settings from 'lucide-svelte/icons/settings';
     import type { Snippet } from 'svelte';
@@ -37,19 +37,19 @@
 <DropdownMenuGroup>
     <DropdownMenuItem>
         {#snippet child({ props })}
-            <a {...props} href={toUrl(edit())}>
+            <Link {...props} href={toUrl(edit())}>
                 <Settings class="size-4" />
                 Settings
-            </a>
+            </Link>
         {/snippet}
     </DropdownMenuItem>
 </DropdownMenuGroup>
 <DropdownMenuSeparator />
-    <DropdownMenuItem class="w-full">
-        {#snippet child({ props })}
-            <button {...props} onclick={() => router.post(logout().url)}>
-                <LogOut class="size-4" />
-                Log out
-            </button>
-        {/snippet}
-    </DropdownMenuItem>
+<DropdownMenuItem class="w-full">
+    {#snippet child({ props })}
+        <button {...props} onclick={() => router.post(logout().url)}>
+            <LogOut class="size-4" />
+            Log out
+        </button>
+    {/snippet}
+</DropdownMenuItem>
