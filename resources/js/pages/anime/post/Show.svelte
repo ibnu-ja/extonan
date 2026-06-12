@@ -1,13 +1,17 @@
 <script lang="ts">
-    import { Link, setLayoutProps } from '@inertiajs/svelte';
+    import { Link, router, setLayoutProps } from '@inertiajs/svelte';
     import ExternalLink from '@lucide/svelte/icons/external-link';
+    import Pencil from 'lucide-svelte/icons/pencil';
+    import Send from 'lucide-svelte/icons/send';
+    import Trash2 from 'lucide-svelte/icons/trash-2';
     import VideoPlayer from '@/components/anime/video-player.svelte';
     import * as Accordion from '@/components/ui/accordion';
     import { Badge } from '@/components/ui/badge';
     import * as Item from '@/components/ui/item';
+    import * as SpeedDial from '@/components/ui/speed-dial/index.js';
     import { t, formatDate } from '@/lib/locale.svelte';
     import { index as animeIndex, show as animeShow } from '@/routes/anime';
-    import { show as postShow } from '@/routes/post';
+    import { show as postShow, edit as postEdit, destroy as postDestroy, update as postUpdate } from '@/routes/post';
 
     let { anime, episodes, post }: App.Data.Anime.PostShowResponse = $props();
 
@@ -291,3 +295,61 @@
         </div>
     </div>
 </div>
+
+{#if post.permissions?.update || post.permissions?.delete || post.permissions?.publish}
+    <SpeedDial.Root>
+        <SpeedDial.Trigger />
+        <SpeedDial.Content>
+            {#if post.permissions.update}
+                <SpeedDial.Item variant="default">
+                    {#snippet child({ props })}
+                        <Link
+                            href={postEdit.url({
+                                anime: anime.id,
+                                post: post.id,
+                            })}
+                            {...props}
+                        >
+                            <Pencil class="size-4" />
+                            Edit
+                        </Link>
+                    {/snippet}
+                </SpeedDial.Item>
+            {/if}
+            {#if post.permissions.delete}
+                <SpeedDial.Item
+                    variant="destructive"
+                    onclick={() => {
+                        if (confirm('Delete this episode?')) {
+                            router.delete(
+                                postDestroy.url({
+                                    anime: anime.id,
+                                    post: post.id,
+                                }),
+                            );
+                        }
+                    }}
+                >
+                    <Trash2 class="size-4" />
+                    Delete
+                </SpeedDial.Item>
+            {/if}
+            {#if !post.isPublished && post.permissions.publish}
+                <SpeedDial.Item
+                    variant="default"
+                    onclick={() =>
+                        router.patch(
+                            postUpdate.url({
+                                anime: anime.id,
+                                post: post.id,
+                            }),
+                            { isPublished: true },
+                        )}
+                >
+                    <Send class="size-4" />
+                    Publish
+                </SpeedDial.Item>
+            {/if}
+        </SpeedDial.Content>
+    </SpeedDial.Root>
+{/if}

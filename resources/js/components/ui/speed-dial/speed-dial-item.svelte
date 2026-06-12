@@ -7,12 +7,14 @@
 		ref = $bindable(null),
 		class: className,
 		variant = "default" as import("@/components/ui/button").ButtonVariant,
+		child,
 		children,
 		...restProps
 	}: {
 		ref?: HTMLButtonElement | null;
 		class?: string;
 		variant?: import("@/components/ui/button").ButtonVariant;
+		child?: Snippet<[{ props: Record<string, unknown> }]>;
 		children?: Snippet;
 		[key: string]: unknown;
 	} = $props();
@@ -27,6 +29,7 @@
 		"group-data-[state=open]:opacity-100 group-data-[state=open]:translate-y-0",
 		className,
 	)}
+	{child}
 	{...restProps}
 >
 	{@render children?.()}

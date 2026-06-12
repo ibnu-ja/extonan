@@ -275,12 +275,13 @@
 <SpeedDial.Root>
     <SpeedDial.Trigger />
     <SpeedDial.Content>
-        <SpeedDial.Item
-            variant="default"
-            onclick={() => router.visit(animeEdit(anime.id).url)}
-        >
-            <Pencil class="size-4" />
-            Edit
+        <SpeedDial.Item variant="default">
+            {#snippet child({ props })}
+                <Link href={animeEdit(anime.id).url} {...props}>
+                    <Pencil class="size-4" />
+                    Edit
+                </Link>
+            {/snippet}
         </SpeedDial.Item>
         <SpeedDial.Item
             variant="destructive"
@@ -293,12 +294,13 @@
             <Trash2 class="size-4" />
             Delete
         </SpeedDial.Item>
-        <SpeedDial.Item
-            variant="secondary"
-            onclick={() => router.visit(postCreate(anime.id).url)}
-        >
-            <Plus class="size-4" />
-            Add Episode
+        <SpeedDial.Item variant="secondary">
+            {#snippet child({ props })}
+                <Link href={postCreate(anime.id).url} {...props}>
+                    <Plus class="size-4" />
+                    Add Episode
+                </Link>
+            {/snippet}
         </SpeedDial.Item>
         {#if !anime.isPublished}
             <SpeedDial.Item
