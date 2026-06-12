@@ -16,6 +16,7 @@
         Eye,
         EyeOff,
     } from 'lucide-svelte';
+    import { onMount } from 'svelte';
     import FilterBar from '@/components/anime/filter-bar.svelte';
     import FilterDropdown from '@/components/anime/filter-dropdown.svelte';
     import Grid from '@/components/anime/grid.svelte';
@@ -31,13 +32,35 @@
     let {
         anime,
         sortOptions = [],
-        perPageValues = [14, 25, 50, 100],
+        perPageValues = [12, 16, 20, 50],
     }: App.Data.Anime.AnimeIndexResponse = $props();
 
     // TODO: Show validation errors from page.props.errors
 
     const { genres, tags, seasons, buildFilterQuery } = useAnime();
     const { can } = useAuth();
+
+    onMount(() => {
+        const params = pageSearchParams();
+
+        if (!params.has('perPage')) {
+            const width = window.innerWidth;
+            let val = 12;
+
+            if (width >= 1536) {
+val = 20;
+} else if (width >= 1280) {
+val = 16;
+}
+
+            params.set('perPage', String(val));
+            router.get(
+                page.url.split('?')[0] + '?' + params.toString(),
+                undefined,
+                { preserveScroll: true, only: ['anime'] },
+            );
+        }
+    });
 
     let debounceTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -291,7 +314,7 @@
         {/if}
     </div>
 
-    <grid items={anime.data} />
+    <Grid items={anime.data} />
 
     {#if anime}
         <Pagination data={anime} only={['anime']} {perPageValues} />

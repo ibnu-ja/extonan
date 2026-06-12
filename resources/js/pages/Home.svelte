@@ -1,11 +1,12 @@
 <script lang="ts">
     import { setLayoutProps } from '@inertiajs/svelte';
     import Autoplay from 'embla-carousel-autoplay';
+    import EpisodeThumbnail from '@/components/anime/episode-thumbnail.svelte';
     import AnimeSlideCard from '@/components/home/anime-slide-card.svelte';
-    import EpisodeCard from '@/components/home/episode-card.svelte';
     import MusicCard from '@/components/home/music-card.svelte';
     import SectionHeading from '@/components/home/section-heading.svelte';
     import * as Carousel from '@/components/ui/carousel';
+    import * as Item from '@/components/ui/item';
 
     let {
         latestAnime,
@@ -52,23 +53,17 @@
     </div>
 {/if}
 
-<section class="mt-4 px-2 sm:mt-8 sm:px-4">
-    <SectionHeading title="Latest Episodes" />
+<section class="mt-4 px-0 sm:mt-8 md:px-4">
+    <div class="px-4">
+        <SectionHeading title="Latest Episodes" />
+    </div>
     {#if latestEpisodes.length > 0}
-        <div
-            class="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-        >
+        <div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {#each latestEpisodes as episode (episode.id)}
-                <EpisodeCard
-                    title={episode.title}
-                    epNo={episode.epNo}
-                    thumbnail={episode.thumbnail}
-                    animeTitle={episode.animeTitle}
-                    author={episode.author}
-                    publishedAt={episode.publishedAt}
-                    isPublished={episode.isPublished}
-                    id={episode.id}
+                <EpisodeThumbnail
+                    episode={episode}
                     animeId={episode.animeId}
+                    animeTitle={episode.animeTitle}
                 />
             {/each}
         </div>
@@ -79,7 +74,7 @@
     {/if}
 </section>
 
-<section class="mt-4 sm:mt-8">
+<section class="mt-4 px-0 sm:mt-8 md:px-4">
     <div class="px-4">
         <SectionHeading title="Latest MV" />
     </div>
@@ -119,7 +114,7 @@
     {/if}
 </section>
 
-<section class="mt-4 sm:mt-8">
+<section class="mt-4 px-0 sm:mt-8 md:px-4">
     <div class="px-4">
         <SectionHeading title="Latest Album" />
     </div>

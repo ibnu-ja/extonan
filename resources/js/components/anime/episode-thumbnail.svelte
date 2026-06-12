@@ -9,15 +9,17 @@
     let {
         episode,
         animeId,
+        animeTitle,
     }: {
-        episode: App.Data.Anime.EpisodeShowData;
+        episode: App.Data.Anime.EpisodeShowData | App.Data.EpisodeSummaryData;
         animeId: number;
+        animeTitle?: Record<string, string | null>;
     } = $props();
 </script>
 
 <Link href={postShow.url({ anime: animeId, post: episode.id })} class="group">
     <Card.Root
-        class="overflow-hidden py-0 gap-0 rounded-none md:rounded-xl transition-colors hover:bg-muted"
+        class="ring-0 overflow-hidden py-0 gap-0 rounded-none md:rounded-xl transition-colors hover:bg-muted"
     >
         {#if episode.thumbnail}
             <AspectRatio ratio={16 / 9}>
@@ -40,6 +42,11 @@
         <Card.Content class="p-3">
             <div class="flex items-start justify-between gap-2">
                 <div class="min-w-0 flex-1">
+                    {#if animeTitle}
+                        <p class="text-muted-foreground truncate text-xs font-medium">
+                            {t(animeTitle)}
+                        </p>
+                    {/if}
                     <p class="truncate text-sm font-medium">
                         {#if episode.epNo}
                             <span class="text-muted-foreground"

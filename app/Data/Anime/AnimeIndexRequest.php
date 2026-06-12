@@ -9,7 +9,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 #[TypeScript]
 class AnimeIndexRequest extends Data
 {
-    public const array PER_PAGE_VALUES = [14, 25, 50, 100];
+    public const array PER_PAGE_VALUES = [12, 16, 20, 50];
 
     public function __construct(
         public AnimeFilterData $filter = new AnimeFilterData,
@@ -22,7 +22,7 @@ class AnimeIndexRequest extends Data
         $perPage = (int) ($properties['perPage'] ?? 0);
 
         if (! in_array($perPage, self::PER_PAGE_VALUES, true)) {
-            $properties['perPage'] = 14;
+            $properties['perPage'] = 12;
         }
 
         return $properties;

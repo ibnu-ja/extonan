@@ -8,9 +8,11 @@
     let {
         episode,
         animeId,
+        animeTitle,
     }: {
-        episode: App.Data.Anime.EpisodeShowData;
+        episode: App.Data.Anime.EpisodeShowData | App.Data.EpisodeSummaryData;
         animeId: number;
+        animeTitle?: Record<string, string | null>;
     } = $props();
 </script>
 
@@ -27,9 +29,16 @@
                         alt=""
                         class="size-10 rounded object-cover"
                     />
+                {:else}
+                    <div class="size-10 rounded bg-muted"></div>
                 {/if}
             </Item.Media>
             <Item.Content>
+                {#if animeTitle}
+                    <Item.Description class="text-xs font-medium">
+                        {t(animeTitle)}
+                    </Item.Description>
+                {/if}
                 <Item.Title>
                     {#if episode.epNo}
                         <span class="text-muted-foreground"

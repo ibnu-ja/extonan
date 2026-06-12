@@ -96,12 +96,12 @@
 
 <div class="w-full mx-auto lg:max-w-7xl xl:max-w-screen-2xl">
     <div class="px-4 py-6 pt-16 md:pt-6">
-        <a
+        <Link
             href={animeShow.url(anime.id)}
             class="hover:text-foreground transition-colors text-sm text-muted-foreground md:hidden"
         >
             {animeTitle}
-        </a>
+        </Link>
         <h1 class="text-2xl md:text-4xl font-bold font-heading mt-1">
             {displayTitle}
             {#if !post.isPublished}

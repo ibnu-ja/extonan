@@ -1,8 +1,8 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
     import { EyeOff, Pencil } from 'lucide-svelte';
-    import { Badge } from 'resources/js/components/ui/badge';
-    import { edit as animeEdit, show as animeShow } from 'resources/js/routes/anime';
+    import { Badge } from '@/components/ui/badge';
+    import { edit as animeEdit, show as animeShow } from '@/routes/anime';
 
     type Item = {
         id: number;
