@@ -16,6 +16,9 @@
         Eye,
         EyeOff,
     } from 'lucide-svelte';
+    import FilterBar from '@/components/anime/filter-bar.svelte';
+    import FilterDropdown from '@/components/anime/filter-dropdown.svelte';
+    import Grid from '@/components/anime/grid.svelte';
     import Pagination from '@/components/pagination.svelte';
     import { Button } from '@/components/ui/button';
     import * as ButtonGroup from '@/components/ui/button-group';
@@ -24,9 +27,6 @@
     import { useAnime } from '@/lib/use-anime.svelte';
     import type { AnimeFilterState } from '@/lib/use-anime.svelte';
     import type { RouteQueryOptions } from '@/wayfinder';
-    import FilterBar from './index/components/filter-bar.svelte';
-    import FilterDropdown from './index/components/filter-dropdown.svelte';
-    import Grid from './index/components/grid.svelte';
 
     let {
         anime,
@@ -291,7 +291,7 @@
         {/if}
     </div>
 
-    <Grid items={anime.data} />
+    <grid items={anime.data} />
 
     {#if anime}
         <Pagination data={anime} only={['anime']} {perPageValues} />

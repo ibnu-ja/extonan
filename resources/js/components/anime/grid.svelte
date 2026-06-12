@@ -27,7 +27,7 @@
         class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
     >
         {#each items as item (item.id)}
-            <Card {item} />
+            <card {item} />
         {/each}
     </div>
 {:else}

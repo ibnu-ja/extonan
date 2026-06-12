@@ -1,11 +1,11 @@
 <script lang="ts">
     import { Search, ArrowUpDown, Check, X } from 'lucide-svelte';
     import { Button } from '@/components/ui/button';
-    import * as Command from '@/components/ui/command/index.js';
-    import * as Drawer from '@/components/ui/drawer/index.js';
-    import * as InputGroup from '@/components/ui/input-group/index.js';
-    import * as Popover from '@/components/ui/popover/index.js';
-    import { useDisplay } from '@/lib/use-display.svelte';
+    import * as Command from '@/components/ui/command';
+    import * as Drawer from '@/components/ui/drawer';
+    import * as InputGroup from '@/components/ui/input-group';
+    import * as Popover from '@/components/ui/popover';
+    import { useDisplay } from '@/lib/use-display.svelte.js';
 
     let {
         search = $bindable(''),
