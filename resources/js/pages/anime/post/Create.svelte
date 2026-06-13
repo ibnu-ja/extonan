@@ -16,7 +16,7 @@
     import { Button } from '@/components/ui/button';
     import * as Card from '@/components/ui/card/index.js';
     import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
-    import * as Field from '@/components/ui/field/index';
+    import * as Field from '@/components/ui/field/index.js';
     import { Input } from '@/components/ui/input';
     import * as InputGroup from '@/components/ui/input-group/index.js';
     import { Switch } from '@/components/ui/switch';
@@ -719,7 +719,7 @@
             onCheckedChange={(v) => (form.isPublished = v)}
             id="is_published"
         />
-        <Field.Error slot="error">{form.errors.isPublished}</Field.Error>
+        <Field.Error>{form.errors.isPublished}</Field.Error>
     </Field.Field>
 {/snippet}
 
