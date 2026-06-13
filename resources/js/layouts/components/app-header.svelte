@@ -43,19 +43,6 @@
             icon: LayoutGrid,
         },
     ];
-
-    const rightNavItems: NavItem[] = [
-        {
-            title: 'Repository',
-            href: 'https://github.com/laravel/svelte-starter-kit',
-            icon: Folder,
-        },
-        {
-            title: 'Documentation',
-            href: 'https://laravel.com/docs/starter-kits#svelte',
-            icon: BookOpen,
-        },
-    ];
 </script>
 
 <div>
@@ -93,48 +80,6 @@
             </div>
 
             <div class="ml-auto flex items-center space-x-2">
-                <div class="relative flex items-center space-x-1">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        class="group h-9 w-9 cursor-pointer"
-                    >
-                        <Search
-                            class="size-5 opacity-80 group-hover:opacity-100"
-                        />
-                    </Button>
-
-                    <div class="hidden space-x-1 lg:flex">
-                        {#each rightNavItems as { icon: Icon, ...item } (toUrl(item.href))}
-                            <TooltipProvider delayDuration={0}>
-                                <Tooltip>
-                                    <TooltipTrigger>
-                                        {#snippet child({ props })}
-                                            <a
-                                                href={toUrl(item.href)}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                {...props}
-                                                class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9 group cursor-pointer"
-                                            >
-                                                <span class="sr-only"
-                                                    >{item.title}</span
-                                                >
-                                                <Icon
-                                                    class="size-5 opacity-80 group-hover:opacity-100"
-                                                />
-                                            </a>
-                                        {/snippet}
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>{item.title}</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                        {/each}
-                    </div>
-                </div>
-
                 <DropdownMenu>
                     <DropdownMenuTrigger>
                         {#snippet child({ props })}

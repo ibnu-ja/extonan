@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\Permission;
+use App\Enums\ResourceType;
 use App\Models\Anime;
 use App\Models\Post;
 use App\Models\User;
@@ -202,7 +203,7 @@ class PostControllerTest extends TestCase
         $this->assertNotNull($post);
         $this->assertCount(1, $post->resources);
         $this->assertEquals('Stream', $post->resources->first()->name);
-        $this->assertEquals('link', $post->resources->first()->type);
+        $this->assertEquals(ResourceType::Link, $post->resources->first()->type);
     }
 
     public function test_guest_can_view_published_post(): void

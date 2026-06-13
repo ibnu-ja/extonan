@@ -6,7 +6,6 @@
     import MusicCard from '@/components/home/music-card.svelte';
     import SectionHeading from '@/components/home/section-heading.svelte';
     import * as Carousel from '@/components/ui/carousel';
-    import * as Item from '@/components/ui/item';
 
     let {
         latestAnime,

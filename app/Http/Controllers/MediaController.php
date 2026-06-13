@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Data\MediaData;
 use App\Data\MediaStoreData;
-use App\Data\PaginatedCollection;
 use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -13,6 +12,7 @@ use Plank\Mediable\Facades\ImageManipulator;
 use Plank\Mediable\Facades\MediaUploader;
 use Plank\Mediable\Media;
 use Spatie\LaravelData\DataCollection;
+use Spatie\LaravelData\PaginatedDataCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -27,7 +27,7 @@ class MediaController extends Controller implements HasMiddleware
 
     public function __construct(private readonly MediaService $media) {}
 
-    public function index(): PaginatedCollection
+    public function index(): PaginatedDataCollection
     {
         $paginator = QueryBuilder::for(Media::class)
             ->allowedFilters(
@@ -39,10 +39,10 @@ class MediaController extends Controller implements HasMiddleware
             ->defaultSort('-created_at')
             ->paginate();
 
-        return PaginatedCollection::fromPaginator(
-            $paginator,
-            fn (Media $media) => MediaData::fromModel($media),
-        );
+        $items = $paginator->getCollection()->map(fn (Media $media) => MediaData::fromModel($media));
+        $paginator->setCollection($items);
+
+        return new PaginatedDataCollection(MediaData::class, $paginator);
     }
 
     public function store(MediaStoreData $data): DataCollection

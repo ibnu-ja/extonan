@@ -1,12 +1,16 @@
 <script lang="ts">
     import { Link, router, setLayoutProps } from '@inertiajs/svelte';
     import ExternalLink from '@lucide/svelte/icons/external-link';
+    import Check from 'lucide-svelte/icons/check';
+    import ChevronDown from 'lucide-svelte/icons/chevron-down';
     import Pencil from 'lucide-svelte/icons/pencil';
     import Send from 'lucide-svelte/icons/send';
     import Trash2 from 'lucide-svelte/icons/trash-2';
     import VideoPlayer from '@/components/anime/video-player.svelte';
     import * as Accordion from '@/components/ui/accordion';
     import { Badge } from '@/components/ui/badge';
+    import { Button } from '@/components/ui/button';
+    import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
     import * as Item from '@/components/ui/item';
     import * as SpeedDial from '@/components/ui/speed-dial/index.js';
     import { t, formatDate } from '@/lib/locale.svelte';
@@ -20,12 +24,25 @@
 
     let { anime, episodes, post }: App.Data.Anime.PostShowResponse = $props();
 
-    // svelte-ignore state_referenced_locally
-    let selectedSaluran = $state(
-        post.saluran.length > 0
-            ? (post.saluran[0].value[0]?.value ?? null)
-            : null,
+    const streamOptions = $derived(
+        [
+            post.embed && { value: 'embed' as const, label: 'Embed' },
+            post.saluran && {
+                value: 'saluran' as const,
+                label: 'Stream (M3U8)',
+            },
+        ].filter(Boolean),
     );
+
+    let activeStreamType = $state<'embed' | 'saluran' | null>(
+        post.embed ? 'embed' : post.saluran ? 'saluran' : null,
+    );
+
+    // svelte-ignore state_referenced_locally
+    let selectedSaluran = $state(post.saluran?.value[0]?.value ?? null);
+
+    // svelte-ignore state_referenced_locally
+    let selectedEmbed = $state(post.embed?.value[0]?.value ?? null);
 
     const displayTitle = $derived(
         post.postType === 'tv' && post.epNo
@@ -130,18 +147,70 @@
 
     <div class="grid gap-6 px-4 py-6 md:grid-cols-12">
         <div class="md:col-span-8 lg:col-span-8 space-y-6">
-            {#if post.embed}
-                <!--eslint-disable-next-line svelte/no-at-html-tags-->
-                {@html post.embed.value[0]?.value}
-            {:else if post.saluran.length > 0 && selectedSaluran}
-                <VideoPlayer
-                    src={selectedSaluran}
-                    poster={post.thumbnail?.extraLarge}
-                />
-                {#if post.saluran.length > 1}
-                    <div class="flex flex-wrap gap-2">
-                        {#each post.saluran as saluranItem (saluranItem.id)}
-                            {#each saluranItem.value as stream (stream.value)}
+            {#if streamOptions.length > 0}
+                <div class="flex items-center gap-2">
+                    <DropdownMenu.Root>
+                        <DropdownMenu.Trigger>
+                            {#snippet child({ props: triggerProps })}
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    class="gap-1"
+                                    {...triggerProps}
+                                >
+                                    {streamOptions.find(
+                                        (s) => s.value === activeStreamType,
+                                    )?.label ?? 'Select'}
+                                    <ChevronDown class="size-3 opacity-50" />
+                                </Button>
+                            {/snippet}
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Content>
+                            {#each streamOptions as opt (opt.value)}
+                                <DropdownMenu.Item
+                                    onclick={() =>
+                                        (activeStreamType = opt.value)}
+                                >
+                                    <div class="flex w-full items-center gap-2">
+                                        {#if activeStreamType === opt.value}
+                                            <Check class="size-4" />
+                                        {/if}
+                                        <span>{opt.label}</span>
+                                    </div>
+                                </DropdownMenu.Item>
+                            {/each}
+                        </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+                </div>
+
+                {#if activeStreamType === 'embed' && post.embed && selectedEmbed}
+                    <!--eslint-disable-next-line svelte/no-at-html-tags-->
+                    {@html selectedEmbed}
+                    {#if post.embed.value.length > 1}
+                        <div class="flex flex-wrap gap-2">
+                            {#each post.embed.value as stream (stream.value)}
+                                <button
+                                    class="rounded-md border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
+                                    class:bg-primary={selectedEmbed ===
+                                        stream.value}
+                                    class:text-primary-foreground={selectedEmbed ===
+                                        stream.value}
+                                    onclick={() =>
+                                        (selectedEmbed = stream.value)}
+                                >
+                                    {stream.name}
+                                </button>
+                            {/each}
+                        </div>
+                    {/if}
+                {:else if activeStreamType === 'saluran' && post.saluran && selectedSaluran}
+                    <VideoPlayer
+                        src={selectedSaluran}
+                        poster={post.thumbnail?.extraLarge}
+                    />
+                    {#if post.saluran.value.length > 1}
+                        <div class="flex flex-wrap gap-2">
+                            {#each post.saluran.value as stream (stream.value)}
                                 <button
                                     class="rounded-md border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
                                     class:bg-primary={selectedSaluran ===
@@ -154,8 +223,8 @@
                                     {stream.name}
                                 </button>
                             {/each}
-                        {/each}
-                    </div>
+                        </div>
+                    {/if}
                 {/if}
             {:else if post.thumbnail}
                 <img

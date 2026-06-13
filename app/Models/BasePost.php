@@ -7,6 +7,7 @@ use App\Observers\RecordAuthorObserver;
 use App\Observers\RecordPublishDateObserver;
 use Auth;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -61,7 +62,8 @@ abstract class BasePost extends Model
     /**
      * Scope a query to only include owned/editable post for user.
      */
-    public function scopeVisible(Builder $query): void
+    #[Scope]
+    protected function visible(Builder $query): void
     {
         $user = auth()->user();
 

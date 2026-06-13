@@ -10,7 +10,6 @@
     import Pencil from 'lucide-svelte/icons/pencil';
     import Plus from 'lucide-svelte/icons/plus';
     import Send from 'lucide-svelte/icons/send';
-    import Star from 'lucide-svelte/icons/star';
     import Trash2 from 'lucide-svelte/icons/trash-2';
     import Banner from '@/components/anime/banner.svelte';
     import Casts from '@/components/anime/casts.svelte';

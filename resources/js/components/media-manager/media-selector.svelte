@@ -5,7 +5,10 @@
     import { Button } from '@/components/ui/button';
     import { Spinner } from '@/components/ui/spinner';
 
-    type MediaResponse = App.Data.PaginatedCollection<App.Data.MediaData>;
+    type MediaResponse = Illuminate.LengthAwarePaginator<
+        number,
+        App.Data.MediaData
+    >;
 
     let {
         media,
@@ -26,12 +29,12 @@
     async function loadMore() {
         if (
             !currentMedia ||
-            currentMedia.currentPage >= currentMedia.lastPage
+            currentMedia.meta.current_page >= currentMedia.meta.last_page
         ) {
             return;
         }
 
-        const nextPage = currentMedia.currentPage + 1;
+        const nextPage = currentMedia.meta.current_page + 1;
         const response = await fetch(
             mediaIndex.url({ query: { page: String(nextPage) } }),
         );
@@ -154,7 +157,7 @@
         {/each}
     </div>
 
-    {#if currentMedia && currentMedia.currentPage < currentMedia.lastPage}
+    {#if currentMedia && currentMedia.meta.current_page < currentMedia.meta.last_page}
         <div class="flex justify-center">
             <Button
                 variant="ghost"

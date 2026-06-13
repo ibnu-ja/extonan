@@ -63,18 +63,6 @@ declare namespace App {
             isCurrent: boolean;
             permissions: App.Data.PermissionsData;
         };
-        export type PaginatedCollection<TValue> = {
-            data: TValue[];
-            currentPage: number;
-            lastPage: number;
-            perPage: number;
-            total: number;
-            links: {
-                url: string | null;
-                label: string;
-                active: boolean;
-            }[];
-        };
         export type PermissionsData = {
             update: boolean;
             delete: boolean;
@@ -195,11 +183,11 @@ declare namespace App {
                 canCreate: boolean;
             };
             export type AnimeCreateResponse = {
-                anime: App.Data.Anime.AnimeFormData | null;
-                genres: App.Data.LabelValue[];
-                tags: App.Data.TagItem[];
-                seasons: App.Enums.Season[];
-                anilistQuery: string;
+                anime?: App.Data.Anime.AnimeFormData;
+                genres?: App.Data.LabelValue[];
+                tags?: App.Data.TagItem[];
+                seasons?: App.Enums.Season[];
+                anilistQuery?: string;
             };
             export type AnimeFilterData = {
                 genreIn: string[];
@@ -226,11 +214,14 @@ declare namespace App {
                 perPage: number | null;
             };
             export type AnimeIndexResponse = {
-                anime: App.Data.PaginatedCollection<App.Data.Anime.AnimeListItemData>;
-                seasons: string[];
-                genres: App.Data.LabelValue[];
-                tags: App.Data.TagItem[];
-                sortOptions: App.Data.LabelValue[];
+                anime: Spatie.LaravelData.PaginatedDataCollection<
+                    number,
+                    App.Data.Anime.AnimeListItemData
+                >;
+                seasons?: string[];
+                genres?: App.Data.LabelValue[];
+                tags?: App.Data.TagItem[];
+                sortOptions?: App.Data.LabelValue[];
                 perPageValues: number[];
             };
             export type AnimeListItemData = {
@@ -275,7 +266,7 @@ declare namespace App {
             };
             export type PostCreateResponse = {
                 anime: App.Data.Anime.AnimeListItemData;
-                post: App.Data.Anime.PostFormData | null;
+                post?: App.Data.Anime.PostFormData;
                 canPublish: boolean;
                 metadata: App.Data.Anilist.AnilistMediaData | null;
             };
@@ -287,16 +278,10 @@ declare namespace App {
                 epNo: string | null;
                 isPublished: boolean;
                 canPublish: boolean;
-                links: {
-                    id?: number;
-                    name: string;
-                    type: string;
-                    value: {
-                        name: string;
-                        value: string;
-                    }[];
-                }[];
-                thumbnailItem: Array<any> | null;
+                links: App.Data.Anime.ResourceData[];
+                embed: App.Data.Anime.ResourceData | null;
+                saluran: App.Data.Anime.ResourceData | null;
+                thumbnailItem: App.Data.MediaData | null;
             };
             export type PostShowData = {
                 id: number;
@@ -311,7 +296,7 @@ declare namespace App {
                 isPublished: boolean;
                 permissions: App.Data.PermissionsData;
                 links: App.Data.Anime.ResourceData[];
-                saluran: App.Data.Anime.ResourceData[];
+                saluran: App.Data.Anime.ResourceData | null;
                 embed: App.Data.Anime.ResourceData | null;
             };
             export type PostShowResponse = {
@@ -325,26 +310,19 @@ declare namespace App {
                 postType: string;
                 epNo: string | null;
                 isPublished: boolean;
-                links:
-                    | {
-                          id?: number;
-                          name: string;
-                          type: string;
-                          value: {
-                              name: string;
-                              value: string;
-                          }[];
-                      }[]
-                    | null;
-                thumbnailItem: {
-                    id: number;
-                } | null;
+                links: App.Data.Anime.ResourceData[];
+                embed: App.Data.Anime.ResourceData | null;
+                saluran: App.Data.Anime.ResourceData | null;
+                thumbnailItem: App.Data.MediaData | null;
             };
             export type ResourceData = {
-                id: number;
+                id?: number;
                 name: string;
                 type: App.Enums.ResourceType;
-                value: Array<any>;
+                value: {
+                    name: string;
+                    value: string;
+                }[];
             };
         }
         namespace Home {

@@ -29,7 +29,9 @@
     } = $props();
 
     const hasAnyAction = $derived(
-        episode.permissions?.update || episode.permissions?.delete || episode.permissions?.publish,
+        episode.permissions?.update ||
+            episode.permissions?.delete ||
+            episode.permissions?.publish,
     );
 </script>
 

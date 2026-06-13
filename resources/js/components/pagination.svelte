@@ -16,12 +16,18 @@
         only = [],
         perPageValues = [14, 25, 50, 100],
     }: {
-        data: App.Data.PaginatedCollection<T>;
+        data: Illuminate.LengthAwarePaginator<number, T>;
         only?: string[];
         perPageValues?: number[];
     } = $props();
 
-    let { currentPage, lastPage, perPage, total, links } = $derived(data);
+    let {
+        current_page: currentPage,
+        last_page: lastPage,
+        per_page: perPage,
+        total,
+    } = $derived(data.meta);
+    let links = $derived(data.links);
     const linkOpts = $derived(only.length > 0 ? { only } : {});
     const from = $derived((currentPage - 1) * perPage + 1);
     const to = $derived(Math.min(currentPage * perPage, total));
@@ -49,7 +55,7 @@
         return path + '?' + params.toString();
     }
 
-    let userPerPage = $derived(String(data.perPage));
+    let userPerPage = $derived(String(perPage));
 
     const { smAndDown } = useDisplay();
     let editingPage = $state(false);

@@ -1,6 +1,12 @@
 <script lang="ts">
     import { Link, router } from '@inertiajs/svelte';
-    import { EllipsisVertical, EyeOff, Pencil, Send, Trash2 } from 'lucide-svelte';
+    import {
+        EllipsisVertical,
+        EyeOff,
+        Pencil,
+        Send,
+        Trash2,
+    } from 'lucide-svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import {
@@ -44,7 +50,9 @@
     );
 
     const hasAnyAction = $derived(
-        item.permissions?.update || item.permissions?.delete || item.permissions?.publish,
+        item.permissions?.update ||
+            item.permissions?.delete ||
+            item.permissions?.publish,
     );
 </script>
 
@@ -65,7 +73,9 @@
         <div
             class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent p-3 pt-8"
         >
-            <h3 class="text-sm font-medium leading-tight text-white line-clamp-2">
+            <h3
+                class="text-sm font-medium leading-tight text-white line-clamp-2"
+            >
                 {displayTitle}
             </h3>
         </div>

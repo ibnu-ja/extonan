@@ -2,6 +2,8 @@
 
 namespace App\Data\Anime;
 
+use App\Data\MediaData;
+use App\Enums\ResourceType;
 use App\Http\Requests\PostType;
 use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Data;
@@ -19,10 +21,11 @@ class PostStoreData extends Data
         public string $postType,
         public ?string $epNo = null,
         public bool $isPublished = false,
-        /** @var array<int, array{id?: int, name: string, type: string, value: array<int, array{name: string, value: string}>}>|null */
-        public ?array $links = null,
-        /** @var array{id: int}|null */
-        public ?array $thumbnailItem = null,
+        /** @var ResourceData[] */
+        public array $links = [],
+        public ?ResourceData $embed = null,
+        public ?ResourceData $saluran = null,
+        public ?MediaData $thumbnailItem = null,
     ) {}
 
     public function toModelArray(): array
@@ -54,15 +57,17 @@ class PostStoreData extends Data
             'isPublished' => 'required|boolean',
             'links' => 'nullable|array',
             'links.*.name' => 'required_with:links|string|max:255',
-            'links.*.type' => 'required_with:links|string',
+            'links.*.type' => ['required_with:links', Rule::enum(ResourceType::class)],
             'links.*.value' => 'required_with:links|array',
             'links.*.value.*.name' => 'required_with:links.*.value|string',
             'links.*.value.*.value' => 'required_with:links.*.value|string',
-            'thumbnailItem' => 'nullable|array',
-            'thumbnailItem.id' => 'required_with:thumbnailItem|integer',
+            'embed' => 'nullable',
+            'saluran' => 'nullable',
+            'thumbnailItem' => 'nullable',
         ];
     }
 
+    /** @param array<string, mixed> $properties */
     public static function prepareForPipeline(array $properties): array
     {
         if (array_key_exists('isPublished', $properties)) {
@@ -71,6 +76,10 @@ class PostStoreData extends Data
                 FILTER_VALIDATE_BOOLEAN,
                 FILTER_NULL_ON_FAILURE
             ) ?? false;
+        }
+
+        if (! array_key_exists('links', $properties) || $properties['links'] === null) {
+            $properties['links'] = [];
         }
 
         return $properties;

@@ -1,22 +1,20 @@
 <script lang="ts">
     import { router, setLayoutProps, useForm } from '@inertiajs/svelte';
-    import { Check, Send, Trash2, X } from 'lucide-svelte';
+    import { Check, ChevronDown, Send, Trash2, X } from 'lucide-svelte';
     import type { Snippet } from 'svelte';
     import { untrack } from 'svelte';
     import AnimeController from '@/actions/App/Http/Controllers/AnimeController';
     import Casts from '@/components/anime/casts.svelte';
     import AppHead from '@/components/app-head.svelte';
-    import InputError from '@/components/input-error.svelte';
     import MultiCombobox from '@/components/multi-combobox.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
-    import { Card, CardContent, CardTitle } from '@/components/ui/card';
+    import * as Card from '@/components/ui/card/index.js';
     import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
+    import * as Field from '@/components/ui/field/index';
     import { Input } from '@/components/ui/input';
     import * as InputGroup from '@/components/ui/input-group/index.js';
-    import { Label } from '@/components/ui/label';
     import { Switch } from '@/components/ui/switch';
-    import { Textarea } from '@/components/ui/textarea';
     import { animeApi } from '@/lib/anilist.svelte';
     import { t } from '@/lib/locale.svelte';
     import { useDisplay } from '@/lib/use-display.svelte';
@@ -28,7 +26,7 @@
     type Props = App.Data.Anime.AnimeCreateResponse;
 
     let {
-        anime = null,
+        anime,
         genres = [],
         tags = [],
         seasons = [],
@@ -172,39 +170,44 @@
 
 <AppHead title={pageTitle} />
 
-{#snippet card(content: Snippet)}
+{#snippet sectionHeader(title: string, action?: Snippet)}
+    <Card.Header class="px-0 md:px-6">
+        <Card.Title>{title}</Card.Title>
+        {#if action}<Card.Action>{@render action()}</Card.Action>{/if}
+    </Card.Header>
+{/snippet}
+
+{#snippet card(title: string, content: Snippet, action?: Snippet)}
     {#if isMobile}
-        <div class="space-y-4">{@render content()}</div>
+        <div class="space-y-3">
+            {@render sectionHeader(title, action)}
+            {@render content()}
+        </div>
     {:else}
-        <Card>
-            <CardContent class="space-y-4">{@render content()}</CardContent>
-        </Card>
+        <Card.Root>
+            {@render sectionHeader(title, action)}
+            <Card.Content class="space-y-3">{@render content()}</Card.Content>
+        </Card.Root>
     {/if}
 {/snippet}
 
 {#snippet basicInfoContent()}
-    <CardTitle>Basic Information</CardTitle>
-    <div class="grid gap-2">
-        <Label for="title_lang">Title</Label>
+    <Field.Field>
+        <Field.Label for="title_lang">Title</Field.Label>
         <InputGroup.Root>
             <InputGroup.Addon>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                         {#snippet child({ props: triggerProps })}
-                            <InputGroup.Button
-                                variant="default"
-                                {...triggerProps}
-                            >
-                                {languages.find((l) => l.value === currentLang)
-                                    ?.label ?? 'Language'}
+                            <InputGroup.Button variant="default" {...triggerProps}>
+                                {languages.find((l) => l.value === currentLang)?.label ?? 'Language'}
+                                <ChevronDown class="ml-1 size-4 opacity-50" />
                             </InputGroup.Button>
                         {/snippet}
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
                         {#each languages as lang (lang.value)}
-                            <DropdownMenu.Item
-                                onclick={() => (currentLang = lang.value)}
-                            >
+                            <DropdownMenu.Item onclick={() => (currentLang = lang.value)}>
                                 <div class="flex w-full items-center gap-2">
                                     {#if currentLang === lang.value}
                                         <Check class="size-4" />
@@ -222,65 +225,75 @@
                 placeholder={`Title in ${languages.find((l) => l.value === currentLang)?.label}`}
             />
         </InputGroup.Root>
-        <InputError message={form.errors[`title.${currentLang}`]} />
-    </div>
-    <div class="grid gap-2">
-        <Label for="title_romaji">Title (Romaji)</Label>
+        <Field.Error>{form.errors[`title.${currentLang}`]}</Field.Error>
+    </Field.Field>
+    <Field.Field>
+        <Field.Label for="title_romaji">Title (Romaji)</Field.Label>
         <Input
             id="title_romaji"
             bind:value={form.title.romaji}
             required
             placeholder="Title in romaji"
         />
-        <InputError message={form.errors['title.romaji']} />
-    </div>
-    <div class="grid gap-2">
-        <Label for="title_native">Title (Native)</Label>
+        <Field.Error>{form.errors['title.romaji']}</Field.Error>
+    </Field.Field>
+    <Field.Field>
+        <Field.Label for="title_native">Title (Native)</Field.Label>
         <Input
             id="title_native"
             bind:value={form.title.native}
             required
             placeholder="Title in native script"
         />
-        <InputError message={form.errors['title.native']} />
-    </div>
-    <div class="grid gap-2">
-        <Label for="description_lang">Description</Label>
-        <div class="flex items-center gap-2">
-            {#each languages as lang (lang.value)}
-                <Button
-                    type="button"
-                    variant={currentLang === lang.value ? 'default' : 'outline'}
-                    size="sm"
-                    onclick={() => (currentLang = lang.value)}
-                >
-                    {lang.label}
-                </Button>
-            {/each}
-        </div>
-        <Textarea
-            id="description_lang"
-            bind:value={form.description[currentLang]}
-            rows={6}
-            placeholder={`Description in ${languages.find((l) => l.value === currentLang)?.label}`}
-        />
-        <InputError message={form.errors[`description.${currentLang}`]} />
-    </div>
+        <Field.Error>{form.errors['title.native']}</Field.Error>
+    </Field.Field>
+    <Field.Field>
+        <Field.Label for="description_lang">Description</Field.Label>
+        <InputGroup.Root>
+            <InputGroup.Textarea
+                id="description_lang"
+                bind:value={form.description[currentLang]}
+                placeholder={`Description in ${languages.find((l) => l.value === currentLang)?.label}`}
+                rows={9}
+            />
+            <InputGroup.Addon align="block-start" class="border-b">
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger>
+                        {#snippet child({ props: triggerProps })}
+                            <InputGroup.Button variant="default" {...triggerProps}>
+                                {languages.find((l) => l.value === currentLang)?.label ?? 'Language'}
+                                <ChevronDown class="ml-1 size-4 opacity-50" />
+                            </InputGroup.Button>
+                        {/snippet}
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content>
+                        {#each languages as lang (lang.value)}
+                            <DropdownMenu.Item onclick={() => (currentLang = lang.value)}>
+                                <div class="flex w-full items-center gap-2">
+                                    {#if currentLang === lang.value}
+                                        <Check class="size-4" />
+                                    {/if}
+                                    <span>{lang.label}</span>
+                                </div>
+                            </DropdownMenu.Item>
+                        {/each}
+                    </DropdownMenu.Content>
+                </DropdownMenu.Root>
+            </InputGroup.Addon>
+        </InputGroup.Root>
+        <Field.Error>{form.errors[`description.${currentLang}`]}</Field.Error>
+    </Field.Field>
 {/snippet}
 
 {#snippet metadataContent()}
-    <CardTitle>Autofill</CardTitle>
-    <div class="grid gap-2">
-        <Label for="anilist_id">Search Source</Label>
+    <Field.Field>
+        <Field.Label for="anilist_id">Search Source</Field.Label>
         <InputGroup.Root>
             <InputGroup.Addon>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                         {#snippet child({ props: triggerProps })}
-                            <InputGroup.Button
-                                variant="default"
-                                {...triggerProps}
-                            >
+                            <InputGroup.Button variant="default" {...triggerProps}>
                                 {useMalId ? 'MAL' : 'AniList'}
                             </InputGroup.Button>
                         {/snippet}
@@ -340,9 +353,9 @@
                 {/if}
             </InputGroup.Addon>
         </InputGroup.Root>
-        <InputError message={fetchError ?? undefined} />
-        <InputError message={form.errors.anilistId} />
-    </div>
+        <Field.Error>{fetchError}</Field.Error>
+        <Field.Error>{form.errors.anilistId}</Field.Error>
+    </Field.Field>
     {#if form.metadata?.id}
         {#if form.metadata.coverImage?.extraLarge}
             <img
@@ -366,9 +379,7 @@
                 </Badge>
             {/if}
             {#if form.metadata.episodes}
-                <Badge variant="secondary"
-                    >{form.metadata.episodes} episodes
-                </Badge>
+                <Badge variant="secondary">{form.metadata.episodes} episodes</Badge>
             {/if}
             {#if form.metadata.studios?.edges?.length}
                 {#each form.metadata.studios.edges.slice(0, 3) as edge (edge.node?.id)}
@@ -382,48 +393,42 @@
 {/snippet}
 
 {#snippet classificationContent()}
-    <CardTitle>Classification</CardTitle>
-    <div class="grid gap-2">
-        <Label>Genres</Label>
+    <Field.Field>
+        <Field.Label>Genres</Field.Label>
         <MultiCombobox
             label="Select genres"
             items={genres}
             bind:selected={form.metadata!.genres}
             placeholder="Search genres..."
         />
-    </div>
-    <div class="grid gap-2">
-        <Label>Tags</Label>
+    </Field.Field>
+    <Field.Field>
+        <Field.Label>Tags</Field.Label>
         <MultiCombobox
             label="Select tags"
             items={tags}
             bind:selected={form.metadata!.tags}
             placeholder="Search tags..."
         />
-    </div>
-
-    <div class="grid gap-2">
-        <Label>Season & Year</Label>
+    </Field.Field>
+    <Field.Field>
+        <Field.Label>Season & Year</Field.Label>
         <InputGroup.Root>
             <InputGroup.Addon>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                         {#snippet child({ props: triggerProps })}
-                            <InputGroup.Button
-                                variant="default"
-                                {...triggerProps}
-                            >
+                            <InputGroup.Button variant="default" {...triggerProps}>
                                 {form.metadata!.season
                                     ? capitalize(form.metadata!.season)
                                     : 'Season'}
+                                <ChevronDown class="ml-1 size-4 opacity-50" />
                             </InputGroup.Button>
                         {/snippet}
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
                         {#each seasons as s (s)}
-                            <DropdownMenu.Item
-                                onclick={() => (form.metadata!.season = s)}
-                            >
+                            <DropdownMenu.Item onclick={() => (form.metadata!.season = s)}>
                                 <div class="flex w-full items-center gap-2">
                                     {#if form.metadata!.season === s}
                                         <Check class="size-4" />
@@ -444,24 +449,24 @@
                 placeholder="Year"
             />
         </InputGroup.Root>
-    </div>
+    </Field.Field>
 {/snippet}
 
 {#snippet publishingContent()}
-    <CardTitle>Publishing</CardTitle>
-    <div class="flex items-center gap-2">
+    <Field.Field orientation="horizontal">
+        <Field.Content>
+            <Field.Label for="is_published">Published</Field.Label>
+        </Field.Content>
         <Switch
             checked={form.isPublished}
             onCheckedChange={(v) => (form.isPublished = v)}
             id="is_published"
         />
-        <Label for="is_published">Published</Label>
-    </div>
-    <InputError message={form.errors.isPublished} />
+        <Field.Error slot="error">{form.errors.isPublished}</Field.Error>
+    </Field.Field>
 {/snippet}
 
 {#snippet castsContent()}
-    <CardTitle class="">Casts</CardTitle>
     <Casts characters={form.metadata!.characters!.edges} />
 {/snippet}
 
@@ -469,19 +474,17 @@
     <form onsubmit={submit}>
         <div class="grid gap-4 md:gap-6 md:grid-cols-12">
             <div class="space-y-6 md:col-span-8">
-                {@render card(basicInfoContent)}
+                {@render card('Basic Information', basicInfoContent)}
 
                 {#if form.metadata?.characters?.edges?.length}
-                    {@render card(castsContent)}
+                    {@render card('Casts', castsContent)}
                 {/if}
             </div>
 
-            <div
-                class="space-y-6 md:col-span-4 md:sticky md:top-4 md:self-start"
-            >
-                {@render card(metadataContent)}
-                {@render card(classificationContent)}
-                {@render card(publishingContent)}
+            <div class="space-y-6 md:col-span-4 md:sticky md:top-4 md:self-start">
+                {@render card('Autofill', metadataContent)}
+                {@render card('Classification', classificationContent)}
+                {@render card('Publishing', publishingContent)}
 
                 <div class="flex gap-2">
                     {#if isEditing}

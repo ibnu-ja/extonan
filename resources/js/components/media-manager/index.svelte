@@ -47,7 +47,10 @@
     let monthsWithCounts = $state<{ month: string; count: number }[]>([]);
     let latestSelected = $state<App.Data.MediaData | null>(null);
     let deleteTarget = $state<App.Data.MediaData | null>(null);
-    type MediaResponse = App.Data.PaginatedCollection<App.Data.MediaData>;
+    type MediaResponse = Illuminate.LengthAwarePaginator<
+        number,
+        App.Data.MediaData
+    >;
 
     let media = $state<MediaResponse | null>(null);
 
@@ -239,8 +242,8 @@
         }}
     >
         <AlertDialog.Portal>
-            <AlertDialog.Overlay class="z-[60]" />
-            <AlertDialog.Content class="z-[60]">
+            <AlertDialog.Overlay class="z-60" />
+            <AlertDialog.Content class="z-60">
                 <AlertDialog.Header>
                     <AlertDialog.Title>Are you sure?</AlertDialog.Title>
                     <AlertDialog.Description>

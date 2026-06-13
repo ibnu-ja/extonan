@@ -10,8 +10,11 @@ use App\Data\Anime\PostFormData;
 use App\Data\Anime\PostShowData;
 use App\Data\Anime\PostShowResponse;
 use App\Data\Anime\PostStoreData;
+use App\Data\Anime\ResourceData;
+use App\Enums\ResourceType;
 use App\Models\Anime;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,6 +25,8 @@ use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
+use Spatie\LaravelData\DataCollection;
+use Spatie\LaravelData\Optional;
 
 class PostController extends Controller implements HasMiddleware
 {
@@ -33,9 +38,6 @@ class PostController extends Controller implements HasMiddleware
         ];
     }
 
-    /**
-     * @see PostCreateResponse
-     */
     public function create(Anime $anime): Response
     {
         Gate::authorize('create', Post::class);
@@ -53,16 +55,22 @@ class PostController extends Controller implements HasMiddleware
 
         $data = PostStoreData::from($request);
 
-        $this->authorizePublishIfRequested($data);
+        $this->authorizePublishIfRequested($data, $request->user());
 
         $post = $anime->posts()->create($data->toModelArray());
 
-        if ($data->links !== null) {
-            $post->resources()->createMany($data->links);
+        $post->resources()->createMany(array_map(fn (ResourceData $r) => $r->toArray(), $data->links));
+
+        if ($data->embed !== null) {
+            $post->resources()->create($data->embed->toArray());
+        }
+
+        if ($data->saluran !== null) {
+            $post->resources()->create($data->saluran->toArray());
         }
 
         if ($data->thumbnailItem !== null) {
-            $post->syncMedia($data->thumbnailItem['id'], 'thumbnail');
+            $post->syncMedia($data->thumbnailItem->id, 'thumbnail');
         } else {
             $post->detachMediaTags('thumbnail');
         }
@@ -72,9 +80,6 @@ class PostController extends Controller implements HasMiddleware
         return redirect()->route('post.show', [$anime, $post]);
     }
 
-    /**
-     * @see PostShowResponse
-     */
     public function show(Anime $anime, Post $post): Response
     {
         Gate::authorize('view', $anime);
@@ -83,23 +88,25 @@ class PostController extends Controller implements HasMiddleware
         $user = Auth::user();
 
         $anime->load(['posts' => fn (MorphMany $query) => $query->current()->with(['media.originalMedia.variants', 'media.variants'])->orderByEpisodeAndNativeTitle()]);
-        $post->load(['author', 'links', 'saluran', 'embeds', 'media.originalMedia.variants', 'media.variants']);
+        $post->load(['author', 'links', 'saluran', 'embed', 'media.originalMedia.variants', 'media.variants']);
 
-        return Inertia::render('anime/post/Show', [
-            'anime' => AnimeListItemData::fromModel($anime, $user),
-            'episodes' => $anime->posts->map(fn (Post $p) => EpisodeListItemData::fromModel($p)),
-            'post' => PostShowData::fromModel($post, $user),
-        ]);
+        $episodes = new DataCollection(EpisodeListItemData::class, $anime->posts->map(
+            fn (Post $p) => EpisodeListItemData::fromModel($p),
+        ));
+
+        return Inertia::render('anime/post/Show', new PostShowResponse(
+            anime: AnimeListItemData::fromModel($anime, $user),
+            episodes: $episodes,
+            post: PostShowData::fromModel($post, $user),
+        ));
     }
 
-    /**
-     * @see PostCreateResponse
-     */
     public function edit(Anime $anime, Post $post): Response
     {
         Gate::authorize('update', $post);
 
         $user = Auth::user();
+        $post->load(['links', 'embed', 'saluran']);
 
         return Inertia::render('anime/post/Create', new PostCreateResponse(
             anime: AnimeListItemData::fromModel($anime, $user),
@@ -114,31 +121,21 @@ class PostController extends Controller implements HasMiddleware
         Gate::authorize('update', $post);
 
         $data = PostStoreData::from($request);
-
-        $this->authorizePublishIfRequested($data);
-
+        $this->authorizePublishIfRequested($data, $request->user(), $post);
         $post->update($data->toModelArray());
-
-        if ($data->links !== null) {
-            $links = collect($data->links)->map(fn ($item) => array_filter([
-                'id' => $item['id'] ?? null,
-                'name' => $item['name'],
-                'type' => $item['type'],
-                'value' => json_encode($item['value']),
-            ], fn ($value, $key) => ! (is_null($value) && $key === 'id'), ARRAY_FILTER_USE_BOTH));
-
-            $post->links()->upsert($links->toArray(), uniqueBy: ['id'], update: ['name', 'value']);
-        }
+        $this->upsertResources($post, ResourceType::Link, $data->links);
+        $this->replaceSingleResource($post, ResourceType::Embed, $data->embed);
+        $this->replaceSingleResource($post, ResourceType::Saluran, $data->saluran);
 
         if ($data->thumbnailItem !== null) {
-            $post->syncMedia($data->thumbnailItem['id'], 'thumbnail');
+            $post->syncMedia($data->thumbnailItem->id, 'thumbnail');
         } else {
             $post->detachMediaTags('thumbnail');
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Episode updated successfully!']);
 
-        return redirect()->back();
+        return redirect()->route('post.show', [$anime, $post]);
     }
 
     public function destroy(Anime $anime, Post $post): RedirectResponse
@@ -152,9 +149,49 @@ class PostController extends Controller implements HasMiddleware
         return redirect()->route('anime.show', $anime);
     }
 
-    private function authorizePublishIfRequested(PostStoreData $data): void
+    /** @param ResourceData[] $items */
+    private function upsertResources(Post $post, ResourceType $type, array $items): void
     {
-        if ($data->isPublished && Auth::user()?->cannot('publish', Post::class)) {
+        $submittedIds = collect($items)
+            ->map(fn (ResourceData $r) => $r->id instanceof Optional ? null : $r->id)
+            ->filter()
+            ->values();
+
+        $query = $post->resources()->where('type', $type);
+
+        if ($submittedIds->isNotEmpty()) {
+            $query->whereNotIn('id', $submittedIds);
+        }
+
+        $query->delete();
+
+        if ($items === []) {
+            return;
+        }
+
+        $post->resources()->upsert(
+            array_map(fn (ResourceData $r) => [...$r->toArray(), 'value' => json_encode($r->value)], $items),
+            uniqueBy: ['id'],
+            update: ['name', 'type', 'value'],
+        );
+    }
+
+    private function replaceSingleResource(Post $post, ResourceType $type, ?ResourceData $item): void
+    {
+        $post->resources()->where('type', $type)->delete();
+
+        if ($item !== null) {
+            $post->resources()->create($item->toArray());
+        }
+    }
+
+    private function authorizePublishIfRequested(PostStoreData $data, ?User $user, ?Post $post = null): void
+    {
+        $requestingPublish = $post
+            ? $data->isPublished && ! $post->is_published
+            : $data->isPublished;
+
+        if ($requestingPublish && $user?->cannot('publish', Post::class)) {
             abort(403);
         }
     }

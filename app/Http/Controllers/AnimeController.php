@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\Anilist\AnilistMediaData;
 use App\Data\Anime\AnimeAZResponse;
 use App\Data\Anime\AnimeCreateResponse;
 use App\Data\Anime\AnimeFormData;
@@ -12,7 +11,8 @@ use App\Data\Anime\AnimeListItemData;
 use App\Data\Anime\AnimeShowResponse;
 use App\Data\Anime\AnimeStoreData;
 use App\Data\Anime\EpisodeShowData;
-use App\Data\PaginatedCollection;
+use App\Data\LabelValue;
+use App\Data\TagItem;
 use App\Enums\Season;
 use App\Models\Anime;
 use App\Models\Post;
@@ -32,6 +32,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
 use Spatie\LaravelData\DataCollection;
+use Spatie\LaravelData\PaginatedDataCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -47,9 +48,6 @@ class AnimeController extends Controller implements HasMiddleware
         ];
     }
 
-    /**
-     * @see AnimeIndexResponse
-     */
     public function index(Request $request): RedirectResponse|Redirector|Response
     {
         if (! $request->has('sort')) {
@@ -86,33 +84,29 @@ class AnimeController extends Controller implements HasMiddleware
             ])
             ->paginate($data->perPage)->appends($request->except(['page']));
 
-        return Inertia::render('anime/Index', [
-            'anime' => PaginatedCollection::fromPaginator(
-                $paginator,
-                fn (Anime $a) => AnimeListItemData::fromModel($a, $user),
-            ),
-            'seasons' => Inertia::once(fn () => (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray()),
-            'genres' => Inertia::once(fn () => $this->animeService->getGenres()),
-            'tags' => Inertia::once(fn () => $this->animeService->getTags()),
-            'sortOptions' => Inertia::once(fn () => $this->animeService->getSortOptions()),
-            'perPageValues' => Inertia::once(fn () => AnimeIndexRequest::PER_PAGE_VALUES),
-        ]);
+        $items = $paginator->getCollection()->map(fn (Anime $a) => AnimeListItemData::fromModel($a, $user));
+        $paginator->setCollection($items);
+
+        return Inertia::render('anime/Index', new AnimeIndexResponse(
+            anime: new PaginatedDataCollection(AnimeListItemData::class, $paginator),
+            seasons: (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray(),
+            genres: new DataCollection(LabelValue::class, $this->animeService->getGenres()),
+            tags: new DataCollection(TagItem::class, $this->animeService->getTags()),
+            sortOptions: new DataCollection(LabelValue::class, $this->animeService->getSortOptions()),
+            perPageValues: AnimeIndexRequest::PER_PAGE_VALUES,
+        ));
     }
 
-    /**
-     * @see AnimeCreateResponse
-     */
     public function create(Request $request): Response
     {
         Gate::authorize('create', Anime::class);
 
-        return Inertia::render('anime/Create', [
-            'anime' => null,
-            'genres' => Inertia::once(fn () => $this->animeService->getGenres()),
-            'tags' => Inertia::once(fn () => $this->animeService->getTags()),
-            'seasons' => Inertia::once(fn () => Season::cases()),
-            'anilistQuery' => Inertia::once(fn () => app(AnilistService::class)->getAnimeQuery()),
-        ]);
+        return Inertia::render('anime/Create', new AnimeCreateResponse(
+            genres: new DataCollection(LabelValue::class, $this->animeService->getGenres()),
+            tags: new DataCollection(TagItem::class, $this->animeService->getTags()),
+            seasons: Season::cases(),
+            anilistQuery: app(AnilistService::class)->getAnimeQuery(),
+        ));
     }
 
     public function store(Request $request): RedirectResponse
@@ -147,24 +141,21 @@ class AnimeController extends Controller implements HasMiddleware
                 fn ($post) => EpisodeShowData::fromModel($post, $anime, $user)
             )),
             canCreateEpisode: auth()->check() && auth()->user()?->can('create', Post::class),
-            metadata: $anime->metadata ? AnilistMediaData::from($anime->metadata) : null,
+            metadata: $anime->metadata,
         ));
     }
 
-    /**
-     * @see AnimeCreateResponse
-     */
-    public function edit(Anime $anime)
+    public function edit(Anime $anime): Response
     {
         Gate::authorize('update', $anime);
 
-        return Inertia::render('anime/Create', [
-            'anime' => AnimeFormData::fromModel($anime, auth()->user()->can('publish', $anime)),
-            'genres' => Inertia::once(fn () => $this->animeService->getGenres()),
-            'tags' => Inertia::once(fn () => $this->animeService->getTags()),
-            'seasons' => Inertia::once(fn () => Season::cases()),
-            'anilistQuery' => Inertia::once(fn () => app(AnilistService::class)->getAnimeQuery()),
-        ]);
+        return Inertia::render('anime/Create', new AnimeCreateResponse(
+            genres: new DataCollection(LabelValue::class, $this->animeService->getGenres()),
+            tags: new DataCollection(TagItem::class, $this->animeService->getTags()),
+            seasons: Season::cases(),
+            anilistQuery: app(AnilistService::class)->getAnimeQuery(),
+            anime: AnimeFormData::fromModel($anime, auth()->user()->can('publish', $anime)),
+        ));
     }
 
     public function update(Request $request, Anime $anime): RedirectResponse
@@ -173,7 +164,7 @@ class AnimeController extends Controller implements HasMiddleware
 
         $data = AnimeStoreData::from($request);
 
-        $this->authorizePublishIfRequested($data, $request->user());
+        $this->authorizePublishIfRequested($data, $request->user(), $anime);
 
         $anime->update($data->toModelArray());
 
@@ -192,9 +183,13 @@ class AnimeController extends Controller implements HasMiddleware
         return redirect()->route('anime.index');
     }
 
-    private function authorizePublishIfRequested(AnimeStoreData $data, User $user): void
+    private function authorizePublishIfRequested(AnimeStoreData $data, User $user, ?Anime $anime = null): void
     {
-        if ($data->isPublished && $user->cannot('publish', Anime::class)) {
+        $requestingPublish = $anime
+            ? $data->isPublished && ! $anime->is_published
+            : $data->isPublished;
+
+        if ($requestingPublish && $user->cannot('publish', Anime::class)) {
             abort(403);
         }
     }
