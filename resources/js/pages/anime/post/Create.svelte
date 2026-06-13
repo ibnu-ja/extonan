@@ -1,12 +1,11 @@
 <script lang="ts">
-    import { router, setLayoutProps, useForm } from '@inertiajs/svelte';
+    import {Link, router, setLayoutProps, useForm} from '@inertiajs/svelte';
     import Check from 'lucide-svelte/icons/check';
     import ChevronDown from 'lucide-svelte/icons/chevron-down';
     import ChevronUp from 'lucide-svelte/icons/chevron-up';
     import ExternalLink from 'lucide-svelte/icons/external-link';
     import Pencil from 'lucide-svelte/icons/pencil';
     import Plus from 'lucide-svelte/icons/plus';
-    import Send from 'lucide-svelte/icons/send';
     import Trash2 from 'lucide-svelte/icons/trash-2';
     import type { Snippet } from 'svelte';
     import PostController from '@/actions/App/Http/Controllers/PostController';
@@ -19,9 +18,7 @@
     import {
         Card,
         CardContent,
-        CardHeader,
         CardTitle,
-        CardAction,
     } from '@/components/ui/card';
     import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
     import { Input } from '@/components/ui/input';
@@ -34,7 +31,6 @@
     import { index as animeIndex, show as animeShow } from '@/routes/anime';
 
     type PostFormData = App.Data.Anime.PostFormData;
-    type AnilistMediaData = App.Data.Anilist.AnilistMediaData;
 
     type Props = App.Data.Anime.PostCreateResponse;
 
@@ -126,10 +122,6 @@
             : null;
     });
 
-    const title = $derived(
-        isEditing && postTitle ? `Editing ${postTitle}` : 'Create Episode',
-    );
-
     function submit(e: Event) {
         e.preventDefault();
 
@@ -145,10 +137,6 @@
 
     function publish() {
         form.isPublished = true;
-        submit(new Event('submit'));
-    }
-
-    function save() {
         submit(new Event('submit'));
     }
 
@@ -386,7 +374,7 @@
                 {#if resource.value.length === 0}
                     <p class="text-sm text-muted-foreground">No data.</p>
                 {:else}
-                    {#each resource.value as link, j (j)}
+                    {#each resource.value as _, j (j)}
                         <div
                             class="grid grid-cols-[80px_1fr] gap-2 items-start"
                         >
@@ -478,12 +466,12 @@
     {/if}
     <div>
         <p class="text-sm font-medium leading-none mb-1">Title</p>
-        <a
-            href="/anime/{anime.id}"
+        <Link
+            href={animeShow.url(anime.id)}
             class="text-sm text-primary underline-offset-4 hover:underline"
         >
             {anime.title.en}
-        </a>
+        </Link>
     </div>
     <div>
         <p class="text-sm font-medium leading-none mb-2">Links</p>
@@ -542,7 +530,6 @@
             >
                 {@render card(thumbnailContent)}
                 {@render card(animeContent)}
-
                 {@render card(publishingContent)}
 
                 <div class="flex gap-2">
