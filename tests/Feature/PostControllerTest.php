@@ -80,7 +80,7 @@ class PostControllerTest extends TestCase
 
         $response = $this->post(route('post.store', $anime), $this->episodeData());
 
-        $response->assertForbidden();
+        $response->assertRedirect(route('login'));
     }
 
     public function test_user_without_create_permission_cannot_store_post(): void
