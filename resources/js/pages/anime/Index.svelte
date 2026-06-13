@@ -48,10 +48,10 @@
             let val = 12;
 
             if (width >= 1536) {
-val = 20;
-} else if (width >= 1280) {
-val = 16;
-}
+                val = 20;
+            } else if (width >= 1280) {
+                val = 16;
+            }
 
             params.set('perPage', String(val));
             router.get(

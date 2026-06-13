@@ -11,7 +11,12 @@
     import * as SpeedDial from '@/components/ui/speed-dial/index.js';
     import { t, formatDate } from '@/lib/locale.svelte';
     import { index as animeIndex, show as animeShow } from '@/routes/anime';
-    import { show as postShow, edit as postEdit, destroy as postDestroy, update as postUpdate } from '@/routes/post';
+    import {
+        show as postShow,
+        edit as postEdit,
+        destroy as postDestroy,
+        update as postUpdate,
+    } from '@/routes/post';
 
     let { anime, episodes, post }: App.Data.Anime.PostShowResponse = $props();
 
@@ -191,6 +196,7 @@
                                 <Accordion.Content>
                                     <div class="flex flex-wrap gap-2">
                                         {#each link.value as item (item.name)}
+                                            <!-- eslint-disable svelte/no-navigation-without-resolve -->
                                             <a
                                                 href={item.value}
                                                 target="_blank"
@@ -200,6 +206,7 @@
                                                 {item.name}
                                                 <ExternalLink class="size-3" />
                                             </a>
+                                            <!-- eslint-enable -->
                                         {/each}
                                     </div>
                                 </Accordion.Content>

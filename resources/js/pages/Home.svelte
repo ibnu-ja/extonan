@@ -58,10 +58,12 @@
         <SectionHeading title="Latest Episodes" />
     </div>
     {#if latestEpisodes.length > 0}
-        <div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div
+            class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        >
             {#each latestEpisodes as episode (episode.id)}
                 <EpisodeThumbnail
-                    episode={episode}
+                    {episode}
                     animeId={episode.animeId}
                     animeTitle={episode.animeTitle}
                 />
