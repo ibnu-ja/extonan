@@ -59,7 +59,7 @@ class PostShowData extends Data
             publishedAt: $post->published_at?->toIso8601String(),
             isPublished: $post->is_published,
             permissions: PermissionsData::fromModel($post, $user),
-            links: new DataCollection(ResourceData::class, $post->links->sortBy('name')->map(
+            links: new DataCollection(ResourceData::class, $post->links->sortBy('name')->values()->map(
                 fn ($r) => ResourceData::fromModel($r),
             )),
             saluran: $post->saluran

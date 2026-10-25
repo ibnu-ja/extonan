@@ -143,6 +143,51 @@ class Anime extends BasePost
         return $this->morphMany(Post::class, 'postable');
     }
 
+    /**
+     * TODO: Implement MediaFormat search filters (excluding MUSIC).
+     *
+     * Target formats from AniList:
+     * - TV: Standard television series
+     * - TV_SHORT: Short television series (<15 mins)
+     * - MOVIE: Theatrical feature film
+     * - SPECIAL: Bonus discs, picture dramas, side-stories
+     * - OVA: Original Video Animation (direct-to-video/disc)
+     * - ONA: Original Net Animation (web streaming release)
+     *
+     * Implementation Recipe:
+     * 1. AniList Ingestion:
+     *    - Add `format` to `MEDIA_FIELDS` in `app/Services/AnilistService.php`.
+     *    - Add `public ?string $format = null` to `app/Data/Anilist/AnilistMediaData.php`.
+     *
+     * 2. PostgreSQL Schema & Indexing (matches `season` pattern):
+     *    - Add generated column or functional index in a new migration:
+     *      `$table->string('format')->virtualAs("metadata->>'format'")->nullable()->index();`
+     *      Raw SQL:
+     *      `ALTER TABLE anime ADD COLUMN format VARCHAR(50) GENERATED ALWAYS AS ((metadata ->> 'format')) STORED;`
+     *      `CREATE INDEX anime_format_index ON anime (format);`
+     *
+     * 3. Eloquent Model Scopes:
+     *    #[Scope]
+     *    protected function formatIn(Builder $query, string ...$formats): void
+     *    {
+     *        $query->whereIn('format', $formats);
+     *    }
+     *
+     *    #[Scope]
+     *    protected function formatNotIn(Builder $query, string ...$formats): void
+     *    {
+     *        $query->whereNotIn('format', $formats);
+     *    }
+     *
+     * 4. QueryBuilder AllowedFilters in `AnimeController.php`:
+     *    - `AllowedFilter::scope('formatIn'),`
+     *    - `AllowedFilter::scope('formatNotIn'),`
+     *
+     * 5. DTO & Validation:
+     *    - Add `$formatIn` and `$formatNotIn` to `AnimeFilterData.php`.
+     *    - Add validation rules in `AnimeIndexRequest.php`:
+     *      `'filter.formatIn.*' => ['string', 'in:TV,TV_SHORT,MOVIE,SPECIAL,OVA,ONA']`
+     */
     #[Scope]
     protected function genreIn(Builder $query, string ...$genres): void
     {

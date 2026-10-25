@@ -87,7 +87,7 @@ class PostController extends Controller implements HasMiddleware
 
         $user = Auth::user();
 
-        $anime->load(['posts' => fn (MorphMany $query) => $query->current()->with(['media.originalMedia.variants', 'media.variants'])->orderByEpisodeAndNativeTitle()]);
+        $anime->load(['posts' => fn (MorphMany $query) => $query->current()->visible()->with(['media.originalMedia.variants', 'media.variants'])->orderByEpisodeAndNativeTitle()]);
         $post->load(['author', 'links', 'saluran', 'embed', 'media.originalMedia.variants', 'media.variants']);
 
         $episodes = new DataCollection(EpisodeListItemData::class, $anime->posts->map(

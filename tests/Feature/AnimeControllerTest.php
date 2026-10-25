@@ -6,6 +6,7 @@ use App\Enums\Permission;
 use App\Models\Anime;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Permission as SpatiePermission;
 use Tests\TestCase;
 
@@ -396,5 +397,79 @@ class AnimeControllerTest extends TestCase
         $response = $this->actingAs($user)->delete(route('anime.destroy', $anime));
 
         $response->assertForbidden();
+    }
+
+    public function test_guest_can_view_published_anime_by_id(): void
+    {
+        $author = User::factory()->create();
+        $anime = Anime::factory()->create([
+            'author_id' => $author->id,
+            'is_published' => true,
+        ]);
+
+        $response = $this->get(route('anime.show', $anime->id));
+
+        $response->assertOk();
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('anime/Show')
+            ->has('anime')
+            ->where('anime.id', $anime->id)
+            ->has('episodes')
+        );
+    }
+
+    public function test_guest_cannot_view_draft_anime(): void
+    {
+        $author = User::factory()->create();
+        $anime = Anime::factory()->create([
+            'author_id' => $author->id,
+            'is_published' => false,
+        ]);
+
+        $response = $this->get(route('anime.show', $anime->id));
+
+        $response->assertForbidden();
+    }
+
+    public function test_author_with_read_self_can_view_own_draft_anime(): void
+    {
+        $user = $this->createUserWithPermission(Permission::POST_READ_SELF->value);
+        $anime = Anime::factory()->create([
+            'author_id' => $user->id,
+            'is_published' => false,
+        ]);
+
+        $response = $this->actingAs($user)->get(route('anime.show', $anime->id));
+
+        $response->assertOk();
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('anime/Show')
+            ->where('anime.id', $anime->id)
+        );
+    }
+
+    public function test_user_with_read_any_can_view_any_draft_anime(): void
+    {
+        $user = $this->createUserWithPermission(Permission::POST_READ_ANY->value);
+        $author = User::factory()->create();
+        $anime = Anime::factory()->create([
+            'author_id' => $author->id,
+            'is_published' => false,
+        ]);
+
+        $response = $this->actingAs($user)->get(route('anime.show', $anime->id));
+
+        $response->assertOk();
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('anime/Show')
+            ->where('anime.id', $anime->id)
+        );
+    }
+
+    public function test_show_returns_404_when_anime_not_found(): void
+    {
+        $response = $this->get('/anime/999999');
+
+        $response->assertNotFound();
     }
 }

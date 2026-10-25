@@ -220,6 +220,29 @@ class PostControllerTest extends TestCase
         $response->assertOk();
     }
 
+    public function test_guest_only_sees_published_episodes_in_sidebar(): void
+    {
+        $anime = Anime::factory()->create();
+        $publishedPost = Post::factory()->create([
+            'postable_id' => $anime->id,
+            'postable_type' => Anime::class,
+            'is_published' => true,
+        ]);
+        $draftPost = Post::factory()->create([
+            'postable_id' => $anime->id,
+            'postable_type' => Anime::class,
+            'is_published' => false,
+        ]);
+
+        $response = $this->get(route('post.show', [$anime, $publishedPost]));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->has('episodes', 1)
+            ->where('episodes.0.id', $publishedPost->id)
+        );
+    }
+
     public function test_user_with_read_any_can_view_unpublished_post(): void
     {
         $user = $this->createUserWithPermission(Permission::POST_READ_ANY->value);

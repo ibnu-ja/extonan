@@ -66,6 +66,9 @@ class AnimeController extends Controller implements HasMiddleware
         $user = Auth::user();
 
         $paginator = QueryBuilder::for(Anime::visible())->allowedFilters(
+            // TODO: Add MediaFormat filters (TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA - see Anime.php recipe)
+            // AllowedFilter::scope('formatIn'),
+            // AllowedFilter::scope('formatNotIn'),
             AllowedFilter::scope('seasonIn'),
             AllowedFilter::scope('seasonNotIn'),
             AllowedFilter::scope('tagIn'),
