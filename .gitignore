@@ -35,3 +35,8 @@ yarn-error.log
 !/config/*.php
 !/config/**/*.php
 /data
+_ide_helper.php
+.agents
+AGENTS.md
+.ai
+sonar-project.properties

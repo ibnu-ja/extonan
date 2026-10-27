@@ -1,14 +1,14 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
     import { Badge } from '@/components/ui/badge';
-    import type {} from '@/types/generated';
+    import { show as animeShow } from '@/routes/anime';
 
     let {
         title,
         genres,
         bannerImage,
         coverImage,
-        link,
+        id,
     }: {
         title: Record<string, string | null>;
         genres: string[];
@@ -19,7 +19,7 @@
             medium: string;
             color: string;
         };
-        link: string;
+        id: number;
     } = $props();
 
     const bgImage = $derived(
@@ -32,7 +32,7 @@
 </script>
 
 <Link
-    href={link}
+    href={animeShow.url(id)}
     class="flex h-full w-full flex-col justify-end bg-cover bg-center p-5 md:p-10"
     style="background-image: {bgImage}"
 >

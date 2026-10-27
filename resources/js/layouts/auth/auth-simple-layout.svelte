@@ -26,7 +26,7 @@
                     class="flex flex-col items-center gap-2 font-medium"
                 >
                     <div
-                        class="mb-1 flex h-9 w-9 items-center justify-center rounded-md"
+                        class="mb-1 flex h-9 w-9 items-center justify-center rounded-[var(--radius)]"
                     >
                         <AppLogoIcon class="size-9" />
                     </div>

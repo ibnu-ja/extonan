@@ -1,15 +1,15 @@
 <script lang="ts">
-	import ArrowLeftIcon from "@lucide/svelte/icons/arrow-left";
 	import type { WithoutChildren } from "bits-ui";
 	import { getEmblaContext } from "./context.js";
 	import { cn } from "@/lib/utils.js";
 	import { Button, type Props } from "@/components/ui/button/index.js";
+	import { Icon } from "@/components/icon/index.js";
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		variant = "outline",
-		size = "icon",
+		size = "icon-sm",
 		...restProps
 	}: WithoutChildren<Props> = $props();
 
@@ -21,10 +21,11 @@
 	{variant}
 	{size}
 	aria-disabled={!emblaCtx.canScrollPrev}
+	disabled={!emblaCtx.canScrollPrev}
 	class={cn(
-		"absolute size-8 rounded-full",
+		"cn-carousel-previous absolute touch-manipulation",
 		emblaCtx.orientation === "horizontal"
-			? "-start-12 top-1/2 -translate-y-1/2"
+			? "inset-y-0 -start-12 my-auto"
 			: "start-1/2 -top-12 -translate-x-1/2 rotate-90",
 		className
 	)}
@@ -33,6 +34,13 @@
 	{...restProps}
 	bind:ref
 >
-	<ArrowLeftIcon class="size-4" />
+	<Icon
+		lucide={() => import("lucide-svelte/icons/chevron-left")}
+		tabler={() => import("@tabler/icons-svelte/icons/chevron-left")}
+		hugeicons={() => import("@hugeicons/core-free-icons/ArrowLeft01Icon")}
+		phosphor={() => import("phosphor-svelte/lib/CaretLeftIcon")}
+		remixicon={() => import("remixicon-svelte/icons/arrow-left-s-line")}
+		class="cn-rtl-flip"
+	/>
 	<span class="sr-only">Previous slide</span>
 </Button>

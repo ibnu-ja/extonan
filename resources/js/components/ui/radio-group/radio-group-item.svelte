@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { RadioGroup as RadioGroupPrimitive } from "bits-ui";
-	import CircleIcon from "@lucide/svelte/icons/circle";
+	import { Icon } from "@/components/icon/index.js";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
 
 	let {
@@ -14,16 +14,21 @@
 	bind:ref
 	data-slot="radio-group-item"
 	class={cn(
-		"border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
+		"cn-radio-group-item group/radio-group-item peer relative aspect-square shrink-0 border outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50",
 		className
 	)}
 	{...restProps}
 >
 	{#snippet children({ checked })}
-		<div data-slot="radio-group-indicator" class="relative flex items-center justify-center">
+		<div data-slot="radio-group-indicator" class="cn-radio-group-indicator">
 			{#if checked}
-				<CircleIcon
-					class="fill-primary absolute start-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2"
+				<Icon
+					lucide={() => import("lucide-svelte/icons/circle")}
+					tabler={() => import("@tabler/icons-svelte/icons/circle")}
+					hugeicons={() => import("@hugeicons/core-free-icons/CircleIcon")}
+					phosphor={() => import("phosphor-svelte/lib/CircleIcon")}
+					remixicon={() => import("remixicon-svelte/icons/circle-line")}
+					class="cn-radio-group-indicator-icon"
 				/>
 			{/if}
 		</div>

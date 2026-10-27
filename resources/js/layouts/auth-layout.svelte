@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import AuthLayout from '@/layouts/auth/auth-simple-layout.svelte';
+    import { DesignSystemProvider } from '@/lib/design-system';
 
     let {
         title = '',
@@ -13,6 +14,8 @@
     } = $props();
 </script>
 
-<AuthLayout {title} {description}>
-    {@render children?.()}
-</AuthLayout>
+<DesignSystemProvider>
+    <AuthLayout {title} {description}>
+        {@render children?.()}
+    </AuthLayout>
+</DesignSystemProvider>

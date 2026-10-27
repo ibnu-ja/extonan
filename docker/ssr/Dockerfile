@@ -22,6 +22,7 @@ RUN WAYFINDER_COMMAND=echo bun run build:ssr
 FROM docker.io/oven/bun:1-alpine
 WORKDIR /app
 ENV NODE_ENV=production
+COPY --from=bun_builder /app/package.json /app/package.json
 COPY --from=bun_builder /app/node_modules /app/node_modules
 COPY --from=bun_builder /app/bootstrap/ssr /app/bootstrap/ssr
 COPY --from=bun_builder /app/public /app/public

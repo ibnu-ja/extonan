@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Calendar as CalendarPrimitive } from "bits-ui";
-	import ChevronLeftIcon from "@lucide/svelte/icons/chevron-left";
+	import { Icon } from "@/components/icon/index.js";
 	import { buttonVariants, type ButtonVariant } from "@/components/ui/button/index.js";
 	import { cn } from "@/lib/utils.js";
 
@@ -16,7 +16,14 @@
 </script>
 
 {#snippet Fallback()}
-	<ChevronLeftIcon class="size-4" />
+	<Icon
+		lucide={() => import("lucide-svelte/icons/chevron-left")}
+		tabler={() => import("@tabler/icons-svelte/icons/chevron-left")}
+		hugeicons={() => import("@hugeicons/core-free-icons/ArrowLeft01Icon")}
+		phosphor={() => import("phosphor-svelte/lib/CaretLeftIcon")}
+		remixicon={() => import("remixicon-svelte/icons/arrow-left-s-line")}
+		class={cn("cn-rtl-flip size-4", className)}
+	/>
 {/snippet}
 
 <CalendarPrimitive.PrevButton
@@ -26,6 +33,11 @@
 		"size-(--cell-size) bg-transparent p-0 select-none disabled:opacity-50 rtl:rotate-180",
 		className
 	)}
-	children={children || Fallback}
 	{...restProps}
-/>
+>
+	{#if children}
+		{@render children?.()}
+	{:else}
+		{@render Fallback()}
+	{/if}
+</CalendarPrimitive.PrevButton>

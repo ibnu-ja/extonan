@@ -36,7 +36,7 @@
         </Link>
 
         <div class="flex flex-col gap-6">
-            <Card class="rounded-xl">
+            <Card>
                 <CardHeader class="px-10 pt-8 pb-0 text-center">
                     <CardTitle class="text-xl">{title}</CardTitle>
                     <CardDescription>

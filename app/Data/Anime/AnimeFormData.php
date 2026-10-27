@@ -2,9 +2,10 @@
 
 namespace App\Data\Anime;
 
+use App\Data\Anilist\AnilistMediaData;
 use App\Models\Anime;
-use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class AnimeFormData extends Data
@@ -16,19 +17,21 @@ class AnimeFormData extends Data
         /** @var array<string, string|null> */
         public array $description,
         public ?int $anilistId,
-        public ?object $metadata,
+        public ?AnilistMediaData $metadata,
         public bool $isPublished,
         public bool $canPublish,
     ) {}
 
     public static function fromModel(Anime $anime, bool $canPublish): self
     {
+        $meta = $anime->metadata;
+
         return new self(
             id: $anime->id,
             title: $anime->getTranslations('title'),
             description: $anime->getTranslations('description'),
             anilistId: $anime->anilist_id,
-            metadata: $anime->metadata,
+            metadata: $meta ? AnilistMediaData::from($meta) : null,
             isPublished: $anime->is_published,
             canPublish: $canPublish,
         );

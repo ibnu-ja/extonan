@@ -5,47 +5,35 @@ export type LabelValue = {
     value: string;
 };
 
-export type AnimeFilterState = {
-    title: string;
-    genreIn: string[];
-    genreNotIn: string[];
-    tagIn: string[];
-    tagNotIn: string[];
-    seasonIn: string[];
-    seasonNotIn: string[];
-};
+export type AnimeFilterState = App.Data.Anime.AnimeFilterData;
 
 export function buildFilterQuery(
-    filters: AnimeFilterState,
+    request: App.Data.Anime.AnimeIndexRequest,
 ): Record<string, unknown> {
     const query: Record<string, unknown> = {};
 
-    if (filters.title) {
-        query.title = filters.title;
+    if (request.sort) {
+        query.sort = request.sort;
     }
 
-    if (filters.genreIn.length > 0) {
-        query.genre_in = filters.genreIn;
-    }
+    if (request.filter) {
+        const filter: Record<string, unknown> = {};
 
-    if (filters.genreNotIn.length > 0) {
-        query.genre_not_in = filters.genreNotIn;
-    }
+        for (const [key, value] of Object.entries(request.filter)) {
+            if (
+                value == null ||
+                value === '' ||
+                (Array.isArray(value) && value.length === 0)
+            ) {
+                continue;
+            }
 
-    if (filters.tagIn.length > 0) {
-        query.tag_in = filters.tagIn;
-    }
+            filter[key] = value;
+        }
 
-    if (filters.tagNotIn.length > 0) {
-        query.tag_not_in = filters.tagNotIn;
-    }
-
-    if (filters.seasonIn.length > 0) {
-        query.season_in = filters.seasonIn;
-    }
-
-    if (filters.seasonNotIn.length > 0) {
-        query.season_not_in = filters.seasonNotIn;
+        if (Object.keys(filter).length > 0) {
+            query.filter = filter;
+        }
     }
 
     return query;
@@ -53,8 +41,17 @@ export function buildFilterQuery(
 
 export function useAnime() {
     const genres = $derived((page.props.genres as LabelValue[]) ?? []);
-    const tags = $derived((page.props.tags as LabelValue[]) ?? []);
+    const rawTags = $derived((page.props.tags as App.Data.TagItem[]) ?? []);
     const seasons = $derived((page.props.seasons as string[]) ?? []);
+
+    const tags = $derived(
+        rawTags
+            .filter((t) => !t.isAdult)
+            .map(
+                (t) =>
+                    ({ key: String(t.id), value: t.name }) satisfies LabelValue,
+            ),
+    );
 
     return {
         get genres() {

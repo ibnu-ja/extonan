@@ -11,7 +11,7 @@ export type ThemeState = {
 };
 
 const appearance = $state<{ value: Appearance }>({ value: 'system' });
-
+let systemDark = $state(false);
 let themeChangeMediaQuery: MediaQueryList | null = null;
 
 const prefersDark = (): boolean => {
@@ -23,7 +23,11 @@ const prefersDark = (): boolean => {
 };
 
 const isDarkMode = (value: Appearance): boolean => {
-    return value === 'dark' || (value === 'system' && prefersDark());
+    return (
+        value === 'dark' ||
+        (value === 'system' &&
+            (typeof window !== 'undefined' ? systemDark : false))
+    );
 };
 
 const getResolvedAppearance = (): ResolvedAppearance => {
@@ -56,12 +60,24 @@ const getStoredAppearance = (): Appearance => {
 
     const stored = localStorage.getItem('appearance');
 
-    return stored === 'light' || stored === 'dark' || stored === 'system'
-        ? stored
-        : 'system';
+    if (stored === 'light' || stored === 'dark' || stored === 'system') {
+        return stored;
+    }
+
+    const match = /(?:^|;\s*)appearance=([^;]+)/.exec(document.cookie);
+
+    if (
+        match &&
+        (match[1] === 'light' || match[1] === 'dark' || match[1] === 'system')
+    ) {
+        return match[1] as Appearance;
+    }
+
+    return 'system';
 };
 
-const handleSystemThemeChange = (): void => {
+const handleSystemThemeChange = (e: MediaQueryListEvent): void => {
+    systemDark = e.matches;
     applyTheme(appearance.value);
 };
 
@@ -82,13 +98,16 @@ export function initializeTheme(): () => void {
         return () => {};
     }
 
+    systemDark = prefersDark();
+    const stored = getStoredAppearance();
+    appearance.value = stored;
+
     if (!localStorage.getItem('appearance')) {
-        localStorage.setItem('appearance', 'system');
-        setCookie('appearance', 'system');
+        localStorage.setItem('appearance', stored);
     }
 
-    appearance.value = getStoredAppearance();
-    applyTheme(appearance.value);
+    setCookie('appearance', stored);
+    applyTheme(stored);
 
     detachThemeChangeListener();
     themeChangeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');

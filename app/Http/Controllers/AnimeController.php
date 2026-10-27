@@ -3,35 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Data\Anime\AnimeAZResponse;
+use App\Data\Anime\AnimeCreateResponse;
 use App\Data\Anime\AnimeFormData;
+use App\Data\Anime\AnimeIndexRequest;
 use App\Data\Anime\AnimeIndexResponse;
 use App\Data\Anime\AnimeListItemData;
 use App\Data\Anime\AnimeShowResponse;
-use App\Data\EpisodeSummaryData;
+use App\Data\Anime\AnimeStoreData;
+use App\Data\Anime\EpisodeShowData;
 use App\Data\LabelValue;
-use App\Data\PaginationData;
-use App\Http\Requests\StoreAnimeRequest;
+use App\Data\TagItem;
+use App\Enums\Season;
 use App\Models\Anime;
 use App\Models\Post;
+use App\Models\User;
 use App\Queries\AnimeSeasonsQuery;
-use Gate;
+use App\Services\AnilistService;
+use App\Services\AnimeService;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
 use Spatie\LaravelData\DataCollection;
+use Spatie\LaravelData\PaginatedDataCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class AnimeController extends Controller implements HasMiddleware
 {
+    public function __construct(private readonly AnimeService $animeService) {}
+
     public static function middleware(): array
     {
         return [
@@ -40,7 +48,7 @@ class AnimeController extends Controller implements HasMiddleware
         ];
     }
 
-    public function index(Request $request): Application|RedirectResponse|Redirector|Response
+    public function index(Request $request): RedirectResponse|Redirector|Response
     {
         if (! $request->has('sort')) {
             $query = $request->query();
@@ -51,61 +59,44 @@ class AnimeController extends Controller implements HasMiddleware
             return redirect($redirectUrl);
         }
 
-        $validGenres = config('anime.genres', []);
-        $validTags = config('anime.tags', []);
+        $data = AnimeIndexRequest::from($request);
 
-        $request->validate([
-            'filter.genre_in.*' => ['nullable', 'string', 'in:'.implode(',', $validGenres)],
-            'filter.genre_not_in.*' => ['nullable', 'string', 'in:'.implode(',', $validGenres)],
-            'filter.tag_in.*' => ['nullable', 'string', 'in:'.implode(',', $validTags)],
-            'filter.tag_not_in.*' => ['nullable', 'string', 'in:'.implode(',', $validTags)],
-            'filter.season_in.*' => ['nullable', 'string'],
-            'filter.season_not_in.*' => ['nullable', 'string'],
-            'filter.title' => ['nullable', 'string', 'max:255'],
-            'filter.is_published' => ['nullable', 'boolean'],
-            'sort' => ['nullable', 'string', 'in:title->romaji,-title->romaji,created_at,-created_at,updated_at,-updated_at'],
-        ]);
+        $request->merge(['perPage' => $data->perPage]);
 
         $user = Auth::user();
 
         $paginator = QueryBuilder::for(Anime::visible())->allowedFilters(
-            AllowedFilter::scope('season_in'),
-            AllowedFilter::scope('season_not_in'),
-            AllowedFilter::scope('tag_in'),
-            AllowedFilter::scope('tag_not_in'),
-            AllowedFilter::scope('genre_in'),
-            AllowedFilter::scope('genre_not_in'),
+            // TODO: Add MediaFormat filters (TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA - see Anime.php recipe)
+            // AllowedFilter::scope('formatIn'),
+            // AllowedFilter::scope('formatNotIn'),
+            AllowedFilter::scope('seasonIn'),
+            AllowedFilter::scope('seasonNotIn'),
+            AllowedFilter::scope('tagIn'),
+            AllowedFilter::scope('tagNotIn'),
+            AllowedFilter::scope('genreIn'),
+            AllowedFilter::scope('genreNotIn'),
             AllowedFilter::scope('title', 'searchTitle'),
-            AllowedFilter::exact('is_published'),
+            AllowedFilter::exact('isPublished', 'is_published'),
         )
             ->allowedSorts('title->romaji', 'created_at', 'updated_at')
-            ->paginate(14)->appends(request()->query());
+            ->select([
+                'id', 'title', 'slug', 'author_id', 'metadata',
+                'created_at', 'updated_at',
+                'is_published', 'is_current', 'uuid', 'published_at',
+                'publisher_type', 'publisher_id',
+            ])
+            ->paginate($data->perPage)->appends($request->except(['page']));
 
-        $items = collect($paginator->items())
-            ->map(fn (Anime $a) => AnimeListItemData::fromModel($a, $user));
+        $items = $paginator->getCollection()->map(fn (Anime $a) => AnimeListItemData::fromModel($a, $user));
+        $paginator->setCollection($items);
 
         return Inertia::render('anime/Index', new AnimeIndexResponse(
-            items: new DataCollection(AnimeListItemData::class, $items),
-            pagination: PaginationData::fromPaginator($paginator),
+            anime: new PaginatedDataCollection(AnimeListItemData::class, $paginator),
             seasons: (new AnimeSeasonsQuery)->builder()->get()->pluck('season_year')->toArray(),
-            canCreate: auth()->check() && auth()->user()?->can('create', Post::class),
-            genres: new DataCollection(LabelValue::class, collect(config('anime.genres', []))->map(fn (string $genre) => new LabelValue(
-                key: $genre,
-                value: __('anime.genres.'.$genre),
-            ))),
-            tags: new DataCollection(LabelValue::class, collect(config('anime.tags', []))->map(fn (string $tag) => new LabelValue(
-                key: $tag,
-                value: __('anime.tags.'.$tag),
-            ))),
-            sortOptions: new DataCollection(LabelValue::class, collect(['title->romaji', '-title->romaji', 'created_at', '-created_at', 'updated_at', '-updated_at'])->map(function (string $sort) {
-                $dir = str_starts_with($sort, '-') ? 'desc' : 'asc';
-                $field = ltrim($sort, '-');
-
-                return new LabelValue(
-                    key: $sort,
-                    value: __('anime.sort.'.$field).' '.__('anime.sort_dir.'.$dir),
-                );
-            })),
+            genres: new DataCollection(LabelValue::class, $this->animeService->getGenres()),
+            tags: new DataCollection(TagItem::class, $this->animeService->getTags()),
+            sortOptions: new DataCollection(LabelValue::class, $this->animeService->getSortOptions()),
+            perPageValues: AnimeIndexRequest::PER_PAGE_VALUES,
         ));
     }
 
@@ -113,79 +104,97 @@ class AnimeController extends Controller implements HasMiddleware
     {
         Gate::authorize('create', Anime::class);
 
-        return Inertia::render('anime/Create', new AnimeFormData(
-            id: null,
-            title: [],
-            description: [],
-            anilistId: null,
-            metadata: null,
-            isPublished: false,
-            canPublish: $request->user()->can('publish', Anime::class),
+        return Inertia::render('anime/Create', new AnimeCreateResponse(
+            genres: new DataCollection(LabelValue::class, $this->animeService->getGenres()),
+            tags: new DataCollection(TagItem::class, $this->animeService->getTags()),
+            seasons: Season::cases(),
+            anilistQuery: app(AnilistService::class)->getAnimeQuery(),
         ));
     }
 
-    public function store(StoreAnimeRequest $request)
+    public function store(Request $request): RedirectResponse
     {
         Gate::authorize('create', Anime::class);
-        if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class)) {
-            abort(403);
-        }
 
-        Anime::create($request->validated());
+        $data = AnimeStoreData::from($request);
 
-        return redirect()->route('anime.index')->banner('Anime '.($request->boolean('is_published') ? 'published' : 'draft saved').' successfully.');
+        $this->authorizePublishIfRequested($data, $request->user());
+
+        Anime::create($data->toModelArray());
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Anime '.($data->isPublished ? 'published' : 'draft saved').' successfully.']);
+
+        return redirect()->route('anime.index');
     }
 
-    public function show(Anime $anime)
+    public function show(Anime $anime): Response
     {
         Gate::authorize('view', $anime);
 
         $user = Auth::user();
         $anime->load([
-            'posts' => fn (MorphMany $query) => $query->orderByEpisodeAndNativeTitle()->visible()->with(['author'])->get(),
+            'posts' => fn (MorphMany $query) => $query->orderByEpisodeAndNativeTitle()->visible()->with(['author']),
             'author',
             'publisher',
         ]);
 
         return Inertia::render('anime/Show', new AnimeShowResponse(
             anime: AnimeListItemData::fromModel($anime, $user),
-            episodes: new DataCollection(EpisodeSummaryData::class, $anime->posts->map(
-                fn ($post) => EpisodeSummaryData::fromModel($post, $user)
+            episodes: new DataCollection(EpisodeShowData::class, $anime->posts->map(
+                fn ($post) => EpisodeShowData::fromModel($post, $anime, $user)
             )),
             canCreateEpisode: auth()->check() && auth()->user()?->can('create', Post::class),
+            metadata: $anime->metadata,
         ));
     }
 
-    public function edit(Anime $anime)
+    public function edit(Anime $anime): Response
     {
         Gate::authorize('update', $anime);
-        if (auth()->user()->cannot('update', $anime)) {
-            abort(403);
-        }
 
-        return Inertia::render('anime/Create', [
-            'anime' => AnimeFormData::fromModel($anime, auth()->user()->can('publish', $anime)),
-        ]);
+        return Inertia::render('anime/Create', new AnimeCreateResponse(
+            genres: new DataCollection(LabelValue::class, $this->animeService->getGenres()),
+            tags: new DataCollection(TagItem::class, $this->animeService->getTags()),
+            seasons: Season::cases(),
+            anilistQuery: app(AnilistService::class)->getAnimeQuery(),
+            anime: AnimeFormData::fromModel($anime, auth()->user()->can('publish', $anime)),
+        ));
     }
 
-    public function update(StoreAnimeRequest $request, Anime $anime)
+    public function update(Request $request, Anime $anime): RedirectResponse
     {
         Gate::authorize('update', $anime);
-        if ($request->boolean('is_published') && $request->user()->cannot('publish', Anime::class)) {
-            abort(403);
-        }
 
-        $anime->update($request->validated());
+        $data = AnimeStoreData::from($request);
 
-        return redirect()->route('anime.show', $anime)->banner('Anime updated successfully.');
+        $this->authorizePublishIfRequested($data, $request->user(), $anime);
+
+        $anime->update($data->toModelArray());
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Anime updated successfully.']);
+
+        return redirect()->route('anime.show', $anime);
     }
 
-    public function destroy(Anime $anime)
+    public function destroy(Anime $anime): RedirectResponse
     {
         Gate::authorize('delete', $anime);
         $anime->delete();
 
-        return redirect()->route('anime.index')->banner('Anime successfully deleted.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Anime successfully deleted.']);
+
+        return redirect()->route('anime.index');
+    }
+
+    private function authorizePublishIfRequested(AnimeStoreData $data, User $user, ?Anime $anime = null): void
+    {
+        $requestingPublish = $anime
+            ? $data->isPublished && ! $anime->is_published
+            : $data->isPublished;
+
+        if ($requestingPublish && $user->cannot('publish', Anime::class)) {
+            abort(403);
+        }
     }
 
     public function az(): Response

@@ -1,14 +1,14 @@
 <script lang="ts">
-    import Check from 'lucide-svelte/icons/check';
     import { index as mediaIndex } from '@/actions/App/Http/Controllers/MediaController';
+    import { Icon } from '@/components/icon';
     import { AspectRatio } from '@/components/ui/aspect-ratio';
     import { Button } from '@/components/ui/button';
     import { Spinner } from '@/components/ui/spinner';
 
-    type MediaResponse = {
-        items: App.Data.MediaData[];
-        pagination: App.Data.PaginationData;
-    };
+    type MediaResponse = Illuminate.LengthAwarePaginator<
+        number,
+        App.Data.MediaData
+    >;
 
     let {
         media,
@@ -29,27 +29,25 @@
     async function loadMore() {
         if (
             !currentMedia ||
-            currentMedia.pagination.currentPage >=
-                currentMedia.pagination.lastPage
+            currentMedia.meta.current_page >= currentMedia.meta.last_page
         ) {
             return;
         }
 
-        loading = true;
-        const nextPage = currentMedia.pagination.currentPage + 1;
+        const nextPage = currentMedia.meta.current_page + 1;
         const response = await fetch(
             mediaIndex.url({ query: { page: String(nextPage) } }),
         );
         const data: MediaResponse = await response.json();
         currentMedia = data;
-        loaded = [...loaded, ...data.items];
+        loaded = [...loaded, ...data.data];
         loading = false;
     }
 
     $effect(() => {
         if (media) {
             currentMedia = media;
-            loaded = media.items;
+            loaded = media.data;
         }
     });
 
@@ -116,7 +114,7 @@
         {#each loaded as item (item.id)}
             <button
                 type="button"
-                class="group relative overflow-hidden rounded-lg border bg-muted cursor-pointer ring-offset-background transition-all hover:ring-2 hover:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary"
+                class="group relative overflow-hidden rounded-[var(--radius)] border bg-muted cursor-pointer ring-offset-background transition-all hover:ring-2 hover:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary data-[selected=true]:bg-accent/20 data-[selected=true]:border-primary"
                 data-selected={isSelected(item)}
                 onclick={() => onMediaSelect(item)}
             >
@@ -150,7 +148,19 @@
                             <span
                                 class="flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground"
                             >
-                                <Check class="size-3" />
+                                <Icon
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/check')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/check')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/Tick02Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/CheckIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/check-line')}
+                                    class="size-3"
+                                />
                             </span>
                         {/if}
                     </div>
@@ -159,7 +169,7 @@
         {/each}
     </div>
 
-    {#if currentMedia && currentMedia.pagination.currentPage < currentMedia.pagination.lastPage}
+    {#if currentMedia && currentMedia.meta.current_page < currentMedia.meta.last_page}
         <div class="flex justify-center">
             <Button
                 variant="ghost"

@@ -1,29 +1,17 @@
 <script lang="ts">
-    import * as icons from 'lucide-svelte';
+    import { Icon } from '@/components/icon';
+    import type { LazyIcon } from '@/components/icon';
 
     interface Props {
-        name: string;
+        icon?: LazyIcon;
         class?: string;
         size?: number | string;
         color?: string;
         strokeWidth?: number | string;
+        [key: string]: any;
     }
 
-    let {
-        name,
-        class: className,
-        size = 16,
-        color,
-        strokeWidth = 2,
-    }: Props = $props();
-
-    const Component = $derived(() => {
-        const iconName = name.charAt(0).toUpperCase() + name.slice(1);
-
-        return (icons as Record<string, any>)[iconName];
-    });
-
-    const styles = $derived(['h-4 w-4', className]);
+    let { icon, class: className, ...restProps }: Props = $props();
 </script>
 
-<Component class={styles} {size} {color} {strokeWidth} />
+<Icon lucide={icon} class={className} {...restProps} />

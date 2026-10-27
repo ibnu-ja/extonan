@@ -47,10 +47,10 @@
     let monthsWithCounts = $state<{ month: string; count: number }[]>([]);
     let latestSelected = $state<App.Data.MediaData | null>(null);
     let deleteTarget = $state<App.Data.MediaData | null>(null);
-    type MediaResponse = {
-        items: App.Data.MediaData[];
-        pagination: App.Data.PaginationData;
-    };
+    type MediaResponse = Illuminate.LengthAwarePaginator<
+        number,
+        App.Data.MediaData
+    >;
 
     let media = $state<MediaResponse | null>(null);
 
@@ -86,7 +86,9 @@
         }
 
         deleteTarget = null;
-        window.dispatchEvent(new CustomEvent('media-refresh', { detail: { deletedId } }));
+        window.dispatchEvent(
+            new CustomEvent('media-refresh', { detail: { deletedId } }),
+        );
     }
 
     function openDialog() {
@@ -240,8 +242,8 @@
         }}
     >
         <AlertDialog.Portal>
-            <AlertDialog.Overlay class="z-[60]" />
-            <AlertDialog.Content class="z-[60]">
+            <AlertDialog.Overlay class="z-60" />
+            <AlertDialog.Content class="z-60">
                 <AlertDialog.Header>
                     <AlertDialog.Title>Are you sure?</AlertDialog.Title>
                     <AlertDialog.Description>

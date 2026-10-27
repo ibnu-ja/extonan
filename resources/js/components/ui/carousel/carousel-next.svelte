@@ -1,15 +1,15 @@
 <script lang="ts">
-	import ArrowRightIcon from "@lucide/svelte/icons/arrow-right";
 	import type { WithoutChildren } from "bits-ui";
 	import { getEmblaContext } from "./context.js";
 	import { cn } from "@/lib/utils.js";
 	import { Button, type Props } from "@/components/ui/button/index.js";
+	import { Icon } from "@/components/icon/index.js";
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		variant = "outline",
-		size = "icon",
+		size = "icon-sm",
 		...restProps
 	}: WithoutChildren<Props> = $props();
 
@@ -21,10 +21,11 @@
 	{variant}
 	{size}
 	aria-disabled={!emblaCtx.canScrollNext}
+	disabled={!emblaCtx.canScrollNext}
 	class={cn(
-		"absolute size-8 rounded-full",
+		"cn-carousel-next absolute touch-manipulation",
 		emblaCtx.orientation === "horizontal"
-			? "-end-12 top-1/2 -translate-y-1/2"
+			? "inset-y-0 -end-12 my-auto"
 			: "start-1/2 -bottom-12 -translate-x-1/2 rotate-90",
 		className
 	)}
@@ -33,6 +34,13 @@
 	bind:ref
 	{...restProps}
 >
-	<ArrowRightIcon class="size-4" />
+	<Icon
+		lucide={() => import("lucide-svelte/icons/chevron-right")}
+		tabler={() => import("@tabler/icons-svelte/icons/chevron-right")}
+		hugeicons={() => import("@hugeicons/core-free-icons/ArrowRight01Icon")}
+		phosphor={() => import("phosphor-svelte/lib/CaretRightIcon")}
+		remixicon={() => import("remixicon-svelte/icons/arrow-right-s-line")}
+		class="cn-rtl-flip"
+	/>
 	<span class="sr-only">Next slide</span>
 </Button>

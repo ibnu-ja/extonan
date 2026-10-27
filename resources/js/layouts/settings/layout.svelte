@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
+    import { Link, page } from '@inertiajs/svelte';
     import type { Snippet } from 'svelte';
     import Heading from '@/components/heading.svelte';
+    import { Badge } from '@/components/ui/badge';
     import { Separator } from '@/components/ui/separator';
     import { currentUrlState } from '@/lib/current-url.svelte';
     import { toUrl } from '@/lib/utils';
@@ -16,20 +17,26 @@
         children?: Snippet;
     } = $props();
 
-    const sidebarNavItems: NavItem[] = [
-        {
-            title: 'Profile',
-            href: editProfile(),
-        },
-        {
-            title: 'Security',
-            href: editSecurity(),
-        },
+    const auth = $derived(page.props.auth);
+
+    const sidebarNavItems = $derived<NavItem[]>([
+        ...(auth?.user
+            ? [
+                  {
+                      title: 'Profile',
+                      href: editProfile(),
+                  },
+                  {
+                      title: 'Security',
+                      href: editSecurity(),
+                  },
+              ]
+            : []),
         {
             title: 'Appearance',
             href: editAppearance(),
         },
-    ];
+    ]);
 
     const url = currentUrlState();
 </script>
@@ -37,7 +44,9 @@
 <div class="px-4 py-6">
     <Heading
         title="Settings"
-        description="Manage your profile and account settings"
+        description={auth?.user
+            ? 'Manage your account and interface preferences'
+            : 'Manage your application preferences'}
     />
 
     <div class="flex flex-col lg:flex-row lg:space-x-12">
@@ -47,25 +56,45 @@
                 aria-label="Settings"
             >
                 {#each sidebarNavItems as item (toUrl(item.href))}
+                    {@const active = url.isCurrentUrl(
+                        item.href,
+                        url.currentUrl,
+                    )}
                     <Link
                         href={toUrl(item.href)}
-                        class="inline-flex h-8 w-full items-center justify-start gap-1.5 whitespace-nowrap rounded-lg border border-transparent bg-clip-padding px-2.5 text-sm font-medium transition-all outline-none select-none hover:bg-muted hover:text-foreground {url.isCurrentUrl(
-                            item.href,
-                            url.currentUrl,
-                        )
-                            ? 'bg-muted'
-                            : ''}"
+                        data-slot="sidebar-menu-button"
+                        data-sidebar="menu-button"
+                        data-active={active ? 'true' : undefined}
+                        class="inline-flex h-8 w-full items-center justify-start gap-1.5 whitespace-nowrap rounded-[var(--radius)] border border-transparent bg-clip-padding px-2.5 text-sm font-medium transition-all outline-none select-none {active
+                            ? 'bg-primary-container text-on-primary-container font-medium'
+                            : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}"
                     >
                         {item.title}
                     </Link>
                 {/each}
+                <button
+                    type="button"
+                    disabled
+                    aria-disabled="true"
+                    data-slot="sidebar-menu-button"
+                    data-sidebar="menu-button"
+                    class="inline-flex h-8 w-full items-center justify-between gap-1.5 whitespace-nowrap rounded-[var(--radius)] border border-transparent bg-clip-padding px-2.5 text-sm font-medium transition-all outline-none select-none cursor-not-allowed opacity-60 text-muted-foreground"
+                >
+                    <span>Player</span>
+                    <Badge
+                        variant="outline"
+                        class="text-[10px] px-1.5 py-0 h-4 font-normal"
+                    >
+                        TBA
+                    </Badge>
+                </button>
             </nav>
         </aside>
 
         <Separator class="my-6 lg:hidden" />
 
-        <div class="flex-1 md:max-w-2xl">
-            <section class="max-w-xl space-y-12">
+        <div class="flex-1 min-w-0">
+            <section class="space-y-12">
                 {@render children?.()}
             </section>
         </div>

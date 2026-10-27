@@ -32,7 +32,7 @@ class HomeController extends Controller
             ->take(15)
             ->orderByDesc('published_at')
             ->get()
-            ->map(fn (Post $p) => EpisodeSummaryData::fromModel($p, $user));
+            ->map(fn (Post $p) => EpisodeSummaryData::fromModel($p, $user, $p->postable?->getTranslations('title') ?? [], $p->postable));
 
         $latestMv = Post::with('author')
             ->where('metadata->post_type', 'mv')
