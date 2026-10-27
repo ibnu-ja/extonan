@@ -2,8 +2,7 @@
 	import { Command as CommandPrimitive } from "bits-ui";
 	import { cn } from "@/lib/utils.js";
 	import * as InputGroup from "@/components/ui/input-group/index.js";
-	import { HugeiconsIcon } from "@hugeicons/svelte"
-	import { SearchIcon } from '@hugeicons/core-free-icons';
+	import { Icon } from "@/components/icon/index.js";
 
 	let {
 		ref = $bindable(null),
@@ -29,7 +28,14 @@
 			{/snippet}
 		</CommandPrimitive.Input>
 		<InputGroup.Addon>
-			<HugeiconsIcon icon={SearchIcon} strokeWidth={2} class="size-4 shrink-0 opacity-50" />
+			<Icon
+				lucide="SearchIcon"
+				tabler="IconSearch"
+				hugeicons="SearchIcon"
+				phosphor="MagnifyingGlassIcon"
+				remixicon="RiSearchLine"
+				class="cn-command-input-icon"
+			/>
 		</InputGroup.Addon>
 	</InputGroup.Root>
 </div>

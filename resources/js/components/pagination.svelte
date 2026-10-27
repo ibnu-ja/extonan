@@ -1,11 +1,6 @@
 <script lang="ts" generics="T">
     import { Link, page, router } from '@inertiajs/svelte';
-    import {
-        ChevronLeft,
-        ChevronRight,
-        ChevronsLeft,
-        ChevronsRight,
-    } from 'lucide-svelte';
+    import { Icon } from '@/components/icon';
     import { Button } from '@/components/ui/button';
     import * as ButtonGroup from '@/components/ui/button-group';
     import * as Select from '@/components/ui/select';
@@ -99,7 +94,14 @@
                 >
                     {#snippet child({ props })}
                         <Link href={pageUrl(1)} {...linkOpts} {...props}>
-                            <ChevronsLeft />
+                            <Icon
+                                lucide="ChevronsLeftIcon"
+                                tabler="IconChevronsLeft"
+                                hugeicons="ArrowLeftDoubleIcon"
+                                phosphor="CaretDoubleLeftIcon"
+                                remixicon="RiSkipBackLine"
+                                class="size-4"
+                            />
                         </Link>
                     {/snippet}
                 </Button>
@@ -115,7 +117,14 @@
                                 {...linkOpts}
                                 {...props}
                             >
-                                <ChevronLeft />
+                                <Icon
+                                    lucide="ChevronLeftIcon"
+                                    tabler="IconChevronLeft"
+                                    hugeicons="ArrowLeft01Icon"
+                                    phosphor="CaretLeftIcon"
+                                    remixicon="RiArrowLeftSLine"
+                                    class="size-4"
+                                />
                             </Link>
                         {/snippet}
                     </Button>
@@ -166,7 +175,14 @@
                                 {...linkOpts}
                                 {...props}
                             >
-                                <ChevronRight />
+                                <Icon
+                                    lucide="ChevronRightIcon"
+                                    tabler="IconChevronRight"
+                                    hugeicons="ArrowRight01Icon"
+                                    phosphor="CaretRightIcon"
+                                    remixicon="RiArrowRightSLine"
+                                    class="size-4"
+                                />
                             </Link>
                         {/snippet}
                     </Button>
@@ -178,7 +194,14 @@
                 >
                     {#snippet child({ props })}
                         <Link href={pageUrl(lastPage)} {...linkOpts} {...props}>
-                            <ChevronsRight />
+                            <Icon
+                                lucide="ChevronsRightIcon"
+                                tabler="IconChevronsRight"
+                                hugeicons="ArrowRightDoubleIcon"
+                                phosphor="CaretDoubleRightIcon"
+                                remixicon="RiSkipForwardLine"
+                                class="size-4"
+                            />
                         </Link>
                     {/snippet}
                 </Button>
@@ -192,7 +215,14 @@
                 >
                     {#snippet child({ props })}
                         <Link href={pageUrl(1)} {...linkOpts} {...props}>
-                            <ChevronsLeft />
+                            <Icon
+                                lucide="ChevronsLeftIcon"
+                                tabler="IconChevronsLeft"
+                                hugeicons="ArrowLeftDoubleIcon"
+                                phosphor="CaretDoubleLeftIcon"
+                                remixicon="RiSkipBackLine"
+                                class="size-4"
+                            />
                         </Link>
                     {/snippet}
                 </Button>
@@ -207,7 +237,14 @@
                             {...linkOpts}
                             {...props}
                         >
-                            <ChevronLeft />
+                            <Icon
+                                lucide="ChevronLeftIcon"
+                                tabler="IconChevronLeft"
+                                hugeicons="ArrowLeft01Icon"
+                                phosphor="CaretLeftIcon"
+                                remixicon="RiArrowLeftSLine"
+                                class="size-4"
+                            />
                         </Link>
                     {/snippet}
                 </Button>
@@ -281,7 +318,14 @@
                             {...linkOpts}
                             {...props}
                         >
-                            <ChevronRight />
+                            <Icon
+                                lucide="ChevronRightIcon"
+                                tabler="IconChevronRight"
+                                hugeicons="ArrowRight01Icon"
+                                phosphor="CaretRightIcon"
+                                remixicon="RiArrowRightSLine"
+                                class="size-4"
+                            />
                         </Link>
                     {/snippet}
                 </Button>
@@ -292,7 +336,14 @@
                 >
                     {#snippet child({ props })}
                         <Link href={pageUrl(lastPage)} {...linkOpts} {...props}>
-                            <ChevronsRight />
+                            <Icon
+                                lucide="ChevronsRightIcon"
+                                tabler="IconChevronsRight"
+                                hugeicons="ArrowRightDoubleIcon"
+                                phosphor="CaretDoubleRightIcon"
+                                remixicon="RiSkipForwardLine"
+                                class="size-4"
+                            />
                         </Link>
                     {/snippet}
                 </Button>

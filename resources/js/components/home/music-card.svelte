@@ -1,7 +1,6 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
-    import PencilIcon from '@lucide/svelte/icons/pencil';
-    import TrashIcon from '@lucide/svelte/icons/trash';
+    import { Icon } from '@/components/icon';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { cn } from '@/lib/utils';
@@ -53,7 +52,7 @@
 <Link href={albumShow.url(id)} class="flex flex-col gap-2">
     <div
         class={cn(
-            'relative overflow-hidden rounded-lg bg-muted',
+            'relative overflow-hidden rounded-[var(--radius)] bg-muted',
             aspect === 'video' ? 'aspect-video' : 'aspect-square',
         )}
     >
@@ -79,10 +78,24 @@
     {#if permissions.update}
         <div class="flex gap-1">
             <Button variant="ghost" size="icon" href={albumEdit.url(id)}>
-                <PencilIcon data-icon="inline-start" class="size-4" />
+                <Icon
+                    lucide="PencilIcon"
+                    tabler="IconPencil"
+                    hugeicons="PencilEdit02Icon"
+                    phosphor="PencilIcon"
+                    remixicon="RiEditLine"
+                    class="size-4"
+                />
             </Button>
             <Button variant="ghost" size="icon">
-                <TrashIcon data-icon="inline-start" class="size-4" />
+                <Icon
+                    lucide="Trash2Icon"
+                    tabler="IconTrash"
+                    hugeicons="Delete02Icon"
+                    phosphor="TrashIcon"
+                    remixicon="RiDeleteBinLine"
+                    class="size-4"
+                />
             </Button>
         </div>
     {/if}

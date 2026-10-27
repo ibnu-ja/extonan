@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { Pagination as PaginationPrimitive } from "bits-ui";
-	import { HugeiconsIcon } from "@hugeicons/svelte"
-	import { ArrowLeftIcon } from '@hugeicons/core-free-icons';
 	import { cn } from "@/lib/utils.js";
-	import { buttonVariants } from "../button/index.js";
+	import { Icon } from "@/components/icon/index.js";
 
 	let {
 		ref = $bindable(null),
@@ -13,20 +11,22 @@
 	}: PaginationPrimitive.PrevButtonProps = $props();
 </script>
 
-{#snippet Fallback()}
-	<HugeiconsIcon icon={ArrowLeftIcon} strokeWidth={2} class={cn("size-4", className)} />
-	<span>Previous</span>
-{/snippet}
-
 <PaginationPrimitive.PrevButton
 	bind:ref
 	aria-label="Go to previous page"
-	class={cn(buttonVariants({ variant: "ghost" }), "pl-2!", className)}
+	class={cn("flex size-9 items-center justify-center rounded-md border", className)}
 	{...restProps}
 >
 	{#if children}
 		{@render children?.()}
 	{:else}
-		{@render Fallback()}
+		<Icon
+		lucide="ChevronLeftIcon"
+		tabler="IconChevronLeft"
+		hugeicons="ArrowLeftIcon"
+		phosphor="CaretLeftIcon"
+		remixicon="RiArrowLeftSLine"
+		class={cn("cn-rtl-flip size-4", className)}
+	/>
 	{/if}
 </PaginationPrimitive.PrevButton>

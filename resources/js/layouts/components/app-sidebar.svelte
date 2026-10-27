@@ -64,7 +64,7 @@
     bind:ref
     collapsible="icon"
     variant="inset"
-    class="hidden md:flex"
+    class="hidden md:flex cn-menu-target"
     {...restProps}
 >
     <Sidebar.Header>

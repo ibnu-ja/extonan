@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Check from 'lucide-svelte/icons/check';
     import { index as mediaIndex } from '@/actions/App/Http/Controllers/MediaController';
+    import { Icon } from '@/components/icon';
     import { AspectRatio } from '@/components/ui/aspect-ratio';
     import { Button } from '@/components/ui/button';
     import { Spinner } from '@/components/ui/spinner';
@@ -148,7 +148,14 @@
                             <span
                                 class="flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground"
                             >
-                                <Check class="size-3" />
+                                <Icon
+                                    lucide="CheckIcon"
+                                    tabler="IconCheck"
+                                    hugeicons="Tick02Icon"
+                                    phosphor="CheckIcon"
+                                    remixicon="RiCheckLine"
+                                    class="size-3"
+                                />
                             </span>
                         {/if}
                     </div>

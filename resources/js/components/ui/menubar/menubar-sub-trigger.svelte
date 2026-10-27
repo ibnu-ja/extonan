@@ -1,16 +1,15 @@
 <script lang="ts">
 	import { Menubar as MenubarPrimitive } from "bits-ui";
-	import { cn, type WithoutChild } from "@/lib/utils.js";
-	import { HugeiconsIcon } from "@hugeicons/svelte"
-	import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
+	import { Icon } from "@/components/icon/index.js";
+	import { cn } from "@/lib/utils.js";
 
 	let {
 		ref = $bindable(null),
 		class: className,
-		inset = undefined,
+		inset,
 		children,
 		...restProps
-	}: WithoutChild<MenubarPrimitive.SubTriggerProps> & {
+	}: MenubarPrimitive.SubTriggerProps & {
 		inset?: boolean;
 	} = $props();
 </script>
@@ -20,11 +19,18 @@
 	data-slot="menubar-sub-trigger"
 	data-inset={inset}
 	class={cn(
-		"focus:bg-accent focus:text-accent-foreground data-open:bg-accent data-open:text-accent-foreground gap-2 rounded-xl px-3 py-2 text-sm data-inset:pl-9.5 [&_svg:not([class*='size-'])]:size-4 flex cursor-default items-center outline-none select-none",
+		"focus:bg-accent focus:text-accent-foreground data-open:bg-accent data-open:text-accent-foreground gap-2 rounded-xs px-2 py-1 text-xs data-inset:pl-7.5 [&_svg:not([class*='size-'])]:size-3.5 flex cursor-default select-none items-center outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
 		className
 	)}
 	{...restProps}
 >
 	{@render children?.()}
-	<HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} class="cn-rtl-flip ml-auto size-4" />
+	<Icon
+		lucide="ChevronRightIcon"
+		tabler="IconChevronRight"
+		hugeicons="ArrowRight01Icon"
+		phosphor="CaretRightIcon"
+		remixicon="RiArrowRightSLine"
+		class="cn-rtl-flip ml-auto size-4"
+	/>
 </MenubarPrimitive.SubTrigger>

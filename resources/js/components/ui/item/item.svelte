@@ -2,17 +2,17 @@
 	import { tv, type VariantProps } from "tailwind-variants";
 
 	export const itemVariants = tv({
-		base: "[a]:hover:bg-muted rounded-2xl border text-sm group/item focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-wrap items-center transition-colors duration-100 outline-none focus-visible:ring-[3px] [a]:transition-colors",
+		base: "cn-item group/item flex w-full flex-wrap items-center transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors",
 		variants: {
 			variant: {
-				default: "border-transparent",
-				outline: "border-border",
-				muted: "bg-muted/50 border-transparent",
+				default: "cn-item-variant-default",
+				outline: "cn-item-variant-outline",
+				muted: "cn-item-variant-muted",
 			},
 			size: {
-				default: "gap-3.5 px-4 py-3.5",
-				sm: "gap-3.5 px-3.5 py-3",
-				xs: "gap-2.5 px-3 py-2.5 in-data-[slot=dropdown-menu-content]:p-0",
+				default: "cn-item-size-default",
+				sm: "cn-item-size-sm",
+				xs: "cn-item-size-xs",
 			},
 		},
 		defaultVariants: {

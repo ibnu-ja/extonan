@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { RangeCalendar as RangeCalendarPrimitive } from "bits-ui";
-	import { HugeiconsIcon } from "@hugeicons/svelte"
-	import { ArrowRightIcon } from '@hugeicons/core-free-icons';
 	import { buttonVariants, type ButtonVariant } from "@/components/ui/button/index.js";
+	import { Icon } from "@/components/icon/index.js";
 	import { cn } from "@/lib/utils.js";
 
 	let {
@@ -17,7 +16,14 @@
 </script>
 
 {#snippet Fallback()}
-	<HugeiconsIcon icon={ArrowRightIcon} strokeWidth={2} class={cn("size-4", className)} />
+	<Icon
+		lucide="ChevronRightIcon"
+		tabler="IconChevronRight"
+		hugeicons="ArrowRightIcon"
+		phosphor="CaretRightIcon"
+		remixicon="RiArrowRightSLine"
+		class={cn("cn-rtl-flip size-4", className)}
+	/>
 {/snippet}
 
 <RangeCalendarPrimitive.NextButton

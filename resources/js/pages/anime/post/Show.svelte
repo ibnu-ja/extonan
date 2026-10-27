@@ -25,15 +25,25 @@
     let { anime, episodes, post }: App.Data.Anime.PostShowResponse = $props();
 
     const streamOptions = $derived(
-        [
-            post.embed && { value: 'embed' as const, label: 'Embed' },
-            post.saluran && {
-                value: 'saluran' as const,
-                label: 'Stream (M3U8)',
-            },
-        ].filter(Boolean),
+        (
+            [
+                post.embed ? { value: 'embed' as const, label: 'Embed' } : null,
+                post.saluran
+                    ? {
+                          value: 'saluran' as const,
+                          label: 'Stream (M3U8)',
+                      }
+                    : null,
+            ] as const
+        ).filter(
+            (
+                opt,
+            ): opt is { value: 'embed' | 'saluran'; label: string } =>
+                opt !== null,
+        ),
     );
 
+    // svelte-ignore state_referenced_locally
     let activeStreamType = $state<'embed' | 'saluran' | null>(
         post.embed ? 'embed' : post.saluran ? 'saluran' : null,
     );
@@ -248,7 +258,7 @@
                     <Accordion.Root type="multiple" class="w-full">
                         {#each post.links as link (link.id)}
                             {@const resolution = getResolution(link.name)}
-                            <Accordion.Item value={link.id.toString()}>
+                            <Accordion.Item value={String(link.id)}>
                                 <Accordion.Trigger>
                                     <span class="flex items-center gap-2">
                                         {link.name}

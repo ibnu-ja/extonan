@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Check, ChevronsUpDown } from 'lucide-svelte';
+    import { Icon } from '@/components/icon';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import * as Command from '@/components/ui/command/index.js';
@@ -100,7 +100,14 @@
                                 {/if}
                             </div>
                         {/if}
-                        <ChevronsUpDown class="size-4 shrink-0 opacity-50" />
+                        <Icon
+                            lucide="ChevronDownIcon"
+                            tabler="IconSelector"
+                            hugeicons="UnfoldMoreIcon"
+                            phosphor="CaretUpDownIcon"
+                            remixicon="RiExpandUpDownLine"
+                            class="size-4 shrink-0 opacity-50"
+                        />
                     </Button>
                 {/snippet}
             </Popover.Trigger>
@@ -118,9 +125,9 @@
                         {#each filtered as item (itemKey(item))}
                             <Command.Item
                                 class={cn(
-                                    'rounded-none px-4',
+                                    'px-4',
                                     isSelected(itemKey(item)) &&
-                                        'bg-green-500/15',
+                                        'bg-primary/10 text-primary font-medium',
                                 )}
                                 onSelect={() => toggle(itemKey(item))}
                             >
@@ -129,7 +136,14 @@
                                         class="flex size-4 items-center justify-center"
                                     >
                                         {#if isSelected(itemKey(item))}
-                                            <Check class="size-4" />
+                                            <Icon
+                                                lucide="CheckIcon"
+                                                tabler="IconCheck"
+                                                hugeicons="Tick02Icon"
+                                                phosphor="CheckIcon"
+                                                remixicon="RiCheckLine"
+                                                class="size-4"
+                                            />
                                         {/if}
                                     </div>
                                     <span class="flex-1">
@@ -169,7 +183,14 @@
                                 {/if}
                             </div>
                         {/if}
-                        <ChevronsUpDown class="size-4 shrink-0 opacity-50" />
+                        <Icon
+                            lucide="ChevronDownIcon"
+                            tabler="IconSelector"
+                            hugeicons="UnfoldMoreIcon"
+                            phosphor="CaretUpDownIcon"
+                            remixicon="RiExpandUpDownLine"
+                            class="size-4 shrink-0 opacity-50"
+                        />
                     </Button>
                 {/snippet}
             </Drawer.Trigger>
@@ -184,9 +205,9 @@
                             {#each filtered as item (itemKey(item))}
                                 <Command.Item
                                     class={cn(
-                                        'rounded-none px-4',
+                                        'px-4',
                                         isSelected(itemKey(item)) &&
-                                            'bg-green-500/15',
+                                            'bg-primary/10 text-primary font-medium',
                                     )}
                                     onSelect={() => toggle(itemKey(item))}
                                 >
@@ -195,7 +216,14 @@
                                             class="flex size-4 items-center justify-center"
                                         >
                                             {#if isSelected(itemKey(item))}
-                                                <Check class="size-4" />
+                                                <Icon
+                                                    lucide="CheckIcon"
+                                                    tabler="IconCheck"
+                                                    hugeicons="Tick02Icon"
+                                                    phosphor="CheckIcon"
+                                                    remixicon="RiCheckLine"
+                                                    class="size-4"
+                                                />
                                             {/if}
                                         </div>
                                         <span class="flex-1">

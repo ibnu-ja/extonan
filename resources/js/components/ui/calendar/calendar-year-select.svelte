@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { Calendar as CalendarPrimitive } from "bits-ui";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
-	import { HugeiconsIcon } from "@hugeicons/svelte"
-	import { ArrowDownIcon } from '@hugeicons/core-free-icons';
+	import { Icon } from "@/components/icon/index.js";
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		value,
+		onchange,
 		...restProps
 	}: WithoutChildrenOrChild<CalendarPrimitive.YearSelectProps> = $props();
 </script>
@@ -20,11 +20,11 @@
 >
 	<CalendarPrimitive.YearSelect
 		bind:ref
-		class="dark:bg-popover dark:text-popover-foreground absolute inset-0 opacity-0"
+		class="bg-background dark:bg-popover dark:text-popover-foreground absolute inset-0 opacity-0"
 		{...restProps}
 	>
 		{#snippet child({ props, yearItems, selectedYearItem })}
-			<select {...props} {value}>
+			<select {...props} {value} {onchange}>
 				{#each yearItems as yearItem (yearItem.value)}
 					<option
 						value={yearItem.value}
@@ -41,7 +41,14 @@
 				aria-hidden="true"
 			>
 				{yearItems.find((item) => item.value === value)?.label || selectedYearItem.label}
-				<HugeiconsIcon icon={ArrowDownIcon} strokeWidth={2} class={cn("size-4", className)} />
+				<Icon
+					lucide="ChevronDownIcon"
+					tabler="IconChevronDown"
+					hugeicons="ArrowDownIcon"
+					phosphor="CaretDownIcon"
+					remixicon="RiArrowDownSLine"
+					class={cn("size-4", className)}
+				/>
 			</span>
 		{/snippet}
 	</CalendarPrimitive.YearSelect>

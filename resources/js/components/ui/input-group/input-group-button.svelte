@@ -2,13 +2,13 @@
 	import { tv, type VariantProps } from "tailwind-variants";
 
 	const inputGroupButtonVariants = tv({
-		base: "gap-2 rounded-4xl text-sm flex items-center shadow-none",
+		base: "cn-input-group-button flex items-center shadow-none",
 		variants: {
 			size: {
-				xs: "h-6 gap-1 px-1.5 [&>svg:not([class*='size-'])]:size-3.5",
+				xs: "cn-input-group-button-size-xs",
 				sm: "cn-input-group-button-size-sm",
-				"icon-xs": "size-6 p-0 has-[>svg]:p-0",
-				"icon-sm": "size-8 p-0 has-[>svg]:p-0",
+				"icon-xs": "cn-input-group-button-size-icon-xs",
+				"icon-sm": "cn-input-group-button-size-icon-sm",
 			},
 		},
 		defaultVariants: {
@@ -20,9 +20,9 @@
 </script>
 
 <script lang="ts">
+	import { Button } from "@/components/ui/button/index.js";
 	import { cn } from "@/lib/utils.js";
 	import type { ComponentProps } from "svelte";
-	import { Button } from "@/components/ui/button/index.js";
 
 	let {
 		ref = $bindable(null),

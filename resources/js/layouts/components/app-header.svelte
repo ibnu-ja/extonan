@@ -1,9 +1,6 @@
 <script lang="ts">
     import { Link, page } from '@inertiajs/svelte';
-    import BookOpen from 'lucide-svelte/icons/book-open';
-    import Folder from 'lucide-svelte/icons/folder';
     import LayoutGrid from 'lucide-svelte/icons/layout-grid';
-    import Search from 'lucide-svelte/icons/search';
     import AppLogo from '@/components/app-logo.svelte';
     import {
         Avatar,
@@ -22,12 +19,6 @@
         NavigationMenuItem,
         NavigationMenuList,
     } from '@/components/ui/navigation-menu';
-    import {
-        Tooltip,
-        TooltipContent,
-        TooltipProvider,
-        TooltipTrigger,
-    } from '@/components/ui/tooltip';
     import UserMenuContent from '@/layouts/components/user-menu-content.svelte';
     import { getInitials } from '@/lib/initials';
     import { toUrl } from '@/lib/utils';

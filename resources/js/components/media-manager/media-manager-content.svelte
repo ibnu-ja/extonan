@@ -1,6 +1,6 @@
 <script lang="ts">
-    import ExternalLink from 'lucide-svelte/icons/external-link';
     import type { Snippet } from 'svelte';
+    import { Icon } from '@/components/icon';
     import * as Breadcrumb from '@/components/ui/breadcrumb';
     import { Button } from '@/components/ui/button';
     import * as Dialog from '@/components/ui/dialog';
@@ -30,7 +30,7 @@
 
 <Dialog.Root bind:open>
     <Dialog.Content
-        class="fixed top-0 left-0 translate-none m-0 h-full w-full max-w-none rounded-none border-0 ring-0 gap-0 p-0 overflow-hidden sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:m-auto sm:h-[500px] sm:max-w-[700px] sm:rounded-xl sm:border sm:ring-1 lg:max-w-[800px]"
+        class="fixed top-0 left-0 translate-none m-0 h-full w-full max-w-none rounded-none border-0 ring-0 gap-0 p-0 overflow-hidden sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:m-auto sm:h-[500px] sm:max-w-[700px] sm:rounded-[var(--radius)] sm:border sm:ring-1 lg:max-w-[800px]"
         trapFocus={false}
     >
         <Dialog.Title class="sr-only">Media Manager</Dialog.Title>
@@ -106,7 +106,12 @@
                                                 rel="noopener noreferrer"
                                                 class="inline-flex items-center gap-1 text-xs text-primary underline-offset-4 hover:underline"
                                             >
-                                                <ExternalLink
+                                                <Icon
+                                                    lucide="ExternalLinkIcon"
+                                                    tabler="IconExternalLink"
+                                                    hugeicons="LinkSquare01Icon"
+                                                    phosphor="ArrowSquareOutIcon"
+                                                    remixicon="RiExternalLinkLine"
                                                     class="size-3 shrink-0"
                                                 />
                                                 original
@@ -118,7 +123,12 @@
                                                     rel="noopener noreferrer"
                                                     class="inline-flex items-center gap-1 text-xs text-primary underline-offset-4 hover:underline"
                                                 >
-                                                    <ExternalLink
+                                                    <Icon
+                                                        lucide="ExternalLinkIcon"
+                                                        tabler="IconExternalLink"
+                                                        hugeicons="LinkSquare01Icon"
+                                                        phosphor="ArrowSquareOutIcon"
+                                                        remixicon="RiExternalLinkLine"
                                                         class="size-3 shrink-0"
                                                     />
                                                     medium
@@ -131,7 +141,12 @@
                                                     rel="noopener noreferrer"
                                                     class="inline-flex items-center gap-1 text-xs text-primary underline-offset-4 hover:underline"
                                                 >
-                                                    <ExternalLink
+                                                    <Icon
+                                                        lucide="ExternalLinkIcon"
+                                                        tabler="IconExternalLink"
+                                                        hugeicons="LinkSquare01Icon"
+                                                        phosphor="ArrowSquareOutIcon"
+                                                        remixicon="RiExternalLinkLine"
                                                         class="size-3 shrink-0"
                                                     />
                                                     large

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Link, router } from '@inertiajs/svelte';
-    import { EllipsisVertical, Pencil, Send, Trash2 } from 'lucide-svelte';
+    import { Icon } from '@/components/icon';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import {
@@ -35,7 +35,7 @@
     );
 </script>
 
-<Item.Root class="rounded-none md:rounded-lg">
+<Item.Root class="rounded-none md:rounded-[var(--radius)]">
     {#snippet child({ props })}
         <Link
             href={postShow.url({ anime: animeId, post: episode.id })}
@@ -46,10 +46,10 @@
                     <img
                         src={episode.thumbnail.medium}
                         alt=""
-                        class="size-10 rounded object-cover"
+                        class="size-10 rounded-[calc(var(--radius)-2px)] object-cover"
                     />
                 {:else}
-                    <div class="size-10 rounded bg-muted"></div>
+                    <div class="size-10 rounded-[calc(var(--radius)-2px)] bg-muted"></div>
                 {/if}
             </Item.Media>
             <Item.Content>
@@ -79,11 +79,18 @@
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    class="size-7 rounded-lg"
+                                    class="size-7"
                                     {...triggerProps}
                                     onclick={(e) => e.stopPropagation()}
                                 >
-                                    <EllipsisVertical class="size-3.5" />
+                                    <Icon
+                                        lucide="EllipsisVerticalIcon"
+                                        tabler="IconDotsVertical"
+                                        hugeicons="MoreVerticalCircle01Icon"
+                                        phosphor="DotsThreeVerticalIcon"
+                                        remixicon="RiMore2Line"
+                                        class="size-3.5"
+                                    />
                                 </Button>
                             {/snippet}
                         </DropdownMenuTrigger>
@@ -98,7 +105,14 @@
                                             }),
                                         )}
                                 >
-                                    <Pencil class="size-4" />
+                                    <Icon
+                                        lucide="PencilIcon"
+                                        tabler="IconPencil"
+                                        hugeicons="PencilEdit02Icon"
+                                        phosphor="PencilIcon"
+                                        remixicon="RiEditLine"
+                                        class="size-4"
+                                    />
                                     Edit
                                 </DropdownMenuItem>
                             {/if}
@@ -116,7 +130,14 @@
                                         }
                                     }}
                                 >
-                                    <Trash2 class="size-4" />
+                                    <Icon
+                                        lucide="Trash2Icon"
+                                        tabler="IconTrash"
+                                        hugeicons="Delete02Icon"
+                                        phosphor="TrashIcon"
+                                        remixicon="RiDeleteBinLine"
+                                        class="size-4"
+                                    />
                                     Delete
                                 </DropdownMenuItem>
                             {/if}
@@ -131,7 +152,14 @@
                                             { isPublished: true },
                                         )}
                                 >
-                                    <Send class="size-4" />
+                                    <Icon
+                                        lucide="SendIcon"
+                                        tabler="IconSend"
+                                        hugeicons="SentIcon"
+                                        phosphor="PaperPlaneRightIcon"
+                                        remixicon="RiSendPlaneLine"
+                                        class="size-4"
+                                    />
                                     Publish
                                 </DropdownMenuItem>
                             {/if}

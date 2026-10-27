@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
-	import { HugeiconsIcon } from "@hugeicons/svelte"
-	import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
+	import { Icon } from "@/components/icon/index.js";
 	import { cn } from "@/lib/utils.js";
 
 	let {
@@ -26,5 +25,12 @@
 	{...restProps}
 >
 	{@render children?.()}
-	<HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} class="ml-auto" />
+	<Icon
+		lucide="ChevronRightIcon"
+		tabler="IconChevronRight"
+		hugeicons="ArrowRight01Icon"
+		phosphor="CaretRightIcon"
+		remixicon="RiArrowRightSLine"
+		class="cn-rtl-flip ml-auto"
+	/>
 </DropdownMenuPrimitive.SubTrigger>

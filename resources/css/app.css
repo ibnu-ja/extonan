@@ -4,7 +4,24 @@
 
 @import 'shadcn-svelte/tailwind.css';
 
+@import './styles/style-nova.css' layer(base);
+@import './styles/style-vega.css' layer(base);
+@import './styles/style-maia.css' layer(base);
+@import './styles/style-luma.css' layer(base);
+@import './styles/style-lyra.css' layer(base);
+@import './styles/style-mira.css' layer(base);
+@import './styles/style-rhea.css' layer(base);
+@import './styles/style-sera.css' layer(base);
 @import '@fontsource-variable/figtree';
+
+@custom-variant style-vega (&:where(.style-vega *));
+@custom-variant style-nova (&:where(.style-nova *));
+@custom-variant style-lyra (&:where(.style-lyra *));
+@custom-variant style-maia (&:where(.style-maia *));
+@custom-variant style-mira (&:where(.style-mira *));
+@custom-variant style-luma (&:where(.style-luma *));
+@custom-variant style-sera (&:where(.style-sera *));
+@custom-variant style-rhea (&:where(.style-rhea *));
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -55,7 +72,7 @@
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
 
-    --color-sidebar: var(--sidebar-background);
+    --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar-primary: var(--sidebar-primary);
     --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
@@ -132,7 +149,8 @@
     --chart-4: hsl(30 80% 55%);
     --chart-5: hsl(340 75% 50%);
     --radius: 0.5rem;
-    --sidebar-background: hsl(220 20% 99%);
+    --sidebar: hsl(220 20% 99%);
+    --sidebar-background: var(--sidebar);
     --sidebar-foreground: hsl(220 15% 30%);
     --sidebar-primary: hsl(213 32% 52%);
     --sidebar-primary-foreground: hsl(0 0% 100%);
@@ -140,7 +158,6 @@
     --sidebar-accent-foreground: hsl(220 15% 35%);
     --sidebar-border: hsl(220 15% 88%);
     --sidebar-ring: hsl(213 32% 52%);
-    --sidebar: hsl(220 20% 99%);
 }
 
 .dark {
@@ -168,7 +185,8 @@
     --chart-3: hsl(260 50% 65%);
     --chart-4: hsl(30 80% 60%);
     --chart-5: hsl(340 75% 60%);
-    --sidebar-background: hsl(220 25% 8%);
+    --sidebar: hsl(220 25% 8%);
+    --sidebar-background: var(--sidebar);
     --sidebar-foreground: hsl(220 10% 80%);
     --sidebar-primary: hsl(213 45% 65%);
     --sidebar-primary-foreground: hsl(0 0% 10%);
@@ -176,7 +194,6 @@
     --sidebar-accent-foreground: hsl(220 10% 80%);
     --sidebar-border: hsl(220 15% 16%);
     --sidebar-ring: hsl(213 45% 65%);
-    --sidebar: hsl(220 25% 8%);
 }
 
 @layer base {

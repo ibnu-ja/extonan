@@ -1,6 +1,6 @@
 <script lang="ts">
     import { page } from '@inertiajs/svelte';
-    import { siFacebook, siDiscord, siGithub } from 'simple-icons';
+    import { siFacebook, siDiscord } from 'simple-icons';
     import { Separator } from '@/components/ui/separator';
 
     const links = [

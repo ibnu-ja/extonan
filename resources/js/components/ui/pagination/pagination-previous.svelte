@@ -2,8 +2,7 @@
 	import { Pagination as PaginationPrimitive } from "bits-ui";
 	import { cn } from "@/lib/utils.js";
 	import { buttonVariants } from "@/components/ui/button/index.js";
-	import { HugeiconsIcon } from "@hugeicons/svelte"
-	import { ArrowLeft01Icon } from '@hugeicons/core-free-icons';
+	import { Icon } from "@/components/icon/index.js";
 
 	let {
 		ref = $bindable(null),
@@ -22,6 +21,14 @@
 	)}
 	{...restProps}
 >
-	<HugeiconsIcon icon={ArrowLeft01Icon} strokeWidth={2} data-icon="inline-start" />
-	<span class="cn-pagination-previous-text hidden sm:block">Previous</span>
+	<Icon
+		lucide="ChevronLeftIcon"
+		tabler="IconChevronLeft"
+		hugeicons="ArrowLeft01Icon"
+		phosphor="CaretLeftIcon"
+		remixicon="RiArrowLeftSLine"
+		data-icon="inline-start"
+		class="cn-rtl-flip"
+	/>
+	<span class="cn-pagination-prev-text hidden sm:block">Previous</span>
 </PaginationPrimitive.PrevButton>

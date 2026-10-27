@@ -1,11 +1,9 @@
 <script lang="ts">
 	import type { Snippet } from "svelte";
 	import { fade } from "svelte/transition";
-
 	import { Popover as PopoverPrimitive } from "bits-ui";
 	import Fab from "../fab/fab.svelte";
-	import Plus from "lucide-svelte/icons/plus";
-	import X from "lucide-svelte/icons/x";
+	import { Icon } from "@/components/icon/index.js";
 
 	function rotate(_node: Element, { duration = 200 } = {}) {
 		return {
@@ -42,7 +40,14 @@
 							{@render iconClose()}
 						{:else}
 							<span in:rotate={{ duration: 200 }}>
-								<X class="size-4" />
+								<Icon
+									lucide="XIcon"
+									tabler="IconX"
+									hugeicons="Cancel01Icon"
+									phosphor="XIcon"
+									remixicon="RiCloseLine"
+									class="size-4"
+								/>
 							</span>
 						{/if}
 					{:else}
@@ -50,7 +55,14 @@
 							{@render icon()}
 						{:else}
 							<span in:rotate={{ duration: 200 }}>
-								<Plus class="size-4" />
+								<Icon
+									lucide="PlusIcon"
+									tabler="IconPlus"
+									hugeicons="PlusSignIcon"
+									phosphor="PlusIcon"
+									remixicon="RiAddLine"
+									class="size-4"
+								/>
 							</span>
 						{/if}
 					{/if}

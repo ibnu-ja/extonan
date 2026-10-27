@@ -14,7 +14,9 @@
 <script lang="ts">
     import AppHead from '@/components/app-head.svelte';
     import Heading from '@/components/heading.svelte';
+    import { Separator } from '@/components/ui/separator';
     import AppearanceTabs from './components/appearance-tabs.svelte';
+    import ThemeCustomizer from './components/theme-customizer.svelte';
 </script>
 
 <AppHead title="Appearance settings" />
@@ -22,10 +24,16 @@
 <h1 class="sr-only">Appearance settings</h1>
 
 <div class="space-y-6">
-    <Heading
-        variant="small"
-        title="Appearance settings"
-        description="Update the appearance settings for your account"
-    />
-    <AppearanceTabs />
+    <div
+        class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+    >
+        <Heading
+            variant="small"
+            title="Appearance settings"
+            description="Customize theme modes, design styles, radii, color palettes, and icons"
+        />
+        <AppearanceTabs />
+    </div>
+    <Separator />
+    <ThemeCustomizer />
 </div>

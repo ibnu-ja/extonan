@@ -11,7 +11,7 @@
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
     {#each characters as character (character.node?.id)}
         <div
-            class="grid grid-cols-2 overflow-hidden rounded-none bg-muted/50 md:rounded-lg"
+            class="grid grid-cols-2 overflow-hidden rounded-none bg-muted/50 md:rounded-[var(--radius)]"
         >
             <div class="grid grid-cols-4">
                 <img

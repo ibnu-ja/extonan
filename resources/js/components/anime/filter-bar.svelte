@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Search, ArrowUpDown, Check, X } from 'lucide-svelte';
+    import { Icon } from '@/components/icon';
     import { Button } from '@/components/ui/button';
     import * as Command from '@/components/ui/command';
     import * as Drawer from '@/components/ui/drawer';
@@ -35,7 +35,14 @@
 <div class="flex items-center gap-2">
     <InputGroup.Root class="flex-1">
         <InputGroup.Addon>
-            <Search class="text-muted-foreground size-4" />
+            <Icon
+                lucide="SearchIcon"
+                tabler="IconSearch"
+                hugeicons="SearchIcon"
+                phosphor="MagnifyingGlassIcon"
+                remixicon="RiSearchLine"
+                class="text-muted-foreground size-4"
+            />
         </InputGroup.Addon>
         <InputGroup.Input
             placeholder="Search anime..."
@@ -52,7 +59,14 @@
                     size="icon-xs"
                     onclick={() => onclear?.()}
                 >
-                    <X class="size-3" />
+                    <Icon
+                        lucide="XIcon"
+                        tabler="IconX"
+                        hugeicons="Cancel01Icon"
+                        phosphor="XIcon"
+                        remixicon="RiCloseLine"
+                        class="size-3"
+                    />
                 </InputGroup.Button>
             </InputGroup.Addon>
         {/if}
@@ -62,7 +76,14 @@
             <Popover.Trigger>
                 {#snippet child({ props })}
                     <Button variant="outline" size="icon-sm" {...props}>
-                        <ArrowUpDown class="size-4" />
+                        <Icon
+                            lucide="ArrowUpDownIcon"
+                            tabler="IconArrowsSort"
+                            hugeicons="Sorting01Icon"
+                            phosphor="ArrowsDownUpIcon"
+                            remixicon="RiArrowUpDownLine"
+                            class="size-4"
+                        />
                     </Button>
                 {/snippet}
             </Popover.Trigger>
@@ -79,7 +100,12 @@
                             >
                                 <span class="flex-1">{opt.value}</span>
                                 {#if sort === opt.key}
-                                    <Check
+                                    <Icon
+                                        lucide="CheckIcon"
+                                        tabler="IconCheck"
+                                        hugeicons="Tick02Icon"
+                                        phosphor="CheckIcon"
+                                        remixicon="RiCheckLine"
                                         class="size-3 text-muted-foreground"
                                     />
                                 {/if}
@@ -94,7 +120,14 @@
             <Drawer.Trigger>
                 {#snippet child({ props })}
                     <Button variant="outline" size="icon-sm" {...props}>
-                        <ArrowUpDown class="size-4" />
+                        <Icon
+                            lucide="ArrowUpDownIcon"
+                            tabler="IconArrowsSort"
+                            hugeicons="Sorting01Icon"
+                            phosphor="ArrowsDownUpIcon"
+                            remixicon="RiArrowUpDownLine"
+                            class="size-4"
+                        />
                     </Button>
                 {/snippet}
             </Drawer.Trigger>
@@ -112,7 +145,12 @@
                                 >
                                     <span class="flex-1">{opt.value}</span>
                                     {#if sort === opt.key}
-                                        <Check
+                                        <Icon
+                                            lucide="CheckIcon"
+                                            tabler="IconCheck"
+                                            hugeicons="Tick02Icon"
+                                            phosphor="CheckIcon"
+                                            remixicon="RiCheckLine"
                                             class="size-3 text-muted-foreground"
                                         />
                                     {/if}

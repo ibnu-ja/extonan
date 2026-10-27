@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Link, router } from '@inertiajs/svelte';
-    import { EllipsisVertical, Pencil, Send, Trash2 } from 'lucide-svelte';
+    import { Icon } from '@/components/icon';
     import { AspectRatio } from '@/components/ui/aspect-ratio';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
@@ -42,7 +42,7 @@
         class="group"
     >
         <Card.Root
-            class="ring-0 overflow-hidden py-0 gap-0 rounded-none md:rounded-xl transition-colors hover:bg-muted"
+            class="ring-0 overflow-hidden py-0 gap-0 rounded-none md:rounded-[var(--radius)] transition-colors hover:bg-muted"
         >
             {#if episode.thumbnail}
                 <AspectRatio ratio={16 / 9}>
@@ -106,10 +106,17 @@
                         <Button
                             variant="secondary"
                             size="icon"
-                            class="size-7 rounded-lg"
+                            class="size-7"
                             {...props}
                         >
-                            <EllipsisVertical class="size-3.5" />
+                            <Icon
+                                lucide="EllipsisVerticalIcon"
+                                tabler="IconDotsVertical"
+                                hugeicons="MoreVerticalCircle01Icon"
+                                phosphor="DotsThreeVerticalIcon"
+                                remixicon="RiMore2Line"
+                                class="size-3.5"
+                            />
                         </Button>
                     {/snippet}
                 </DropdownMenuTrigger>
@@ -124,7 +131,14 @@
                                     }),
                                 )}
                         >
-                            <Pencil class="size-4" />
+                            <Icon
+                                lucide="PencilIcon"
+                                tabler="IconPencil"
+                                hugeicons="PencilEdit02Icon"
+                                phosphor="PencilIcon"
+                                remixicon="RiEditLine"
+                                class="size-4"
+                            />
                             Edit
                         </DropdownMenuItem>
                     {/if}
@@ -142,7 +156,14 @@
                                 }
                             }}
                         >
-                            <Trash2 class="size-4" />
+                            <Icon
+                                lucide="Trash2Icon"
+                                tabler="IconTrash"
+                                hugeicons="Delete02Icon"
+                                phosphor="TrashIcon"
+                                remixicon="RiDeleteBinLine"
+                                class="size-4"
+                            />
                             Delete
                         </DropdownMenuItem>
                     {/if}
@@ -157,7 +178,14 @@
                                     { isPublished: true },
                                 )}
                         >
-                            <Send class="size-4" />
+                            <Icon
+                                lucide="SendIcon"
+                                tabler="IconSend"
+                                hugeicons="SentIcon"
+                                phosphor="PaperPlaneRightIcon"
+                                remixicon="RiSendPlaneLine"
+                                class="size-4"
+                            />
                             Publish
                         </DropdownMenuItem>
                     {/if}

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Button } from "@/components/ui/button/index.js";
-	import { HugeiconsIcon } from "@hugeicons/svelte"
-	import { SidebarLeftIcon } from '@hugeicons/core-free-icons';
+	import { Icon } from "@/components/icon/index.js";
 	import { cn } from "@/lib/utils.js";
 	import type { ComponentProps } from "svelte";
 	import { useSidebar } from "./context.svelte.js";
@@ -32,6 +31,13 @@
 	}}
 	{...restProps}
 >
-	<HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={2}  />
+	<Icon
+		lucide="PanelLeftIcon"
+		tabler="IconLayoutSidebar"
+		hugeicons="SidebarLeftIcon"
+		phosphor="SidebarIcon"
+		remixicon="RiSideBarLine"
+		class="cn-rtl-flip"
+	/>
 	<span class="sr-only">Toggle Sidebar</span>
 </Button>

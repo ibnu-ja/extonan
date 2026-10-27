@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
-	import { HugeiconsIcon } from "@hugeicons/svelte"
-	import { Tick02Icon } from '@hugeicons/core-free-icons';
+	import { Icon } from "@/components/icon/index.js";
 	import { cn, type WithoutChild } from "@/lib/utils.js";
 
 	let {
@@ -27,7 +26,13 @@
 			data-slot="dropdown-menu-radio-item-indicator"
 		>
 			{#if checked}
-				<HugeiconsIcon icon={Tick02Icon} strokeWidth={2}  />
+				<Icon
+					lucide="CheckIcon"
+					tabler="IconCheck"
+					hugeicons="Tick02Icon"
+					phosphor="CheckIcon"
+					remixicon="RiCheckLine"
+				/>
 			{/if}
 		</span>
 		{@render childrenProp?.({ checked })}
