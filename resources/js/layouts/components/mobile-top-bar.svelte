@@ -15,8 +15,11 @@
 </script>
 
 <header
-    class="fixed top-0 left-0 right-0 z-50 flex h-16 items-center bg-transparent transition-opacity duration-300 opacity-0"
+    class="fixed top-0 left-0 right-0 z-50 flex h-16 items-center bg-transparent transition-all duration-300 opacity-0 pointer-events-none select-none"
     class:opacity-100={scrolled}
+    class:pointer-events-auto={scrolled}
+    class:select-auto={scrolled}
+    aria-hidden={!scrolled}
 >
     <div
         class="absolute inset-0 transition-opacity duration-300 opacity-0"
