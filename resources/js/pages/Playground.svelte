@@ -5,15 +5,7 @@
 </script>
 
 <script lang="ts">
-    import {
-        Share,
-        Trash2,
-        Plus,
-        X,
-        FilePen,
-        Download,
-        Eye,
-    } from 'lucide-svelte';
+    import { Icon } from '@/components/icon';
     import MediaManager from '@/components/media-manager/index.svelte';
     import MediaManagerTrigger from '@/components/media-manager/media-manager-trigger.svelte';
     import * as SpeedDial from '@/components/ui/speed-dial/index.js';
@@ -52,7 +44,7 @@
             <MediaManager title="Select Thumbnail" bind:value={singleValue}>
                 {#snippet header({ title, onOpen })}
                     <div
-                        class="flex items-center justify-between rounded-lg border p-4"
+                        class="flex items-center justify-between rounded-[var(--radius)] border p-4"
                     >
                         <div>
                             <h4 class="font-heading text-lg font-semibold">
@@ -77,14 +69,14 @@
                                     <img
                                         src={item.mediumUrl ?? item.url}
                                         alt={item.filename}
-                                        class="h-20 w-20 rounded object-cover"
+                                        class="h-20 w-20 rounded-[var(--radius)] object-cover"
                                     />
                                 {/each}
                             {:else}
                                 <img
                                     src={val.mediumUrl ?? val.url}
                                     alt={val.filename}
-                                    class="h-20 w-20 rounded object-cover"
+                                    class="h-20 w-20 rounded-[var(--radius)] object-cover"
                                 />
                             {/if}
                         </div>
@@ -123,7 +115,7 @@
             >
                 {#snippet header({ title, onOpen })}
                     <div
-                        class="flex items-center justify-between rounded-lg border p-4"
+                        class="flex items-center justify-between rounded-[var(--radius)] border p-4"
                     >
                         <h4 class="font-heading text-lg font-semibold">
                             {title}
@@ -144,14 +136,14 @@
                                     <img
                                         src={item.mediumUrl ?? item.url}
                                         alt={item.filename}
-                                        class="h-20 w-20 rounded object-cover"
+                                        class="h-20 w-20 rounded-[var(--radius)] object-cover"
                                     />
                                 {/each}
                             {:else}
                                 <img
                                     src={val.mediumUrl ?? val.url}
                                     alt={val.filename}
-                                    class="h-20 w-20 rounded object-cover"
+                                    class="h-20 w-20 rounded-[var(--radius)] object-cover"
                                 />
                             {/if}
                         </div>
@@ -187,10 +179,24 @@
         <SpeedDial.Root>
             <SpeedDial.Trigger>
                 {#snippet icon()}
-                    <Plus class="size-4" />
+                    <Icon
+                        lucide="PlusIcon"
+                        tabler="IconPlus"
+                        hugeicons="PlusSignIcon"
+                        phosphor="PlusIcon"
+                        remixicon="RiAddLine"
+                        class="size-4"
+                    />
                 {/snippet}
                 {#snippet iconClose()}
-                    <X class="size-4" />
+                    <Icon
+                        lucide="XIcon"
+                        tabler="IconX"
+                        hugeicons="Cancel01Icon"
+                        phosphor="XIcon"
+                        remixicon="RiCloseLine"
+                        class="size-4"
+                    />
                 {/snippet}
                 {#snippet labelClose()}
                     Closess
@@ -199,29 +205,64 @@
             </SpeedDial.Trigger>
             <SpeedDial.Content>
                 <SpeedDial.Item variant="default" onclick={onEdit}>
-                    <FilePen class="size-4" />
+                    <Icon
+                        lucide="FilePenIcon"
+                        tabler="IconEdit"
+                        hugeicons="PencilEdit02Icon"
+                        phosphor="PencilSimpleIcon"
+                        remixicon="RiEditLine"
+                        class="size-4"
+                    />
                     Edit
                 </SpeedDial.Item>
                 <SpeedDial.Item variant="secondary" onclick={onShare}>
-                    <Share class="size-4" />
+                    <Icon
+                        lucide="Share2Icon"
+                        tabler="IconShare"
+                        hugeicons="Share01Icon"
+                        phosphor="ShareNetworkIcon"
+                        remixicon="RiShareLine"
+                        class="size-4"
+                    />
                     Share
                 </SpeedDial.Item>
                 <SpeedDial.Item
                     variant="outline"
                     onclick={() => console.log('Download')}
                 >
-                    <Download class="size-4" />
+                    <Icon
+                        lucide="DownloadIcon"
+                        tabler="IconDownload"
+                        hugeicons="Download01Icon"
+                        phosphor="DownloadSimpleIcon"
+                        remixicon="RiDownloadLine"
+                        class="size-4"
+                    />
                     Download
                 </SpeedDial.Item>
                 <SpeedDial.Item
                     variant="ghost"
                     onclick={() => console.log('Preview')}
                 >
-                    <Eye class="size-4" />
+                    <Icon
+                        lucide="EyeIcon"
+                        tabler="IconEye"
+                        hugeicons="ViewIcon"
+                        phosphor="EyeIcon"
+                        remixicon="RiEyeLine"
+                        class="size-4"
+                    />
                     Preview
                 </SpeedDial.Item>
                 <SpeedDial.Item variant="destructive" onclick={onDelete}>
-                    <Trash2 class="size-4" />
+                    <Icon
+                        lucide="Trash2Icon"
+                        tabler="IconTrash"
+                        hugeicons="Delete02Icon"
+                        phosphor="TrashIcon"
+                        remixicon="RiDeleteBinLine"
+                        class="size-4"
+                    />
                     Delete
                 </SpeedDial.Item>
             </SpeedDial.Content>
@@ -234,23 +275,23 @@
             </p>
             <div class="flex flex-wrap gap-2">
                 <span
-                    class="inline-flex items-center gap-1 rounded-md bg-primary px-2 py-0.5 text-xs text-primary-foreground"
+                    class="inline-flex items-center gap-1 rounded-[var(--radius)] bg-primary px-2 py-0.5 text-xs text-primary-foreground"
                     >default</span
                 >
                 <span
-                    class="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 text-xs text-secondary-foreground"
+                    class="inline-flex items-center gap-1 rounded-[var(--radius)] bg-secondary px-2 py-0.5 text-xs text-secondary-foreground"
                     >secondary</span
                 >
                 <span
-                    class="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs"
+                    class="inline-flex items-center gap-1 rounded-[var(--radius)] border px-2 py-0.5 text-xs"
                     >outline</span
                 >
                 <span
-                    class="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground"
+                    class="inline-flex items-center gap-1 rounded-[var(--radius)] bg-muted px-2 py-0.5 text-xs text-muted-foreground"
                     >ghost</span
                 >
                 <span
-                    class="inline-flex items-center gap-1 rounded-md bg-destructive/10 px-2 py-0.5 text-xs text-destructive"
+                    class="inline-flex items-center gap-1 rounded-[var(--radius)] bg-destructive/10 px-2 py-0.5 text-xs text-destructive"
                     >destructive</span
                 >
             </div>

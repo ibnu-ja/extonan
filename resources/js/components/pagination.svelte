@@ -362,7 +362,7 @@
                     onValueChange={navigatePerPage}
                 >
                     <Select.Trigger
-                        class="h-7 w-14 border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3 outline-none flex items-center justify-between gap-1"
+                        class="h-7 w-14 border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-[var(--radius)] border px-2.5 text-xs font-medium transition-colors focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3 outline-none flex items-center justify-between gap-1"
                     >
                         {userPerPage}
                     </Select.Trigger>

@@ -8,18 +8,16 @@
 
 <script lang="ts">
     import { Link, page, router } from '@inertiajs/svelte';
-    import {
-        Clapperboard,
-        Plus,
-        Tag,
-        Calendar,
-        Eye,
-        EyeOff,
-    } from 'lucide-svelte';
     import { onMount } from 'svelte';
     import FilterBar from '@/components/anime/filter-bar.svelte';
     import FilterDropdown from '@/components/anime/filter-dropdown.svelte';
     import Grid from '@/components/anime/grid.svelte';
+    import { Icon } from '@/components/icon';
+    import {
+        NavCalendar,
+        NavClapperboard,
+        NavTag,
+    } from '@/components/icon/nav-icons';
     import Pagination from '@/components/pagination.svelte';
     import { Button } from '@/components/ui/button';
     import * as ButtonGroup from '@/components/ui/button-group';
@@ -254,7 +252,7 @@
     <div class="flex flex-wrap items-center gap-2">
         <FilterDropdown
             label="Genre"
-            icon={Clapperboard}
+            icon={NavClapperboard}
             items={genres.map((g) => g.value)}
             selectedIn={filters.genreIn}
             selectedNotIn={filters.genreNotIn}
@@ -263,7 +261,7 @@
         />
         <FilterDropdown
             label="Tag"
-            icon={Tag}
+            icon={NavTag}
             items={tags.map((g) => g.value)}
             selectedIn={selectedTagNames}
             selectedNotIn={selectedTagNotInNames}
@@ -273,7 +271,7 @@
         />
         <FilterDropdown
             label="Season"
-            icon={Calendar}
+            icon={NavCalendar}
             items={seasons}
             selectedIn={filters.seasonIn}
             selectedNotIn={filters.seasonNotIn}
@@ -294,7 +292,14 @@
                         applyFilters();
                     }}
                 >
-                    <Eye class="size-4" />
+                    <Icon
+                        lucide="EyeIcon"
+                        tabler="IconEye"
+                        hugeicons="ViewIcon"
+                        phosphor="EyeIcon"
+                        remixicon="RiEyeLine"
+                        class="size-4"
+                    />
                     Published
                 </Button>
                 <Button
@@ -307,7 +312,14 @@
                         applyFilters();
                     }}
                 >
-                    <EyeOff class="size-4" />
+                    <Icon
+                        lucide="EyeOffIcon"
+                        tabler="IconEyeOff"
+                        hugeicons="ViewOffSlashIcon"
+                        phosphor="EyeSlashIcon"
+                        remixicon="RiEyeOffLine"
+                        class="size-4"
+                    />
                     Draft
                 </Button>
             </ButtonGroup.Root>
@@ -324,7 +336,14 @@
         <Fab>
             {#snippet child({ props })}
                 <Link href={animeCreate().url} prefetch="hover" {...props}>
-                    <Plus class="size-6" />
+                    <Icon
+                        lucide="PlusIcon"
+                        tabler="IconPlus"
+                        hugeicons="PlusSignIcon"
+                        phosphor="PlusIcon"
+                        remixicon="RiAddLine"
+                        class="size-6"
+                    />
                     Add
                 </Link>
             {/snippet}

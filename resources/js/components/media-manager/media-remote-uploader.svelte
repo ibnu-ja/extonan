@@ -1,6 +1,6 @@
 <script lang="ts">
-    import AlertCircle from 'lucide-svelte/icons/alert-circle';
     import { store as mediaStore } from '@/actions/App/Http/Controllers/MediaController';
+    import { Icon } from '@/components/icon';
     import * as Alert from '@/components/ui/alert';
     import { Button } from '@/components/ui/button';
     import { Label } from '@/components/ui/label';
@@ -130,7 +130,14 @@
 
 {#if errors.length > 0}
     <Alert.Root variant="destructive">
-        <AlertCircle />
+        <Icon
+            lucide="CircleAlertIcon"
+            tabler="IconAlertCircle"
+            hugeicons="AlertCircleIcon"
+            phosphor="WarningCircleIcon"
+            remixicon="RiErrorWarningLine"
+            class="size-4"
+        />
         <Alert.Title>Upload failed</Alert.Title>
         <Alert.Description>
             <ul class="list-inside list-disc text-sm">

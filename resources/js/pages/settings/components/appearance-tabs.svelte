@@ -54,7 +54,7 @@
     {#each tabs as tab (tab.value)}
         <button
             onclick={() => handleAppearanceChange(tab.value)}
-            class="flex items-center rounded-[calc(var(--radius)-2px)] px-3.5 py-1.5 transition-colors {appearance.value ===
+            class="flex items-center rounded-[max(0px,calc(var(--radius)-2px))] px-3.5 py-1.5 transition-colors {appearance.value ===
             tab.value
                 ? 'bg-background text-foreground shadow-xs font-medium'
                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'}"

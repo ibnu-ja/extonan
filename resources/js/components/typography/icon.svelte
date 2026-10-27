@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as icons from 'lucide-svelte';
+    import { Icon } from '@/components/icon';
 
     interface Props {
         name: string;
@@ -7,23 +7,20 @@
         size?: number | string;
         color?: string;
         strokeWidth?: number | string;
+        [key: string]: any;
     }
 
     let {
         name,
         class: className,
-        size = 16,
-        color,
-        strokeWidth = 2,
+        ...restProps
     }: Props = $props();
 
-    const Component = $derived(() => {
+    const lucideName = $derived.by(() => {
         const iconName = name.charAt(0).toUpperCase() + name.slice(1);
 
-        return (icons as Record<string, any>)[iconName];
+        return iconName.endsWith('Icon') ? iconName : `${iconName}Icon`;
     });
-
-    const styles = $derived(['h-4 w-4', className]);
 </script>
 
-<Component class={styles} {size} {color} {strokeWidth} />
+<Icon lucide={lucideName} class={className} {...restProps} />

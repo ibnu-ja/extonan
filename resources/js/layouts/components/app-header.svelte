@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Link, page } from '@inertiajs/svelte';
-    import LayoutGrid from 'lucide-svelte/icons/layout-grid';
     import AppLogo from '@/components/app-logo.svelte';
+    import { Icon } from '@/components/icon';
     import {
         Avatar,
         AvatarFallback,
@@ -23,15 +23,20 @@
     import { getInitials } from '@/lib/initials';
     import { toUrl } from '@/lib/utils';
     import { dashboard } from '@/routes';
-    import type { NavItem } from '@/types';
 
     const auth = $derived(page.props.auth);
 
-    const mainNavItems: NavItem[] = [
+    const mainNavItems = [
         {
             title: 'Dashboard',
             href: dashboard(),
-            icon: LayoutGrid,
+            icon: {
+                lucide: 'LayoutGridIcon',
+                tabler: 'IconLayoutGrid',
+                hugeicons: 'DashboardSquare01Icon',
+                phosphor: 'SquaresFourIcon',
+                remixicon: 'RiDashboardLine',
+            },
         },
     ];
 </script>
@@ -49,7 +54,7 @@
                     <NavigationMenuList
                         class="flex h-full items-stretch space-x-2"
                     >
-                        {#each mainNavItems as { icon: Icon, ...item } (toUrl(item.href))}
+                        {#each mainNavItems as item (toUrl(item.href))}
                             <NavigationMenuItem>
                                 <NavigationMenuLink href={toUrl(item.href)}>
                                     {#snippet child({ props })}
@@ -57,8 +62,15 @@
                                             href={toUrl(item.href)}
                                             {...props}
                                         >
-                                            {#if Icon}
-                                                <Icon class="mr-2 h-4 w-4" />
+                                            {#if item.icon}
+                                                <Icon
+                                                    lucide={item.icon.lucide}
+                                                    tabler={item.icon.tabler}
+                                                    hugeicons={item.icon.hugeicons}
+                                                    phosphor={item.icon.phosphor}
+                                                    remixicon={item.icon.remixicon}
+                                                    class="mr-2 size-4"
+                                                />
                                             {/if}
                                             {item.title}
                                         </Link>
@@ -90,7 +102,7 @@
                                         />
                                     {/if}
                                     <AvatarFallback
-                                        class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white"
+                                        class="rounded-full bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white"
                                     >
                                         {getInitials(auth.user?.name ?? '')}
                                     </AvatarFallback>

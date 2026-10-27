@@ -1,5 +1,5 @@
 <script lang="ts">
-    import CircleAlert from 'lucide-svelte/icons/circle-alert';
+    import { Icon } from '@/components/icon';
     import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
     let {
@@ -14,7 +14,14 @@
 </script>
 
 <Alert variant="destructive">
-    <CircleAlert class="size-4" />
+    <Icon
+        lucide="CircleAlertIcon"
+        tabler="IconAlertCircle"
+        hugeicons="AlertCircleIcon"
+        phosphor="WarningCircleIcon"
+        remixicon="RiErrorWarningLine"
+        class="size-4"
+    />
     <AlertTitle>{title}</AlertTitle>
     <AlertDescription>
         <ul class="list-inside list-disc text-sm">

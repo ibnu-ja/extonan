@@ -1,10 +1,7 @@
 <script lang="ts">
     import { Form } from '@inertiajs/svelte';
-    import Eye from 'lucide-svelte/icons/eye';
-    import EyeOff from 'lucide-svelte/icons/eye-off';
-    import LockKeyhole from 'lucide-svelte/icons/lock-keyhole';
-    import RefreshCw from 'lucide-svelte/icons/refresh-cw';
     import { onMount, tick } from 'svelte';
+    import { Icon } from '@/components/icon';
     import { Button } from '@/components/ui/button';
     import {
         Card,
@@ -46,8 +43,16 @@
 
 <Card class="w-full">
     <CardHeader>
-        <CardTitle class="flex gap-3">
-            <LockKeyhole class="size-4" />2FA recovery codes
+        <CardTitle class="flex items-center gap-2">
+            <Icon
+                lucide="LockKeyholeIcon"
+                tabler="IconLock"
+                hugeicons="LockKeyIcon"
+                phosphor="LockKeyIcon"
+                remixicon="RiLockPasswordLine"
+                class="size-4"
+            />
+            2FA recovery codes
         </CardTitle>
         <CardDescription>
             Recovery codes let you regain access if you lose your 2FA device.
@@ -60,9 +65,23 @@
         >
             <Button onclick={toggleRecoveryCodesVisibility} class="w-fit">
                 {#if isRecoveryCodesVisible}
-                    <EyeOff class="size-4" />
+                    <Icon
+                        lucide="EyeOffIcon"
+                        tabler="IconEyeOff"
+                        hugeicons="ViewOffIcon"
+                        phosphor="EyeSlashIcon"
+                        remixicon="RiEyeOffLine"
+                        class="size-4"
+                    />
                 {:else}
-                    <Eye class="size-4" />
+                    <Icon
+                        lucide="EyeIcon"
+                        tabler="IconEye"
+                        hugeicons="ViewIcon"
+                        phosphor="EyeIcon"
+                        remixicon="RiEyeLine"
+                        class="size-4"
+                    />
                 {/if}
                 {isRecoveryCodesVisible ? 'Hide' : 'View'} recovery codes
             </Button>
@@ -79,7 +98,15 @@
                             type="submit"
                             disabled={processing}
                         >
-                            <RefreshCw class="size-4" /> Regenerate codes
+                            <Icon
+                                lucide="RefreshCwIcon"
+                                tabler="IconRefresh"
+                                hugeicons="RefreshIcon"
+                                phosphor="ArrowsClockwiseIcon"
+                                remixicon="RiRefreshLine"
+                                class="size-4"
+                            />
+                            Regenerate codes
                         </Button>
                     {/snippet}
                 </Form>
@@ -98,7 +125,7 @@
                 <div class="mt-3 space-y-3">
                     <div
                         bind:this={recoveryCodeSectionRef}
-                        class="grid gap-1 rounded-lg bg-muted p-4 font-mono text-sm"
+                        class="grid gap-1 rounded-[var(--radius)] bg-muted p-4 font-mono text-sm"
                     >
                         {#if !twoFactorAuth.state.recoveryCodesList.length}
                             <div class="space-y-2">

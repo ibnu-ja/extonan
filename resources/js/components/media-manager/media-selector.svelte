@@ -114,7 +114,7 @@
         {#each loaded as item (item.id)}
             <button
                 type="button"
-                class="group relative overflow-hidden rounded-lg border bg-muted cursor-pointer ring-offset-background transition-all hover:ring-2 hover:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary"
+                class="group relative overflow-hidden rounded-[var(--radius)] border bg-muted cursor-pointer ring-offset-background transition-all hover:ring-2 hover:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary"
                 data-selected={isSelected(item)}
                 onclick={() => onMediaSelect(item)}
             >

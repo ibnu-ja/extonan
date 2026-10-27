@@ -24,7 +24,7 @@
 {:else}
     <main
         class={cn(
-            'mx-auto flex h-full w-full flex-1 flex-col gap-4 rounded-xl',
+            'mx-auto flex h-full w-full flex-1 flex-col gap-4 rounded-[var(--radius)]',
             className,
         )}
     >

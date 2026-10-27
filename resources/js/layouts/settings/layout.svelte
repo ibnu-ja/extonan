@@ -49,7 +49,7 @@
                 {#each sidebarNavItems as item (toUrl(item.href))}
                     <Link
                         href={toUrl(item.href)}
-                        class="inline-flex h-8 w-full items-center justify-start gap-1.5 whitespace-nowrap rounded-lg border border-transparent bg-clip-padding px-2.5 text-sm font-medium transition-all outline-none select-none hover:bg-muted hover:text-foreground {url.isCurrentUrl(
+                        class="inline-flex h-8 w-full items-center justify-start gap-1.5 whitespace-nowrap rounded-[var(--radius)] border border-transparent bg-clip-padding px-2.5 text-sm font-medium transition-all outline-none select-none hover:bg-muted hover:text-foreground {url.isCurrentUrl(
                             item.href,
                             url.currentUrl,
                         )

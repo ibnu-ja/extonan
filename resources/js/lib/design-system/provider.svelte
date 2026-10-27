@@ -24,6 +24,8 @@ import type {DesignSystemState} from "./state.svelte.js";
 				body.classList.remove(className);
 			}
 		}
+
+		body.classList.remove("has-radius-override");
 	}
 
 	let stopMenuSync: (() => void) | null = null;
@@ -38,6 +40,7 @@ return;
 		removeManagedClasses(body);
 		body.classList.add(`style-${designSystem.style}`);
 		body.classList.add(`base-color-${designSystem.baseColor}`);
+		body.classList.toggle("has-radius-override", designSystem.radius !== null);
 
 		// Build theme variables
 		const registryTheme = buildRegistryTheme(designSystem.toConfig());

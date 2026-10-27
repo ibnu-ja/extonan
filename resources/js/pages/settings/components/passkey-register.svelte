@@ -62,7 +62,7 @@
 {:else}
     <form
         onsubmit={handleSubmit}
-        class="space-y-4 rounded-lg border border-border bg-muted/50 p-4"
+        class="space-y-4 rounded-[var(--radius)] border border-border bg-muted/50 p-4"
     >
         <div class="grid gap-2">
             <Label for="passkey-name">Passkey name</Label>

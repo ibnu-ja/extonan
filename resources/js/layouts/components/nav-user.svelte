@@ -1,8 +1,6 @@
 <script lang="ts">
     import { Link, page, router } from '@inertiajs/svelte';
-    import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
-    import LogOutIcon from '@lucide/svelte/icons/log-out';
-    import SettingsIcon from '@lucide/svelte/icons/settings';
+    import { Icon } from '@/components/icon';
     import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
     import * as Sidebar from '@/components/ui/sidebar/index.js';
     import { useSidebar } from '@/components/ui/sidebar/index.js';
@@ -27,12 +25,19 @@
                             {...props}
                         >
                             <UserInfo {user} />
-                            <ChevronsUpDownIcon class="ms-auto size-4" />
+                            <Icon
+                                lucide="ChevronsUpDownIcon"
+                                tabler="IconSelector"
+                                hugeicons="UnfoldMoreIcon"
+                                phosphor="CaretUpDownIcon"
+                                remixicon="RiExpandUpDownLine"
+                                class="ms-auto size-4"
+                            />
                         </Sidebar.MenuButton>
                     {/snippet}
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content
-                    class="w-(--bits-dropdown-menu-anchor-width) min-w-56 rounded-lg"
+                    class="w-(--bits-dropdown-menu-anchor-width) min-w-56 rounded-[var(--radius)]"
                     side={sidebar.state === 'collapsed' ? 'right' : 'top'}
                     align="end"
                     sideOffset={4}
@@ -49,7 +54,14 @@
                         <DropdownMenu.Item>
                             {#snippet child({ props })}
                                 <Link {...props} href={toUrl(edit())} prefetch>
-                                    <SettingsIcon class="size-4" />
+                                    <Icon
+                                        lucide="SettingsIcon"
+                                        tabler="IconSettings"
+                                        hugeicons="Settings01Icon"
+                                        phosphor="GearIcon"
+                                        remixicon="RiSettings3Line"
+                                        class="size-4"
+                                    />
                                     Settings
                                 </Link>
                             {/snippet}
@@ -62,7 +74,14 @@
                                 {...props}
                                 onclick={() => router.post(logout().url)}
                             >
-                                <LogOutIcon class="size-4" />
+                                <Icon
+                                    lucide="LogOutIcon"
+                                    tabler="IconLogout"
+                                    hugeicons="Logout01Icon"
+                                    phosphor="SignOutIcon"
+                                    remixicon="RiLogoutBoxRLine"
+                                    class="size-4"
+                                />
                                 Log out
                             </button>
                         {/snippet}

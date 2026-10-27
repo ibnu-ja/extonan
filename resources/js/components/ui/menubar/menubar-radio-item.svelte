@@ -15,14 +15,14 @@
 	bind:ref
 	data-slot="menubar-radio-item"
 	class={cn(
-		"focus:bg-accent focus:text-accent-foreground gap-2 rounded-xs py-1 pr-2 pl-7 text-xs [&_svg:not([class*='size-'])]:size-3.5 relative flex cursor-default select-none items-center outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+		"cn-menubar-radio-item relative flex cursor-default select-none items-center outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
 		className
 	)}
 	{...restProps}
 >
 	{#snippet children({ checked })}
 		<span
-			class="absolute left-2 flex size-3.5 items-center justify-center pointer-events-none"
+			class="cn-menubar-radio-item-indicator flex size-3.5 items-center justify-center pointer-events-none"
 			data-slot="menubar-radio-item-indicator"
 		>
 			{#if checked}

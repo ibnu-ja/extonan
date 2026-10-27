@@ -1,15 +1,10 @@
 <script lang="ts">
     import { Link, router, setLayoutProps, useForm } from '@inertiajs/svelte';
-    import Check from 'lucide-svelte/icons/check';
-    import ChevronDown from 'lucide-svelte/icons/chevron-down';
-    import ChevronUp from 'lucide-svelte/icons/chevron-up';
-    import ExternalLink from 'lucide-svelte/icons/external-link';
-    import Plus from 'lucide-svelte/icons/plus';
-    import Trash2 from 'lucide-svelte/icons/trash-2';
     import { untrack } from 'svelte';
     import type { Snippet } from 'svelte';
     import PostController from '@/actions/App/Http/Controllers/PostController';
     import AppHead from '@/components/app-head.svelte';
+    import { Icon } from '@/components/icon';
     import MediaManager from '@/components/media-manager/index.svelte';
     import MediaManagerTrigger from '@/components/media-manager/media-manager-trigger.svelte';
     import { Badge } from '@/components/ui/badge';
@@ -281,7 +276,14 @@
                 class="text-destructive shrink-0 mt-7"
                 onclick={() => deleteFn(j)}
             >
-                <Trash2 class="size-4" />
+                <Icon
+                    lucide="Trash2Icon"
+                    tabler="IconTrash"
+                    hugeicons="Delete02Icon"
+                    phosphor="TrashIcon"
+                    remixicon="RiDeleteBinLine"
+                    class="size-4"
+                />
             </Button>
         </div>
     {/each}
@@ -297,7 +299,14 @@
                 class="text-destructive shrink-0"
                 onclick={deleteFn}
             >
-                <Trash2 class="size-4" />
+                <Icon
+                    lucide="Trash2Icon"
+                    tabler="IconTrash"
+                    hugeicons="Delete02Icon"
+                    phosphor="TrashIcon"
+                    remixicon="RiDeleteBinLine"
+                    class="size-4"
+                />
             </Button>
         </Card.Action>
     </Card.Header>
@@ -326,9 +335,17 @@
                         placeholderValue,
                     )}
                 {/if}
-                <Button variant="outline" size="sm" onclick={addFn}
-                    ><Plus class="mr-1 size-4" /> Add Mirror</Button
-                >
+                <Button variant="outline" size="sm" onclick={addFn}>
+                    <Icon
+                        lucide="PlusIcon"
+                        tabler="IconPlus"
+                        hugeicons="PlusSignIcon"
+                        phosphor="PlusIcon"
+                        remixicon="RiAddLine"
+                        class="mr-1 size-4"
+                    />
+                    Add Mirror
+                </Button>
             </div>
         {:else}
             <Card.Root>
@@ -345,9 +362,17 @@
                             placeholderValue,
                         )}
                     {/if}
-                    <Button variant="outline" size="sm" onclick={addFn}
-                        ><Plus class="mr-1 size-4" /> Add Mirror</Button
-                    >
+                    <Button variant="outline" size="sm" onclick={addFn}>
+                        <Icon
+                            lucide="PlusIcon"
+                            tabler="IconPlus"
+                            hugeicons="PlusSignIcon"
+                            phosphor="PlusIcon"
+                            remixicon="RiAddLine"
+                            class="mr-1 size-4"
+                        />
+                        Add Mirror
+                    </Button>
                 </Card.Content>
             </Card.Root>
         {/if}
@@ -370,7 +395,12 @@
                                     {postTypes.find(
                                         (t) => t.value === form.postType,
                                     )?.label ?? 'Type'}
-                                    <ChevronDown
+                                    <Icon
+                                        lucide="ChevronDownIcon"
+                                        tabler="IconChevronDown"
+                                        hugeicons="ArrowDown01Icon"
+                                        phosphor="CaretDownIcon"
+                                        remixicon="RiArrowDownSLine"
                                         class="ml-1 size-4 opacity-50"
                                     />
                                 </InputGroup.Button>
@@ -382,9 +412,16 @@
                                     onclick={() => (form.postType = type.value)}
                                 >
                                     <div class="flex w-full items-center gap-2">
-                                        {#if form.postType === type.value}<Check
+                                        {#if form.postType === type.value}
+                                            <Icon
+                                                lucide="CheckIcon"
+                                                tabler="IconCheck"
+                                                hugeicons="Tick02Icon"
+                                                phosphor="CheckIcon"
+                                                remixicon="RiCheckLine"
                                                 class="size-4"
-                                            />{/if}
+                                            />
+                                        {/if}
                                         <span>{type.label}</span>
                                     </div>
                                 </DropdownMenu.Item>
@@ -413,7 +450,12 @@
                                     {languages.find(
                                         (l) => l.value === currentLang,
                                     )?.label ?? 'Language'}
-                                    <ChevronDown
+                                    <Icon
+                                        lucide="ChevronDownIcon"
+                                        tabler="IconChevronDown"
+                                        hugeicons="ArrowDown01Icon"
+                                        phosphor="CaretDownIcon"
+                                        remixicon="RiArrowDownSLine"
                                         class="ml-1 size-4 opacity-50"
                                     />
                                 </InputGroup.Button>
@@ -425,9 +467,16 @@
                                     onclick={() => (currentLang = lang.value)}
                                 >
                                     <div class="flex w-full items-center gap-2">
-                                        {#if currentLang === lang.value}<Check
+                                        {#if currentLang === lang.value}
+                                            <Icon
+                                                lucide="CheckIcon"
+                                                tabler="IconCheck"
+                                                hugeicons="Tick02Icon"
+                                                phosphor="CheckIcon"
+                                                remixicon="RiCheckLine"
                                                 class="size-4"
-                                            />{/if}
+                                            />
+                                        {/if}
                                         <span>{lang.label}</span>
                                     </div>
                                 </DropdownMenu.Item>
@@ -483,7 +532,14 @@
                             >
                                 {languages.find((l) => l.value === currentLang)
                                     ?.label ?? 'Language'}
-                                <ChevronDown class="ml-1 size-4 opacity-50" />
+                                <Icon
+                                    lucide="ChevronDownIcon"
+                                    tabler="IconChevronDown"
+                                    hugeicons="ArrowDown01Icon"
+                                    phosphor="CaretDownIcon"
+                                    remixicon="RiArrowDownSLine"
+                                    class="ml-1 size-4 opacity-50"
+                                />
                             </InputGroup.Button>
                         {/snippet}
                     </DropdownMenu.Trigger>
@@ -493,9 +549,16 @@
                                 onclick={() => (currentLang = lang.value)}
                             >
                                 <div class="flex w-full items-center gap-2">
-                                    {#if currentLang === lang.value}<Check
+                                    {#if currentLang === lang.value}
+                                        <Icon
+                                            lucide="CheckIcon"
+                                            tabler="IconCheck"
+                                            hugeicons="Tick02Icon"
+                                            phosphor="CheckIcon"
+                                            remixicon="RiCheckLine"
                                             class="size-4"
-                                        />{/if}
+                                        />
+                                    {/if}
                                     <span>{lang.label}</span>
                                 </div>
                             </DropdownMenu.Item>
@@ -514,7 +577,15 @@
             <DropdownMenu.Trigger>
                 {#snippet child({ props: triggerProps })}
                     <Button variant="outline" size="sm" {...triggerProps}>
-                        <Plus class="mr-1 size-4" /> Add Stream
+                        <Icon
+                            lucide="PlusIcon"
+                            tabler="IconPlus"
+                            hugeicons="PlusSignIcon"
+                            phosphor="PlusIcon"
+                            remixicon="RiAddLine"
+                            class="mr-1 size-4"
+                        />
+                        Add Stream
                     </Button>
                 {/snippet}
             </DropdownMenu.Trigger>
@@ -554,9 +625,17 @@
 {/snippet}
 
 {#snippet downloadLinksAction()}
-    <Button variant="outline" size="sm" onclick={addLink}
-        ><Plus class="mr-1 size-4" /> Add File</Button
-    >
+    <Button variant="outline" size="sm" onclick={addLink}>
+        <Icon
+            lucide="PlusIcon"
+            tabler="IconPlus"
+            hugeicons="PlusSignIcon"
+            phosphor="PlusIcon"
+            remixicon="RiAddLine"
+            class="mr-1 size-4"
+        />
+        Add File
+    </Button>
 {/snippet}
 
 {#snippet downloadLinksContent()}
@@ -575,8 +654,16 @@
                             size="icon"
                             class="text-destructive shrink-0"
                             onclick={() => deleteLink(i)}
-                            ><Trash2 class="size-4" /></Button
                         >
+                            <Icon
+                                lucide="Trash2Icon"
+                                tabler="IconTrash"
+                                hugeicons="Delete02Icon"
+                                phosphor="TrashIcon"
+                                remixicon="RiDeleteBinLine"
+                                class="size-4"
+                            />
+                        </Button>
                     </Field.Field>
                     {#if link.value.length === 0}
                         <p>No mirrors.</p>
@@ -593,8 +680,17 @@
                         variant="outline"
                         size="sm"
                         onclick={() => addMirror(i)}
-                        ><Plus class="mr-1 size-4" /> Add Mirror</Button
                     >
+                        <Icon
+                            lucide="PlusIcon"
+                            tabler="IconPlus"
+                            hugeicons="PlusSignIcon"
+                            phosphor="PlusIcon"
+                            remixicon="RiAddLine"
+                            class="mr-1 size-4"
+                        />
+                        Add Mirror
+                    </Button>
                 </div>
             {:else}
                 <Card.Root>
@@ -625,8 +721,17 @@
                             variant="outline"
                             size="sm"
                             onclick={() => addMirror(i)}
-                            ><Plus class="mr-1 size-4" /> Add Mirror</Button
                         >
+                            <Icon
+                                lucide="PlusIcon"
+                                tabler="IconPlus"
+                                hugeicons="PlusSignIcon"
+                                phosphor="PlusIcon"
+                                remixicon="RiAddLine"
+                                class="mr-1 size-4"
+                            />
+                            Add Mirror
+                        </Button>
                     </Card.Content>
                 </Card.Root>
             {/if}
@@ -666,9 +771,25 @@
         size="icon"
         onclick={() => (showAnimeImage = !showAnimeImage)}
     >
-        {#if showAnimeImage}<ChevronUp class="size-4" />{:else}<ChevronDown
+        {#if showAnimeImage}
+            <Icon
+                lucide="ChevronUpIcon"
+                tabler="IconChevronUp"
+                hugeicons="ArrowUp01Icon"
+                phosphor="CaretUpIcon"
+                remixicon="RiArrowUpSLine"
                 class="size-4"
-            />{/if}
+            />
+        {:else}
+            <Icon
+                lucide="ChevronDownIcon"
+                tabler="IconChevronDown"
+                hugeicons="ArrowDown01Icon"
+                phosphor="CaretDownIcon"
+                remixicon="RiArrowDownSLine"
+                class="size-4"
+            />
+        {/if}
     </Button>
 {/snippet}
 
@@ -689,9 +810,17 @@
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <Badge variant="secondary"
-                        >Anilist<ExternalLink class="ml-1 size-3" /></Badge
-                    >
+                    <Badge variant="secondary">
+                        Anilist
+                        <Icon
+                            lucide="ExternalLinkIcon"
+                            tabler="IconExternalLink"
+                            hugeicons="ExternalLinkIcon"
+                            phosphor="ArrowSquareOutIcon"
+                            remixicon="RiExternalLinkLine"
+                            class="ml-1 size-3"
+                        />
+                    </Badge>
                 </a>
             {/if}
             {#if metadata?.idMal}
@@ -700,9 +829,17 @@
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <Badge variant="secondary"
-                        >MyAnimelist<ExternalLink class="ml-1 size-3" /></Badge
-                    >
+                    <Badge variant="secondary">
+                        MyAnimelist
+                        <Icon
+                            lucide="ExternalLinkIcon"
+                            tabler="IconExternalLink"
+                            hugeicons="ExternalLinkIcon"
+                            phosphor="ArrowSquareOutIcon"
+                            remixicon="RiExternalLinkLine"
+                            class="ml-1 size-3"
+                        />
+                    </Badge>
                 </a>
             {/if}
         </div>
@@ -750,7 +887,14 @@
                             onclick={deletePost}
                             disabled={form.processing}
                         >
-                            <Trash2 class="size-4" />
+                            <Icon
+                                lucide="Trash2Icon"
+                                tabler="IconTrash"
+                                hugeicons="Delete02Icon"
+                                phosphor="TrashIcon"
+                                remixicon="RiDeleteBinLine"
+                                class="size-4"
+                            />
                         </Button>
                     {/if}
                     {#if form.isDirty}

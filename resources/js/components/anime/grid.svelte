@@ -31,7 +31,7 @@
         {/each}
     </div>
 {:else}
-    <div class="flex h-48 items-center justify-center rounded-xl bg-muted">
+    <div class="flex h-48 items-center justify-center rounded-[var(--radius)] bg-muted">
         <p class="text-muted-foreground text-sm">No anime found.</p>
     </div>
 {/if}

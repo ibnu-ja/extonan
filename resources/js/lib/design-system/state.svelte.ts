@@ -16,14 +16,6 @@ const STORAGE_KEY = "extonan_design_system";
 const CONTEXT_KEY = Symbol.for("extonan.design-system");
 
 function normalizeConfig(config: PresetConfig): PresetConfig {
-	if ((config.style === "lyra" || config.style === "sera") && config.radius !== "none") {
-		return { ...config, radius: "none" };
-	}
-
-	if (config.style === "rhea" && config.radius === "large") {
-		return { ...config, radius: "default" };
-	}
-
 	return config;
 }
 
@@ -127,23 +119,23 @@ this.menuAccent = config.menuAccent as MenuAccentValue;
 this.menuColor = config.menuColor as MenuColorValue;
 }
 
-		if (config.radius) {
-this.radius = config.radius as RadiusValue;
-}
+		if ("radius" in config) {
+			this.radius = config.radius as RadiusValue;
+		}
 
 		this.persist();
 	}
 
 	applyPreset(presetString: string): boolean {
 		if (!isValidPreset(presetString)) {
-return false;
-}
+			return false;
+		}
 
 		const decoded = decodePreset(presetString);
 
 		if (!decoded) {
-return false;
-}
+			return false;
+		}
 
 		this.applyConfig(normalizeConfig(decoded));
 
@@ -152,7 +144,14 @@ return false;
 
 	get preset(): string {
 		try {
-			return encodePreset(normalizeConfig(this.toConfig() as unknown as PresetConfig));
+			const cfg = this.toConfig();
+
+			return encodePreset(
+				normalizeConfig({
+					...cfg,
+					radius: cfg.radius ?? "default",
+				} as unknown as PresetConfig)
+			);
 		} catch {
 			return "";
 		}

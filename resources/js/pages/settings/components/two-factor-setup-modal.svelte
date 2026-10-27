@@ -1,9 +1,7 @@
 <script lang="ts">
     import { Form } from '@inertiajs/svelte';
-    import Check from 'lucide-svelte/icons/check';
-    import Copy from 'lucide-svelte/icons/copy';
-    import ScanLine from 'lucide-svelte/icons/scan-line';
     import { tick } from 'svelte';
+    import { Icon } from '@/components/icon';
     import InputError from '@/components/input-error.svelte';
     import { Button } from '@/components/ui/button';
     import {
@@ -143,7 +141,14 @@
                             ></div>
                         {/each}
                     </div>
-                    <ScanLine class="relative z-20 size-6 text-foreground" />
+                    <Icon
+                        lucide="ScanLineIcon"
+                        tabler="IconScan"
+                        hugeicons="ScanIcon"
+                        phosphor="ScanIcon"
+                        remixicon="RiScanLine"
+                        class="relative z-20 size-6 text-foreground"
+                    />
                 </div>
             </div>
             <div class="my-3 space-y-1 text-center">
@@ -165,7 +170,7 @@
                         class="relative mx-auto flex max-w-md items-center overflow-hidden"
                     >
                         <div
-                            class="relative mx-auto aspect-square w-64 overflow-hidden rounded-lg border border-border"
+                            class="relative mx-auto aspect-square w-64 overflow-hidden rounded-[var(--radius)] border border-border"
                         >
                             {#if !twoFactorAuth.state.qrCodeSvg}
                                 <div
@@ -215,7 +220,7 @@
                         class="flex w-full items-center justify-center space-x-2"
                     >
                         <div
-                            class="flex w-full items-stretch overflow-hidden rounded-xl border border-border"
+                            class="flex w-full items-stretch overflow-hidden rounded-[var(--radius)] border border-border"
                         >
                             {#if !twoFactorAuth.state.manualSetupKey}
                                 <div
@@ -239,9 +244,23 @@
                                     class="relative block h-auto border-l border-border px-3 hover:bg-muted"
                                 >
                                     {#if copied}
-                                        <Check class="w-4 text-green-500" />
+                                        <Icon
+                                            lucide="CheckIcon"
+                                            tabler="IconCheck"
+                                            hugeicons="Tick02Icon"
+                                            phosphor="CheckIcon"
+                                            remixicon="RiCheckLine"
+                                            class="size-4 text-emerald-500"
+                                        />
                                     {:else}
-                                        <Copy class="w-4" />
+                                        <Icon
+                                            lucide="CopyIcon"
+                                            tabler="IconCopy"
+                                            hugeicons="Copy01Icon"
+                                            phosphor="CopyIcon"
+                                            remixicon="RiFileCopyLine"
+                                            class="size-4 text-muted-foreground"
+                                        />
                                     {/if}
                                 </button>
                             {/if}

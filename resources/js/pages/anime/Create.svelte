@@ -1,11 +1,11 @@
 <script lang="ts">
     import { router, setLayoutProps, useForm } from '@inertiajs/svelte';
-    import { Check, ChevronDown, Send, Trash2, X } from 'lucide-svelte';
     import type { Snippet } from 'svelte';
     import { untrack } from 'svelte';
     import AnimeController from '@/actions/App/Http/Controllers/AnimeController';
     import Casts from '@/components/anime/casts.svelte';
     import AppHead from '@/components/app-head.svelte';
+    import { Icon } from '@/components/icon';
     import MultiCombobox from '@/components/multi-combobox.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
@@ -201,7 +201,14 @@
                         {#snippet child({ props: triggerProps })}
                             <InputGroup.Button variant="default" {...triggerProps}>
                                 {languages.find((l) => l.value === currentLang)?.label ?? 'Language'}
-                                <ChevronDown class="ml-1 size-4 opacity-50" />
+                                <Icon
+                                    lucide="ChevronDownIcon"
+                                    tabler="IconChevronDown"
+                                    hugeicons="ArrowDown01Icon"
+                                    phosphor="CaretDownIcon"
+                                    remixicon="RiArrowDownSLine"
+                                    class="ml-1 size-4 opacity-50"
+                                />
                             </InputGroup.Button>
                         {/snippet}
                     </DropdownMenu.Trigger>
@@ -210,7 +217,14 @@
                             <DropdownMenu.Item onclick={() => (currentLang = lang.value)}>
                                 <div class="flex w-full items-center gap-2">
                                     {#if currentLang === lang.value}
-                                        <Check class="size-4" />
+                                        <Icon
+                                            lucide="CheckIcon"
+                                            tabler="IconCheck"
+                                            hugeicons="Tick02Icon"
+                                            phosphor="CheckIcon"
+                                            remixicon="RiCheckLine"
+                                            class="size-4"
+                                        />
                                     {/if}
                                     <span>{lang.label}</span>
                                 </div>
@@ -262,7 +276,14 @@
                         {#snippet child({ props: triggerProps })}
                             <InputGroup.Button variant="default" {...triggerProps}>
                                 {languages.find((l) => l.value === currentLang)?.label ?? 'Language'}
-                                <ChevronDown class="ml-1 size-4 opacity-50" />
+                                <Icon
+                                    lucide="ChevronDownIcon"
+                                    tabler="IconChevronDown"
+                                    hugeicons="ArrowDown01Icon"
+                                    phosphor="CaretDownIcon"
+                                    remixicon="RiArrowDownSLine"
+                                    class="ml-1 size-4 opacity-50"
+                                />
                             </InputGroup.Button>
                         {/snippet}
                     </DropdownMenu.Trigger>
@@ -271,7 +292,14 @@
                             <DropdownMenu.Item onclick={() => (currentLang = lang.value)}>
                                 <div class="flex w-full items-center gap-2">
                                     {#if currentLang === lang.value}
-                                        <Check class="size-4" />
+                                        <Icon
+                                            lucide="CheckIcon"
+                                            tabler="IconCheck"
+                                            hugeicons="Tick02Icon"
+                                            phosphor="CheckIcon"
+                                            remixicon="RiCheckLine"
+                                            class="size-4"
+                                        />
                                     {/if}
                                     <span>{lang.label}</span>
                                 </div>
@@ -302,7 +330,14 @@
                         <DropdownMenu.Item onclick={() => (useMalId = false)}>
                             <div class="flex w-full items-center gap-2">
                                 {#if !useMalId}
-                                    <Check class="size-4" />
+                                    <Icon
+                                        lucide="CheckIcon"
+                                        tabler="IconCheck"
+                                        hugeicons="Tick02Icon"
+                                        phosphor="CheckIcon"
+                                        remixicon="RiCheckLine"
+                                        class="size-4"
+                                    />
                                 {/if}
                                 <span>AniList</span>
                             </div>
@@ -310,7 +345,14 @@
                         <DropdownMenu.Item onclick={() => (useMalId = true)}>
                             <div class="flex w-full items-center gap-2">
                                 {#if useMalId}
-                                    <Check class="size-4" />
+                                    <Icon
+                                        lucide="CheckIcon"
+                                        tabler="IconCheck"
+                                        hugeicons="Tick02Icon"
+                                        phosphor="CheckIcon"
+                                        remixicon="RiCheckLine"
+                                        class="size-4"
+                                    />
                                 {/if}
                                 <span>MAL</span>
                             </div>
@@ -339,7 +381,14 @@
                     size="icon-xs"
                     aria-label="Autofill"
                 >
-                    <Send class="size-4" />
+                    <Icon
+                        lucide="SendIcon"
+                        tabler="IconSend"
+                        hugeicons="SentIcon"
+                        phosphor="PaperPlaneTiltIcon"
+                        remixicon="RiSendPlaneLine"
+                        class="size-4"
+                    />
                 </InputGroup.Button>
                 {#if form.metadata?.id}
                     <InputGroup.Button
@@ -348,7 +397,14 @@
                         size="icon-xs"
                         aria-label="Clear"
                     >
-                        <X class="size-4" />
+                        <Icon
+                            lucide="XIcon"
+                            tabler="IconX"
+                            hugeicons="Cancel01Icon"
+                            phosphor="XIcon"
+                            remixicon="RiCloseLine"
+                            class="size-4"
+                        />
                     </InputGroup.Button>
                 {/if}
             </InputGroup.Addon>
@@ -361,7 +417,7 @@
             <img
                 src={form.metadata.coverImage.extraLarge}
                 alt="Cover"
-                class="w-full rounded-lg object-cover"
+                class="w-full rounded-[var(--radius)] object-cover"
             />
         {/if}
         <div class="flex flex-wrap gap-2">
@@ -422,7 +478,14 @@
                                 {form.metadata!.season
                                     ? capitalize(form.metadata!.season)
                                     : 'Season'}
-                                <ChevronDown class="ml-1 size-4 opacity-50" />
+                                <Icon
+                                    lucide="ChevronDownIcon"
+                                    tabler="IconChevronDown"
+                                    hugeicons="ArrowDown01Icon"
+                                    phosphor="CaretDownIcon"
+                                    remixicon="RiArrowDownSLine"
+                                    class="ml-1 size-4 opacity-50"
+                                />
                             </InputGroup.Button>
                         {/snippet}
                     </DropdownMenu.Trigger>
@@ -431,7 +494,14 @@
                             <DropdownMenu.Item onclick={() => (form.metadata!.season = s)}>
                                 <div class="flex w-full items-center gap-2">
                                     {#if form.metadata!.season === s}
-                                        <Check class="size-4" />
+                                        <Icon
+                                            lucide="CheckIcon"
+                                            tabler="IconCheck"
+                                            hugeicons="Tick02Icon"
+                                            phosphor="CheckIcon"
+                                            remixicon="RiCheckLine"
+                                            class="size-4"
+                                        />
                                     {/if}
                                     <span>{capitalize(s)}</span>
                                 </div>
@@ -495,7 +565,14 @@
                             onclick={deleteAnime}
                             disabled={form.processing}
                         >
-                            <Trash2 class="size-4" />
+                            <Icon
+                                lucide="Trash2Icon"
+                                tabler="IconTrash"
+                                hugeicons="Delete02Icon"
+                                phosphor="TrashIcon"
+                                remixicon="RiDeleteBinLine"
+                                class="size-4"
+                            />
                         </Button>
                     {/if}
                     {#if form.isDirty}

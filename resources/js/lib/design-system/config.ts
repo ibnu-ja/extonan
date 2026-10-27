@@ -78,7 +78,19 @@ export const RADII = [
 ] as const;
 
 export type Radius = (typeof RADII)[number];
-export type RadiusValue = Radius["name"];
+export type RadiusOverrideName = Radius["name"];
+export type RadiusValue = RadiusOverrideName | null;
+
+export const STYLE_PRESET_RADII: Record<StyleName, string> = {
+	nova: "0.5rem",
+	vega: "0.5rem",
+	maia: "0.75rem",
+	lyra: "0rem",
+	mira: "0.375rem",
+	luma: "0.75rem",
+	sera: "0rem",
+	rhea: "0.875rem",
+};
 
 export const ICON_LIBRARIES = [
 	{ name: "lucide", label: "Lucide" },
@@ -113,7 +125,7 @@ export const DEFAULT_CONFIG: DesignSystemConfig = {
 	fontHeading: "inherit",
 	menuAccent: "subtle",
 	menuColor: "default",
-	radius: "large",
+	radius: null,
 };
 
 export function getBaseColor(name: string) {
@@ -174,13 +186,23 @@ darkVars[key] = chartDark[key];
 		darkVars["sidebar-accent-foreground"] = darkVars["primary-foreground"];
 	}
 
-	// Apply radius
-	if (config.radius && config.radius !== "default") {
-		const radius = RADII.find((r) => r.name === config.radius);
+	// Apply radius: Dual Track (Track 1 = Preset / null, Track 2 = Override)
+	const presetRadius = STYLE_PRESET_RADII[config.style] ?? "0.5rem";
+	lightVars["radius-preset"] = presetRadius;
+	darkVars["radius-preset"] = presetRadius;
 
-		if (radius?.value) {
-			lightVars.radius = radius.value;
-		}
+	if (config.radius === null || config.radius === undefined) {
+		lightVars.radius = presetRadius;
+		darkVars.radius = presetRadius;
+		delete lightVars["radius-override"];
+		delete darkVars["radius-override"];
+	} else {
+		const radius = RADII.find((r) => r.name === config.radius);
+		const radiusValue = radius?.value ?? "0.5rem";
+		lightVars.radius = radiusValue;
+		darkVars.radius = radiusValue;
+		lightVars["radius-override"] = radiusValue;
+		darkVars["radius-override"] = radiusValue;
 	}
 
 	return {

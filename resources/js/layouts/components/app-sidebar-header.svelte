@@ -1,8 +1,7 @@
 <script lang="ts">
     import { Link, page } from '@inertiajs/svelte';
-    import CircleUserRound from 'lucide-svelte/icons/circle-user-round';
-    import LayoutGrid from 'lucide-svelte/icons/layout-grid';
     import Breadcrumbs from '@/components/breadcrumbs.svelte';
+    import { Icon } from '@/components/icon';
     import { Avatar, AvatarFallback } from '@/components/ui/avatar';
     import { Button } from '@/components/ui/button';
     import {
@@ -64,7 +63,14 @@
                         <DropdownMenuItem>
                             {#snippet child({ props })}
                                 <Link {...props} href={toUrl(dashboard())}>
-                                    <LayoutGrid class="mr-2 h-4 w-4" />
+                                    <Icon
+                                        lucide="LayoutGridIcon"
+                                        tabler="IconLayoutGrid"
+                                        hugeicons="DashboardSquare01Icon"
+                                        phosphor="SquaresFourIcon"
+                                        remixicon="RiDashboardLine"
+                                        class="mr-2 size-4"
+                                    />
                                     Dashboard
                                 </Link>
                             {/snippet}
@@ -82,7 +88,12 @@
                             class="relative size-9 rounded-full p-0"
                             {...props}
                         >
-                            <CircleUserRound
+                            <Icon
+                                lucide="CircleUserRoundIcon"
+                                tabler="IconUserCircle"
+                                hugeicons="UserCircleIcon"
+                                phosphor="UserCircleIcon"
+                                remixicon="RiUserSharedLine"
                                 class="size-5 text-muted-foreground"
                             />
                         </Button>
@@ -108,7 +119,14 @@
                 href={toUrl(login())}
                 class="inline-flex size-9 items-center justify-center rounded-full hover:bg-accent"
             >
-                <CircleUserRound class="size-5 text-muted-foreground" />
+                <Icon
+                    lucide="CircleUserRoundIcon"
+                    tabler="IconUserCircle"
+                    hugeicons="UserCircleIcon"
+                    phosphor="UserCircleIcon"
+                    remixicon="RiUserSharedLine"
+                    class="size-5 text-muted-foreground"
+                />
             </Link>
         {/if}
     </div>

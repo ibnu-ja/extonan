@@ -69,7 +69,7 @@
             {/each}
         </div>
     {:else}
-        <div class="flex h-32 items-center justify-center rounded-xl bg-muted">
+        <div class="flex h-32 items-center justify-center rounded-[var(--radius)] bg-muted">
             <p class="text-muted-foreground">No episodes published yet.</p>
         </div>
     {/if}
@@ -109,7 +109,7 @@
             </Carousel.Root>
         </div>
     {:else}
-        <div class="flex h-32 items-center justify-center rounded-xl bg-muted">
+        <div class="flex h-32 items-center justify-center rounded-[var(--radius)] bg-muted">
             <p class="text-muted-foreground">No music videos published yet.</p>
         </div>
     {/if}
@@ -148,7 +148,7 @@
             </Carousel.Root>
         </div>
     {:else}
-        <div class="flex h-32 items-center justify-center rounded-xl bg-muted">
+        <div class="flex h-32 items-center justify-center rounded-[var(--radius)] bg-muted">
             <p class="text-muted-foreground">No albums published yet.</p>
         </div>
     {/if}

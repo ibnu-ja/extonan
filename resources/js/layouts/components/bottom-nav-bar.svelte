@@ -1,9 +1,6 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
-    import Clapperboard from 'lucide-svelte/icons/clapperboard';
-    import Disc3 from 'lucide-svelte/icons/disc-3';
-    import Film from 'lucide-svelte/icons/film';
-    import House from 'lucide-svelte/icons/house';
+    import { Icon } from '@/components/icon';
     import { currentUrlState } from '@/lib/current-url.svelte';
     import { toUrl } from '@/lib/utils';
     import { home } from '@/routes';
@@ -33,19 +30,47 @@
     class="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t bg-background md:hidden"
 >
     <Link href={toUrl(home())} class={navClass(home(), true)}>
-        <House class="size-4" />
+        <Icon
+            lucide="HouseIcon"
+            tabler="IconHome"
+            hugeicons="Home01Icon"
+            phosphor="HouseIcon"
+            remixicon="RiHomeLine"
+            class="size-4"
+        />
         <span>Home</span>
     </Link>
     <Link href={toUrl(anime())} class={navClass(anime())}>
-        <Film class="size-4" />
+        <Icon
+            lucide="FilmIcon"
+            tabler="IconFilm"
+            hugeicons="Film01Icon"
+            phosphor="FilmSlateIcon"
+            remixicon="RiFilmLine"
+            class="size-4"
+        />
         <span>Anime</span>
     </Link>
     <Link href={toUrl(album())} class={navClass(album())}>
-        <Disc3 class="size-4" />
+        <Icon
+            lucide="Disc3Icon"
+            tabler="IconDisc"
+            hugeicons="Disc02Icon"
+            phosphor="DiscIcon"
+            remixicon="RiDiscLine"
+            class="size-4"
+        />
         <span>Album</span>
     </Link>
     <Link href={toUrl(mv())} class={navClass(mv())}>
-        <Clapperboard class="size-4" />
+        <Icon
+            lucide="ClapperboardIcon"
+            tabler="IconClapperboard"
+            hugeicons="ClapperboardIcon"
+            phosphor="FilmReelIcon"
+            remixicon="RiMovieLine"
+            class="size-4"
+        />
         <span>MV</span>
     </Link>
 </nav>

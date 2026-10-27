@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+    import { Icon } from '@/components/icon';
     import { t } from '@/lib/locale.svelte';
 
     let {
@@ -48,7 +48,7 @@
                     <img
                         src={coverImage}
                         alt={displayTitle}
-                        class="w-full rounded-lg shadow-2xl"
+                        class="w-full rounded-[var(--radius)] shadow-2xl"
                     />
                 </div>
             {/if}
@@ -98,7 +98,14 @@
                                 class="inline-flex transition-transform duration-200"
                                 class:rotate-180={expanded}
                             >
-                                <ChevronDownIcon class="size-3" />
+                                <Icon
+                                    lucide="ChevronDownIcon"
+                                    tabler="IconChevronDown"
+                                    hugeicons="ArrowDown01Icon"
+                                    phosphor="CaretDownIcon"
+                                    remixicon="RiArrowDownSLine"
+                                    class="size-3"
+                                />
                             </span>
                         </button>
                     </div>

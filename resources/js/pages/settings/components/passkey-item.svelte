@@ -1,6 +1,5 @@
 <script lang="ts">
-    import KeyRound from 'lucide-svelte/icons/key-round';
-    import Trash2 from 'lucide-svelte/icons/trash-2';
+    import { Icon } from '@/components/icon';
     import { Button } from '@/components/ui/button';
     import {
         Dialog,
@@ -34,16 +33,23 @@
 <div class="flex items-center justify-between border-b p-4 last:border-b-0">
     <div class="flex items-center gap-4">
         <div
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted"
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius)] bg-muted"
         >
-            <KeyRound class="h-5 w-5 text-muted-foreground" />
+            <Icon
+                lucide="KeyRoundIcon"
+                tabler="IconKey"
+                hugeicons="Key01Icon"
+                phosphor="KeyIcon"
+                remixicon="RiKeyLine"
+                class="size-5 text-muted-foreground"
+            />
         </div>
         <div class="space-y-1">
             <div class="flex items-center gap-2.5">
                 <p class="font-medium tracking-tight">{passkey.name}</p>
                 {#if passkey.authenticator}
                     <span
-                        class="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground ring-1 ring-inset ring-border"
+                        class="inline-flex items-center gap-1 rounded-[calc(var(--radius)-2px)] bg-muted px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground ring-1 ring-inset ring-border"
                     >
                         {passkey.authenticator}
                     </span>
@@ -68,7 +74,14 @@
                     class="text-destructive hover:bg-destructive/10 hover:text-destructive"
                     {...props}
                 >
-                    <Trash2 class="h-4 w-4" />
+                    <Icon
+                        lucide="Trash2Icon"
+                        tabler="IconTrash"
+                        hugeicons="Delete02Icon"
+                        phosphor="TrashIcon"
+                        remixicon="RiDeleteBinLine"
+                        class="size-4"
+                    />
                     <span class="sr-only">Remove</span>
                 </Button>
             {/snippet}

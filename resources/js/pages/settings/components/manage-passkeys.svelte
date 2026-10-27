@@ -1,8 +1,8 @@
 <script lang="ts">
     import { router } from '@inertiajs/svelte';
-    import KeyRound from 'lucide-svelte/icons/key-round';
     import { destroy } from '@/actions/Laravel/Passkeys/Http/Controllers/PasskeyRegistrationController';
     import Heading from '@/components/heading.svelte';
+    import { Icon } from '@/components/icon';
     import type { Passkey } from '@/types/auth';
     import PasskeyItem from './passkey-item.svelte';
     import PasskeyRegister from './passkey-register.svelte';
@@ -34,7 +34,7 @@
             description="Manage your passkeys for passwordless sign-in"
         />
 
-        <div class="overflow-hidden rounded-lg border border-border">
+        <div class="overflow-hidden rounded-[var(--radius)] border border-border">
             {#if passkeys.length > 0}
                 {#each passkeys as passkey (passkey.id)}
                     <PasskeyItem {passkey} onDelete={handleDelete} />
@@ -42,9 +42,16 @@
             {:else}
                 <div class="p-8 text-center">
                     <div
-                        class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted"
+                        class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-[var(--radius)] bg-muted"
                     >
-                        <KeyRound class="h-7 w-7 text-muted-foreground" />
+                        <Icon
+                            lucide="KeyRoundIcon"
+                            tabler="IconKey"
+                            hugeicons="Key01Icon"
+                            phosphor="KeyIcon"
+                            remixicon="RiKeyLine"
+                            class="size-7 text-muted-foreground"
+                        />
                     </div>
                     <p class="font-medium">No passkeys yet</p>
                     <p class="mt-1 text-sm text-muted-foreground">

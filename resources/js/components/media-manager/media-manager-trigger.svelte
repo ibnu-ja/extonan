@@ -1,6 +1,6 @@
 <script lang="ts">
-    import ImageIcon from 'lucide-svelte/icons/image';
     import type { Snippet } from 'svelte';
+    import { Icon } from '@/components/icon';
     import { Button } from '@/components/ui/button';
 
     let {
@@ -20,7 +20,14 @@
     {#if children}
         {@render children()}
     {:else}
-        <ImageIcon class="mr-1 size-4" />
+        <Icon
+            lucide="ImageIcon"
+            tabler="IconPhoto"
+            hugeicons="Image01Icon"
+            phosphor="ImageIcon"
+            remixicon="RiImageLine"
+            class="mr-1 size-4"
+        />
         {hasValue ? 'Edit' : 'Add'} Media
     {/if}
 </Button>

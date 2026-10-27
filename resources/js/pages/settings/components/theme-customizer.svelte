@@ -19,12 +19,14 @@
 		BASE_THEMES,
 		THEMES,
 		RADII,
+		STYLE_PRESET_RADII,
 		MENU_COLORS,
 		MENU_ACCENTS
 	} from "@/lib/design-system";
 	import type { StyleName, RadiusValue, MenuColorValue, MenuAccentValue } from "@/lib/design-system";
 
 	const designSystem = useDesignSystem();
+	const activePresetRadius = $derived(STYLE_PRESET_RADII[designSystem.style] ?? "0.5rem");
 
 	let presetInput = $state("");
 	let sandboxChecked = $state(true);
@@ -69,25 +71,25 @@
 		const styles = STYLES.map((s) => s.name);
 		const baseColors = BASE_THEMES.map((b) => b.name);
 		const themes = THEMES.map((t) => t.name);
-		const radii = RADII.map((r) => r.name);
+		const radii: RadiusValue[] = [null, ...RADII.map((r) => r.name)];
 		const menuColors = MENU_COLORS.map((m) => m.value);
 		const menuAccents = MENU_ACCENTS.map((m) => m.value);
 
 		designSystem.style = styles[Math.floor(Math.random() * styles.length)] as StyleName;
 		designSystem.baseColor = baseColors[Math.floor(Math.random() * baseColors.length)];
 		designSystem.theme = themes[Math.floor(Math.random() * themes.length)];
-		designSystem.radius = radii[Math.floor(Math.random() * radii.length)] as RadiusValue;
+		designSystem.radius = radii[Math.floor(Math.random() * radii.length)];
 		designSystem.menuColor = menuColors[Math.floor(Math.random() * menuColors.length)] as MenuColorValue;
 		designSystem.menuAccent = menuAccents[Math.floor(Math.random() * menuAccents.length)] as MenuAccentValue;
 
 		toast.success("Random preset applied!", {
-			description: `${designSystem.style.toUpperCase()} / ${designSystem.baseColor} / ${designSystem.theme}`,
+			description: `${designSystem.style.toUpperCase()} / ${designSystem.baseColor} / ${designSystem.theme} / Radius: ${designSystem.radius ?? "Preset"}`,
 		});
 	}
 
 	function triggerSampleToast() {
 		toast.success("Design system token test!", {
-			description: `Style: ${designSystem.style.toUpperCase()}, Theme: ${designSystem.theme}, Radius: ${designSystem.radius}`,
+			description: `Style: ${designSystem.style.toUpperCase()}, Theme: ${designSystem.theme}, Radius: ${designSystem.radius ?? "Preset"}`,
 		});
 	}
 </script>
@@ -186,7 +188,7 @@
 				<button
 					type="button"
 					onclick={() => (designSystem.style = s.name as StyleName)}
-					class="flex flex-col items-start gap-1 rounded-xl border p-3 text-left transition-all hover:bg-muted/50 {active
+					class="flex flex-col items-start gap-1 rounded-[var(--radius)] border p-3 text-left transition-all hover:bg-muted/50 {active
 						? 'border-primary bg-primary/5 ring-1 ring-primary'
 						: 'border-border'}"
 				>
@@ -220,7 +222,7 @@
 					<button
 						type="button"
 						onclick={() => (designSystem.baseColor = b.name)}
-						class="flex items-center gap-2 rounded-lg border p-2 text-left text-xs font-medium transition-all hover:bg-muted/50 {active
+						class="flex items-center gap-2 rounded-[var(--radius)] border p-2 text-left text-xs font-medium transition-all hover:bg-muted/50 {active
 							? 'border-primary bg-primary/5 ring-1 ring-primary'
 							: 'border-border'}"
 					>
@@ -234,27 +236,54 @@
 			</div>
 		</div>
 
-		<!-- Corner Radius -->
+		<!-- Corner Radius (Dual Track: Preset vs Override) -->
 		<div class="space-y-3">
 			<div class="flex items-center justify-between">
-				<Label class="text-sm font-semibold">3. Corner Radius</Label>
-				<span class="text-xs capitalize text-muted-foreground">{designSystem.radius}</span>
+				<div class="flex items-center gap-2">
+					<Label class="text-sm font-semibold">3. Corner Radius</Label>
+					<Badge variant="outline" class="text-[10px] font-normal">Dual Track</Badge>
+				</div>
+				<span class="text-xs text-muted-foreground">
+					{#if designSystem.radius === null}
+						<span class="text-primary font-medium">Track 1: Preset</span> ({STYLE_PRESET_RADII[designSystem.style] ?? "0.5rem"})
+					{:else}
+						<span class="text-amber-500 font-medium">Track 2: Override</span> ({designSystem.radius})
+					{/if}
+				</span>
 			</div>
-			<div class="grid grid-cols-5 gap-2">
+			<div class="grid grid-cols-2 gap-2 sm:grid-cols-6">
+				<!-- Track 1: Preset (Bawaan) -->
+				<button
+					type="button"
+					onclick={() => (designSystem.radius = null)}
+					class="flex flex-col items-center justify-center gap-1.5 rounded-[var(--radius)] border p-2 text-center text-xs font-medium transition-all hover:bg-muted/50 {designSystem.radius === null
+						? 'border-primary bg-primary/10 ring-2 ring-primary text-primary font-semibold'
+						: 'border-border'}"
+				>
+					<div
+						class="size-4 border-2 border-current transition-all"
+						style="border-top-left-radius: {activePresetRadius}; border-top-right-radius: {activePresetRadius};"
+					></div>
+					<span>Preset</span>
+					<span class="text-[10px] opacity-75">Bawaan ({activePresetRadius})</span>
+				</button>
+
+				<!-- Track 2: Overrides (Default, None, Small, Medium, Large) -->
 				{#each RADII as r (r.name)}
 					{@const active = designSystem.radius === r.name}
 					<button
 						type="button"
 						onclick={() => (designSystem.radius = r.name as RadiusValue)}
-						class="flex flex-col items-center justify-center gap-1.5 rounded-lg border p-2 text-center text-xs font-medium transition-all hover:bg-muted/50 {active
-							? 'border-primary bg-primary/5 ring-1 ring-primary'
+						class="flex flex-col items-center justify-center gap-1.5 rounded-[var(--radius)] border p-2 text-center text-xs font-medium transition-all hover:bg-muted/50 {active
+							? 'border-primary bg-primary/10 ring-2 ring-primary text-primary font-semibold'
 							: 'border-border'}"
 					>
 						<div
-							class="size-4 border-2 border-foreground/70"
+							class="size-4 border-2 border-current transition-all"
 							style="border-top-left-radius: {r.value}; border-top-right-radius: {r.value};"
 						></div>
 						<span>{r.label}</span>
+						<span class="text-[10px] opacity-75">Override ({r.value})</span>
 					</button>
 				{/each}
 			</div>
@@ -298,7 +327,7 @@
 				<button
 					type="button"
 					onclick={() => (designSystem.iconLibrary = "lucide")}
-					class="flex items-center justify-center gap-2 rounded-lg border p-2.5 text-xs font-medium transition-all {designSystem.iconLibrary ===
+					class="flex items-center justify-center gap-2 rounded-[var(--radius)] border p-2.5 text-xs font-medium transition-all {designSystem.iconLibrary ===
 					'lucide'
 						? 'border-primary bg-primary/5 ring-1 ring-primary'
 						: 'border-border hover:bg-muted/50'}"
@@ -309,7 +338,7 @@
 				<button
 					type="button"
 					onclick={() => (designSystem.iconLibrary = "hugeicons")}
-					class="flex items-center justify-center gap-2 rounded-lg border p-2.5 text-xs font-medium transition-all {designSystem.iconLibrary ===
+					class="flex items-center justify-center gap-2 rounded-[var(--radius)] border p-2.5 text-xs font-medium transition-all {designSystem.iconLibrary ===
 					'hugeicons'
 						? 'border-primary bg-primary/5 ring-1 ring-primary'
 						: 'border-border hover:bg-muted/50'}"
@@ -329,7 +358,7 @@
 					<button
 						type="button"
 						onclick={() => (designSystem.menuColor = mc.value as MenuColorValue)}
-						class="rounded-lg border p-2 text-center text-xs font-medium transition-all {active
+						class="rounded-[var(--radius)] border p-2 text-center text-xs font-medium transition-all {active
 							? 'border-primary bg-primary/5 ring-1 ring-primary'
 							: 'border-border hover:bg-muted/50'}"
 					>
@@ -348,7 +377,7 @@
 					<button
 						type="button"
 						onclick={() => (designSystem.menuAccent = ma.value as MenuAccentValue)}
-						class="rounded-lg border p-2 text-center text-xs font-medium transition-all {active
+						class="rounded-[var(--radius)] border p-2 text-center text-xs font-medium transition-all {active
 							? 'border-primary bg-primary/5 ring-1 ring-primary'
 							: 'border-border hover:bg-muted/50'}"
 					>

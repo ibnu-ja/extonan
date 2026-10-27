@@ -1,14 +1,16 @@
 <script lang="ts">
     import { Link, page } from '@inertiajs/svelte';
-    import Clapperboard from 'lucide-svelte/icons/clapperboard';
-    import Disc3 from 'lucide-svelte/icons/disc-3';
-    import Film from 'lucide-svelte/icons/film';
-    import House from 'lucide-svelte/icons/house';
-    import LayoutGrid from 'lucide-svelte/icons/layout-grid';
-    import LogIn from 'lucide-svelte/icons/log-in';
-    import UserPlus from 'lucide-svelte/icons/user-plus';
     import type { ComponentProps } from 'svelte';
     import AppLogo from '@/components/app-logo.svelte';
+    import {
+        NavClapperboard,
+        NavDisc3,
+        NavFilm,
+        NavHouse,
+        NavLayoutGrid,
+        NavLogIn,
+        NavUserPlus,
+    } from '@/components/icon/nav-icons';
     import * as Sidebar from '@/components/ui/sidebar/index.js';
     import NavFooter from '@/layouts/components/nav-footer.svelte';
     import NavMain from '@/layouts/components/nav-main.svelte';
@@ -35,23 +37,23 @@
     const canRegister = $derived(page.props.canRegister as boolean | undefined);
 
     const mainNavItems = $derived(<NavItem[]>[
-        { title: 'Home', href: home(), icon: House },
-        { title: 'Anime', href: anime(), icon: Film },
-        { title: 'Album', href: album(), icon: Disc3 },
-        { title: 'MV', href: mv(), icon: Clapperboard },
-        { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
+        { title: 'Home', href: home(), icon: NavHouse },
+        { title: 'Anime', href: anime(), icon: NavFilm },
+        { title: 'Album', href: album(), icon: NavDisc3 },
+        { title: 'MV', href: mv(), icon: NavClapperboard },
+        { title: 'Dashboard', href: dashboard(), icon: NavLayoutGrid },
     ]);
 
     const footerNavItems = $derived(<NavItem[]>[
         ...(!isLoggedIn
             ? [
-                  { title: 'Log in', href: login(), icon: LogIn },
+                  { title: 'Log in', href: login(), icon: NavLogIn },
                   ...(canRegister
                       ? [
                             {
                                 title: 'Register',
                                 href: registerRoute(),
-                                icon: UserPlus,
+                                icon: NavUserPlus,
                             },
                         ]
                       : []),

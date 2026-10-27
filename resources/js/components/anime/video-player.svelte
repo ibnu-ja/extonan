@@ -1,15 +1,8 @@
 <script lang="ts">
-    import FastForward from '@lucide/svelte/icons/fast-forward';
-    import Maximize from '@lucide/svelte/icons/maximize';
-    import Minimize from '@lucide/svelte/icons/minimize';
-    import Pause from '@lucide/svelte/icons/pause';
-    import Play from '@lucide/svelte/icons/play';
-    import Rewind from '@lucide/svelte/icons/rewind';
-    import Volume2 from '@lucide/svelte/icons/volume-2';
-    import VolumeX from '@lucide/svelte/icons/volume-x';
     import Hls from 'hls.js';
     import type { Level } from 'hls.js';
     import { onMount, onDestroy } from 'svelte';
+    import { Icon } from '@/components/icon';
     import { Button } from '@/components/ui/button';
     import * as Select from '@/components/ui/select';
 
@@ -256,7 +249,7 @@
         class:max-w-full={isFullscreen}
         class:object-contain={isFullscreen}
         class:rounded-none={!isFullscreen}
-        class:sm:rounded-xl={!isFullscreen}
+        class:sm:rounded-[var(--radius)]={!isFullscreen}
         playsinline
         {poster}
         muted={isMuted}
@@ -271,7 +264,7 @@
 
     <!-- Controls overlay -->
     <div
-        class="absolute right-2 bottom-2 left-2 flex items-center justify-between rounded-xl bg-background/90 p-1 shadow-lg backdrop-blur-sm transition-all duration-300 ease-in-out"
+        class="absolute right-2 bottom-2 left-2 flex items-center justify-between rounded-[calc(var(--radius)-2px)] bg-background/90 p-1 shadow-lg backdrop-blur-sm transition-all duration-300 ease-in-out"
         class:opacity-90={controlsVisible}
         class:translate-y-0={controlsVisible}
         class:pointer-events-auto={controlsVisible}
@@ -287,9 +280,23 @@
                 onclick={togglePlayPause}
             >
                 {#if isPlaying}
-                    <Pause class="size-4" />
+                    <Icon
+                        lucide="PauseIcon"
+                        tabler="IconPlayerPause"
+                        hugeicons="PauseIcon"
+                        phosphor="PauseIcon"
+                        remixicon="RiPauseLine"
+                        class="size-4"
+                    />
                 {:else}
-                    <Play class="size-4" />
+                    <Icon
+                        lucide="PlayIcon"
+                        tabler="IconPlayerPlay"
+                        hugeicons="PlayIcon"
+                        phosphor="PlayIcon"
+                        remixicon="RiPlayLine"
+                        class="size-4"
+                    />
                 {/if}
             </Button>
 
@@ -300,9 +307,23 @@
                 onclick={toggleMute}
             >
                 {#if isMuted || volume === 0}
-                    <VolumeX class="size-4" />
+                    <Icon
+                        lucide="VolumeXIcon"
+                        tabler="IconVolumeOff"
+                        hugeicons="VolumeCrossIcon"
+                        phosphor="SpeakerSimpleSlashIcon"
+                        remixicon="RiVolumeMuteLine"
+                        class="size-4"
+                    />
                 {:else}
-                    <Volume2 class="size-4" />
+                    <Icon
+                        lucide="Volume2Icon"
+                        tabler="IconVolume"
+                        hugeicons="VolumeHighIcon"
+                        phosphor="SpeakerHighIcon"
+                        remixicon="RiVolumeUpLine"
+                        class="size-4"
+                    />
                 {/if}
             </Button>
 
@@ -343,7 +364,14 @@
                 class="size-8"
                 onclick={skipBack}
             >
-                <Rewind class="size-4" />
+                <Icon
+                    lucide="RewindIcon"
+                    tabler="IconPlayerTrackPrev"
+                    hugeicons="Backward01Icon"
+                    phosphor="RewindIcon"
+                    remixicon="RiRewindLine"
+                    class="size-4"
+                />
             </Button>
 
             <Button
@@ -352,7 +380,14 @@
                 class="size-8"
                 onclick={skipForward}
             >
-                <FastForward class="size-4" />
+                <Icon
+                    lucide="FastForwardIcon"
+                    tabler="IconPlayerTrackNext"
+                    hugeicons="Forward01Icon"
+                    phosphor="FastForwardIcon"
+                    remixicon="RiSpeedUpLine"
+                    class="size-4"
+                />
             </Button>
 
             {#if hlsReady && levels.length > 1}
@@ -383,9 +418,23 @@
                 onclick={toggleFullscreen}
             >
                 {#if isFullscreen}
-                    <Minimize class="size-4" />
+                    <Icon
+                        lucide="MinimizeIcon"
+                        tabler="IconMinimize"
+                        hugeicons="MinimizeScreenIcon"
+                        phosphor="ArrowsInIcon"
+                        remixicon="RiFullscreenExitLine"
+                        class="size-4"
+                    />
                 {:else}
-                    <Maximize class="size-4" />
+                    <Icon
+                        lucide="MaximizeIcon"
+                        tabler="IconMaximize"
+                        hugeicons="MaximizeScreenIcon"
+                        phosphor="ArrowsOutIcon"
+                        remixicon="RiFullscreenLine"
+                        class="size-4"
+                    />
                 {/if}
             </Button>
         </div>

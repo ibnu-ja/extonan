@@ -18,11 +18,11 @@
     const showAvatar = $derived(user.avatar && user.avatar !== '');
 </script>
 
-<Avatar class="h-8 w-8 overflow-hidden rounded-lg">
+<Avatar class="h-8 w-8 overflow-hidden rounded-[var(--radius)]">
     {#if showAvatar}
         <AvatarImage src={user.avatar!} alt={user.name} />
     {/if}
-    <AvatarFallback class="rounded-lg text-black dark:text-white">
+    <AvatarFallback class="rounded-[var(--radius)] text-black dark:text-white">
         {getInitials(user.name)}
     </AvatarFallback>
 </Avatar>

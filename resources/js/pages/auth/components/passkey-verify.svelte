@@ -2,8 +2,8 @@
     import type { UrlMethodPair } from '@inertiajs/core';
     import { router } from '@inertiajs/svelte';
     import { usePasskeyVerify } from '@laravel/passkeys/svelte';
-    import KeyRound from 'lucide-svelte/icons/key-round';
     import { untrack } from 'svelte';
+    import { Icon } from '@/components/icon';
     import InputError from '@/components/input-error.svelte';
     import { Button } from '@/components/ui/button';
     import { Separator } from '@/components/ui/separator';
@@ -50,7 +50,14 @@
             {#if passkeyVerify.isLoading}
                 <Spinner />
             {:else}
-                <KeyRound class="h-4 w-4" />
+                <Icon
+                    lucide="KeyRoundIcon"
+                    tabler="IconKey"
+                    hugeicons="Key01Icon"
+                    phosphor="KeyIcon"
+                    remixicon="RiKeyLine"
+                    class="size-4"
+                />
             {/if}
             {passkeyVerify.isLoading
                 ? (props.loadingLabel ?? 'Authenticating...')

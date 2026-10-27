@@ -14,7 +14,7 @@
 <PaginationPrimitive.NextButton
 	bind:ref
 	aria-label="Go to next page"
-	class={cn("flex size-9 items-center justify-center rounded-md border", className)}
+	class={cn("flex size-9 items-center justify-center rounded-[var(--radius)] border", className)}
 	{...restProps}
 >
 	{#if children}

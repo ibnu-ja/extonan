@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
-    import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
+    import { Icon as NavPolymorphicIcon } from '@/components/icon';
     import * as Collapsible from '@/components/ui/collapsible/index.js';
     import * as Sidebar from '@/components/ui/sidebar/index.js';
     import { currentUrlState } from '@/lib/current-url.svelte';
@@ -43,7 +43,14 @@
                                             {...props}
                                             class="data-[state=open]:rotate-90"
                                         >
-                                            <ChevronRightIcon />
+                                            <NavPolymorphicIcon
+                                                lucide="ChevronRightIcon"
+                                                tabler="IconChevronRight"
+                                                hugeicons="ArrowRight01Icon"
+                                                phosphor="CaretRightIcon"
+                                                remixicon="RiArrowRightSLine"
+                                                class="size-4"
+                                            />
                                             <span class="sr-only">Toggle</span>
                                         </Sidebar.MenuAction>
                                     {/snippet}

@@ -1,12 +1,7 @@
 <script lang="ts">
     import { Link, router, setLayoutProps } from '@inertiajs/svelte';
-    import ExternalLink from '@lucide/svelte/icons/external-link';
-    import Check from 'lucide-svelte/icons/check';
-    import ChevronDown from 'lucide-svelte/icons/chevron-down';
-    import Pencil from 'lucide-svelte/icons/pencil';
-    import Send from 'lucide-svelte/icons/send';
-    import Trash2 from 'lucide-svelte/icons/trash-2';
     import VideoPlayer from '@/components/anime/video-player.svelte';
+    import { Icon } from '@/components/icon';
     import * as Accordion from '@/components/ui/accordion';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
@@ -171,7 +166,14 @@
                                     {streamOptions.find(
                                         (s) => s.value === activeStreamType,
                                     )?.label ?? 'Select'}
-                                    <ChevronDown class="size-3 opacity-50" />
+                                    <Icon
+                                        lucide="ChevronDownIcon"
+                                        tabler="IconChevronDown"
+                                        hugeicons="ArrowDown01Icon"
+                                        phosphor="CaretDownIcon"
+                                        remixicon="RiArrowDownSLine"
+                                        class="size-3 opacity-50"
+                                    />
                                 </Button>
                             {/snippet}
                         </DropdownMenu.Trigger>
@@ -183,7 +185,14 @@
                                 >
                                     <div class="flex w-full items-center gap-2">
                                         {#if activeStreamType === opt.value}
-                                            <Check class="size-4" />
+                                            <Icon
+                                                lucide="CheckIcon"
+                                                tabler="IconCheck"
+                                                hugeicons="Tick02Icon"
+                                                phosphor="CheckIcon"
+                                                remixicon="RiCheckLine"
+                                                class="size-4"
+                                            />
                                         {/if}
                                         <span>{opt.label}</span>
                                     </div>
@@ -200,7 +209,7 @@
                         <div class="flex flex-wrap gap-2">
                             {#each post.embed.value as stream (stream.value)}
                                 <button
-                                    class="rounded-md border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
+                                    class="rounded-[var(--radius)] border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
                                     class:bg-primary={selectedEmbed ===
                                         stream.value}
                                     class:text-primary-foreground={selectedEmbed ===
@@ -222,7 +231,7 @@
                         <div class="flex flex-wrap gap-2">
                             {#each post.saluran.value as stream (stream.value)}
                                 <button
-                                    class="rounded-md border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
+                                    class="rounded-[var(--radius)] border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
                                     class:bg-primary={selectedSaluran ===
                                         stream.value}
                                     class:text-primary-foreground={selectedSaluran ===
@@ -240,7 +249,7 @@
                 <img
                     src={post.thumbnail.extraLarge}
                     alt={displayTitle}
-                    class="max-h-80 mx-auto rounded-lg"
+                    class="max-h-80 mx-auto rounded-[var(--radius)]"
                 />
             {/if}
 
@@ -280,10 +289,17 @@
                                                 href={item.value}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                class="inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
+                                                class="inline-flex items-center gap-1.5 rounded-[var(--radius)] border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
                                             >
                                                 {item.name}
-                                                <ExternalLink class="size-3" />
+                                                <Icon
+                                                    lucide="ExternalLinkIcon"
+                                                    tabler="IconExternalLink"
+                                                    hugeicons="ExternalLinkIcon"
+                                                    phosphor="ArrowSquareOutIcon"
+                                                    remixicon="RiExternalLinkLine"
+                                                    class="size-3"
+                                                />
                                             </a>
                                             <!-- eslint-enable -->
                                         {/each}
@@ -324,7 +340,7 @@
                                                     src={episode.thumbnail
                                                         .medium}
                                                     alt=""
-                                                    class="size-10 rounded object-cover"
+                                                    class="size-10 rounded-[var(--radius)] object-cover"
                                                 />
                                             {/if}
                                         </Item.Media>
@@ -355,7 +371,7 @@
                                                     src={episode.thumbnail
                                                         .medium}
                                                     alt=""
-                                                    class="size-10 rounded object-cover"
+                                                    class="size-10 rounded-[var(--radius)] object-cover"
                                                 />
                                             {/if}
                                         </Item.Media>
@@ -396,7 +412,14 @@
                             })}
                             {...props}
                         >
-                            <Pencil class="size-4" />
+                            <Icon
+                                lucide="PencilIcon"
+                                tabler="IconPencil"
+                                hugeicons="PencilEdit02Icon"
+                                phosphor="PencilSimpleIcon"
+                                remixicon="RiEditLine"
+                                class="size-4"
+                            />
                             Edit
                         </Link>
                     {/snippet}
@@ -416,7 +439,14 @@
                         }
                     }}
                 >
-                    <Trash2 class="size-4" />
+                    <Icon
+                        lucide="Trash2Icon"
+                        tabler="IconTrash"
+                        hugeicons="Delete02Icon"
+                        phosphor="TrashIcon"
+                        remixicon="RiDeleteBinLine"
+                        class="size-4"
+                    />
                     Delete
                 </SpeedDial.Item>
             {/if}
@@ -432,7 +462,14 @@
                             { isPublished: true },
                         )}
                 >
-                    <Send class="size-4" />
+                    <Icon
+                        lucide="SendIcon"
+                        tabler="IconSend"
+                        hugeicons="SentIcon"
+                        phosphor="PaperPlaneTiltIcon"
+                        remixicon="RiSendPlaneLine"
+                        class="size-4"
+                    />
                     Publish
                 </SpeedDial.Item>
             {/if}

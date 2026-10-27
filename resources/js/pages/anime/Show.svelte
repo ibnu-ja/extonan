@@ -1,20 +1,10 @@
 <script lang="ts">
     import { Link, router, setLayoutProps } from '@inertiajs/svelte';
-    import Calendar from '@lucide/svelte/icons/calendar';
-    import Clapperboard from '@lucide/svelte/icons/clapperboard';
-    import Film from '@lucide/svelte/icons/film';
-    import Hash from '@lucide/svelte/icons/hash';
-    import Info from '@lucide/svelte/icons/info';
-    import LayoutGrid from '@lucide/svelte/icons/layout-grid';
-    import List from '@lucide/svelte/icons/list';
-    import Pencil from 'lucide-svelte/icons/pencil';
-    import Plus from 'lucide-svelte/icons/plus';
-    import Send from 'lucide-svelte/icons/send';
-    import Trash2 from 'lucide-svelte/icons/trash-2';
     import Banner from '@/components/anime/banner.svelte';
     import Casts from '@/components/anime/casts.svelte';
     import EpisodeListItem from '@/components/anime/episode-list-item.svelte';
     import EpisodeThumbnail from '@/components/anime/episode-thumbnail.svelte';
+    import { Icon } from '@/components/icon';
     import { Badge } from '@/components/ui/badge';
     import * as Item from '@/components/ui/item';
     import * as SpeedDial from '@/components/ui/speed-dial/index.js';
@@ -94,12 +84,28 @@
                 <div class="flex items-center justify-between px-4">
                     <Tabs.List>
                         <Tabs.Trigger value="episodes">
-                            <Film data-icon="inline-start" />
+                            <Icon
+                                lucide="FilmIcon"
+                                tabler="IconFilm"
+                                hugeicons="Film01Icon"
+                                phosphor="FilmStripIcon"
+                                remixicon="RiFilmLine"
+                                class="size-4"
+                                data-icon="inline-start"
+                            />
                             Episodes ({episodes.length})
                         </Tabs.Trigger>
                         {#if metadata?.characters?.edges?.length}
                             <Tabs.Trigger value="casts">
-                                <Clapperboard data-icon="inline-start" />
+                                <Icon
+                                    lucide="ClapperboardIcon"
+                                    tabler="IconMovie"
+                                    hugeicons="ClapperboardIcon"
+                                    phosphor="FilmSlateIcon"
+                                    remixicon="RiClapperboardLine"
+                                    class="size-4"
+                                    data-icon="inline-start"
+                                />
                                 Casts
                             </Tabs.Trigger>
                         {/if}
@@ -115,13 +121,27 @@
                                 value="thumbnail"
                                 aria-label="Thumbnail view"
                             >
-                                <LayoutGrid class="size-4" />
+                                <Icon
+                                    lucide="LayoutGridIcon"
+                                    tabler="IconLayoutGrid"
+                                    hugeicons="GridIcon"
+                                    phosphor="SquaresFourIcon"
+                                    remixicon="RiGridLine"
+                                    class="size-4"
+                                />
                             </ToggleGroup.Item>
                             <ToggleGroup.Item
                                 value="list"
                                 aria-label="List view"
                             >
-                                <List class="size-4" />
+                                <Icon
+                                    lucide="ListIcon"
+                                    tabler="IconList"
+                                    hugeicons="Menu01Icon"
+                                    phosphor="ListIcon"
+                                    remixicon="RiListUnordered"
+                                    class="size-4"
+                                />
                             </ToggleGroup.Item>
                         </ToggleGroup.Root>
                     {/if}
@@ -220,7 +240,14 @@
                 {#if season}
                     <Item.Root>
                         <Item.Media variant="icon">
-                            <Calendar />
+                            <Icon
+                                lucide="CalendarIcon"
+                                tabler="IconCalendar"
+                                hugeicons="Calendar03Icon"
+                                phosphor="CalendarIcon"
+                                remixicon="RiCalendarLine"
+                                class="size-4"
+                            />
                         </Item.Media>
                         <Item.Content>
                             <Item.Description>{season}</Item.Description>
@@ -231,7 +258,14 @@
                 {#if episodeCount}
                     <Item.Root>
                         <Item.Media variant="icon">
-                            <Hash />
+                            <Icon
+                                lucide="HashIcon"
+                                tabler="IconHash"
+                                hugeicons="Tag01Icon"
+                                phosphor="HashIcon"
+                                remixicon="RiHashtag"
+                                class="size-4"
+                            />
                         </Item.Media>
                         <Item.Content>
                             <Item.Description
@@ -244,7 +278,14 @@
                 {#if mainStudio}
                     <Item.Root>
                         <Item.Media variant="icon">
-                            <Clapperboard />
+                            <Icon
+                                lucide="ClapperboardIcon"
+                                tabler="IconMovie"
+                                hugeicons="ClapperboardIcon"
+                                phosphor="FilmSlateIcon"
+                                remixicon="RiClapperboardLine"
+                                class="size-4"
+                            />
                         </Item.Media>
                         <Item.Content>
                             <Item.Description>{mainStudio}</Item.Description>
@@ -255,7 +296,14 @@
                 {#if startDate}
                     <Item.Root>
                         <Item.Media variant="icon">
-                            <Info />
+                            <Icon
+                                lucide="InfoIcon"
+                                tabler="IconInfoCircle"
+                                hugeicons="InformationCircleIcon"
+                                phosphor="InfoIcon"
+                                remixicon="RiInformationLine"
+                                class="size-4"
+                            />
                         </Item.Media>
                         <Item.Content>
                             <Item.Description>{startDate}</Item.Description>
@@ -277,7 +325,14 @@
         <SpeedDial.Item variant="default">
             {#snippet child({ props })}
                 <Link href={animeEdit(anime.id).url} {...props}>
-                    <Pencil class="size-4" />
+                    <Icon
+                        lucide="PencilIcon"
+                        tabler="IconPencil"
+                        hugeicons="PencilEdit02Icon"
+                        phosphor="PencilSimpleIcon"
+                        remixicon="RiEditLine"
+                        class="size-4"
+                    />
                     Edit
                 </Link>
             {/snippet}
@@ -290,13 +345,27 @@
                 }
             }}
         >
-            <Trash2 class="size-4" />
+            <Icon
+                lucide="Trash2Icon"
+                tabler="IconTrash"
+                hugeicons="Delete02Icon"
+                phosphor="TrashIcon"
+                remixicon="RiDeleteBinLine"
+                class="size-4"
+            />
             Delete
         </SpeedDial.Item>
         <SpeedDial.Item variant="secondary">
             {#snippet child({ props })}
                 <Link href={postCreate(anime.id).url} {...props}>
-                    <Plus class="size-4" />
+                    <Icon
+                        lucide="PlusIcon"
+                        tabler="IconPlus"
+                        hugeicons="PlusSignIcon"
+                        phosphor="PlusIcon"
+                        remixicon="RiAddLine"
+                        class="size-4"
+                    />
                     Add Episode
                 </Link>
             {/snippet}
@@ -309,7 +378,14 @@
                         isPublished: true,
                     })}
             >
-                <Send class="size-4" />
+                <Icon
+                    lucide="SendIcon"
+                    tabler="IconSend"
+                    hugeicons="SentIcon"
+                    phosphor="PaperPlaneTiltIcon"
+                    remixicon="RiSendPlaneLine"
+                    class="size-4"
+                />
                 Publish
             </SpeedDial.Item>
         {/if}
