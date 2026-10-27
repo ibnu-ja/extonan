@@ -17,6 +17,19 @@ export function toUrl(
     return typeof href === 'string' ? href : href.url;
 }
 
+export function isEllipsisActive(el: HTMLElement): boolean {
+    if (el.scrollWidth > el.offsetWidth) {
+        return true;
+    }
+
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const rangeRect = range.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+
+    return rangeRect.right - elRect.right > 0.5;
+}
+
 export type WithoutChild<T> = T extends { child?: any } ? Omit<T, 'child'> : T;
 export type WithoutChildren<T> = T extends { children?: any }
     ? Omit<T, 'children'>

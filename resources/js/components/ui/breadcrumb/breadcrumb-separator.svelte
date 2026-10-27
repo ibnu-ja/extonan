@@ -23,11 +23,11 @@
 		{@render children?.()}
 	{:else}
 		<Icon
-			lucide="ChevronRightIcon"
-			tabler="IconChevronRight"
-			hugeicons="ArrowRight01Icon"
-			phosphor="CaretRightIcon"
-			remixicon="RiArrowRightSLine"
+			lucide={() => import("lucide-svelte/icons/chevron-right")}
+			tabler={() => import("@tabler/icons-svelte/icons/chevron-right")}
+			hugeicons={() => import("@hugeicons/core-free-icons/ArrowRight01Icon")}
+			phosphor={() => import("phosphor-svelte/lib/CaretRightIcon")}
+			remixicon={() => import("remixicon-svelte/icons/arrow-right-s-line")}
 			class="cn-rtl-flip"
 		/>
 	{/if}

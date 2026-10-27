@@ -29,11 +29,11 @@
 		</CommandPrimitive.Input>
 		<InputGroup.Addon>
 			<Icon
-				lucide="SearchIcon"
-				tabler="IconSearch"
-				hugeicons="SearchIcon"
-				phosphor="MagnifyingGlassIcon"
-				remixicon="RiSearchLine"
+				lucide={() => import("lucide-svelte/icons/search")}
+				tabler={() => import("@tabler/icons-svelte/icons/search")}
+				hugeicons={() => import("@hugeicons/core-free-icons/Search01Icon")}
+				phosphor={() => import("phosphor-svelte/lib/MagnifyingGlassIcon")}
+				remixicon={() => import("remixicon-svelte/icons/search-line")}
 				class="cn-command-input-icon"
 			/>
 		</InputGroup.Addon>

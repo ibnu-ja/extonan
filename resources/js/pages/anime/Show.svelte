@@ -2,9 +2,9 @@
     import { Link, router, setLayoutProps } from '@inertiajs/svelte';
     import Banner from '@/components/anime/banner.svelte';
     import Casts from '@/components/anime/casts.svelte';
-    import EpisodeListItem from '@/components/anime/episode-list-item.svelte';
-    import EpisodeThumbnail from '@/components/anime/episode-thumbnail.svelte';
     import { Icon } from '@/components/icon';
+    import PostCard from '@/components/post-card.svelte';
+    import PostListItem from '@/components/post-list-item.svelte';
     import { Badge } from '@/components/ui/badge';
     import * as Item from '@/components/ui/item';
     import * as SpeedDial from '@/components/ui/speed-dial/index.js';
@@ -85,11 +85,16 @@
                     <Tabs.List>
                         <Tabs.Trigger value="episodes">
                             <Icon
-                                lucide="FilmIcon"
-                                tabler="IconFilm"
-                                hugeicons="Film01Icon"
-                                phosphor="FilmStripIcon"
-                                remixicon="RiFilmLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/film')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/movie')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/Film01Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/FilmStripIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/film-line')}
                                 class="size-4"
                                 data-icon="inline-start"
                             />
@@ -98,11 +103,16 @@
                         {#if metadata?.characters?.edges?.length}
                             <Tabs.Trigger value="casts">
                                 <Icon
-                                    lucide="ClapperboardIcon"
-                                    tabler="IconMovie"
-                                    hugeicons="ClapperboardIcon"
-                                    phosphor="FilmSlateIcon"
-                                    remixicon="RiClapperboardLine"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/clapperboard')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/movie')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/ClapperboardIcon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/FilmSlateIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/clapperboard-line')}
                                     class="size-4"
                                     data-icon="inline-start"
                                 />
@@ -122,11 +132,16 @@
                                 aria-label="Thumbnail view"
                             >
                                 <Icon
-                                    lucide="LayoutGridIcon"
-                                    tabler="IconLayoutGrid"
-                                    hugeicons="GridIcon"
-                                    phosphor="SquaresFourIcon"
-                                    remixicon="RiGridLine"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/layout-grid')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/layout-grid')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/GridIcon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/SquaresFourIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/grid-line')}
                                     class="size-4"
                                 />
                             </ToggleGroup.Item>
@@ -135,11 +150,16 @@
                                 aria-label="List view"
                             >
                                 <Icon
-                                    lucide="ListIcon"
-                                    tabler="IconList"
-                                    hugeicons="Menu01Icon"
-                                    phosphor="ListIcon"
-                                    remixicon="RiListUnordered"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/list')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/list')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/Menu01Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/ListIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/list-unordered')}
                                     class="size-4"
                                 />
                             </ToggleGroup.Item>
@@ -154,18 +174,20 @@
                                 class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:p-4"
                             >
                                 {#each episodes as episode (episode.id)}
-                                    <EpisodeThumbnail
-                                        {episode}
+                                    <PostCard
+                                        post={episode}
                                         animeId={anime.id}
+                                        animeTitle={anime.title}
                                     />
                                 {/each}
                             </div>
                         {:else}
                             <Item.Group class="px-0 md:px-4">
                                 {#each episodes as episode (episode.id)}
-                                    <EpisodeListItem
-                                        {episode}
+                                    <PostListItem
+                                        post={episode}
                                         animeId={anime.id}
+                                        animeTitle={anime.title}
                                     />
                                 {/each}
                             </Item.Group>
@@ -241,11 +263,16 @@
                     <Item.Root>
                         <Item.Media variant="icon">
                             <Icon
-                                lucide="CalendarIcon"
-                                tabler="IconCalendar"
-                                hugeicons="Calendar03Icon"
-                                phosphor="CalendarIcon"
-                                remixicon="RiCalendarLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/calendar')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/calendar')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/Calendar03Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/CalendarIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/calendar-line')}
                                 class="size-4"
                             />
                         </Item.Media>
@@ -259,11 +286,16 @@
                     <Item.Root>
                         <Item.Media variant="icon">
                             <Icon
-                                lucide="HashIcon"
-                                tabler="IconHash"
-                                hugeicons="Tag01Icon"
-                                phosphor="HashIcon"
-                                remixicon="RiHashtag"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/hash')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/hash')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/Tag01Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/HashIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/hashtag')}
                                 class="size-4"
                             />
                         </Item.Media>
@@ -279,11 +311,16 @@
                     <Item.Root>
                         <Item.Media variant="icon">
                             <Icon
-                                lucide="ClapperboardIcon"
-                                tabler="IconMovie"
-                                hugeicons="ClapperboardIcon"
-                                phosphor="FilmSlateIcon"
-                                remixicon="RiClapperboardLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/clapperboard')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/movie')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/ClapperboardIcon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/FilmSlateIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/clapperboard-line')}
                                 class="size-4"
                             />
                         </Item.Media>
@@ -297,11 +334,16 @@
                     <Item.Root>
                         <Item.Media variant="icon">
                             <Icon
-                                lucide="InfoIcon"
-                                tabler="IconInfoCircle"
-                                hugeicons="InformationCircleIcon"
-                                phosphor="InfoIcon"
-                                remixicon="RiInformationLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/info')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/info-circle')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/InformationCircleIcon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/InfoIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/information-line')}
                                 class="size-4"
                             />
                         </Item.Media>
@@ -326,11 +368,15 @@
             {#snippet child({ props })}
                 <Link href={animeEdit(anime.id).url} {...props}>
                     <Icon
-                        lucide="PencilIcon"
-                        tabler="IconPencil"
-                        hugeicons="PencilEdit02Icon"
-                        phosphor="PencilSimpleIcon"
-                        remixicon="RiEditLine"
+                        lucide={() => import('lucide-svelte/icons/pencil')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/pencil')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/PencilEdit02Icon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/PencilSimpleIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/edit-line')}
                         class="size-4"
                     />
                     Edit
@@ -346,11 +392,13 @@
             }}
         >
             <Icon
-                lucide="Trash2Icon"
-                tabler="IconTrash"
-                hugeicons="Delete02Icon"
-                phosphor="TrashIcon"
-                remixicon="RiDeleteBinLine"
+                lucide={() => import('lucide-svelte/icons/trash-2')}
+                tabler={() => import('@tabler/icons-svelte/icons/trash')}
+                hugeicons={() =>
+                    import('@hugeicons/core-free-icons/Delete02Icon')}
+                phosphor={() => import('phosphor-svelte/lib/TrashIcon')}
+                remixicon={() =>
+                    import('remixicon-svelte/icons/delete-bin-line')}
                 class="size-4"
             />
             Delete
@@ -359,11 +407,13 @@
             {#snippet child({ props })}
                 <Link href={postCreate(anime.id).url} {...props}>
                     <Icon
-                        lucide="PlusIcon"
-                        tabler="IconPlus"
-                        hugeicons="PlusSignIcon"
-                        phosphor="PlusIcon"
-                        remixicon="RiAddLine"
+                        lucide={() => import('lucide-svelte/icons/plus')}
+                        tabler={() => import('@tabler/icons-svelte/icons/plus')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/PlusSignIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/PlusIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/add-line')}
                         class="size-4"
                     />
                     Add Episode
@@ -379,11 +429,14 @@
                     })}
             >
                 <Icon
-                    lucide="SendIcon"
-                    tabler="IconSend"
-                    hugeicons="SentIcon"
-                    phosphor="PaperPlaneTiltIcon"
-                    remixicon="RiSendPlaneLine"
+                    lucide={() => import('lucide-svelte/icons/send')}
+                    tabler={() => import('@tabler/icons-svelte/icons/send')}
+                    hugeicons={() =>
+                        import('@hugeicons/core-free-icons/SentIcon')}
+                    phosphor={() =>
+                        import('phosphor-svelte/lib/PaperPlaneTiltIcon')}
+                    remixicon={() =>
+                        import('remixicon-svelte/icons/send-plane-line')}
                     class="size-4"
                 />
                 Publish

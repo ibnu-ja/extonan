@@ -35,11 +35,11 @@
 	bind:ref
 >
 	<Icon
-		lucide="ChevronLeftIcon"
-		tabler="IconChevronLeft"
-		hugeicons="ArrowLeft01Icon"
-		phosphor="CaretLeftIcon"
-		remixicon="RiArrowLeftSLine"
+		lucide={() => import("lucide-svelte/icons/chevron-left")}
+		tabler={() => import("@tabler/icons-svelte/icons/chevron-left")}
+		hugeicons={() => import("@hugeicons/core-free-icons/ArrowLeft01Icon")}
+		phosphor={() => import("phosphor-svelte/lib/CaretLeftIcon")}
+		remixicon={() => import("remixicon-svelte/icons/arrow-left-s-line")}
 		class="cn-rtl-flip"
 	/>
 	<span class="sr-only">Previous slide</span>

@@ -13,11 +13,6 @@
     import FilterDropdown from '@/components/anime/filter-dropdown.svelte';
     import Grid from '@/components/anime/grid.svelte';
     import { Icon } from '@/components/icon';
-    import {
-        NavCalendar,
-        NavClapperboard,
-        NavTag,
-    } from '@/components/icon/nav-icons';
     import Pagination from '@/components/pagination.svelte';
     import { Button } from '@/components/ui/button';
     import * as ButtonGroup from '@/components/ui/button-group';
@@ -252,7 +247,14 @@
     <div class="flex flex-wrap items-center gap-2">
         <FilterDropdown
             label="Genre"
-            icon={NavClapperboard}
+            icon={{
+                lucide: () => import('lucide-svelte/icons/clapperboard'),
+                tabler: () => import('@tabler/icons-svelte/icons/movie'),
+                hugeicons: () =>
+                    import('@hugeicons/core-free-icons/ClapperboardIcon'),
+                phosphor: () => import('phosphor-svelte/lib/FilmReelIcon'),
+                remixicon: () => import('remixicon-svelte/icons/movie-line'),
+            }}
             items={genres.map((g) => g.value)}
             selectedIn={filters.genreIn}
             selectedNotIn={filters.genreNotIn}
@@ -261,7 +263,14 @@
         />
         <FilterDropdown
             label="Tag"
-            icon={NavTag}
+            icon={{
+                lucide: () => import('lucide-svelte/icons/tag'),
+                tabler: () => import('@tabler/icons-svelte/icons/tag'),
+                hugeicons: () => import('@hugeicons/core-free-icons/Tag01Icon'),
+                phosphor: () => import('phosphor-svelte/lib/TagIcon'),
+                remixicon: () =>
+                    import('remixicon-svelte/icons/price-tag-3-line'),
+            }}
             items={tags.map((g) => g.value)}
             selectedIn={selectedTagNames}
             selectedNotIn={selectedTagNotInNames}
@@ -271,7 +280,14 @@
         />
         <FilterDropdown
             label="Season"
-            icon={NavCalendar}
+            icon={{
+                lucide: () => import('lucide-svelte/icons/calendar'),
+                tabler: () => import('@tabler/icons-svelte/icons/calendar'),
+                hugeicons: () =>
+                    import('@hugeicons/core-free-icons/Calendar03Icon'),
+                phosphor: () => import('phosphor-svelte/lib/CalendarIcon'),
+                remixicon: () => import('remixicon-svelte/icons/calendar-line'),
+            }}
             items={seasons}
             selectedIn={filters.seasonIn}
             selectedNotIn={filters.seasonNotIn}
@@ -293,11 +309,13 @@
                     }}
                 >
                     <Icon
-                        lucide="EyeIcon"
-                        tabler="IconEye"
-                        hugeicons="ViewIcon"
-                        phosphor="EyeIcon"
-                        remixicon="RiEyeLine"
+                        lucide={() => import('lucide-svelte/icons/eye')}
+                        tabler={() => import('@tabler/icons-svelte/icons/eye')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/ViewIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/EyeIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/eye-line')}
                         class="size-4"
                     />
                     Published
@@ -313,11 +331,15 @@
                     }}
                 >
                     <Icon
-                        lucide="EyeOffIcon"
-                        tabler="IconEyeOff"
-                        hugeicons="ViewOffSlashIcon"
-                        phosphor="EyeSlashIcon"
-                        remixicon="RiEyeOffLine"
+                        lucide={() => import('lucide-svelte/icons/eye-off')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/eye-off')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/ViewOffSlashIcon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/EyeSlashIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/eye-off-line')}
                         class="size-4"
                     />
                     Draft
@@ -337,11 +359,13 @@
             {#snippet child({ props })}
                 <Link href={animeCreate().url} prefetch="hover" {...props}>
                     <Icon
-                        lucide="PlusIcon"
-                        tabler="IconPlus"
-                        hugeicons="PlusSignIcon"
-                        phosphor="PlusIcon"
-                        remixicon="RiAddLine"
+                        lucide={() => import('lucide-svelte/icons/plus')}
+                        tabler={() => import('@tabler/icons-svelte/icons/plus')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/PlusSignIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/PlusIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/add-line')}
                         class="size-6"
                     />
                     Add

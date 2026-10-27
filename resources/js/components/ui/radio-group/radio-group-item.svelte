@@ -23,11 +23,11 @@
 		<div data-slot="radio-group-indicator" class="cn-radio-group-indicator">
 			{#if checked}
 				<Icon
-					lucide="CircleIcon"
-					tabler="IconCircle"
-					hugeicons="CircleIcon"
-					phosphor="CircleIcon"
-					remixicon="RiCircleLine"
+					lucide={() => import("lucide-svelte/icons/circle")}
+					tabler={() => import("@tabler/icons-svelte/icons/circle")}
+					hugeicons={() => import("@hugeicons/core-free-icons/CircleIcon")}
+					phosphor={() => import("phosphor-svelte/lib/CircleIcon")}
+					remixicon={() => import("remixicon-svelte/icons/circle-line")}
 					class="cn-radio-group-indicator-icon"
 				/>
 			{/if}

@@ -23,20 +23,21 @@
     >
         {#if showPassword}
             <Icon
-                lucide="EyeOffIcon"
-                tabler="IconEyeOff"
-                hugeicons="ViewOffIcon"
-                phosphor="EyeSlashIcon"
-                remixicon="RiEyeOffLine"
+                lucide={() => import('lucide-svelte/icons/eye-off')}
+                tabler={() => import('@tabler/icons-svelte/icons/eye-off')}
+                hugeicons={() =>
+                    import('@hugeicons/core-free-icons/ViewOffIcon')}
+                phosphor={() => import('phosphor-svelte/lib/EyeSlashIcon')}
+                remixicon={() => import('remixicon-svelte/icons/eye-off-line')}
                 class="size-4"
             />
         {:else}
             <Icon
-                lucide="EyeIcon"
-                tabler="IconEye"
-                hugeicons="ViewIcon"
-                phosphor="EyeIcon"
-                remixicon="RiEyeLine"
+                lucide={() => import('lucide-svelte/icons/eye')}
+                tabler={() => import('@tabler/icons-svelte/icons/eye')}
+                hugeicons={() => import('@hugeicons/core-free-icons/ViewIcon')}
+                phosphor={() => import('phosphor-svelte/lib/EyeIcon')}
+                remixicon={() => import('remixicon-svelte/icons/eye-line')}
                 class="size-4"
             />
         {/if}

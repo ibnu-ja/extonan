@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
+    import { Icon as NavPolymorphicIcon } from '@/components/icon';
     import * as Sidebar from '@/components/ui/sidebar/index.js';
     import { toUrl } from '@/lib/utils';
     import type { NavItem } from '@/types';
@@ -27,7 +28,14 @@
                                 href={toUrl(item.href)}
                                 class={props.class}
                             >
-                                {#if Icon}<Icon class="size-4 shrink-0" />{/if}
+                                {#if typeof Icon === 'object' && Icon}
+                                    <NavPolymorphicIcon
+                                        {...Icon}
+                                        class="size-4 shrink-0"
+                                    />
+                                {:else if Icon}
+                                    <Icon class="size-4 shrink-0" />
+                                {/if}
                                 <span>{item.title}</span>
                             </Link>
                         {/snippet}

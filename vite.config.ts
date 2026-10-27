@@ -8,7 +8,18 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
     ssr: {
-        noExternal: ['@lucide/svelte', 'lucide-svelte', 'svelte-sonner'],
+        noExternal: [
+            '@lucide/svelte',
+            'lucide-svelte',
+            'svelte-sonner',
+            '@material/material-color-utilities',
+            '@hugeicons/svelte',
+            'bits-ui',
+            'mode-watcher',
+            '@tabler/icons-svelte',
+            'phosphor-svelte',
+            'remixicon-svelte',
+        ],
     },
     plugins: [
         laravel({

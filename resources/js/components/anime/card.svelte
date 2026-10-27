@@ -78,11 +78,15 @@
             <div class="absolute left-2 top-2">
                 <Badge variant="secondary" class="gap-1 text-xs">
                     <Icon
-                        lucide="EyeOffIcon"
-                        tabler="IconEyeOff"
-                        hugeicons="ViewOffIcon"
-                        phosphor="EyeSlashIcon"
-                        remixicon="RiEyeOffLine"
+                        lucide={() => import('lucide-svelte/icons/eye-off')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/eye-off')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/ViewOffIcon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/EyeSlashIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/eye-off-line')}
                         class="size-3"
                     />
                     Draft
@@ -103,11 +107,16 @@
                             {...props}
                         >
                             <Icon
-                                lucide="EllipsisVerticalIcon"
-                                tabler="IconDotsVertical"
-                                hugeicons="MoreVerticalCircle01Icon"
-                                phosphor="DotsThreeVerticalIcon"
-                                remixicon="RiMore2Line"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/ellipsis-vertical')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/dots-vertical')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/MoreVerticalCircle01Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/DotsThreeVerticalIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/more-2-line')}
                                 class="size-3.5"
                             />
                         </Button>
@@ -119,11 +128,16 @@
                             onclick={() => router.visit(animeEdit(item.id).url)}
                         >
                             <Icon
-                                lucide="PencilIcon"
-                                tabler="IconPencil"
-                                hugeicons="PencilEdit02Icon"
-                                phosphor="PencilIcon"
-                                remixicon="RiEditLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/pencil')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/pencil')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/PencilEdit02Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/PencilIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/edit-line')}
                                 class="size-4"
                             />
                             Edit
@@ -139,11 +153,16 @@
                             }}
                         >
                             <Icon
-                                lucide="Trash2Icon"
-                                tabler="IconTrash"
-                                hugeicons="Delete02Icon"
-                                phosphor="TrashIcon"
-                                remixicon="RiDeleteBinLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/trash-2')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/trash')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/Delete02Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/TrashIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/delete-bin-line')}
                                 class="size-4"
                             />
                             Delete
@@ -157,11 +176,16 @@
                                 })}
                         >
                             <Icon
-                                lucide="SendIcon"
-                                tabler="IconSend"
-                                hugeicons="SentIcon"
-                                phosphor="PaperPlaneRightIcon"
-                                remixicon="RiSendPlaneLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/send')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/send')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/SentIcon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/PaperPlaneRightIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/send-plane-line')}
                                 class="size-4"
                             />
                             Publish

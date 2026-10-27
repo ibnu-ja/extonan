@@ -1,82 +1,74 @@
-import type { MenuColorValue } from "./config.js";
+import type { MenuColorValue } from './config.js';
 
 /**
- * Menu content components ship with `cn-menu-target cn-menu-translucent` so every menu color can be
- * previewed. This keeps rendered menus in sync with `menuColor` (toggling `dark` for inverted menus
- * and `cn-menu-translucent` for translucent ones), including menus that are portaled in later.
- *
+ * Keeps rendered menus in sync with `menuColor` (toggling `dark` on `.cn-menu-target` for inverted menus).
  * Returns a cleanup function.
  */
 export function syncMenuColor(menuColor: MenuColorValue): () => void {
-	if (typeof window === "undefined" || typeof document === "undefined") {
-		return () => {};
-	}
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+        return () => {};
+    }
 
-	const isInvertedMenu = menuColor === "inverted" || menuColor === "inverted-translucent";
-	const isTranslucentMenu =
-		menuColor === "default-translucent" || menuColor === "inverted-translucent";
+    const isInvertedMenu = menuColor === 'inverted';
 
-	let frameId = 0;
+    let frameId = 0;
 
-	const updateMenuElements = () => {
-		const allElements = document.querySelectorAll<HTMLElement>(
-			".cn-menu-target, [data-menu-translucent]"
-		);
+    const updateMenuElements = () => {
+        const allElements =
+            document.querySelectorAll<HTMLElement>('.cn-menu-target');
 
-		if (allElements.length === 0) {
-return;
-}
+        if (allElements.length === 0) {
+            return;
+        }
 
-		allElements.forEach((element) => {
-			element.style.transition = "none";
-		});
+        allElements.forEach((element) => {
+            element.style.transition = 'none';
+        });
 
-		allElements.forEach((element) => {
-			if (element.classList.contains("cn-menu-target")) {
-				if (isInvertedMenu) {
-					element.classList.add("dark");
-				} else {
-					element.classList.remove("dark");
-				}
-			}
+        allElements.forEach((element) => {
+            if (element.classList.contains('cn-menu-target')) {
+                if (isInvertedMenu) {
+                    element.classList.add('dark');
+                } else {
+                    element.classList.remove('dark');
+                }
+            }
 
-			if (isTranslucentMenu) {
-				element.classList.add("cn-menu-translucent");
-				element.removeAttribute("data-menu-translucent");
-			} else if (element.classList.contains("cn-menu-translucent")) {
-				element.classList.remove("cn-menu-translucent");
-				element.setAttribute("data-menu-translucent", "");
-			}
-		});
+            if (element.classList.contains('cn-menu-translucent')) {
+                element.classList.remove('cn-menu-translucent');
+            }
 
-		void document.body.offsetHeight;
+            element.removeAttribute('data-menu-translucent');
+        });
 
-		allElements.forEach((element) => {
-			element.style.transition = "";
-		});
-	};
+        void document.body.offsetHeight;
 
-	updateMenuElements();
+        allElements.forEach((element) => {
+            element.style.transition = '';
+        });
+    };
 
-	const observer = new MutationObserver(() => {
-		if (frameId) {
-return;
-}
+    updateMenuElements();
 
-		frameId = window.requestAnimationFrame(() => {
-			frameId = 0;
-			updateMenuElements();
-		});
-	});
+    const observer = new MutationObserver(() => {
+        if (frameId) {
+            return;
+        }
 
-	observer.observe(document.body, { childList: true, subtree: true });
+        frameId = window.requestAnimationFrame(() => {
+            frameId = 0;
+            updateMenuElements();
+        });
+    });
 
-	return () => {
-		observer.disconnect();
+    observer.observe(document.body, { childList: true, subtree: true });
 
-		if (frameId) {
-			window.cancelAnimationFrame(frameId);
-			frameId = 0;
-		}
-	};
+    return () => {
+        observer.disconnect();
+
+        if (frameId) {
+            window.cancelAnimationFrame(frameId);
+            frameId = 0;
+        }
+    };
 }

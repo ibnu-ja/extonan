@@ -32,12 +32,12 @@
 	{...restProps}
 >
 	<Icon
-		lucide="PanelLeftIcon"
-		tabler="IconLayoutSidebar"
-		hugeicons="SidebarLeftIcon"
-		phosphor="SidebarIcon"
-		remixicon="RiSideBarLine"
-		class="cn-rtl-flip"
+		lucide={() => import("lucide-svelte/icons/panel-left")}
+		tabler={() => import("@tabler/icons-svelte/icons/layout-sidebar")}
+		hugeicons={() => import("@hugeicons/core-free-icons/SidebarLeftIcon")}
+		phosphor={() => import("phosphor-svelte/lib/SidebarIcon")}
+		remixicon={() => import("remixicon-svelte/icons/side-bar-line")}
+		class="size-4 cn-rtl-flip"
 	/>
 	<span class="sr-only">Toggle Sidebar</span>
 </Button>

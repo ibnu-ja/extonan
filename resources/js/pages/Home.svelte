@@ -1,10 +1,9 @@
 <script lang="ts">
     import { setLayoutProps } from '@inertiajs/svelte';
     import Autoplay from 'embla-carousel-autoplay';
-    import EpisodeThumbnail from '@/components/anime/episode-thumbnail.svelte';
     import AnimeSlideCard from '@/components/home/anime-slide-card.svelte';
-    import MusicCard from '@/components/home/music-card.svelte';
     import SectionHeading from '@/components/home/section-heading.svelte';
+    import PostCard from '@/components/post-card.svelte';
     import * as Carousel from '@/components/ui/carousel';
 
     let {
@@ -58,18 +57,20 @@
     </div>
     {#if latestEpisodes.length > 0}
         <div
-            class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
         >
             {#each latestEpisodes as episode (episode.id)}
-                <EpisodeThumbnail
-                    {episode}
+                <PostCard
+                    post={episode}
                     animeId={episode.animeId}
                     animeTitle={episode.animeTitle}
                 />
             {/each}
         </div>
     {:else}
-        <div class="flex h-32 items-center justify-center rounded-[var(--radius)] bg-muted">
+        <div
+            class="flex h-32 items-center justify-center rounded-[var(--radius)] bg-muted"
+        >
             <p class="text-muted-foreground">No episodes published yet.</p>
         </div>
     {/if}
@@ -80,36 +81,29 @@
         <SectionHeading title="Latest MV" />
     </div>
     {#if latestMv.length > 0}
-        <div class="relative group">
+        <div class="relative group/carousel">
             <Carousel.Root opts={{ align: 'start', skipSnaps: true }}>
                 <Carousel.Content class="ms-0 pe-4">
                     {#each latestMv as mv (mv.id)}
                         <Carousel.Item
                             class="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
                         >
-                            <MusicCard
-                                title={mv.title}
-                                thumbnail={mv.thumbnail}
-                                author={mv.author}
-                                publishedAt={mv.publishedAt}
-                                isPublished={mv.isPublished}
-                                id={mv.id}
-                                permissions={mv.permissions}
-                                aspect="video"
-                            />
+                            <PostCard post={mv} aspect="video" />
                         </Carousel.Item>
                     {/each}
                 </Carousel.Content>
                 <Carousel.Previous
-                    class="left-2 top-2/5 mt-1 opacity-0 transition-all duration-300 pointer-events-none group-hover:mt-0 group-hover:opacity-100 group-hover:pointer-events-auto"
+                    class="left-2 top-2/5 mt-1 opacity-0 transition-all duration-300 pointer-events-none group-hover/carousel:mt-0 group-hover/carousel:opacity-100 group-hover/carousel:pointer-events-auto"
                 />
                 <Carousel.Next
-                    class="right-2 top-2/5 mt-1 opacity-0 transition-all duration-300 pointer-events-none group-hover:mt-0 group-hover:opacity-100 group-hover:pointer-events-auto"
+                    class="right-2 top-2/5 mt-1 opacity-0 transition-all duration-300 pointer-events-none group-hover/carousel:mt-0 group-hover/carousel:opacity-100 group-hover/carousel:pointer-events-auto"
                 />
             </Carousel.Root>
         </div>
     {:else}
-        <div class="flex h-32 items-center justify-center rounded-[var(--radius)] bg-muted">
+        <div
+            class="flex h-32 items-center justify-center rounded-[var(--radius)] bg-muted"
+        >
             <p class="text-muted-foreground">No music videos published yet.</p>
         </div>
     {/if}
@@ -120,35 +114,29 @@
         <SectionHeading title="Latest Album" />
     </div>
     {#if latestAlbum.length > 0}
-        <div class="relative group">
+        <div class="relative group/carousel">
             <Carousel.Root opts={{ align: 'start', skipSnaps: true }}>
                 <Carousel.Content class="ms-0 pe-4">
                     {#each latestAlbum as album (album.id)}
                         <Carousel.Item
                             class="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
                         >
-                            <MusicCard
-                                title={album.title}
-                                thumbnail={album.thumbnail}
-                                author={album.author}
-                                publishedAt={album.publishedAt}
-                                isPublished={album.isPublished}
-                                id={album.id}
-                                permissions={album.permissions}
-                            />
+                            <PostCard post={album} aspect="square" />
                         </Carousel.Item>
                     {/each}
                 </Carousel.Content>
                 <Carousel.Previous
-                    class="left-2 top-2/5 mt-1 opacity-0 transition-all duration-300 pointer-events-none group-hover:mt-0 group-hover:opacity-100 group-hover:pointer-events-auto"
+                    class="left-2 top-2/5 mt-1 opacity-0 transition-all duration-300 pointer-events-none group-hover/carousel:mt-0 group-hover/carousel:opacity-100 group-hover/carousel:pointer-events-auto"
                 />
                 <Carousel.Next
-                    class="right-2 top-2/5 mt-1 opacity-0 transition-all duration-300 pointer-events-none group-hover:mt-0 group-hover:opacity-100 group-hover:pointer-events-auto"
+                    class="right-2 top-2/5 mt-1 opacity-0 transition-all duration-300 pointer-events-none group-hover/carousel:mt-0 group-hover/carousel:opacity-100 group-hover/carousel:pointer-events-auto"
                 />
             </Carousel.Root>
         </div>
     {:else}
-        <div class="flex h-32 items-center justify-center rounded-[var(--radius)] bg-muted">
+        <div
+            class="flex h-32 items-center justify-center rounded-[var(--radius)] bg-muted"
+        >
             <p class="text-muted-foreground">No albums published yet.</p>
         </div>
     {/if}

@@ -26,21 +26,21 @@
 	>
 		{@render children?.()}
 		<Icon
-			lucide="ChevronDownIcon"
-			tabler="IconChevronDown"
+			lucide={() => import("lucide-svelte/icons/chevron-down")}
+			tabler={() => import("@tabler/icons-svelte/icons/chevron-down")}
 			data-slot="accordion-trigger-icon"
-			hugeicons="ArrowDown01Icon"
-			phosphor="CaretDownIcon"
-			remixicon="RiArrowDownSLine"
+			hugeicons={() => import("@hugeicons/core-free-icons/ArrowDown01Icon")}
+			phosphor={() => import("phosphor-svelte/lib/CaretDownIcon")}
+			remixicon={() => import("remixicon-svelte/icons/arrow-down-s-line")}
 			class="cn-accordion-trigger-icon pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden"
 		/>
 		<Icon
-			lucide="ChevronUpIcon"
-			tabler="IconChevronUp"
+			lucide={() => import("lucide-svelte/icons/chevron-up")}
+			tabler={() => import("@tabler/icons-svelte/icons/chevron-up")}
 			data-slot="accordion-trigger-icon"
-			hugeicons="ArrowUp01Icon"
-			phosphor="CaretUpIcon"
-			remixicon="RiArrowUpSLine"
+			hugeicons={() => import("@hugeicons/core-free-icons/ArrowUp01Icon")}
+			phosphor={() => import("phosphor-svelte/lib/CaretUpIcon")}
+			remixicon={() => import("remixicon-svelte/icons/arrow-up-s-line")}
 			class="cn-accordion-trigger-icon pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline"
 		/>
 	</AccordionPrimitive.Trigger>

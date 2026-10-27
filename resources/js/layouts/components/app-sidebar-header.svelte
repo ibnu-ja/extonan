@@ -8,12 +8,14 @@
         DropdownMenu,
         DropdownMenuContent,
         DropdownMenuItem,
+        DropdownMenuSeparator,
         DropdownMenuTrigger,
     } from '@/components/ui/dropdown-menu';
     import { SidebarTrigger } from '@/components/ui/sidebar';
     import UserMenuContent from '@/layouts/components/user-menu-content.svelte';
     import { toUrl } from '@/lib/utils';
     import { dashboard, login, register as registerRoute } from '@/routes';
+    import { edit as editAppearance } from '@/routes/appearance';
     import type { BreadcrumbItem } from '@/types';
 
     let {
@@ -64,11 +66,16 @@
                             {#snippet child({ props })}
                                 <Link {...props} href={toUrl(dashboard())}>
                                     <Icon
-                                        lucide="LayoutGridIcon"
-                                        tabler="IconLayoutGrid"
-                                        hugeicons="DashboardSquare01Icon"
-                                        phosphor="SquaresFourIcon"
-                                        remixicon="RiDashboardLine"
+                                        lucide={() =>
+                                            import('lucide-svelte/icons/layout-grid')}
+                                        tabler={() =>
+                                            import('@tabler/icons-svelte/icons/layout-grid')}
+                                        hugeicons={() =>
+                                            import('@hugeicons/core-free-icons/DashboardSquare01Icon')}
+                                        phosphor={() =>
+                                            import('phosphor-svelte/lib/SquaresFourIcon')}
+                                        remixicon={() =>
+                                            import('remixicon-svelte/icons/dashboard-line')}
                                         class="mr-2 size-4"
                                     />
                                     Dashboard
@@ -78,7 +85,7 @@
                     </UserMenuContent>
                 </DropdownMenuContent>
             </DropdownMenu>
-        {:else if canRegister}
+        {:else}
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     {#snippet child({ props })}
@@ -89,45 +96,87 @@
                             {...props}
                         >
                             <Icon
-                                lucide="CircleUserRoundIcon"
-                                tabler="IconUserCircle"
-                                hugeicons="UserCircleIcon"
-                                phosphor="UserCircleIcon"
-                                remixicon="RiUserSharedLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/circle-user-round')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/user-circle')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/UserCircleIcon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/UserCircleIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/user-shared-line')}
                                 class="size-5 text-muted-foreground"
                             />
                         </Button>
                     {/snippet}
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" class="w-40">
+                <DropdownMenuContent align="end" class="w-44">
                     <DropdownMenuItem>
                         {#snippet child({ props })}
-                            <Link {...props} href={toUrl(login())}>Log in</Link>
-                        {/snippet}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        {#snippet child({ props })}
-                            <Link {...props} href={toUrl(registerRoute())}>
-                                Register
+                            <Link {...props} href={toUrl(editAppearance())}>
+                                <Icon
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/palette')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/palette')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/PaintBoardIcon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/PaletteIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/palette-line')}
+                                    class="mr-2 size-4"
+                                />
+                                Appearance
                             </Link>
                         {/snippet}
                     </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                        {#snippet child({ props })}
+                            <Link {...props} href={toUrl(login())}>
+                                <Icon
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/log-in')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/login')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/Login01Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/SignInIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/login-box-line')}
+                                    class="mr-2 size-4"
+                                />
+                                Log in
+                            </Link>
+                        {/snippet}
+                    </DropdownMenuItem>
+                    {#if canRegister}
+                        <DropdownMenuItem>
+                            {#snippet child({ props })}
+                                <Link {...props} href={toUrl(registerRoute())}>
+                                    <Icon
+                                        lucide={() =>
+                                            import('lucide-svelte/icons/user-plus')}
+                                        tabler={() =>
+                                            import('@tabler/icons-svelte/icons/user-plus')}
+                                        hugeicons={() =>
+                                            import('@hugeicons/core-free-icons/UserAdd01Icon')}
+                                        phosphor={() =>
+                                            import('phosphor-svelte/lib/UserPlusIcon')}
+                                        remixicon={() =>
+                                            import('remixicon-svelte/icons/user-add-line')}
+                                        class="mr-2 size-4"
+                                    />
+                                    Register
+                                </Link>
+                            {/snippet}
+                        </DropdownMenuItem>
+                    {/if}
                 </DropdownMenuContent>
             </DropdownMenu>
-        {:else}
-            <Link
-                href={toUrl(login())}
-                class="inline-flex size-9 items-center justify-center rounded-full hover:bg-accent"
-            >
-                <Icon
-                    lucide="CircleUserRoundIcon"
-                    tabler="IconUserCircle"
-                    hugeicons="UserCircleIcon"
-                    phosphor="UserCircleIcon"
-                    remixicon="RiUserSharedLine"
-                    class="size-5 text-muted-foreground"
-                />
-            </Link>
         {/if}
     </div>
 </header>

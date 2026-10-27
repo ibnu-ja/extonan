@@ -31,9 +31,7 @@
                     : null,
             ] as const
         ).filter(
-            (
-                opt,
-            ): opt is { value: 'embed' | 'saluran'; label: string } =>
+            (opt): opt is { value: 'embed' | 'saluran'; label: string } =>
                 opt !== null,
         ),
     );
@@ -167,11 +165,16 @@
                                         (s) => s.value === activeStreamType,
                                     )?.label ?? 'Select'}
                                     <Icon
-                                        lucide="ChevronDownIcon"
-                                        tabler="IconChevronDown"
-                                        hugeicons="ArrowDown01Icon"
-                                        phosphor="CaretDownIcon"
-                                        remixicon="RiArrowDownSLine"
+                                        lucide={() =>
+                                            import('lucide-svelte/icons/chevron-down')}
+                                        tabler={() =>
+                                            import('@tabler/icons-svelte/icons/chevron-down')}
+                                        hugeicons={() =>
+                                            import('@hugeicons/core-free-icons/ArrowDown01Icon')}
+                                        phosphor={() =>
+                                            import('phosphor-svelte/lib/CaretDownIcon')}
+                                        remixicon={() =>
+                                            import('remixicon-svelte/icons/arrow-down-s-line')}
                                         class="size-3 opacity-50"
                                     />
                                 </Button>
@@ -186,11 +189,16 @@
                                     <div class="flex w-full items-center gap-2">
                                         {#if activeStreamType === opt.value}
                                             <Icon
-                                                lucide="CheckIcon"
-                                                tabler="IconCheck"
-                                                hugeicons="Tick02Icon"
-                                                phosphor="CheckIcon"
-                                                remixicon="RiCheckLine"
+                                                lucide={() =>
+                                                    import('lucide-svelte/icons/check')}
+                                                tabler={() =>
+                                                    import('@tabler/icons-svelte/icons/check')}
+                                                hugeicons={() =>
+                                                    import('@hugeicons/core-free-icons/Tick02Icon')}
+                                                phosphor={() =>
+                                                    import('phosphor-svelte/lib/CheckIcon')}
+                                                remixicon={() =>
+                                                    import('remixicon-svelte/icons/check-line')}
                                                 class="size-4"
                                             />
                                         {/if}
@@ -293,11 +301,16 @@
                                             >
                                                 {item.name}
                                                 <Icon
-                                                    lucide="ExternalLinkIcon"
-                                                    tabler="IconExternalLink"
-                                                    hugeicons="ExternalLinkIcon"
-                                                    phosphor="ArrowSquareOutIcon"
-                                                    remixicon="RiExternalLinkLine"
+                                                    lucide={() =>
+                                                        import('lucide-svelte/icons/external-link')}
+                                                    tabler={() =>
+                                                        import('@tabler/icons-svelte/icons/external-link')}
+                                                    hugeicons={() =>
+                                                        import('@hugeicons/core-free-icons/ExternalLinkIcon')}
+                                                    phosphor={() =>
+                                                        import('phosphor-svelte/lib/ArrowSquareOutIcon')}
+                                                    remixicon={() =>
+                                                        import('remixicon-svelte/icons/external-link-line')}
                                                     class="size-3"
                                                 />
                                             </a>
@@ -413,11 +426,16 @@
                             {...props}
                         >
                             <Icon
-                                lucide="PencilIcon"
-                                tabler="IconPencil"
-                                hugeicons="PencilEdit02Icon"
-                                phosphor="PencilSimpleIcon"
-                                remixicon="RiEditLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/pencil')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/pencil')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/PencilEdit02Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/PencilSimpleIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/edit-line')}
                                 class="size-4"
                             />
                             Edit
@@ -440,11 +458,14 @@
                     }}
                 >
                     <Icon
-                        lucide="Trash2Icon"
-                        tabler="IconTrash"
-                        hugeicons="Delete02Icon"
-                        phosphor="TrashIcon"
-                        remixicon="RiDeleteBinLine"
+                        lucide={() => import('lucide-svelte/icons/trash-2')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/trash')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/Delete02Icon')}
+                        phosphor={() => import('phosphor-svelte/lib/TrashIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/delete-bin-line')}
                         class="size-4"
                     />
                     Delete
@@ -463,11 +484,14 @@
                         )}
                 >
                     <Icon
-                        lucide="SendIcon"
-                        tabler="IconSend"
-                        hugeicons="SentIcon"
-                        phosphor="PaperPlaneTiltIcon"
-                        remixicon="RiSendPlaneLine"
+                        lucide={() => import('lucide-svelte/icons/send')}
+                        tabler={() => import('@tabler/icons-svelte/icons/send')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/SentIcon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/PaperPlaneTiltIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/send-plane-line')}
                         class="size-4"
                     />
                     Publish

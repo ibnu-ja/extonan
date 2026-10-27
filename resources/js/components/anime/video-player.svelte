@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Hls from 'hls.js';
+    import type Hls from 'hls.js';
     import type { Level } from 'hls.js';
     import { onMount, onDestroy } from 'svelte';
     import { Icon } from '@/components/icon';
@@ -149,51 +149,72 @@
         }
     }
 
+    let isDestroyed = false;
+
     onMount(() => {
         video.volume = volume / 100;
         video.muted = isMuted;
 
-        if (Hls.isSupported()) {
-            hls = new Hls({
-                enableWorker: true,
-                lowLatencyMode: false,
-                maxBufferLength: 30,
-                maxMaxBufferLength: 60,
-                startLevel: -1,
-            });
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MEDIA_ATTACHED, () => hls!.loadSource(src));
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                levels = hls!.levels;
-                hlsReady = true;
+        void (async () => {
+            const { default: HlsClass } = await import('hls.js');
+
+            if (isDestroyed || !video) {
+                return;
+            }
+
+            if (HlsClass.isSupported()) {
+                hls = new HlsClass({
+                    enableWorker: true,
+                    lowLatencyMode: false,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 60,
+                    startLevel: -1,
+                });
+                hls.attachMedia(video);
+                hls.on(HlsClass.Events.MEDIA_ATTACHED, () =>
+                    hls!.loadSource(src),
+                );
+                hls.on(HlsClass.Events.MANIFEST_PARSED, () => {
+                    levels = hls!.levels;
+                    hlsReady = true;
+
+                    if (autoplay) {
+                        video.play().catch(() => {});
+                    }
+                });
+
+                hls.on(HlsClass.Events.ERROR, (_event, data) => {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case HlsClass.ErrorTypes.NETWORK_ERROR:
+                                hls?.startLoad();
+                                break;
+                            case HlsClass.ErrorTypes.MEDIA_ERROR:
+                                hls?.recoverMediaError();
+                                break;
+                            default:
+                                hls?.destroy();
+                                break;
+                        }
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = src;
+                video.addEventListener('loadedmetadata', () => {
+                    hlsReady = true;
+
+                    if (autoplay) {
+                        video.play().catch(() => {});
+                    }
+                });
+            } else {
+                video.src = src;
 
                 if (autoplay) {
                     video.play().catch(() => {});
                 }
-            });
-
-            hls.on(Hls.Events.ERROR, (_event, data) => {
-                if (data.fatal) {
-                    switch (data.type) {
-                        case Hls.ErrorTypes.NETWORK_ERROR:
-                            hls?.startLoad();
-                            break;
-                        case Hls.ErrorTypes.MEDIA_ERROR:
-                            hls?.recoverMediaError();
-                            break;
-                        default:
-                            hls?.destroy();
-                            break;
-                    }
-                }
-            });
-        } else {
-            video.src = src;
-
-            if (autoplay) {
-                video.play().catch(() => {});
             }
-        }
+        })();
 
         function onMouseMove() {
             showControlsFn();
@@ -230,7 +251,20 @@
         };
     });
 
+    $effect(() => {
+        const currentSrc = src;
+
+        if (hls && hlsReady && currentSrc) {
+            hls.loadSource(currentSrc);
+        } else if (video && !hls && currentSrc && video.src !== currentSrc) {
+            video.src = currentSrc;
+        }
+    });
+
     onDestroy(() => {
+        isDestroyed = true;
+        hls?.destroy();
+
         if (hideTimer) {
             clearTimeout(hideTimer);
         }
@@ -281,20 +315,26 @@
             >
                 {#if isPlaying}
                     <Icon
-                        lucide="PauseIcon"
-                        tabler="IconPlayerPause"
-                        hugeicons="PauseIcon"
-                        phosphor="PauseIcon"
-                        remixicon="RiPauseLine"
+                        lucide={() => import('lucide-svelte/icons/pause')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/player-pause')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/PauseIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/PauseIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/pause-line')}
                         class="size-4"
                     />
                 {:else}
                     <Icon
-                        lucide="PlayIcon"
-                        tabler="IconPlayerPlay"
-                        hugeicons="PlayIcon"
-                        phosphor="PlayIcon"
-                        remixicon="RiPlayLine"
+                        lucide={() => import('lucide-svelte/icons/play')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/player-play')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/PlayIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/PlayIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/play-line')}
                         class="size-4"
                     />
                 {/if}
@@ -308,20 +348,28 @@
             >
                 {#if isMuted || volume === 0}
                     <Icon
-                        lucide="VolumeXIcon"
-                        tabler="IconVolumeOff"
-                        hugeicons="VolumeCrossIcon"
-                        phosphor="SpeakerSimpleSlashIcon"
-                        remixicon="RiVolumeMuteLine"
+                        lucide={() => import('lucide-svelte/icons/volume-x')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/volume-off')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/VolumeMute01Icon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/SpeakerSimpleSlashIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/volume-mute-line')}
                         class="size-4"
                     />
                 {:else}
                     <Icon
-                        lucide="Volume2Icon"
-                        tabler="IconVolume"
-                        hugeicons="VolumeHighIcon"
-                        phosphor="SpeakerHighIcon"
-                        remixicon="RiVolumeUpLine"
+                        lucide={() => import('lucide-svelte/icons/volume-2')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/volume')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/VolumeHighIcon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/SpeakerHighIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/volume-up-line')}
                         class="size-4"
                     />
                 {/if}
@@ -365,11 +413,14 @@
                 onclick={skipBack}
             >
                 <Icon
-                    lucide="RewindIcon"
-                    tabler="IconPlayerTrackPrev"
-                    hugeicons="Backward01Icon"
-                    phosphor="RewindIcon"
-                    remixicon="RiRewindLine"
+                    lucide={() => import('lucide-svelte/icons/rewind')}
+                    tabler={() =>
+                        import('@tabler/icons-svelte/icons/player-track-prev')}
+                    hugeicons={() =>
+                        import('@hugeicons/core-free-icons/Backward01Icon')}
+                    phosphor={() => import('phosphor-svelte/lib/RewindIcon')}
+                    remixicon={() =>
+                        import('remixicon-svelte/icons/rewind-line')}
                     class="size-4"
                 />
             </Button>
@@ -381,11 +432,15 @@
                 onclick={skipForward}
             >
                 <Icon
-                    lucide="FastForwardIcon"
-                    tabler="IconPlayerTrackNext"
-                    hugeicons="Forward01Icon"
-                    phosphor="FastForwardIcon"
-                    remixicon="RiSpeedUpLine"
+                    lucide={() => import('lucide-svelte/icons/fast-forward')}
+                    tabler={() =>
+                        import('@tabler/icons-svelte/icons/player-track-next')}
+                    hugeicons={() =>
+                        import('@hugeicons/core-free-icons/Forward01Icon')}
+                    phosphor={() =>
+                        import('phosphor-svelte/lib/FastForwardIcon')}
+                    remixicon={() =>
+                        import('remixicon-svelte/icons/speed-up-line')}
                     class="size-4"
                 />
             </Button>
@@ -419,20 +474,28 @@
             >
                 {#if isFullscreen}
                     <Icon
-                        lucide="MinimizeIcon"
-                        tabler="IconMinimize"
-                        hugeicons="MinimizeScreenIcon"
-                        phosphor="ArrowsInIcon"
-                        remixicon="RiFullscreenExitLine"
+                        lucide={() => import('lucide-svelte/icons/minimize')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/minimize')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/MinimizeScreenIcon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/ArrowsInIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/fullscreen-exit-line')}
                         class="size-4"
                     />
                 {:else}
                     <Icon
-                        lucide="MaximizeIcon"
-                        tabler="IconMaximize"
-                        hugeicons="MaximizeScreenIcon"
-                        phosphor="ArrowsOutIcon"
-                        remixicon="RiFullscreenLine"
+                        lucide={() => import('lucide-svelte/icons/maximize')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/maximize')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/MaximizeScreenIcon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/ArrowsOutIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/fullscreen-line')}
                         class="size-4"
                     />
                 {/if}

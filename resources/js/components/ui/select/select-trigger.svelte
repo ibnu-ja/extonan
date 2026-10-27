@@ -26,11 +26,11 @@
 >
 	{@render children?.()}
 	<Icon
-		lucide="ChevronDownIcon"
-		tabler="IconSelector"
-		hugeicons="UnfoldMoreIcon"
-		phosphor="CaretDownIcon"
-		remixicon="RiArrowDownSLine"
+		lucide={() => import("lucide-svelte/icons/chevron-down")}
+		tabler={() => import("@tabler/icons-svelte/icons/selector")}
+		hugeicons={() => import("@hugeicons/core-free-icons/UnfoldMoreIcon")}
+		phosphor={() => import("phosphor-svelte/lib/CaretDownIcon")}
+		remixicon={() => import("remixicon-svelte/icons/arrow-down-s-line")}
 		class="cn-select-trigger-icon pointer-events-none"
 	/>
 </SelectPrimitive.Trigger>

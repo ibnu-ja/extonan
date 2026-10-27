@@ -17,10 +17,10 @@
 	{...restProps}
 >
 	<Icon
-		lucide="ChevronUpIcon"
-		tabler="IconChevronUp"
-		hugeicons="ArrowUp01Icon"
-		phosphor="CaretUpIcon"
-		remixicon="RiArrowUpSLine"
+		lucide={() => import("lucide-svelte/icons/chevron-up")}
+		tabler={() => import("@tabler/icons-svelte/icons/chevron-up")}
+		hugeicons={() => import("@hugeicons/core-free-icons/ArrowUp01Icon")}
+		phosphor={() => import("phosphor-svelte/lib/CaretUpIcon")}
+		remixicon={() => import("remixicon-svelte/icons/arrow-up-s-line")}
 	/>
 </SelectPrimitive.ScrollUpButton>

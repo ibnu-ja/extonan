@@ -12,7 +12,9 @@
 
 <div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
     {#each imageList as item (item.id)}
-        <div class="group relative overflow-hidden rounded-[var(--radius)] border bg-muted">
+        <div
+            class="group relative overflow-hidden rounded-[var(--radius)] border bg-muted"
+        >
             <AspectRatio ratio={1}>
                 {#if item.mediumUrl}
                     <img

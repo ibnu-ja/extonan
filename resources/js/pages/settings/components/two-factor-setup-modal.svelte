@@ -142,11 +142,13 @@
                         {/each}
                     </div>
                     <Icon
-                        lucide="ScanLineIcon"
-                        tabler="IconScan"
-                        hugeicons="ScanIcon"
-                        phosphor="ScanIcon"
-                        remixicon="RiScanLine"
+                        lucide={() => import('lucide-svelte/icons/scan-line')}
+                        tabler={() => import('@tabler/icons-svelte/icons/scan')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/ScanIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/ScanIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/scan-line')}
                         class="relative z-20 size-6 text-foreground"
                     />
                 </div>
@@ -245,20 +247,30 @@
                                 >
                                     {#if copied}
                                         <Icon
-                                            lucide="CheckIcon"
-                                            tabler="IconCheck"
-                                            hugeicons="Tick02Icon"
-                                            phosphor="CheckIcon"
-                                            remixicon="RiCheckLine"
+                                            lucide={() =>
+                                                import('lucide-svelte/icons/check')}
+                                            tabler={() =>
+                                                import('@tabler/icons-svelte/icons/check')}
+                                            hugeicons={() =>
+                                                import('@hugeicons/core-free-icons/Tick02Icon')}
+                                            phosphor={() =>
+                                                import('phosphor-svelte/lib/CheckIcon')}
+                                            remixicon={() =>
+                                                import('remixicon-svelte/icons/check-line')}
                                             class="size-4 text-emerald-500"
                                         />
                                     {:else}
                                         <Icon
-                                            lucide="CopyIcon"
-                                            tabler="IconCopy"
-                                            hugeicons="Copy01Icon"
-                                            phosphor="CopyIcon"
-                                            remixicon="RiFileCopyLine"
+                                            lucide={() =>
+                                                import('lucide-svelte/icons/copy')}
+                                            tabler={() =>
+                                                import('@tabler/icons-svelte/icons/copy')}
+                                            hugeicons={() =>
+                                                import('@hugeicons/core-free-icons/Copy01Icon')}
+                                            phosphor={() =>
+                                                import('phosphor-svelte/lib/CopyIcon')}
+                                            remixicon={() =>
+                                                import('remixicon-svelte/icons/file-copy-line')}
                                             class="size-4 text-muted-foreground"
                                         />
                                     {/if}

@@ -1,73 +1,62 @@
 <script lang="ts">
     import { Icon } from '@/components/icon';
+    import * as Tabs from '@/components/ui/tabs';
     import { themeState } from '@/lib/theme.svelte';
     import type { Appearance } from '@/types';
 
     const { appearance, updateAppearance } = themeState();
 
-    interface TabItem {
-        value: Appearance;
-        label: string;
-        lucide: string;
-        tabler: string;
-        hugeicons: string;
-        phosphor: string;
-        remixicon: string;
-    }
-
-    const tabs: TabItem[] = [
+    const tabs = [
         {
             value: 'light',
             label: 'Light',
-            lucide: 'Sun',
-            tabler: 'IconSun',
-            hugeicons: 'Sun01Icon',
-            phosphor: 'SunIcon',
-            remixicon: 'RiSunLine',
+            lucide: () => import('lucide-svelte/icons/sun'),
+            tabler: () => import('@tabler/icons-svelte/icons/sun'),
+            hugeicons: () => import('@hugeicons/core-free-icons/Sun01Icon'),
+            phosphor: () => import('phosphor-svelte/lib/SunIcon'),
+            remixicon: () => import('remixicon-svelte/icons/sun-line'),
         },
         {
             value: 'dark',
             label: 'Dark',
-            lucide: 'Moon',
-            tabler: 'IconMoon',
-            hugeicons: 'Moon02Icon',
-            phosphor: 'MoonIcon',
-            remixicon: 'RiMoonLine',
+            lucide: () => import('lucide-svelte/icons/moon'),
+            tabler: () => import('@tabler/icons-svelte/icons/moon'),
+            hugeicons: () => import('@hugeicons/core-free-icons/Moon02Icon'),
+            phosphor: () => import('phosphor-svelte/lib/MoonIcon'),
+            remixicon: () => import('remixicon-svelte/icons/moon-line'),
         },
         {
             value: 'system',
             label: 'System',
-            lucide: 'Monitor',
-            tabler: 'IconDeviceDesktop',
-            hugeicons: 'ComputerIcon',
-            phosphor: 'DesktopIcon',
-            remixicon: 'RiComputerLine',
+            lucide: () => import('lucide-svelte/icons/monitor'),
+            tabler: () => import('@tabler/icons-svelte/icons/device-desktop'),
+            hugeicons: () => import('@hugeicons/core-free-icons/ComputerIcon'),
+            phosphor: () => import('phosphor-svelte/lib/DesktopIcon'),
+            remixicon: () => import('remixicon-svelte/icons/computer-line'),
         },
-    ];
+    ] as const;
 
-    function handleAppearanceChange(value: Appearance) {
-        updateAppearance(value);
+    function handleAppearanceChange(value: string | undefined) {
+        if (value) {
+            updateAppearance(value as Appearance);
+        }
     }
 </script>
 
-<div class="inline-flex gap-1 rounded-[var(--radius)] bg-muted p-1">
-    {#each tabs as tab (tab.value)}
-        <button
-            onclick={() => handleAppearanceChange(tab.value)}
-            class="flex items-center rounded-[max(0px,calc(var(--radius)-2px))] px-3.5 py-1.5 transition-colors {appearance.value ===
-            tab.value
-                ? 'bg-background text-foreground shadow-xs font-medium'
-                : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'}"
-        >
-            <Icon
-                lucide={tab.lucide}
-                tabler={tab.tabler}
-                hugeicons={tab.hugeicons}
-                phosphor={tab.phosphor}
-                remixicon={tab.remixicon}
-                class="-ml-1 size-4"
-            />
-            <span class="ml-1.5 text-sm">{tab.label}</span>
-        </button>
-    {/each}
-</div>
+<Tabs.Root value={appearance.value} onValueChange={handleAppearanceChange}>
+    <Tabs.List class="h-9 p-1">
+        {#each tabs as tab (tab.value)}
+            <Tabs.Trigger value={tab.value} class="gap-1.5 px-3 py-1 text-xs">
+                <Icon
+                    lucide={tab.lucide}
+                    tabler={tab.tabler}
+                    hugeicons={tab.hugeicons}
+                    phosphor={tab.phosphor}
+                    remixicon={tab.remixicon}
+                    class="size-3.5"
+                />
+                <span>{tab.label}</span>
+            </Tabs.Trigger>
+        {/each}
+    </Tabs.List>
+</Tabs.Root>

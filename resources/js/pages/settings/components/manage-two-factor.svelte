@@ -47,11 +47,16 @@
                     {#if twoFactorAuth.hasSetupData()}
                         <Button onclick={() => (showSetupModal = true)}>
                             <Icon
-                                lucide="ShieldCheckIcon"
-                                tabler="IconShieldCheck"
-                                hugeicons="ShieldTickIcon"
-                                phosphor="ShieldCheckIcon"
-                                remixicon="RiShieldCheckLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/shield-check')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/shield-check')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/Shield01Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/ShieldCheckIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/shield-check-line')}
                                 class="size-4"
                             />
                             Continue setup

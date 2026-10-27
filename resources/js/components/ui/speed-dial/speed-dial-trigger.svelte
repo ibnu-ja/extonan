@@ -41,11 +41,11 @@
 						{:else}
 							<span in:rotate={{ duration: 200 }}>
 								<Icon
-									lucide="XIcon"
-									tabler="IconX"
-									hugeicons="Cancel01Icon"
-									phosphor="XIcon"
-									remixicon="RiCloseLine"
+									lucide={() => import("lucide-svelte/icons/x")}
+									tabler={() => import("@tabler/icons-svelte/icons/x")}
+									hugeicons={() => import("@hugeicons/core-free-icons/Cancel01Icon")}
+									phosphor={() => import("phosphor-svelte/lib/XIcon")}
+									remixicon={() => import("remixicon-svelte/icons/close-line")}
 									class="size-4"
 								/>
 							</span>
@@ -56,11 +56,11 @@
 						{:else}
 							<span in:rotate={{ duration: 200 }}>
 								<Icon
-									lucide="PlusIcon"
-									tabler="IconPlus"
-									hugeicons="PlusSignIcon"
-									phosphor="PlusIcon"
-									remixicon="RiAddLine"
+									lucide={() => import("lucide-svelte/icons/plus")}
+									tabler={() => import("@tabler/icons-svelte/icons/plus")}
+									hugeicons={() => import("@hugeicons/core-free-icons/PlusSignIcon")}
+									phosphor={() => import("phosphor-svelte/lib/PlusIcon")}
+									remixicon={() => import("remixicon-svelte/icons/add-line")}
 									class="size-4"
 								/>
 							</span>

@@ -125,11 +125,13 @@
 {#if errors.length > 0}
     <Alert.Root variant="destructive">
         <Icon
-            lucide="CircleAlertIcon"
-            tabler="IconAlertCircle"
-            hugeicons="AlertCircleIcon"
-            phosphor="WarningCircleIcon"
-            remixicon="RiErrorWarningLine"
+            lucide={() => import('lucide-svelte/icons/circle-alert')}
+            tabler={() => import('@tabler/icons-svelte/icons/alert-circle')}
+            hugeicons={() =>
+                import('@hugeicons/core-free-icons/AlertCircleIcon')}
+            phosphor={() => import('phosphor-svelte/lib/WarningCircleIcon')}
+            remixicon={() =>
+                import('remixicon-svelte/icons/error-warning-line')}
             class="size-4"
         />
         <Alert.Title>Upload failed</Alert.Title>

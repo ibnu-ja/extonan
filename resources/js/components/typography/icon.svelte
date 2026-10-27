@@ -1,8 +1,9 @@
 <script lang="ts">
     import { Icon } from '@/components/icon';
+    import type { LazyIcon } from '@/components/icon';
 
     interface Props {
-        name: string;
+        icon?: LazyIcon;
         class?: string;
         size?: number | string;
         color?: string;
@@ -10,17 +11,7 @@
         [key: string]: any;
     }
 
-    let {
-        name,
-        class: className,
-        ...restProps
-    }: Props = $props();
-
-    const lucideName = $derived.by(() => {
-        const iconName = name.charAt(0).toUpperCase() + name.slice(1);
-
-        return iconName.endsWith('Icon') ? iconName : `${iconName}Icon`;
-    });
+    let { icon, class: className, ...restProps }: Props = $props();
 </script>
 
-<Icon lucide={lucideName} class={className} {...restProps} />
+<Icon lucide={icon} class={className} {...restProps} />

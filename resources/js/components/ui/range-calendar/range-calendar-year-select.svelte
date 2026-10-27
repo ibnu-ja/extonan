@@ -38,11 +38,11 @@
 			>
 				{yearItems.find((item) => item.value === value)?.label || selectedYearItem.label}
 				<Icon
-					lucide="ChevronDownIcon"
-					tabler="IconChevronDown"
-					hugeicons="ArrowDownIcon"
-					phosphor="CaretDownIcon"
-					remixicon="RiArrowDownSLine"
+					lucide={() => import("lucide-svelte/icons/chevron-down")}
+					tabler={() => import("@tabler/icons-svelte/icons/chevron-down")}
+					hugeicons={() => import("@hugeicons/core-free-icons/ArrowDown01Icon")}
+					phosphor={() => import("phosphor-svelte/lib/CaretDownIcon")}
+					remixicon={() => import("remixicon-svelte/icons/arrow-down-s-line")}
 					class={cn("size-4", className)}
 				/>
 			</span>

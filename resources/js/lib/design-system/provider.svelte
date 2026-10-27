@@ -1,104 +1,141 @@
 <script lang="ts">
-	import { onDestroy  } from "svelte";
-import type {Snippet} from "svelte";
-	import { buildRegistryTheme } from "./config.js";
-	import { syncMenuColor } from "./menu-color.js";
-	import { setDesignSystem  } from "./state.svelte.js";
-import type {DesignSystemState} from "./state.svelte.js";
+    import { onDestroy } from 'svelte';
+    import type { Snippet } from 'svelte';
+    import { themeState } from '@/lib/theme.svelte';
+    import { buildRegistryTheme } from './config.js';
+    import { syncMenuColor } from './menu-color.js';
+    import { setDesignSystem } from './state.svelte.js';
+    import type { DesignSystemState } from './state.svelte.js';
 
-	interface Props {
-		children: Snippet;
-		state?: DesignSystemState;
-	}
+    interface Props {
+        children: Snippet;
+        state?: DesignSystemState;
+    }
 
-	let { children, state }: Props = $props();
+    let { children, state }: Props = $props();
 
-	// svelte-ignore state_referenced_locally
-	const designSystem = setDesignSystem(state);
+    // svelte-ignore state_referenced_locally
+    const designSystem = setDesignSystem(state);
+    const { resolvedAppearance } = themeState();
 
-	const MANAGED_BODY_PREFIXES = ["style-", "base-color-"] as const;
+    $effect(() => {
+        if (
+            resolvedAppearance() === 'dark' &&
+            designSystem.menuColor !== 'default'
+        ) {
+            designSystem.menuColor = 'default';
+        }
+    });
 
-	function removeManagedClasses(body: HTMLElement) {
-		for (const className of Array.from(body.classList)) {
-			if (MANAGED_BODY_PREFIXES.some((prefix) => className.startsWith(prefix))) {
-				body.classList.remove(className);
-			}
-		}
+    const MANAGED_BODY_PREFIXES = ['style-', 'base-color-'] as const;
 
-		body.classList.remove("has-radius-override");
-	}
+    function removeManagedClasses(body: HTMLElement) {
+        for (const className of Array.from(body.classList)) {
+            if (
+                MANAGED_BODY_PREFIXES.some((prefix) =>
+                    className.startsWith(prefix),
+                )
+            ) {
+                body.classList.remove(className);
+            }
+        }
 
-	let stopMenuSync: (() => void) | null = null;
-	const STYLE_ELEMENT_ID = "extonan-design-system-vars";
+        body.classList.remove('has-radius-override');
+    }
 
-	$effect(() => {
-		if (typeof window === "undefined" || typeof document === "undefined") {
-return;
-}
+    let stopMenuSync: (() => void) | null = null;
+    const STYLE_ELEMENT_ID = 'extonan-design-system-vars';
 
-		const body = document.body;
-		removeManagedClasses(body);
-		body.classList.add(`style-${designSystem.style}`);
-		body.classList.add(`base-color-${designSystem.baseColor}`);
-		body.classList.toggle("has-radius-override", designSystem.radius !== null);
+    const FONT_SIZE_PX: Record<number, string> = {
+        75: '12px',
+        100: '16px',
+        125: '20px',
+        150: '24px',
+    };
 
-		// Build theme variables
-		const registryTheme = buildRegistryTheme(designSystem.toConfig());
+    $effect(() => {
+        if (typeof window === 'undefined' || typeof document === 'undefined') {
+            return;
+        }
 
-		let styleEl = document.getElementById(STYLE_ELEMENT_ID) as HTMLStyleElement | null;
+        const body = document.body;
+        removeManagedClasses(body);
+        body.classList.add(`style-${designSystem.style}`);
+        body.classList.add(`base-color-${designSystem.baseColor}`);
+        body.classList.toggle(
+            'has-radius-override',
+            designSystem.radius !== null,
+        );
 
-		if (!styleEl) {
-			styleEl = document.createElement("style");
-			styleEl.id = STYLE_ELEMENT_ID;
-			document.head.appendChild(styleEl);
-		}
+        document.documentElement.style.fontSize =
+            FONT_SIZE_PX[designSystem.fontSize] ?? '16px';
 
-		const { light, dark, theme } = registryTheme.cssVars;
-		let css = ":root {\n";
+        // Build theme variables
+        const registryTheme = buildRegistryTheme(designSystem.toConfig());
 
-		if (theme) {
-			for (const [k, v] of Object.entries(theme)) {
-				if (v) {
-css += `  --${k}: ${v};\n`;
-}
-			}
-		}
+        let styleEl = document.getElementById(
+            STYLE_ELEMENT_ID,
+        ) as HTMLStyleElement | null;
 
-		if (light) {
-			for (const [k, v] of Object.entries(light)) {
-				if (v) {
-css += `  --${k}: ${v};\n`;
-}
-			}
+        if (!styleEl) {
+            styleEl = document.createElement('style');
+            styleEl.id = STYLE_ELEMENT_ID;
+            document.head.appendChild(styleEl);
+        }
 
-			css += `  --sidebar-background: var(--sidebar);\n`;
-		}
+        const { light, dark, theme } = registryTheme.cssVars;
+        let css = ':root {\n';
 
-		css += "}\n\n.dark {\n";
+        if (theme) {
+            for (const [k, v] of Object.entries(theme)) {
+                if (v) {
+                    css += `  --${k}: ${v};\n`;
+                }
+            }
+        }
 
-		if (dark) {
-			for (const [k, v] of Object.entries(dark)) {
-				if (v) {
-css += `  --${k}: ${v};\n`;
-}
-			}
+        if (light) {
+            for (const [k, v] of Object.entries(light)) {
+                if (v) {
+                    css += `  --${k}: ${v};\n`;
+                }
+            }
 
-			css += `  --sidebar-background: var(--sidebar);\n`;
-		}
+            css += `  --sidebar-background: var(--sidebar);\n`;
+        }
 
-		css += "}\n";
+        css += '}\n\n.dark {\n';
 
-		styleEl.textContent = css;
+        if (dark) {
+            for (const [k, v] of Object.entries(dark)) {
+                if (v) {
+                    css += `  --${k}: ${v};\n`;
+                }
+            }
 
-		// Sync menu colors
-		stopMenuSync?.();
-		stopMenuSync = syncMenuColor(designSystem.menuColor);
-	});
+            css += `  --sidebar-background: var(--sidebar);\n`;
+        }
 
-	onDestroy(() => {
-		stopMenuSync?.();
-		stopMenuSync = null;
-	});
+        css += '}\n';
+
+        styleEl.textContent = css;
+
+        // Sync menu colors
+        stopMenuSync?.();
+        stopMenuSync = syncMenuColor(designSystem.menuColor);
+
+        // Auto-persist design system state to localStorage and theme_preset cookie
+        designSystem.persist();
+    });
+
+    onDestroy(() => {
+        stopMenuSync?.();
+        stopMenuSync = null;
+
+        if (typeof document !== 'undefined') {
+            document.documentElement.style.fontSize = '';
+        }
+    });
 </script>
 
 {@render children()}

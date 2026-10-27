@@ -36,11 +36,13 @@
     <InputGroup.Root class="flex-1">
         <InputGroup.Addon>
             <Icon
-                lucide="SearchIcon"
-                tabler="IconSearch"
-                hugeicons="SearchIcon"
-                phosphor="MagnifyingGlassIcon"
-                remixicon="RiSearchLine"
+                lucide={() => import('lucide-svelte/icons/search')}
+                tabler={() => import('@tabler/icons-svelte/icons/search')}
+                hugeicons={() =>
+                    import('@hugeicons/core-free-icons/Search01Icon')}
+                phosphor={() =>
+                    import('phosphor-svelte/lib/MagnifyingGlassIcon')}
+                remixicon={() => import('remixicon-svelte/icons/search-line')}
                 class="text-muted-foreground size-4"
             />
         </InputGroup.Addon>
@@ -60,11 +62,13 @@
                     onclick={() => onclear?.()}
                 >
                     <Icon
-                        lucide="XIcon"
-                        tabler="IconX"
-                        hugeicons="Cancel01Icon"
-                        phosphor="XIcon"
-                        remixicon="RiCloseLine"
+                        lucide={() => import('lucide-svelte/icons/x')}
+                        tabler={() => import('@tabler/icons-svelte/icons/x')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/Cancel01Icon')}
+                        phosphor={() => import('phosphor-svelte/lib/XIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/close-line')}
                         class="size-3"
                     />
                 </InputGroup.Button>
@@ -77,11 +81,16 @@
                 {#snippet child({ props })}
                     <Button variant="outline" size="icon-sm" {...props}>
                         <Icon
-                            lucide="ArrowUpDownIcon"
-                            tabler="IconArrowsSort"
-                            hugeicons="Sorting01Icon"
-                            phosphor="ArrowsDownUpIcon"
-                            remixicon="RiArrowUpDownLine"
+                            lucide={() =>
+                                import('lucide-svelte/icons/arrow-up-down')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/arrows-sort')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/Sorting01Icon')}
+                            phosphor={() =>
+                                import('phosphor-svelte/lib/ArrowsDownUpIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/arrow-up-down-line')}
                             class="size-4"
                         />
                     </Button>
@@ -92,7 +101,7 @@
                     <Command.List>
                         {#each sortOptions as opt (opt.key)}
                             <Command.Item
-                                class={`${sort === opt.key ? 'bg-accent hover:bg-accent/80' : ''} px-4`}
+                                class={`${sort === opt.key ? 'bg-accent text-accent-foreground font-medium hover:bg-accent/80' : ''} px-4`}
                                 onSelect={() => {
                                     onsortchange?.(opt.key);
                                     sortOpen = false;
@@ -101,12 +110,17 @@
                                 <span class="flex-1">{opt.value}</span>
                                 {#if sort === opt.key}
                                     <Icon
-                                        lucide="CheckIcon"
-                                        tabler="IconCheck"
-                                        hugeicons="Tick02Icon"
-                                        phosphor="CheckIcon"
-                                        remixicon="RiCheckLine"
-                                        class="size-3 text-muted-foreground"
+                                        lucide={() =>
+                                            import('lucide-svelte/icons/check')}
+                                        tabler={() =>
+                                            import('@tabler/icons-svelte/icons/check')}
+                                        hugeicons={() =>
+                                            import('@hugeicons/core-free-icons/Tick02Icon')}
+                                        phosphor={() =>
+                                            import('phosphor-svelte/lib/CheckIcon')}
+                                        remixicon={() =>
+                                            import('remixicon-svelte/icons/check-line')}
+                                        class="size-3 text-accent-foreground"
                                     />
                                 {/if}
                             </Command.Item>
@@ -121,11 +135,16 @@
                 {#snippet child({ props })}
                     <Button variant="outline" size="icon-sm" {...props}>
                         <Icon
-                            lucide="ArrowUpDownIcon"
-                            tabler="IconArrowsSort"
-                            hugeicons="Sorting01Icon"
-                            phosphor="ArrowsDownUpIcon"
-                            remixicon="RiArrowUpDownLine"
+                            lucide={() =>
+                                import('lucide-svelte/icons/arrow-up-down')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/arrows-sort')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/Sorting01Icon')}
+                            phosphor={() =>
+                                import('phosphor-svelte/lib/ArrowsDownUpIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/arrow-up-down-line')}
                             class="size-4"
                         />
                     </Button>
@@ -137,7 +156,7 @@
                         <Command.List>
                             {#each sortOptions as opt (opt.key)}
                                 <Command.Item
-                                    class={`${sort === opt.key ? 'bg-accent hover:bg-accent/80' : ''} px-4`}
+                                    class={`${sort === opt.key ? 'bg-accent text-accent-foreground font-medium hover:bg-accent/80' : ''} px-4`}
                                     onSelect={() => {
                                         onsortchange?.(opt.key);
                                         sortOpen = false;
@@ -146,12 +165,17 @@
                                     <span class="flex-1">{opt.value}</span>
                                     {#if sort === opt.key}
                                         <Icon
-                                            lucide="CheckIcon"
-                                            tabler="IconCheck"
-                                            hugeicons="Tick02Icon"
-                                            phosphor="CheckIcon"
-                                            remixicon="RiCheckLine"
-                                            class="size-3 text-muted-foreground"
+                                            lucide={() =>
+                                                import('lucide-svelte/icons/check')}
+                                            tabler={() =>
+                                                import('@tabler/icons-svelte/icons/check')}
+                                            hugeicons={() =>
+                                                import('@hugeicons/core-free-icons/Tick02Icon')}
+                                            phosphor={() =>
+                                                import('phosphor-svelte/lib/CheckIcon')}
+                                            remixicon={() =>
+                                                import('remixicon-svelte/icons/check-line')}
+                                            class="size-3 text-accent-foreground"
                                         />
                                     {/if}
                                 </Command.Item>

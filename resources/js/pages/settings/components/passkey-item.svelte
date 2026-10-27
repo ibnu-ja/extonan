@@ -36,11 +36,11 @@
             class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius)] bg-muted"
         >
             <Icon
-                lucide="KeyRoundIcon"
-                tabler="IconKey"
-                hugeicons="Key01Icon"
-                phosphor="KeyIcon"
-                remixicon="RiKeyLine"
+                lucide={() => import('lucide-svelte/icons/key-round')}
+                tabler={() => import('@tabler/icons-svelte/icons/key')}
+                hugeicons={() => import('@hugeicons/core-free-icons/Key01Icon')}
+                phosphor={() => import('phosphor-svelte/lib/KeyIcon')}
+                remixicon={() => import('remixicon-svelte/icons/key-line')}
                 class="size-5 text-muted-foreground"
             />
         </div>
@@ -75,11 +75,14 @@
                     {...props}
                 >
                     <Icon
-                        lucide="Trash2Icon"
-                        tabler="IconTrash"
-                        hugeicons="Delete02Icon"
-                        phosphor="TrashIcon"
-                        remixicon="RiDeleteBinLine"
+                        lucide={() => import('lucide-svelte/icons/trash-2')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/trash')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/Delete02Icon')}
+                        phosphor={() => import('phosphor-svelte/lib/TrashIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/delete-bin-line')}
                         class="size-4"
                     />
                     <span class="sr-only">Remove</span>

@@ -29,8 +29,8 @@
     >
         <Heading
             variant="small"
-            title="Appearance settings"
-            description="Customize theme modes, design styles, radii, color palettes, and icons"
+            title="Theme mode"
+            description="Select between light, dark, and system themes"
         />
         <AppearanceTabs />
     </div>

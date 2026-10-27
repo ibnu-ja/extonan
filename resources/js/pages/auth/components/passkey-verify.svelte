@@ -51,11 +51,12 @@
                 <Spinner />
             {:else}
                 <Icon
-                    lucide="KeyRoundIcon"
-                    tabler="IconKey"
-                    hugeicons="Key01Icon"
-                    phosphor="KeyIcon"
-                    remixicon="RiKeyLine"
+                    lucide={() => import('lucide-svelte/icons/key-round')}
+                    tabler={() => import('@tabler/icons-svelte/icons/key')}
+                    hugeicons={() =>
+                        import('@hugeicons/core-free-icons/Key01Icon')}
+                    phosphor={() => import('phosphor-svelte/lib/KeyIcon')}
+                    remixicon={() => import('remixicon-svelte/icons/key-line')}
                     class="size-4"
                 />
             {/if}

@@ -18,11 +18,11 @@
 </script>
 
 <Icon
-	lucide="Loader2Icon"
-	tabler="IconLoader"
-	hugeicons="Loading03Icon"
-	phosphor="SpinnerIcon"
-	remixicon="RiLoaderLine"
+	lucide={() => import("lucide-svelte/icons/loader-circle")}
+	tabler={() => import("@tabler/icons-svelte/icons/loader")}
+	hugeicons={() => import("@hugeicons/core-free-icons/Loading03Icon")}
+	phosphor={() => import("phosphor-svelte/lib/SpinnerIcon")}
+	remixicon={() => import("remixicon-svelte/icons/loader-line")}
 	{role}
 	{...name != null ? { name } : {}}
 	{...color != null ? { color } : {}}

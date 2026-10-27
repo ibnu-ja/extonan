@@ -34,7 +34,9 @@
             description="Manage your passkeys for passwordless sign-in"
         />
 
-        <div class="overflow-hidden rounded-[var(--radius)] border border-border">
+        <div
+            class="overflow-hidden rounded-[var(--radius)] border border-border"
+        >
             {#if passkeys.length > 0}
                 {#each passkeys as passkey (passkey.id)}
                     <PasskeyItem {passkey} onDelete={handleDelete} />
@@ -45,11 +47,16 @@
                         class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-[var(--radius)] bg-muted"
                     >
                         <Icon
-                            lucide="KeyRoundIcon"
-                            tabler="IconKey"
-                            hugeicons="Key01Icon"
-                            phosphor="KeyIcon"
-                            remixicon="RiKeyLine"
+                            lucide={() =>
+                                import('lucide-svelte/icons/key-round')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/key')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/Key01Icon')}
+                            phosphor={() =>
+                                import('phosphor-svelte/lib/KeyIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/key-line')}
                             class="size-7 text-muted-foreground"
                         />
                     </div>

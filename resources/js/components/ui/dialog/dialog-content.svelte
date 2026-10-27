@@ -39,11 +39,11 @@
 				{#snippet child({ props })}
 					<Button variant="ghost" class="cn-dialog-close" size="icon-sm" {...props}>
 						<Icon
-							lucide="XIcon"
-							tabler="IconX"
-							hugeicons="Cancel01Icon"
-							phosphor="XIcon"
-							remixicon="RiCloseLine"
+							lucide={() => import("lucide-svelte/icons/x")}
+							tabler={() => import("@tabler/icons-svelte/icons/x")}
+							hugeicons={() => import("@hugeicons/core-free-icons/Cancel01Icon")}
+							phosphor={() => import("phosphor-svelte/lib/XIcon")}
+							remixicon={() => import("remixicon-svelte/icons/close-line")}
 						/>
 						<span class="sr-only">Close</span>
 					</Button>

@@ -1,216 +1,223 @@
-import { BASE_THEMES, THEMES } from "./themes.js";
-import type { BaseTheme, Theme } from "./themes.js";
+import {
+    generateM3Theme,
+    M3_VARIANTS,
+    M3_SEED_PRESETS,
+    isValidHex,
+    normalizeHex,
+} from './m3-generator.js';
+import type { M3Variant, TonalRamp, M3ThemeResult } from './m3-generator.js';
+import { BASE_THEMES, THEMES } from './themes.js';
+import type { BaseTheme, Theme } from './themes.js';
 
-export { BASE_THEMES, THEMES, type BaseTheme, type Theme };
+export {
+    BASE_THEMES,
+    THEMES,
+    type BaseTheme,
+    type Theme,
+    generateM3Theme,
+    type M3Variant,
+    M3_VARIANTS,
+    M3_SEED_PRESETS,
+    type TonalRamp,
+    type M3ThemeResult,
+    isValidHex,
+    normalizeHex,
+};
 
 export const STYLES = [
-	{
-		name: "vega",
-		title: "Vega",
-		description: "The classic shadcn/ui look. Clean, neutral, and familiar.",
-	},
-	{
-		name: "nova",
-		title: "Nova",
-		description: "Reduced padding and margins for compact layouts.",
-	},
-	{
-		name: "maia",
-		title: "Maia",
-		description: "Soft and rounded, with generous spacing.",
-	},
-	{
-		name: "lyra",
-		title: "Lyra",
-		description: "Boxy and sharp. Pairs well with mono fonts.",
-	},
-	{
-		name: "mira",
-		title: "Mira",
-		description: "Compact. Made for dense interfaces.",
-	},
-	{
-		name: "luma",
-		title: "Luma",
-		description: "Rounded geometry. Soft elevation. Breathable layouts.",
-	},
-	{
-		name: "sera",
-		title: "Sera",
-		description: "Editorial and typographic.",
-	},
-	{
-		name: "rhea",
-		title: "Rhea",
-		description: "Like Luma but compact.",
-	},
+    {
+        name: 'vega',
+        title: 'Vega',
+        description:
+            'The classic shadcn/ui look. Clean, neutral, and familiar.',
+    },
+    {
+        name: 'nova',
+        title: 'Nova',
+        description: 'Reduced padding and margins for compact layouts.',
+    },
+    {
+        name: 'maia',
+        title: 'Maia',
+        description: 'Soft and rounded, with generous spacing.',
+    },
+    {
+        name: 'lyra',
+        title: 'Lyra',
+        description: 'Boxy and sharp. Pairs well with mono fonts.',
+    },
+    {
+        name: 'mira',
+        title: 'Mira',
+        description: 'Compact. Made for dense interfaces.',
+    },
+    {
+        name: 'luma',
+        title: 'Luma',
+        description: 'Rounded geometry. Soft elevation. Breathable layouts.',
+    },
+    {
+        name: 'sera',
+        title: 'Sera',
+        description: 'Editorial and typographic.',
+    },
+    {
+        name: 'rhea',
+        title: 'Rhea',
+        description: 'Like Luma but compact.',
+    },
 ] as const;
 
 export type Style = (typeof STYLES)[number];
-export type StyleName = Style["name"];
-export type ThemeName = Theme["name"];
-export type BaseColorName = BaseTheme["name"];
-
-export const MENU_ACCENTS = [
-	{ value: "subtle", label: "Subtle" },
-	{ value: "bold", label: "Bold" },
-] as const;
-
-export type MenuAccent = (typeof MENU_ACCENTS)[number];
-export type MenuAccentValue = MenuAccent["value"];
+export type StyleName = Style['name'];
+export type ThemeName = Theme['name'];
+export type BaseColorName = BaseTheme['name'];
 
 export const MENU_COLORS = [
-	{ value: "default", label: "Default" },
-	{ value: "inverted", label: "Inverted" },
-	{ value: "default-translucent", label: "Default Translucent" },
-	{ value: "inverted-translucent", label: "Inverted Translucent" },
+    { value: 'default', label: 'Default' },
+    { value: 'inverted', label: 'Inverted' },
 ] as const;
 
 export type MenuColor = (typeof MENU_COLORS)[number];
-export type MenuColorValue = MenuColor["value"];
+export type MenuColorValue = MenuColor['value'];
+
+export const FONT_SIZES = [
+    { value: 75, label: '75%', size: '12px' },
+    { value: 100, label: '100%', size: '16px' },
+    { value: 125, label: '125%', size: '20px' },
+    { value: 150, label: '150%', size: '24px' },
+] as const;
+
+export type FontSize = (typeof FONT_SIZES)[number];
+export type FontSizeValue = FontSize['value'];
 
 export const RADII = [
-	{ name: "default", label: "Default", value: "0.5rem" },
-	{ name: "none", label: "None", value: "0rem" },
-	{ name: "small", label: "Small", value: "0.45rem" },
-	{ name: "medium", label: "Medium", value: "0.625rem" },
-	{ name: "large", label: "Large", value: "0.875rem" },
+    { name: 'default', label: 'Default', value: '0.5rem' },
+    { name: 'none', label: 'None', value: '0rem' },
+    { name: 'small', label: 'Small', value: '0.45rem' },
+    { name: 'medium', label: 'Medium', value: '0.625rem' },
+    { name: 'large', label: 'Large', value: '0.875rem' },
 ] as const;
 
 export type Radius = (typeof RADII)[number];
-export type RadiusOverrideName = Radius["name"];
+export type RadiusOverrideName = Radius['name'];
 export type RadiusValue = RadiusOverrideName | null;
 
 export const STYLE_PRESET_RADII: Record<StyleName, string> = {
-	nova: "0.5rem",
-	vega: "0.5rem",
-	maia: "0.75rem",
-	lyra: "0rem",
-	mira: "0.375rem",
-	luma: "0.75rem",
-	sera: "0rem",
-	rhea: "0.875rem",
+    nova: '0.5rem',
+    vega: '0.5rem',
+    maia: '0.75rem',
+    lyra: '0rem',
+    mira: '0.375rem',
+    luma: '0.75rem',
+    sera: '0rem',
+    rhea: '0.875rem',
 };
 
 export const ICON_LIBRARIES = [
-	{ name: "lucide", label: "Lucide" },
-	{ name: "hugeicons", label: "Hugeicons" },
-	{ name: "tabler", label: "Tabler" },
-	{ name: "phosphor", label: "Phosphor" },
-	{ name: "remixicon", label: "Remixicon" },
+    { name: 'lucide', label: 'Lucide' },
+    { name: 'hugeicons', label: 'Hugeicons' },
+    { name: 'tabler', label: 'Tabler' },
+    { name: 'phosphor', label: 'Phosphor' },
+    { name: 'remixicon', label: 'Remixicon' },
 ] as const;
 
-export type IconLibraryName = (typeof ICON_LIBRARIES)[number]["name"];
+export type IconLibraryName = (typeof ICON_LIBRARIES)[number]['name'];
 
 export interface DesignSystemConfig {
-	style: StyleName;
-	baseColor: string;
-	theme: string;
-	chartColor: string;
-	iconLibrary: IconLibraryName;
-	font: string;
-	fontHeading?: string;
-	menuAccent: MenuAccentValue;
-	menuColor: MenuColorValue;
-	radius: RadiusValue;
+    style: StyleName;
+    sourceColor: string;
+    variant: M3Variant;
+    contrast: number;
+    iconLibrary: IconLibraryName;
+    font: string;
+    fontHeading?: string;
+    fontSize: FontSizeValue;
+    menuColor: MenuColorValue;
+    radius: RadiusValue;
+    baseColor?: string;
+    theme?: string;
+    chartColor?: string;
 }
 
 export const DEFAULT_CONFIG: DesignSystemConfig = {
-	style: "nova",
-	baseColor: "neutral",
-	theme: "neutral",
-	chartColor: "neutral",
-	iconLibrary: "lucide",
-	font: "inter",
-	fontHeading: "inherit",
-	menuAccent: "subtle",
-	menuColor: "default",
-	radius: null,
+    style: 'nova',
+    sourceColor: '#2563eb',
+    variant: 'tonalSpot',
+    contrast: 0.0,
+    iconLibrary: 'lucide',
+    font: 'inter',
+    fontHeading: 'inherit',
+    fontSize: 100,
+    menuColor: 'default',
+    radius: null,
+    baseColor: 'neutral',
+    theme: 'neutral',
+    chartColor: 'neutral',
 };
 
-export function getBaseColor(name: string) {
-	return BASE_THEMES.find((color) => color.name === name);
+export function getBaseColor(name?: string) {
+    return BASE_THEMES.find((color) => color.name === name);
 }
 
-export function getTheme(name: string) {
-	return THEMES.find((theme) => theme.name === name);
+export function getTheme(name?: string) {
+    return THEMES.find((theme) => theme.name === name);
 }
 
 export function getStyle(name: StyleName) {
-	return STYLES.find((style) => style.name === name);
+    return STYLES.find((style) => style.name === name);
 }
 
 export function buildRegistryTheme(config: DesignSystemConfig) {
-	const baseColor = getBaseColor(config.baseColor) ?? BASE_THEMES[0];
-	const theme = getTheme(config.theme) ?? THEMES[0];
+    const sourceColor = config.sourceColor ?? '#2563eb';
+    const variant = config.variant ?? 'tonalSpot';
+    const contrast = config.contrast ?? 0.0;
 
-	const lightVars: Record<string, string> = {
-		...(baseColor.cssVars?.light as Record<string, string>),
-		...(theme.cssVars?.light as Record<string, string>),
-	};
-	const darkVars: Record<string, string> = {
-		...(baseColor.cssVars?.dark as Record<string, string>),
-		...(theme.cssVars?.dark as Record<string, string>),
-	};
-	const themeVars: Record<string, string> = {};
+    // Pure Material 3 Dynamic Scheme Generation
+    const m3 = generateM3Theme({
+        sourceColor,
+        variant,
+        contrast,
+    });
 
-	// Apply chart color override
-	const chartTheme = getTheme(config.chartColor);
+    const lightVars: Record<string, string> = { ...m3.light };
+    const darkVars: Record<string, string> = { ...m3.dark };
+    const themeVars: Record<string, string> = {};
 
-	if (chartTheme) {
-		const chartLight = chartTheme.cssVars?.light as Record<string, string>;
-		const chartDark = chartTheme.cssVars?.dark as Record<string, string>;
+    // Canonical M3 Navigation Active Tokens (Tonal Container)
+    lightVars['sidebar-accent-active'] = lightVars['primary-container'];
+    lightVars['sidebar-accent-active-foreground'] =
+        lightVars['on-primary-container'];
+    darkVars['sidebar-accent-active'] = darkVars['primary-container'];
+    darkVars['sidebar-accent-active-foreground'] =
+        darkVars['on-primary-container'];
 
-		for (let i = 1; i <= 5; i++) {
-			const key = `chart-${i}`;
+    // Apply radius: Dual Track (Track 1 = Preset / null, Track 2 = Override)
+    const presetRadius = STYLE_PRESET_RADII[config.style] ?? '0.5rem';
+    lightVars['radius-preset'] = presetRadius;
+    darkVars['radius-preset'] = presetRadius;
 
-			if (chartLight?.[key]) {
-lightVars[key] = chartLight[key];
-}
+    if (config.radius === null || config.radius === undefined) {
+        lightVars.radius = presetRadius;
+        darkVars.radius = presetRadius;
+        delete lightVars['radius-override'];
+        delete darkVars['radius-override'];
+    } else {
+        const radius = RADII.find((r) => r.name === config.radius);
+        const radiusValue = radius?.value ?? '0.5rem';
+        lightVars.radius = radiusValue;
+        darkVars.radius = radiusValue;
+        lightVars['radius-override'] = radiusValue;
+        darkVars['radius-override'] = radiusValue;
+    }
 
-			if (chartDark?.[key]) {
-darkVars[key] = chartDark[key];
-}
-		}
-	}
-
-	// Apply menu accent
-	if (config.menuAccent === "bold") {
-		lightVars.accent = lightVars.primary;
-		lightVars["accent-foreground"] = lightVars["primary-foreground"];
-		darkVars.accent = darkVars.primary;
-		darkVars["accent-foreground"] = darkVars["primary-foreground"];
-		lightVars["sidebar-accent"] = lightVars.primary;
-		lightVars["sidebar-accent-foreground"] = lightVars["primary-foreground"];
-		darkVars["sidebar-accent"] = darkVars.primary;
-		darkVars["sidebar-accent-foreground"] = darkVars["primary-foreground"];
-	}
-
-	// Apply radius: Dual Track (Track 1 = Preset / null, Track 2 = Override)
-	const presetRadius = STYLE_PRESET_RADII[config.style] ?? "0.5rem";
-	lightVars["radius-preset"] = presetRadius;
-	darkVars["radius-preset"] = presetRadius;
-
-	if (config.radius === null || config.radius === undefined) {
-		lightVars.radius = presetRadius;
-		darkVars.radius = presetRadius;
-		delete lightVars["radius-override"];
-		delete darkVars["radius-override"];
-	} else {
-		const radius = RADII.find((r) => r.name === config.radius);
-		const radiusValue = radius?.value ?? "0.5rem";
-		lightVars.radius = radiusValue;
-		darkVars.radius = radiusValue;
-		lightVars["radius-override"] = radiusValue;
-		darkVars["radius-override"] = radiusValue;
-	}
-
-	return {
-		name: `${config.baseColor}-${config.theme}`,
-		cssVars: {
-			light: lightVars,
-			dark: darkVars,
-			theme: themeVars,
-		},
-	};
+    return {
+        name: `m3-${variant}-${sourceColor}`,
+        cssVars: {
+            light: lightVars,
+            dark: darkVars,
+            theme: themeVars,
+        },
+        ramps: m3.ramps,
+    };
 }

@@ -21,11 +21,11 @@
         {@render children()}
     {:else}
         <Icon
-            lucide="ImageIcon"
-            tabler="IconPhoto"
-            hugeicons="Image01Icon"
-            phosphor="ImageIcon"
-            remixicon="RiImageLine"
+            lucide={() => import('lucide-svelte/icons/image')}
+            tabler={() => import('@tabler/icons-svelte/icons/photo')}
+            hugeicons={() => import('@hugeicons/core-free-icons/Image01Icon')}
+            phosphor={() => import('phosphor-svelte/lib/ImageIcon')}
+            remixicon={() => import('remixicon-svelte/icons/image-line')}
             class="mr-1 size-4"
         />
         {hasValue ? 'Edit' : 'Add'} Media

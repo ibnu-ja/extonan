@@ -23,11 +23,11 @@
 		{@render children?.()}
 	{:else}
 		<Icon
-			lucide="MinusIcon"
-			tabler="IconMinus"
-			hugeicons="MinusSignIcon"
-			phosphor="MinusIcon"
-			remixicon="RiSubtractLine"
+			lucide={() => import("lucide-svelte/icons/minus")}
+			tabler={() => import("@tabler/icons-svelte/icons/minus")}
+			hugeicons={() => import("@hugeicons/core-free-icons/MinusSignIcon")}
+			phosphor={() => import("phosphor-svelte/lib/MinusIcon")}
+			remixicon={() => import("remixicon-svelte/icons/subtract-line")}
 		/>
 	{/if}
 </div>

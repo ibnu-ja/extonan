@@ -2,15 +2,6 @@
     import { Link, page } from '@inertiajs/svelte';
     import type { ComponentProps } from 'svelte';
     import AppLogo from '@/components/app-logo.svelte';
-    import {
-        NavClapperboard,
-        NavDisc3,
-        NavFilm,
-        NavHouse,
-        NavLayoutGrid,
-        NavLogIn,
-        NavUserPlus,
-    } from '@/components/icon/nav-icons';
     import * as Sidebar from '@/components/ui/sidebar/index.js';
     import NavFooter from '@/layouts/components/nav-footer.svelte';
     import NavMain from '@/layouts/components/nav-main.svelte';
@@ -24,6 +15,7 @@
     } from '@/routes';
     import { index as album } from '@/routes/album';
     import { index as anime } from '@/routes/anime';
+    import { edit as editAppearance } from '@/routes/appearance';
     import { index as mv } from '@/routes/mv';
     import type { NavItem } from '@/types';
 
@@ -37,23 +29,119 @@
     const canRegister = $derived(page.props.canRegister as boolean | undefined);
 
     const mainNavItems = $derived(<NavItem[]>[
-        { title: 'Home', href: home(), icon: NavHouse },
-        { title: 'Anime', href: anime(), icon: NavFilm },
-        { title: 'Album', href: album(), icon: NavDisc3 },
-        { title: 'MV', href: mv(), icon: NavClapperboard },
-        { title: 'Dashboard', href: dashboard(), icon: NavLayoutGrid },
+        {
+            title: 'Home',
+            href: home(),
+            icon: {
+                lucide: () => import('lucide-svelte/icons/house'),
+                tabler: () => import('@tabler/icons-svelte/icons/home'),
+                hugeicons: () =>
+                    import('@hugeicons/core-free-icons/Home01Icon'),
+                phosphor: () => import('phosphor-svelte/lib/HouseIcon'),
+                remixicon: () => import('remixicon-svelte/icons/home-line'),
+            },
+        },
+        {
+            title: 'Anime',
+            href: anime(),
+            icon: {
+                lucide: () => import('lucide-svelte/icons/film'),
+                tabler: () => import('@tabler/icons-svelte/icons/movie'),
+                hugeicons: () =>
+                    import('@hugeicons/core-free-icons/Film01Icon'),
+                phosphor: () => import('phosphor-svelte/lib/FilmSlateIcon'),
+                remixicon: () => import('remixicon-svelte/icons/film-line'),
+            },
+        },
+        {
+            title: 'Album',
+            href: album(),
+            icon: {
+                lucide: () => import('lucide-svelte/icons/disc-3'),
+                tabler: () => import('@tabler/icons-svelte/icons/disc'),
+                hugeicons: () =>
+                    import('@hugeicons/core-free-icons/DiscTwoIcon'),
+                phosphor: () => import('phosphor-svelte/lib/DiscIcon'),
+                remixicon: () => import('remixicon-svelte/icons/disc-line'),
+            },
+        },
+        {
+            title: 'MV',
+            href: mv(),
+            icon: {
+                lucide: () => import('lucide-svelte/icons/clapperboard'),
+                tabler: () => import('@tabler/icons-svelte/icons/movie'),
+                hugeicons: () =>
+                    import('@hugeicons/core-free-icons/ClapperboardIcon'),
+                phosphor: () => import('phosphor-svelte/lib/FilmReelIcon'),
+                remixicon: () => import('remixicon-svelte/icons/movie-line'),
+            },
+        },
+        {
+            title: 'Dashboard',
+            href: dashboard(),
+            icon: {
+                lucide: () => import('lucide-svelte/icons/layout-grid'),
+                tabler: () => import('@tabler/icons-svelte/icons/layout-grid'),
+                hugeicons: () =>
+                    import('@hugeicons/core-free-icons/DashboardSquare01Icon'),
+                phosphor: () => import('phosphor-svelte/lib/SquaresFourIcon'),
+                remixicon: () =>
+                    import('remixicon-svelte/icons/dashboard-line'),
+            },
+        },
     ]);
 
     const footerNavItems = $derived(<NavItem[]>[
         ...(!isLoggedIn
             ? [
-                  { title: 'Log in', href: login(), icon: NavLogIn },
+                  {
+                      title: 'Appearance',
+                      href: editAppearance(),
+                      icon: {
+                          lucide: () => import('lucide-svelte/icons/palette'),
+                          tabler: () =>
+                              import('@tabler/icons-svelte/icons/palette'),
+                          hugeicons: () =>
+                              import('@hugeicons/core-free-icons/PaintBoardIcon'),
+                          phosphor: () =>
+                              import('phosphor-svelte/lib/PaletteIcon'),
+                          remixicon: () =>
+                              import('remixicon-svelte/icons/palette-line'),
+                      },
+                  },
+                  {
+                      title: 'Log in',
+                      href: login(),
+                      icon: {
+                          lucide: () => import('lucide-svelte/icons/log-in'),
+                          tabler: () =>
+                              import('@tabler/icons-svelte/icons/login'),
+                          hugeicons: () =>
+                              import('@hugeicons/core-free-icons/Login01Icon'),
+                          phosphor: () =>
+                              import('phosphor-svelte/lib/SignInIcon'),
+                          remixicon: () =>
+                              import('remixicon-svelte/icons/login-box-line'),
+                      },
+                  },
                   ...(canRegister
                       ? [
                             {
                                 title: 'Register',
                                 href: registerRoute(),
-                                icon: NavUserPlus,
+                                icon: {
+                                    lucide: () =>
+                                        import('lucide-svelte/icons/user-plus'),
+                                    tabler: () =>
+                                        import('@tabler/icons-svelte/icons/user-plus'),
+                                    hugeicons: () =>
+                                        import('@hugeicons/core-free-icons/UserAdd01Icon'),
+                                    phosphor: () =>
+                                        import('phosphor-svelte/lib/UserPlusIcon'),
+                                    remixicon: () =>
+                                        import('remixicon-svelte/icons/user-add-line'),
+                                },
                             },
                         ]
                       : []),

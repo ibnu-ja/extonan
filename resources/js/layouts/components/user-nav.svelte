@@ -48,11 +48,16 @@
                             {#snippet child({ props })}
                                 <Link {...props} href={toUrl(dashboard())}>
                                     <Icon
-                                        lucide="LayoutGridIcon"
-                                        tabler="IconLayoutGrid"
-                                        hugeicons="DashboardSquare01Icon"
-                                        phosphor="SquaresFourIcon"
-                                        remixicon="RiDashboardLine"
+                                        lucide={() =>
+                                            import('lucide-svelte/icons/layout-grid')}
+                                        tabler={() =>
+                                            import('@tabler/icons-svelte/icons/layout-grid')}
+                                        hugeicons={() =>
+                                            import('@hugeicons/core-free-icons/DashboardSquare01Icon')}
+                                        phosphor={() =>
+                                            import('phosphor-svelte/lib/SquaresFourIcon')}
+                                        remixicon={() =>
+                                            import('remixicon-svelte/icons/dashboard-line')}
                                         class="mr-2 size-4"
                                     />
                                     Dashboard
@@ -74,11 +79,16 @@
                         {...props}
                     >
                         <Icon
-                            lucide="CircleUserRoundIcon"
-                            tabler="IconUserCircle"
-                            hugeicons="UserCircleIcon"
-                            phosphor="UserCircleIcon"
-                            remixicon="RiUserSharedLine"
+                            lucide={() =>
+                                import('lucide-svelte/icons/circle-user-round')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/user-circle')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/UserCircleIcon')}
+                            phosphor={() =>
+                                import('phosphor-svelte/lib/UserCircleIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/user-shared-line')}
                             class="size-5 text-muted-foreground"
                         />
                     </Button>
@@ -105,11 +115,13 @@
             class="inline-flex size-9 items-center justify-center rounded-full hover:bg-accent"
         >
             <Icon
-                lucide="CircleUserRoundIcon"
-                tabler="IconUserCircle"
-                hugeicons="UserCircleIcon"
-                phosphor="UserCircleIcon"
-                remixicon="RiUserSharedLine"
+                lucide={() => import('lucide-svelte/icons/circle-user-round')}
+                tabler={() => import('@tabler/icons-svelte/icons/user-circle')}
+                hugeicons={() =>
+                    import('@hugeicons/core-free-icons/UserCircleIcon')}
+                phosphor={() => import('phosphor-svelte/lib/UserCircleIcon')}
+                remixicon={() =>
+                    import('remixicon-svelte/icons/user-shared-line')}
                 class="size-5 text-muted-foreground"
             />
         </Link>

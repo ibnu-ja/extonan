@@ -199,14 +199,23 @@
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                         {#snippet child({ props: triggerProps })}
-                            <InputGroup.Button variant="default" {...triggerProps}>
-                                {languages.find((l) => l.value === currentLang)?.label ?? 'Language'}
+                            <InputGroup.Button
+                                variant="default"
+                                {...triggerProps}
+                            >
+                                {languages.find((l) => l.value === currentLang)
+                                    ?.label ?? 'Language'}
                                 <Icon
-                                    lucide="ChevronDownIcon"
-                                    tabler="IconChevronDown"
-                                    hugeicons="ArrowDown01Icon"
-                                    phosphor="CaretDownIcon"
-                                    remixicon="RiArrowDownSLine"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/chevron-down')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/chevron-down')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/ArrowDown01Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/CaretDownIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/arrow-down-s-line')}
                                     class="ml-1 size-4 opacity-50"
                                 />
                             </InputGroup.Button>
@@ -214,15 +223,22 @@
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
                         {#each languages as lang (lang.value)}
-                            <DropdownMenu.Item onclick={() => (currentLang = lang.value)}>
+                            <DropdownMenu.Item
+                                onclick={() => (currentLang = lang.value)}
+                            >
                                 <div class="flex w-full items-center gap-2">
                                     {#if currentLang === lang.value}
                                         <Icon
-                                            lucide="CheckIcon"
-                                            tabler="IconCheck"
-                                            hugeicons="Tick02Icon"
-                                            phosphor="CheckIcon"
-                                            remixicon="RiCheckLine"
+                                            lucide={() =>
+                                                import('lucide-svelte/icons/check')}
+                                            tabler={() =>
+                                                import('@tabler/icons-svelte/icons/check')}
+                                            hugeicons={() =>
+                                                import('@hugeicons/core-free-icons/Tick02Icon')}
+                                            phosphor={() =>
+                                                import('phosphor-svelte/lib/CheckIcon')}
+                                            remixicon={() =>
+                                                import('remixicon-svelte/icons/check-line')}
                                             class="size-4"
                                         />
                                     {/if}
@@ -274,14 +290,23 @@
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                         {#snippet child({ props: triggerProps })}
-                            <InputGroup.Button variant="default" {...triggerProps}>
-                                {languages.find((l) => l.value === currentLang)?.label ?? 'Language'}
+                            <InputGroup.Button
+                                variant="default"
+                                {...triggerProps}
+                            >
+                                {languages.find((l) => l.value === currentLang)
+                                    ?.label ?? 'Language'}
                                 <Icon
-                                    lucide="ChevronDownIcon"
-                                    tabler="IconChevronDown"
-                                    hugeicons="ArrowDown01Icon"
-                                    phosphor="CaretDownIcon"
-                                    remixicon="RiArrowDownSLine"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/chevron-down')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/chevron-down')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/ArrowDown01Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/CaretDownIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/arrow-down-s-line')}
                                     class="ml-1 size-4 opacity-50"
                                 />
                             </InputGroup.Button>
@@ -289,15 +314,22 @@
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
                         {#each languages as lang (lang.value)}
-                            <DropdownMenu.Item onclick={() => (currentLang = lang.value)}>
+                            <DropdownMenu.Item
+                                onclick={() => (currentLang = lang.value)}
+                            >
                                 <div class="flex w-full items-center gap-2">
                                     {#if currentLang === lang.value}
                                         <Icon
-                                            lucide="CheckIcon"
-                                            tabler="IconCheck"
-                                            hugeicons="Tick02Icon"
-                                            phosphor="CheckIcon"
-                                            remixicon="RiCheckLine"
+                                            lucide={() =>
+                                                import('lucide-svelte/icons/check')}
+                                            tabler={() =>
+                                                import('@tabler/icons-svelte/icons/check')}
+                                            hugeicons={() =>
+                                                import('@hugeicons/core-free-icons/Tick02Icon')}
+                                            phosphor={() =>
+                                                import('phosphor-svelte/lib/CheckIcon')}
+                                            remixicon={() =>
+                                                import('remixicon-svelte/icons/check-line')}
                                             class="size-4"
                                         />
                                     {/if}
@@ -321,7 +353,10 @@
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                         {#snippet child({ props: triggerProps })}
-                            <InputGroup.Button variant="default" {...triggerProps}>
+                            <InputGroup.Button
+                                variant="default"
+                                {...triggerProps}
+                            >
                                 {useMalId ? 'MAL' : 'AniList'}
                             </InputGroup.Button>
                         {/snippet}
@@ -331,11 +366,16 @@
                             <div class="flex w-full items-center gap-2">
                                 {#if !useMalId}
                                     <Icon
-                                        lucide="CheckIcon"
-                                        tabler="IconCheck"
-                                        hugeicons="Tick02Icon"
-                                        phosphor="CheckIcon"
-                                        remixicon="RiCheckLine"
+                                        lucide={() =>
+                                            import('lucide-svelte/icons/check')}
+                                        tabler={() =>
+                                            import('@tabler/icons-svelte/icons/check')}
+                                        hugeicons={() =>
+                                            import('@hugeicons/core-free-icons/Tick02Icon')}
+                                        phosphor={() =>
+                                            import('phosphor-svelte/lib/CheckIcon')}
+                                        remixicon={() =>
+                                            import('remixicon-svelte/icons/check-line')}
                                         class="size-4"
                                     />
                                 {/if}
@@ -346,11 +386,16 @@
                             <div class="flex w-full items-center gap-2">
                                 {#if useMalId}
                                     <Icon
-                                        lucide="CheckIcon"
-                                        tabler="IconCheck"
-                                        hugeicons="Tick02Icon"
-                                        phosphor="CheckIcon"
-                                        remixicon="RiCheckLine"
+                                        lucide={() =>
+                                            import('lucide-svelte/icons/check')}
+                                        tabler={() =>
+                                            import('@tabler/icons-svelte/icons/check')}
+                                        hugeicons={() =>
+                                            import('@hugeicons/core-free-icons/Tick02Icon')}
+                                        phosphor={() =>
+                                            import('phosphor-svelte/lib/CheckIcon')}
+                                        remixicon={() =>
+                                            import('remixicon-svelte/icons/check-line')}
                                         class="size-4"
                                     />
                                 {/if}
@@ -382,11 +427,14 @@
                     aria-label="Autofill"
                 >
                     <Icon
-                        lucide="SendIcon"
-                        tabler="IconSend"
-                        hugeicons="SentIcon"
-                        phosphor="PaperPlaneTiltIcon"
-                        remixicon="RiSendPlaneLine"
+                        lucide={() => import('lucide-svelte/icons/send')}
+                        tabler={() => import('@tabler/icons-svelte/icons/send')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/SentIcon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/PaperPlaneTiltIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/send-plane-line')}
                         class="size-4"
                     />
                 </InputGroup.Button>
@@ -398,11 +446,14 @@
                         aria-label="Clear"
                     >
                         <Icon
-                            lucide="XIcon"
-                            tabler="IconX"
-                            hugeicons="Cancel01Icon"
-                            phosphor="XIcon"
-                            remixicon="RiCloseLine"
+                            lucide={() => import('lucide-svelte/icons/x')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/x')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/Cancel01Icon')}
+                            phosphor={() => import('phosphor-svelte/lib/XIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/close-line')}
                             class="size-4"
                         />
                     </InputGroup.Button>
@@ -435,7 +486,9 @@
                 </Badge>
             {/if}
             {#if form.metadata.episodes}
-                <Badge variant="secondary">{form.metadata.episodes} episodes</Badge>
+                <Badge variant="secondary"
+                    >{form.metadata.episodes} episodes</Badge
+                >
             {/if}
             {#if form.metadata.studios?.edges?.length}
                 {#each form.metadata.studios.edges.slice(0, 3) as edge (edge.node?.id)}
@@ -474,16 +527,24 @@
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                         {#snippet child({ props: triggerProps })}
-                            <InputGroup.Button variant="default" {...triggerProps}>
+                            <InputGroup.Button
+                                variant="default"
+                                {...triggerProps}
+                            >
                                 {form.metadata!.season
                                     ? capitalize(form.metadata!.season)
                                     : 'Season'}
                                 <Icon
-                                    lucide="ChevronDownIcon"
-                                    tabler="IconChevronDown"
-                                    hugeicons="ArrowDown01Icon"
-                                    phosphor="CaretDownIcon"
-                                    remixicon="RiArrowDownSLine"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/chevron-down')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/chevron-down')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/ArrowDown01Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/CaretDownIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/arrow-down-s-line')}
                                     class="ml-1 size-4 opacity-50"
                                 />
                             </InputGroup.Button>
@@ -491,15 +552,22 @@
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
                         {#each seasons as s (s)}
-                            <DropdownMenu.Item onclick={() => (form.metadata!.season = s)}>
+                            <DropdownMenu.Item
+                                onclick={() => (form.metadata!.season = s)}
+                            >
                                 <div class="flex w-full items-center gap-2">
                                     {#if form.metadata!.season === s}
                                         <Icon
-                                            lucide="CheckIcon"
-                                            tabler="IconCheck"
-                                            hugeicons="Tick02Icon"
-                                            phosphor="CheckIcon"
-                                            remixicon="RiCheckLine"
+                                            lucide={() =>
+                                                import('lucide-svelte/icons/check')}
+                                            tabler={() =>
+                                                import('@tabler/icons-svelte/icons/check')}
+                                            hugeicons={() =>
+                                                import('@hugeicons/core-free-icons/Tick02Icon')}
+                                            phosphor={() =>
+                                                import('phosphor-svelte/lib/CheckIcon')}
+                                            remixicon={() =>
+                                                import('remixicon-svelte/icons/check-line')}
                                             class="size-4"
                                         />
                                     {/if}
@@ -551,7 +619,9 @@
                 {/if}
             </div>
 
-            <div class="space-y-6 md:col-span-4 md:sticky md:top-4 md:self-start">
+            <div
+                class="space-y-6 md:col-span-4 md:sticky md:top-4 md:self-start"
+            >
                 {@render card('Autofill', metadataContent)}
                 {@render card('Classification', classificationContent)}
                 {@render card('Publishing', publishingContent)}
@@ -566,11 +636,16 @@
                             disabled={form.processing}
                         >
                             <Icon
-                                lucide="Trash2Icon"
-                                tabler="IconTrash"
-                                hugeicons="Delete02Icon"
-                                phosphor="TrashIcon"
-                                remixicon="RiDeleteBinLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/trash-2')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/trash')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/Delete02Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/TrashIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/delete-bin-line')}
                                 class="size-4"
                             />
                         </Button>

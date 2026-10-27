@@ -1,45 +1,112 @@
 <script lang="ts">
-	import type { Snippet } from "svelte";
-	import { getDesignSystem } from "@/lib/design-system/index.js";
-	import HugeiconsIcon from "./hugeicons-icon.svelte";
-	import LucideIcon from "./lucide-icon.svelte";
+    import { HugeiconsIcon } from '@hugeicons/svelte';
+    import type { Snippet } from 'svelte';
+    import { getDesignSystem } from '@/lib/design-system/index.js';
+    import { cn } from '@/lib/utils.js';
 
-	interface Props {
-		lucide?: string;
-		tabler?: string;
-		hugeicons?: string;
-		phosphor?: string;
-		remixicon?: string;
-		class?: string;
-		placeholder?: Snippet;
-		[key: string]: any;
-	}
+    export type LazyIcon = () => Promise<any>;
 
-	let {
-		lucide,
-		tabler: _tabler,
-		hugeicons,
-		phosphor: _phosphor,
-		remixicon: _remixicon,
-		class: className,
-		placeholder,
-		...restProps
-	}: Props = $props();
+    interface Props {
+        lucide?: LazyIcon;
+        tabler?: LazyIcon;
+        hugeicons?: LazyIcon;
+        phosphor?: LazyIcon;
+        remixicon?: LazyIcon;
+        class?: string;
+        placeholder?: Snippet;
+        [key: string]: any;
+    }
 
-	const designSystem = getDesignSystem();
-	const activeLibrary = $derived(designSystem?.iconLibrary ?? "lucide");
+    let {
+        lucide,
+        tabler,
+        hugeicons,
+        phosphor,
+        remixicon,
+        class: className,
+        placeholder,
+        ...restProps
+    }: Props = $props();
 
-	const shouldUseHugeicons = $derived(
-		activeLibrary === "hugeicons" && Boolean(hugeicons)
-	);
+    const designSystem = getDesignSystem();
+    const activeLibrary = $derived(designSystem?.iconLibrary ?? 'lucide');
+
+    const activeLoader = $derived(
+        activeLibrary === 'tabler' && tabler
+            ? tabler
+            : activeLibrary === 'hugeicons' && hugeicons
+              ? hugeicons
+              : activeLibrary === 'phosphor' && phosphor
+                ? phosphor
+                : activeLibrary === 'remixicon' && remixicon
+                  ? remixicon
+                  : (lucide ?? tabler ?? hugeicons ?? phosphor ?? remixicon),
+    );
+
+    let LoadedComponent = $state<any>(null);
+    let isHugeiconsObject = $state(false);
+
+    $effect(() => {
+        const loader = activeLoader;
+
+        if (!loader || typeof loader !== 'function') {
+            LoadedComponent = null;
+            isHugeiconsObject = false;
+
+            return;
+        }
+
+        loader()
+            .then((mod) => {
+                const res = mod?.default ?? mod;
+
+                if (
+                    Array.isArray(res) ||
+                    (res &&
+                        typeof res === 'object' &&
+                        (res.svg || res.name) &&
+                        !res.$$render)
+                ) {
+                    LoadedComponent = res;
+                    isHugeiconsObject = true;
+                } else if (typeof res === 'function') {
+                    LoadedComponent = res;
+                    isHugeiconsObject = false;
+                } else {
+                    LoadedComponent = null;
+                    isHugeiconsObject = false;
+                }
+            })
+            .catch(() => {
+                LoadedComponent = null;
+                isHugeiconsObject = false;
+            });
+    });
 </script>
 
-{#if shouldUseHugeicons && hugeicons}
-	<HugeiconsIcon name={hugeicons} class={className} {placeholder} {...restProps} />
-{:else if lucide}
-	<LucideIcon name={lucide} class={className} {placeholder} {...restProps} />
-{:else if hugeicons}
-	<HugeiconsIcon name={hugeicons} class={className} {placeholder} {...restProps} />
+{#if LoadedComponent}
+    {#if isHugeiconsObject}
+        <HugeiconsIcon
+            icon={LoadedComponent}
+            class={cn('size-4', className)}
+            {...restProps}
+        />
+    {:else if typeof LoadedComponent === 'function'}
+        {@const Comp = LoadedComponent}
+        <Comp class={cn('size-4', className)} {...restProps} />
+    {/if}
 {:else if placeholder}
-	{@render placeholder()}
+    {@render placeholder()}
+{:else}
+    <svg
+        class={cn('size-4', className)}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        {...restProps}
+    ></svg>
 {/if}

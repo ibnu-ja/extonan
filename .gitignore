@@ -39,3 +39,4 @@ _ide_helper.php
 .agents
 AGENTS.md
 .ai
+sonar-project.properties

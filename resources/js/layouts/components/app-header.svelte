@@ -31,11 +31,13 @@
             title: 'Dashboard',
             href: dashboard(),
             icon: {
-                lucide: 'LayoutGridIcon',
-                tabler: 'IconLayoutGrid',
-                hugeicons: 'DashboardSquare01Icon',
-                phosphor: 'SquaresFourIcon',
-                remixicon: 'RiDashboardLine',
+                lucide: () => import('lucide-svelte/icons/layout-grid'),
+                tabler: () => import('@tabler/icons-svelte/icons/layout-grid'),
+                hugeicons: () =>
+                    import('@hugeicons/core-free-icons/DashboardSquare01Icon'),
+                phosphor: () => import('phosphor-svelte/lib/SquaresFourIcon'),
+                remixicon: () =>
+                    import('remixicon-svelte/icons/dashboard-line'),
             },
         },
     ];
@@ -66,9 +68,12 @@
                                                 <Icon
                                                     lucide={item.icon.lucide}
                                                     tabler={item.icon.tabler}
-                                                    hugeicons={item.icon.hugeicons}
-                                                    phosphor={item.icon.phosphor}
-                                                    remixicon={item.icon.remixicon}
+                                                    hugeicons={item.icon
+                                                        .hugeicons}
+                                                    phosphor={item.icon
+                                                        .phosphor}
+                                                    remixicon={item.icon
+                                                        .remixicon}
                                                     class="mr-2 size-4"
                                                 />
                                             {/if}

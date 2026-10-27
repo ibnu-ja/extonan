@@ -32,7 +32,14 @@
                                             href={toUrl(href)}
                                             class={props.class}
                                         >
-                                            {#if Icon}<Icon />{/if}
+                                            {#if typeof Icon === 'object' && Icon}
+                                                <NavPolymorphicIcon
+                                                    {...Icon}
+                                                    class="size-4 shrink-0"
+                                                />
+                                            {:else if Icon}
+                                                <Icon class="size-4 shrink-0" />
+                                            {/if}
                                             <span>{title}</span>
                                         </Link>
                                     {/snippet}
@@ -44,11 +51,16 @@
                                             class="data-[state=open]:rotate-90"
                                         >
                                             <NavPolymorphicIcon
-                                                lucide="ChevronRightIcon"
-                                                tabler="IconChevronRight"
-                                                hugeicons="ArrowRight01Icon"
-                                                phosphor="CaretRightIcon"
-                                                remixicon="RiArrowRightSLine"
+                                                lucide={() =>
+                                                    import('lucide-svelte/icons/chevron-right')}
+                                                tabler={() =>
+                                                    import('@tabler/icons-svelte/icons/chevron-right')}
+                                                hugeicons={() =>
+                                                    import('@hugeicons/core-free-icons/ArrowRight01Icon')}
+                                                phosphor={() =>
+                                                    import('phosphor-svelte/lib/CaretRightIcon')}
+                                                remixicon={() =>
+                                                    import('remixicon-svelte/icons/arrow-right-s-line')}
                                                 class="size-4"
                                             />
                                             <span class="sr-only">Toggle</span>
@@ -83,7 +95,14 @@
                                 href={toUrl(href)}
                                 class={props.class}
                             >
-                                {#if Icon}<Icon class="size-4 shrink-0" />{/if}
+                                {#if typeof Icon === 'object' && Icon}
+                                    <NavPolymorphicIcon
+                                        {...Icon}
+                                        class="size-4 shrink-0"
+                                    />
+                                {:else if Icon}
+                                    <Icon class="size-4 shrink-0" />
+                                {/if}
                                 <span>{title}</span>
                             </Link>
                         {/snippet}

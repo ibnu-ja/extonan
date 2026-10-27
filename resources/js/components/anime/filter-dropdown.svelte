@@ -112,8 +112,12 @@
             {#snippet child({ props })}
                 <Button variant="outline" size="sm" {...props} class="gap-1">
                     {#if iconComponent}
-                        {@const IconComp = iconComponent}
-                        <IconComp class="size-4 shrink-0" />
+                        {#if typeof iconComponent === 'object'}
+                            <Icon {...iconComponent} class="size-4 shrink-0" />
+                        {:else}
+                            {@const IconComp = iconComponent}
+                            <IconComp class="size-4 shrink-0" />
+                        {/if}
                     {/if}
                     {singleSelect && activeKey ? activeKey : label}
                     {#if !singleSelect && activeCount > 0}
@@ -141,11 +145,15 @@
                             onclick={() => onclear?.()}
                         >
                             <Icon
-                                lucide="XIcon"
-                                tabler="IconX"
-                                hugeicons="Cancel01Icon"
-                                phosphor="XIcon"
-                                remixicon="RiCloseLine"
+                                lucide={() => import('lucide-svelte/icons/x')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/x')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/Cancel01Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/XIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/close-line')}
                                 class="size-3"
                             />
                         </Button>
@@ -162,7 +170,7 @@
                             class={cn(
                                 'px-4',
                                 getItemMode(item) === 'in'
-                                    ? 'bg-primary/10 text-primary font-medium hover:bg-primary/20 aria-selected:bg-primary/20'
+                                    ? 'bg-accent text-accent-foreground font-medium hover:bg-accent/80 aria-selected:bg-accent/80'
                                     : getItemMode(item) === 'notIn'
                                       ? 'bg-destructive/10 text-destructive font-medium hover:bg-destructive/20 aria-selected:bg-destructive/20'
                                       : '',
@@ -172,20 +180,30 @@
                             <div class="flex w-full items-center gap-2">
                                 {#if getItemMode(item) === 'in'}
                                     <Icon
-                                        lucide="CheckIcon"
-                                        tabler="IconCheck"
-                                        hugeicons="Tick02Icon"
-                                        phosphor="CheckIcon"
-                                        remixicon="RiCheckLine"
+                                        lucide={() =>
+                                            import('lucide-svelte/icons/check')}
+                                        tabler={() =>
+                                            import('@tabler/icons-svelte/icons/check')}
+                                        hugeicons={() =>
+                                            import('@hugeicons/core-free-icons/Tick02Icon')}
+                                        phosphor={() =>
+                                            import('phosphor-svelte/lib/CheckIcon')}
+                                        remixicon={() =>
+                                            import('remixicon-svelte/icons/check-line')}
                                         class="size-4 text-primary"
                                     />
                                 {:else if getItemMode(item) === 'notIn'}
                                     <Icon
-                                        lucide="XIcon"
-                                        tabler="IconX"
-                                        hugeicons="Cancel01Icon"
-                                        phosphor="XIcon"
-                                        remixicon="RiCloseLine"
+                                        lucide={() =>
+                                            import('lucide-svelte/icons/x')}
+                                        tabler={() =>
+                                            import('@tabler/icons-svelte/icons/x')}
+                                        hugeicons={() =>
+                                            import('@hugeicons/core-free-icons/Cancel01Icon')}
+                                        phosphor={() =>
+                                            import('phosphor-svelte/lib/XIcon')}
+                                        remixicon={() =>
+                                            import('remixicon-svelte/icons/close-line')}
                                         class="size-4 text-destructive"
                                     />
                                 {/if}
@@ -203,8 +221,12 @@
             {#snippet child({ props })}
                 <Button variant="outline" size="sm" {...props} class="gap-1">
                     {#if iconComponent}
-                        {@const IconComp = iconComponent}
-                        <IconComp class="size-4 shrink-0" />
+                        {#if typeof iconComponent === 'object'}
+                            <Icon {...iconComponent} class="size-4 shrink-0" />
+                        {:else}
+                            {@const IconComp = iconComponent}
+                            <IconComp class="size-4 shrink-0" />
+                        {/if}
                     {/if}
                     {singleSelect && activeKey ? activeKey : label}
                     {#if !singleSelect && activeCount > 0}
@@ -233,11 +255,16 @@
                                 onclick={() => onclear?.()}
                             >
                                 <Icon
-                                    lucide="XIcon"
-                                    tabler="IconX"
-                                    hugeicons="Cancel01Icon"
-                                    phosphor="XIcon"
-                                    remixicon="RiCloseLine"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/x')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/x')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/Cancel01Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/XIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/close-line')}
                                     class="size-3"
                                 />
                             </Button>
@@ -254,7 +281,7 @@
                                 class={cn(
                                     'px-4',
                                     getItemMode(item) === 'in'
-                                        ? 'bg-primary/10 text-primary font-medium hover:bg-primary/20 aria-selected:bg-primary/20'
+                                        ? 'bg-accent text-accent-foreground font-medium hover:bg-accent/80 aria-selected:bg-accent/80'
                                         : getItemMode(item) === 'notIn'
                                           ? 'bg-destructive/10 text-destructive font-medium hover:bg-destructive/20 aria-selected:bg-destructive/20'
                                           : '',
@@ -264,20 +291,30 @@
                                 <div class="flex w-full items-center gap-2">
                                     {#if getItemMode(item) === 'in'}
                                         <Icon
-                                            lucide="CheckIcon"
-                                            tabler="IconCheck"
-                                            hugeicons="Tick02Icon"
-                                            phosphor="CheckIcon"
-                                            remixicon="RiCheckLine"
+                                            lucide={() =>
+                                                import('lucide-svelte/icons/check')}
+                                            tabler={() =>
+                                                import('@tabler/icons-svelte/icons/check')}
+                                            hugeicons={() =>
+                                                import('@hugeicons/core-free-icons/Tick02Icon')}
+                                            phosphor={() =>
+                                                import('phosphor-svelte/lib/CheckIcon')}
+                                            remixicon={() =>
+                                                import('remixicon-svelte/icons/check-line')}
                                             class="size-4 text-primary"
                                         />
                                     {:else if getItemMode(item) === 'notIn'}
                                         <Icon
-                                            lucide="XIcon"
-                                            tabler="IconX"
-                                            hugeicons="Cancel01Icon"
-                                            phosphor="XIcon"
-                                            remixicon="RiCloseLine"
+                                            lucide={() =>
+                                                import('lucide-svelte/icons/x')}
+                                            tabler={() =>
+                                                import('@tabler/icons-svelte/icons/x')}
+                                            hugeicons={() =>
+                                                import('@hugeicons/core-free-icons/Cancel01Icon')}
+                                            phosphor={() =>
+                                                import('phosphor-svelte/lib/XIcon')}
+                                            remixicon={() =>
+                                                import('remixicon-svelte/icons/close-line')}
                                             class="size-4 text-destructive"
                                         />
                                     {/if}

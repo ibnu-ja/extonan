@@ -27,11 +27,11 @@
 		>
 			{#if checked}
 				<Icon
-					lucide="CheckIcon"
-					tabler="IconCheck"
-					hugeicons="Tick02Icon"
-					phosphor="CheckIcon"
-					remixicon="RiCheckLine"
+					lucide={() => import("lucide-svelte/icons/check")}
+					tabler={() => import("@tabler/icons-svelte/icons/check")}
+					hugeicons={() => import("@hugeicons/core-free-icons/Tick02Icon")}
+					phosphor={() => import("phosphor-svelte/lib/CheckIcon")}
+					remixicon={() => import("remixicon-svelte/icons/check-line")}
 				/>
 			{/if}
 		</span>

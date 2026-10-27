@@ -45,11 +45,13 @@
     <CardHeader>
         <CardTitle class="flex items-center gap-2">
             <Icon
-                lucide="LockKeyholeIcon"
-                tabler="IconLock"
-                hugeicons="LockKeyIcon"
-                phosphor="LockKeyIcon"
-                remixicon="RiLockPasswordLine"
+                lucide={() => import('lucide-svelte/icons/lock-keyhole')}
+                tabler={() => import('@tabler/icons-svelte/icons/lock')}
+                hugeicons={() =>
+                    import('@hugeicons/core-free-icons/LockKeyIcon')}
+                phosphor={() => import('phosphor-svelte/lib/LockKeyIcon')}
+                remixicon={() =>
+                    import('remixicon-svelte/icons/lock-password-line')}
                 class="size-4"
             />
             2FA recovery codes
@@ -66,20 +68,26 @@
             <Button onclick={toggleRecoveryCodesVisibility} class="w-fit">
                 {#if isRecoveryCodesVisible}
                     <Icon
-                        lucide="EyeOffIcon"
-                        tabler="IconEyeOff"
-                        hugeicons="ViewOffIcon"
-                        phosphor="EyeSlashIcon"
-                        remixicon="RiEyeOffLine"
+                        lucide={() => import('lucide-svelte/icons/eye-off')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/eye-off')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/ViewOffIcon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/EyeSlashIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/eye-off-line')}
                         class="size-4"
                     />
                 {:else}
                     <Icon
-                        lucide="EyeIcon"
-                        tabler="IconEye"
-                        hugeicons="ViewIcon"
-                        phosphor="EyeIcon"
-                        remixicon="RiEyeLine"
+                        lucide={() => import('lucide-svelte/icons/eye')}
+                        tabler={() => import('@tabler/icons-svelte/icons/eye')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/ViewIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/EyeIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/eye-line')}
                         class="size-4"
                     />
                 {/if}
@@ -99,11 +107,16 @@
                             disabled={processing}
                         >
                             <Icon
-                                lucide="RefreshCwIcon"
-                                tabler="IconRefresh"
-                                hugeicons="RefreshIcon"
-                                phosphor="ArrowsClockwiseIcon"
-                                remixicon="RiRefreshLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/refresh-cw')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/refresh')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/RefreshIcon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/ArrowsClockwiseIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/refresh-line')}
                                 class="size-4"
                             />
                             Regenerate codes

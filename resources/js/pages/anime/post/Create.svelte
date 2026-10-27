@@ -277,11 +277,13 @@
                 onclick={() => deleteFn(j)}
             >
                 <Icon
-                    lucide="Trash2Icon"
-                    tabler="IconTrash"
-                    hugeicons="Delete02Icon"
-                    phosphor="TrashIcon"
-                    remixicon="RiDeleteBinLine"
+                    lucide={() => import('lucide-svelte/icons/trash-2')}
+                    tabler={() => import('@tabler/icons-svelte/icons/trash')}
+                    hugeicons={() =>
+                        import('@hugeicons/core-free-icons/Delete02Icon')}
+                    phosphor={() => import('phosphor-svelte/lib/TrashIcon')}
+                    remixicon={() =>
+                        import('remixicon-svelte/icons/delete-bin-line')}
                     class="size-4"
                 />
             </Button>
@@ -300,11 +302,13 @@
                 onclick={deleteFn}
             >
                 <Icon
-                    lucide="Trash2Icon"
-                    tabler="IconTrash"
-                    hugeicons="Delete02Icon"
-                    phosphor="TrashIcon"
-                    remixicon="RiDeleteBinLine"
+                    lucide={() => import('lucide-svelte/icons/trash-2')}
+                    tabler={() => import('@tabler/icons-svelte/icons/trash')}
+                    hugeicons={() =>
+                        import('@hugeicons/core-free-icons/Delete02Icon')}
+                    phosphor={() => import('phosphor-svelte/lib/TrashIcon')}
+                    remixicon={() =>
+                        import('remixicon-svelte/icons/delete-bin-line')}
                     class="size-4"
                 />
             </Button>
@@ -337,11 +341,13 @@
                 {/if}
                 <Button variant="outline" size="sm" onclick={addFn}>
                     <Icon
-                        lucide="PlusIcon"
-                        tabler="IconPlus"
-                        hugeicons="PlusSignIcon"
-                        phosphor="PlusIcon"
-                        remixicon="RiAddLine"
+                        lucide={() => import('lucide-svelte/icons/plus')}
+                        tabler={() => import('@tabler/icons-svelte/icons/plus')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/PlusSignIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/PlusIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/add-line')}
                         class="mr-1 size-4"
                     />
                     Add Mirror
@@ -364,11 +370,15 @@
                     {/if}
                     <Button variant="outline" size="sm" onclick={addFn}>
                         <Icon
-                            lucide="PlusIcon"
-                            tabler="IconPlus"
-                            hugeicons="PlusSignIcon"
-                            phosphor="PlusIcon"
-                            remixicon="RiAddLine"
+                            lucide={() => import('lucide-svelte/icons/plus')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/plus')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/PlusSignIcon')}
+                            phosphor={() =>
+                                import('phosphor-svelte/lib/PlusIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/add-line')}
                             class="mr-1 size-4"
                         />
                         Add Mirror
@@ -396,11 +406,16 @@
                                         (t) => t.value === form.postType,
                                     )?.label ?? 'Type'}
                                     <Icon
-                                        lucide="ChevronDownIcon"
-                                        tabler="IconChevronDown"
-                                        hugeicons="ArrowDown01Icon"
-                                        phosphor="CaretDownIcon"
-                                        remixicon="RiArrowDownSLine"
+                                        lucide={() =>
+                                            import('lucide-svelte/icons/chevron-down')}
+                                        tabler={() =>
+                                            import('@tabler/icons-svelte/icons/chevron-down')}
+                                        hugeicons={() =>
+                                            import('@hugeicons/core-free-icons/ArrowDown01Icon')}
+                                        phosphor={() =>
+                                            import('phosphor-svelte/lib/CaretDownIcon')}
+                                        remixicon={() =>
+                                            import('remixicon-svelte/icons/arrow-down-s-line')}
                                         class="ml-1 size-4 opacity-50"
                                     />
                                 </InputGroup.Button>
@@ -414,11 +429,16 @@
                                     <div class="flex w-full items-center gap-2">
                                         {#if form.postType === type.value}
                                             <Icon
-                                                lucide="CheckIcon"
-                                                tabler="IconCheck"
-                                                hugeicons="Tick02Icon"
-                                                phosphor="CheckIcon"
-                                                remixicon="RiCheckLine"
+                                                lucide={() =>
+                                                    import('lucide-svelte/icons/check')}
+                                                tabler={() =>
+                                                    import('@tabler/icons-svelte/icons/check')}
+                                                hugeicons={() =>
+                                                    import('@hugeicons/core-free-icons/Tick02Icon')}
+                                                phosphor={() =>
+                                                    import('phosphor-svelte/lib/CheckIcon')}
+                                                remixicon={() =>
+                                                    import('remixicon-svelte/icons/check-line')}
                                                 class="size-4"
                                             />
                                         {/if}
@@ -451,11 +471,16 @@
                                         (l) => l.value === currentLang,
                                     )?.label ?? 'Language'}
                                     <Icon
-                                        lucide="ChevronDownIcon"
-                                        tabler="IconChevronDown"
-                                        hugeicons="ArrowDown01Icon"
-                                        phosphor="CaretDownIcon"
-                                        remixicon="RiArrowDownSLine"
+                                        lucide={() =>
+                                            import('lucide-svelte/icons/chevron-down')}
+                                        tabler={() =>
+                                            import('@tabler/icons-svelte/icons/chevron-down')}
+                                        hugeicons={() =>
+                                            import('@hugeicons/core-free-icons/ArrowDown01Icon')}
+                                        phosphor={() =>
+                                            import('phosphor-svelte/lib/CaretDownIcon')}
+                                        remixicon={() =>
+                                            import('remixicon-svelte/icons/arrow-down-s-line')}
                                         class="ml-1 size-4 opacity-50"
                                     />
                                 </InputGroup.Button>
@@ -469,11 +494,16 @@
                                     <div class="flex w-full items-center gap-2">
                                         {#if currentLang === lang.value}
                                             <Icon
-                                                lucide="CheckIcon"
-                                                tabler="IconCheck"
-                                                hugeicons="Tick02Icon"
-                                                phosphor="CheckIcon"
-                                                remixicon="RiCheckLine"
+                                                lucide={() =>
+                                                    import('lucide-svelte/icons/check')}
+                                                tabler={() =>
+                                                    import('@tabler/icons-svelte/icons/check')}
+                                                hugeicons={() =>
+                                                    import('@hugeicons/core-free-icons/Tick02Icon')}
+                                                phosphor={() =>
+                                                    import('phosphor-svelte/lib/CheckIcon')}
+                                                remixicon={() =>
+                                                    import('remixicon-svelte/icons/check-line')}
                                                 class="size-4"
                                             />
                                         {/if}
@@ -533,11 +563,16 @@
                                 {languages.find((l) => l.value === currentLang)
                                     ?.label ?? 'Language'}
                                 <Icon
-                                    lucide="ChevronDownIcon"
-                                    tabler="IconChevronDown"
-                                    hugeicons="ArrowDown01Icon"
-                                    phosphor="CaretDownIcon"
-                                    remixicon="RiArrowDownSLine"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/chevron-down')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/chevron-down')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/ArrowDown01Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/CaretDownIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/arrow-down-s-line')}
                                     class="ml-1 size-4 opacity-50"
                                 />
                             </InputGroup.Button>
@@ -551,11 +586,16 @@
                                 <div class="flex w-full items-center gap-2">
                                     {#if currentLang === lang.value}
                                         <Icon
-                                            lucide="CheckIcon"
-                                            tabler="IconCheck"
-                                            hugeicons="Tick02Icon"
-                                            phosphor="CheckIcon"
-                                            remixicon="RiCheckLine"
+                                            lucide={() =>
+                                                import('lucide-svelte/icons/check')}
+                                            tabler={() =>
+                                                import('@tabler/icons-svelte/icons/check')}
+                                            hugeicons={() =>
+                                                import('@hugeicons/core-free-icons/Tick02Icon')}
+                                            phosphor={() =>
+                                                import('phosphor-svelte/lib/CheckIcon')}
+                                            remixicon={() =>
+                                                import('remixicon-svelte/icons/check-line')}
                                             class="size-4"
                                         />
                                     {/if}
@@ -578,11 +618,15 @@
                 {#snippet child({ props: triggerProps })}
                     <Button variant="outline" size="sm" {...triggerProps}>
                         <Icon
-                            lucide="PlusIcon"
-                            tabler="IconPlus"
-                            hugeicons="PlusSignIcon"
-                            phosphor="PlusIcon"
-                            remixicon="RiAddLine"
+                            lucide={() => import('lucide-svelte/icons/plus')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/plus')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/PlusSignIcon')}
+                            phosphor={() =>
+                                import('phosphor-svelte/lib/PlusIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/add-line')}
                             class="mr-1 size-4"
                         />
                         Add Stream
@@ -627,11 +671,11 @@
 {#snippet downloadLinksAction()}
     <Button variant="outline" size="sm" onclick={addLink}>
         <Icon
-            lucide="PlusIcon"
-            tabler="IconPlus"
-            hugeicons="PlusSignIcon"
-            phosphor="PlusIcon"
-            remixicon="RiAddLine"
+            lucide={() => import('lucide-svelte/icons/plus')}
+            tabler={() => import('@tabler/icons-svelte/icons/plus')}
+            hugeicons={() => import('@hugeicons/core-free-icons/PlusSignIcon')}
+            phosphor={() => import('phosphor-svelte/lib/PlusIcon')}
+            remixicon={() => import('remixicon-svelte/icons/add-line')}
             class="mr-1 size-4"
         />
         Add File
@@ -656,11 +700,16 @@
                             onclick={() => deleteLink(i)}
                         >
                             <Icon
-                                lucide="Trash2Icon"
-                                tabler="IconTrash"
-                                hugeicons="Delete02Icon"
-                                phosphor="TrashIcon"
-                                remixicon="RiDeleteBinLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/trash-2')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/trash')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/Delete02Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/TrashIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/delete-bin-line')}
                                 class="size-4"
                             />
                         </Button>
@@ -682,11 +731,15 @@
                         onclick={() => addMirror(i)}
                     >
                         <Icon
-                            lucide="PlusIcon"
-                            tabler="IconPlus"
-                            hugeicons="PlusSignIcon"
-                            phosphor="PlusIcon"
-                            remixicon="RiAddLine"
+                            lucide={() => import('lucide-svelte/icons/plus')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/plus')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/PlusSignIcon')}
+                            phosphor={() =>
+                                import('phosphor-svelte/lib/PlusIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/add-line')}
                             class="mr-1 size-4"
                         />
                         Add Mirror
@@ -723,11 +776,16 @@
                             onclick={() => addMirror(i)}
                         >
                             <Icon
-                                lucide="PlusIcon"
-                                tabler="IconPlus"
-                                hugeicons="PlusSignIcon"
-                                phosphor="PlusIcon"
-                                remixicon="RiAddLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/plus')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/plus')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/PlusSignIcon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/PlusIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/add-line')}
                                 class="mr-1 size-4"
                             />
                             Add Mirror
@@ -773,20 +831,24 @@
     >
         {#if showAnimeImage}
             <Icon
-                lucide="ChevronUpIcon"
-                tabler="IconChevronUp"
-                hugeicons="ArrowUp01Icon"
-                phosphor="CaretUpIcon"
-                remixicon="RiArrowUpSLine"
+                lucide={() => import('lucide-svelte/icons/chevron-up')}
+                tabler={() => import('@tabler/icons-svelte/icons/chevron-up')}
+                hugeicons={() =>
+                    import('@hugeicons/core-free-icons/ArrowUp01Icon')}
+                phosphor={() => import('phosphor-svelte/lib/CaretUpIcon')}
+                remixicon={() =>
+                    import('remixicon-svelte/icons/arrow-up-s-line')}
                 class="size-4"
             />
         {:else}
             <Icon
-                lucide="ChevronDownIcon"
-                tabler="IconChevronDown"
-                hugeicons="ArrowDown01Icon"
-                phosphor="CaretDownIcon"
-                remixicon="RiArrowDownSLine"
+                lucide={() => import('lucide-svelte/icons/chevron-down')}
+                tabler={() => import('@tabler/icons-svelte/icons/chevron-down')}
+                hugeicons={() =>
+                    import('@hugeicons/core-free-icons/ArrowDown01Icon')}
+                phosphor={() => import('phosphor-svelte/lib/CaretDownIcon')}
+                remixicon={() =>
+                    import('remixicon-svelte/icons/arrow-down-s-line')}
                 class="size-4"
             />
         {/if}
@@ -813,11 +875,16 @@
                     <Badge variant="secondary">
                         Anilist
                         <Icon
-                            lucide="ExternalLinkIcon"
-                            tabler="IconExternalLink"
-                            hugeicons="ExternalLinkIcon"
-                            phosphor="ArrowSquareOutIcon"
-                            remixicon="RiExternalLinkLine"
+                            lucide={() =>
+                                import('lucide-svelte/icons/external-link')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/external-link')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/ExternalLinkIcon')}
+                            phosphor={() =>
+                                import('phosphor-svelte/lib/ArrowSquareOutIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/external-link-line')}
                             class="ml-1 size-3"
                         />
                     </Badge>
@@ -832,11 +899,16 @@
                     <Badge variant="secondary">
                         MyAnimelist
                         <Icon
-                            lucide="ExternalLinkIcon"
-                            tabler="IconExternalLink"
-                            hugeicons="ExternalLinkIcon"
-                            phosphor="ArrowSquareOutIcon"
-                            remixicon="RiExternalLinkLine"
+                            lucide={() =>
+                                import('lucide-svelte/icons/external-link')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/external-link')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/ExternalLinkIcon')}
+                            phosphor={() =>
+                                import('phosphor-svelte/lib/ArrowSquareOutIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/external-link-line')}
                             class="ml-1 size-3"
                         />
                     </Badge>
@@ -888,11 +960,16 @@
                             disabled={form.processing}
                         >
                             <Icon
-                                lucide="Trash2Icon"
-                                tabler="IconTrash"
-                                hugeicons="Delete02Icon"
-                                phosphor="TrashIcon"
-                                remixicon="RiDeleteBinLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/trash-2')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/trash')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/Delete02Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/TrashIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/delete-bin-line')}
                                 class="size-4"
                             />
                         </Button>

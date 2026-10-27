@@ -99,11 +99,16 @@
                                 class:rotate-180={expanded}
                             >
                                 <Icon
-                                    lucide="ChevronDownIcon"
-                                    tabler="IconChevronDown"
-                                    hugeicons="ArrowDown01Icon"
-                                    phosphor="CaretDownIcon"
-                                    remixicon="RiArrowDownSLine"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/chevron-down')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/chevron-down')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/ArrowDown01Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/CaretDownIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/arrow-down-s-line')}
                                     class="size-3"
                                 />
                             </span>

@@ -18,11 +18,11 @@
 	{...restProps}
 >
 	<Icon
-		lucide="MoreHorizontalIcon"
-		tabler="IconDots"
-		hugeicons="MoreHorizontalCircle01Icon"
-		phosphor="DotsThreeIcon"
-		remixicon="RiMoreLine"
+		lucide={() => import("lucide-svelte/icons/ellipsis")}
+		tabler={() => import("@tabler/icons-svelte/icons/dots")}
+		hugeicons={() => import("@hugeicons/core-free-icons/MoreHorizontalCircle01Icon")}
+		phosphor={() => import("phosphor-svelte/lib/DotsThreeIcon")}
+		remixicon={() => import("remixicon-svelte/icons/more-line")}
 	/>
 	<span class="sr-only">More pages</span>
 </span>

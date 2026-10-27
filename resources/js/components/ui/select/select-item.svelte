@@ -27,11 +27,11 @@
 		<span class="absolute end-2 flex size-3.5 items-center justify-center">
 			{#if selected}
 				<Icon
-					lucide="CheckIcon"
-					tabler="IconCheck"
-					hugeicons="Tick02Icon"
-					phosphor="CheckIcon"
-					remixicon="RiCheckLine"
+					lucide={() => import("lucide-svelte/icons/check")}
+					tabler={() => import("@tabler/icons-svelte/icons/check")}
+					hugeicons={() => import("@hugeicons/core-free-icons/Tick02Icon")}
+					phosphor={() => import("phosphor-svelte/lib/CheckIcon")}
+					remixicon={() => import("remixicon-svelte/icons/check-line")}
 					class="cn-select-item-indicator-icon pointer-events-none"
 				/>
 			{/if}

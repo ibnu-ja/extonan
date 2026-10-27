@@ -30,19 +30,19 @@
 		>
 			{#if checked}
 				<Icon
-					lucide="CheckIcon"
-					tabler="IconCheck"
-					hugeicons="Tick02Icon"
-					phosphor="CheckIcon"
-					remixicon="RiCheckLine"
+					lucide={() => import("lucide-svelte/icons/check")}
+					tabler={() => import("@tabler/icons-svelte/icons/check")}
+					hugeicons={() => import("@hugeicons/core-free-icons/Tick02Icon")}
+					phosphor={() => import("phosphor-svelte/lib/CheckIcon")}
+					remixicon={() => import("remixicon-svelte/icons/check-line")}
 				/>
 			{:else if indeterminate}
 				<Icon
-					lucide="MinusIcon"
-					tabler="IconMinus"
-					hugeicons="MinusSignIcon"
-					phosphor="MinusIcon"
-					remixicon="RiSubtractLine"
+					lucide={() => import("lucide-svelte/icons/minus")}
+					tabler={() => import("@tabler/icons-svelte/icons/minus")}
+					hugeicons={() => import("@hugeicons/core-free-icons/MinusSignIcon")}
+					phosphor={() => import("phosphor-svelte/lib/MinusIcon")}
+					remixicon={() => import("remixicon-svelte/icons/subtract-line")}
 				/>
 			{/if}
 		</div>

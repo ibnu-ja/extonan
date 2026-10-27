@@ -1,18 +1,19 @@
 <script lang="ts">
     import { page } from '@inertiajs/svelte';
     import { siFacebook, siDiscord } from 'simple-icons';
+    import { BrandIcon } from '@/components/icon';
     import { Separator } from '@/components/ui/separator';
 
     const links = [
         {
             url: 'https://facebook.com/extonan',
             title: 'Facebook',
-            icon: siFacebook.path,
+            icon: siFacebook,
         },
         {
             url: 'https://discord.extonan.id',
             title: 'Discord',
-            icon: siDiscord.path,
+            icon: siDiscord,
         },
     ];
 
@@ -43,9 +44,7 @@
                     class="hover:text-foreground"
                     aria-label={link.title}
                 >
-                    <svg viewBox="0 0 24 24" class="size-5 fill-current">
-                        <path d={link.icon} />
-                    </svg>
+                    <BrandIcon icon={link.icon} class="size-5" />
                 </a>
             {/each}
         </div>

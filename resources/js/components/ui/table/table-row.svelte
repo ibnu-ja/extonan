@@ -13,7 +13,7 @@
 <tr
 	bind:this={ref}
 	data-slot="table-row"
-	class={cn("cn-table-row has-aria-expanded:bg-muted/50", className)}
+	class={cn("cn-table-row has-aria-expanded:bg-muted/50 data-[state=selected]:bg-accent/40 data-[state=selected]:text-accent-foreground", className)}
 	{...restProps}
 >
 	{@render children?.()}

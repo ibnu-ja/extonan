@@ -114,7 +114,7 @@
         {#each loaded as item (item.id)}
             <button
                 type="button"
-                class="group relative overflow-hidden rounded-[var(--radius)] border bg-muted cursor-pointer ring-offset-background transition-all hover:ring-2 hover:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary"
+                class="group relative overflow-hidden rounded-[var(--radius)] border bg-muted cursor-pointer ring-offset-background transition-all hover:ring-2 hover:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary data-[selected=true]:bg-accent/20 data-[selected=true]:border-primary"
                 data-selected={isSelected(item)}
                 onclick={() => onMediaSelect(item)}
             >
@@ -149,11 +149,16 @@
                                 class="flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground"
                             >
                                 <Icon
-                                    lucide="CheckIcon"
-                                    tabler="IconCheck"
-                                    hugeicons="Tick02Icon"
-                                    phosphor="CheckIcon"
-                                    remixicon="RiCheckLine"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/check')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/check')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/Tick02Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/CheckIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/check-line')}
                                     class="size-3"
                                 />
                             </span>

@@ -180,21 +180,25 @@
             <SpeedDial.Trigger>
                 {#snippet icon()}
                     <Icon
-                        lucide="PlusIcon"
-                        tabler="IconPlus"
-                        hugeicons="PlusSignIcon"
-                        phosphor="PlusIcon"
-                        remixicon="RiAddLine"
+                        lucide={() => import('lucide-svelte/icons/plus')}
+                        tabler={() => import('@tabler/icons-svelte/icons/plus')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/PlusSignIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/PlusIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/add-line')}
                         class="size-4"
                     />
                 {/snippet}
                 {#snippet iconClose()}
                     <Icon
-                        lucide="XIcon"
-                        tabler="IconX"
-                        hugeicons="Cancel01Icon"
-                        phosphor="XIcon"
-                        remixicon="RiCloseLine"
+                        lucide={() => import('lucide-svelte/icons/x')}
+                        tabler={() => import('@tabler/icons-svelte/icons/x')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/Cancel01Icon')}
+                        phosphor={() => import('phosphor-svelte/lib/XIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/close-line')}
                         class="size-4"
                     />
                 {/snippet}
@@ -206,22 +210,29 @@
             <SpeedDial.Content>
                 <SpeedDial.Item variant="default" onclick={onEdit}>
                     <Icon
-                        lucide="FilePenIcon"
-                        tabler="IconEdit"
-                        hugeicons="PencilEdit02Icon"
-                        phosphor="PencilSimpleIcon"
-                        remixicon="RiEditLine"
+                        lucide={() => import('lucide-svelte/icons/file-pen')}
+                        tabler={() => import('@tabler/icons-svelte/icons/edit')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/PencilEdit02Icon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/PencilSimpleIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/edit-line')}
                         class="size-4"
                     />
                     Edit
                 </SpeedDial.Item>
                 <SpeedDial.Item variant="secondary" onclick={onShare}>
                     <Icon
-                        lucide="Share2Icon"
-                        tabler="IconShare"
-                        hugeicons="Share01Icon"
-                        phosphor="ShareNetworkIcon"
-                        remixicon="RiShareLine"
+                        lucide={() => import('lucide-svelte/icons/share-2')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/share')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/Share01Icon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/ShareNetworkIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/share-line')}
                         class="size-4"
                     />
                     Share
@@ -231,11 +242,15 @@
                     onclick={() => console.log('Download')}
                 >
                     <Icon
-                        lucide="DownloadIcon"
-                        tabler="IconDownload"
-                        hugeicons="Download01Icon"
-                        phosphor="DownloadSimpleIcon"
-                        remixicon="RiDownloadLine"
+                        lucide={() => import('lucide-svelte/icons/download')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/download')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/Download01Icon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/DownloadSimpleIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/download-line')}
                         class="size-4"
                     />
                     Download
@@ -245,22 +260,27 @@
                     onclick={() => console.log('Preview')}
                 >
                     <Icon
-                        lucide="EyeIcon"
-                        tabler="IconEye"
-                        hugeicons="ViewIcon"
-                        phosphor="EyeIcon"
-                        remixicon="RiEyeLine"
+                        lucide={() => import('lucide-svelte/icons/eye')}
+                        tabler={() => import('@tabler/icons-svelte/icons/eye')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/ViewIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/EyeIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/eye-line')}
                         class="size-4"
                     />
                     Preview
                 </SpeedDial.Item>
                 <SpeedDial.Item variant="destructive" onclick={onDelete}>
                     <Icon
-                        lucide="Trash2Icon"
-                        tabler="IconTrash"
-                        hugeicons="Delete02Icon"
-                        phosphor="TrashIcon"
-                        remixicon="RiDeleteBinLine"
+                        lucide={() => import('lucide-svelte/icons/trash-2')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/trash')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/Delete02Icon')}
+                        phosphor={() => import('phosphor-svelte/lib/TrashIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/delete-bin-line')}
                         class="size-4"
                     />
                     Delete

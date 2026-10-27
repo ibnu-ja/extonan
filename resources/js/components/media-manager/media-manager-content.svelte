@@ -107,11 +107,16 @@
                                                 class="inline-flex items-center gap-1 text-xs text-primary underline-offset-4 hover:underline"
                                             >
                                                 <Icon
-                                                    lucide="ExternalLinkIcon"
-                                                    tabler="IconExternalLink"
-                                                    hugeicons="LinkSquare01Icon"
-                                                    phosphor="ArrowSquareOutIcon"
-                                                    remixicon="RiExternalLinkLine"
+                                                    lucide={() =>
+                                                        import('lucide-svelte/icons/external-link')}
+                                                    tabler={() =>
+                                                        import('@tabler/icons-svelte/icons/external-link')}
+                                                    hugeicons={() =>
+                                                        import('@hugeicons/core-free-icons/LinkSquare01Icon')}
+                                                    phosphor={() =>
+                                                        import('phosphor-svelte/lib/ArrowSquareOutIcon')}
+                                                    remixicon={() =>
+                                                        import('remixicon-svelte/icons/external-link-line')}
                                                     class="size-3 shrink-0"
                                                 />
                                                 original
@@ -124,11 +129,16 @@
                                                     class="inline-flex items-center gap-1 text-xs text-primary underline-offset-4 hover:underline"
                                                 >
                                                     <Icon
-                                                        lucide="ExternalLinkIcon"
-                                                        tabler="IconExternalLink"
-                                                        hugeicons="LinkSquare01Icon"
-                                                        phosphor="ArrowSquareOutIcon"
-                                                        remixicon="RiExternalLinkLine"
+                                                        lucide={() =>
+                                                            import('lucide-svelte/icons/external-link')}
+                                                        tabler={() =>
+                                                            import('@tabler/icons-svelte/icons/external-link')}
+                                                        hugeicons={() =>
+                                                            import('@hugeicons/core-free-icons/LinkSquare01Icon')}
+                                                        phosphor={() =>
+                                                            import('phosphor-svelte/lib/ArrowSquareOutIcon')}
+                                                        remixicon={() =>
+                                                            import('remixicon-svelte/icons/external-link-line')}
                                                         class="size-3 shrink-0"
                                                     />
                                                     medium
@@ -142,11 +152,16 @@
                                                     class="inline-flex items-center gap-1 text-xs text-primary underline-offset-4 hover:underline"
                                                 >
                                                     <Icon
-                                                        lucide="ExternalLinkIcon"
-                                                        tabler="IconExternalLink"
-                                                        hugeicons="LinkSquare01Icon"
-                                                        phosphor="ArrowSquareOutIcon"
-                                                        remixicon="RiExternalLinkLine"
+                                                        lucide={() =>
+                                                            import('lucide-svelte/icons/external-link')}
+                                                        tabler={() =>
+                                                            import('@tabler/icons-svelte/icons/external-link')}
+                                                        hugeicons={() =>
+                                                            import('@hugeicons/core-free-icons/LinkSquare01Icon')}
+                                                        phosphor={() =>
+                                                            import('phosphor-svelte/lib/ArrowSquareOutIcon')}
+                                                        remixicon={() =>
+                                                            import('remixicon-svelte/icons/external-link-line')}
                                                         class="size-3 shrink-0"
                                                     />
                                                     large

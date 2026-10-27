@@ -38,11 +38,13 @@
         {#snippet child({ props })}
             <Link {...props} href={toUrl(edit())}>
                 <Icon
-                    lucide="SettingsIcon"
-                    tabler="IconSettings"
-                    hugeicons="Settings01Icon"
-                    phosphor="GearIcon"
-                    remixicon="RiSettings3Line"
+                    lucide={() => import('lucide-svelte/icons/settings')}
+                    tabler={() => import('@tabler/icons-svelte/icons/settings')}
+                    hugeicons={() =>
+                        import('@hugeicons/core-free-icons/Settings01Icon')}
+                    phosphor={() => import('phosphor-svelte/lib/GearIcon')}
+                    remixicon={() =>
+                        import('remixicon-svelte/icons/settings-3-line')}
                     class="size-4"
                 />
                 Settings
@@ -55,11 +57,13 @@
     {#snippet child({ props })}
         <button {...props} onclick={() => router.post(logout().url)}>
             <Icon
-                lucide="LogOutIcon"
-                tabler="IconLogout"
-                hugeicons="Logout01Icon"
-                phosphor="SignOutIcon"
-                remixicon="RiLogoutBoxRLine"
+                lucide={() => import('lucide-svelte/icons/log-out')}
+                tabler={() => import('@tabler/icons-svelte/icons/logout')}
+                hugeicons={() =>
+                    import('@hugeicons/core-free-icons/Logout01Icon')}
+                phosphor={() => import('phosphor-svelte/lib/SignOutIcon')}
+                remixicon={() =>
+                    import('remixicon-svelte/icons/logout-box-r-line')}
                 class="size-4"
             />
             Log out

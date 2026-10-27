@@ -29,7 +29,7 @@
 	data-size={size}
 	class={cn(
 		buttonVariants({ size, variant: isActive ? "outline" : "ghost" }),
-		"cn-pagination-link",
+		"cn-pagination-link data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:border-accent",
 		className
 	)}
 	{...restProps}

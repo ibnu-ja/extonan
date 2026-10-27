@@ -101,11 +101,16 @@
                             </div>
                         {/if}
                         <Icon
-                            lucide="ChevronDownIcon"
-                            tabler="IconSelector"
-                            hugeicons="UnfoldMoreIcon"
-                            phosphor="CaretUpDownIcon"
-                            remixicon="RiExpandUpDownLine"
+                            lucide={() =>
+                                import('lucide-svelte/icons/chevron-down')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/selector')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/UnfoldMoreIcon')}
+                            phosphor={() =>
+                                import('phosphor-svelte/lib/CaretUpDownIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/expand-up-down-line')}
                             class="size-4 shrink-0 opacity-50"
                         />
                     </Button>
@@ -127,7 +132,7 @@
                                 class={cn(
                                     'px-4',
                                     isSelected(itemKey(item)) &&
-                                        'bg-primary/10 text-primary font-medium',
+                                        'bg-accent text-accent-foreground font-medium',
                                 )}
                                 onSelect={() => toggle(itemKey(item))}
                             >
@@ -137,11 +142,16 @@
                                     >
                                         {#if isSelected(itemKey(item))}
                                             <Icon
-                                                lucide="CheckIcon"
-                                                tabler="IconCheck"
-                                                hugeicons="Tick02Icon"
-                                                phosphor="CheckIcon"
-                                                remixicon="RiCheckLine"
+                                                lucide={() =>
+                                                    import('lucide-svelte/icons/check')}
+                                                tabler={() =>
+                                                    import('@tabler/icons-svelte/icons/check')}
+                                                hugeicons={() =>
+                                                    import('@hugeicons/core-free-icons/Tick02Icon')}
+                                                phosphor={() =>
+                                                    import('phosphor-svelte/lib/CheckIcon')}
+                                                remixicon={() =>
+                                                    import('remixicon-svelte/icons/check-line')}
                                                 class="size-4"
                                             />
                                         {/if}
@@ -184,11 +194,16 @@
                             </div>
                         {/if}
                         <Icon
-                            lucide="ChevronDownIcon"
-                            tabler="IconSelector"
-                            hugeicons="UnfoldMoreIcon"
-                            phosphor="CaretUpDownIcon"
-                            remixicon="RiExpandUpDownLine"
+                            lucide={() =>
+                                import('lucide-svelte/icons/chevron-down')}
+                            tabler={() =>
+                                import('@tabler/icons-svelte/icons/selector')}
+                            hugeicons={() =>
+                                import('@hugeicons/core-free-icons/UnfoldMoreIcon')}
+                            phosphor={() =>
+                                import('phosphor-svelte/lib/CaretUpDownIcon')}
+                            remixicon={() =>
+                                import('remixicon-svelte/icons/expand-up-down-line')}
                             class="size-4 shrink-0 opacity-50"
                         />
                     </Button>
@@ -207,7 +222,7 @@
                                     class={cn(
                                         'px-4',
                                         isSelected(itemKey(item)) &&
-                                            'bg-primary/10 text-primary font-medium',
+                                            'bg-accent text-accent-foreground font-medium',
                                     )}
                                     onSelect={() => toggle(itemKey(item))}
                                 >
@@ -217,11 +232,16 @@
                                         >
                                             {#if isSelected(itemKey(item))}
                                                 <Icon
-                                                    lucide="CheckIcon"
-                                                    tabler="IconCheck"
-                                                    hugeicons="Tick02Icon"
-                                                    phosphor="CheckIcon"
-                                                    remixicon="RiCheckLine"
+                                                    lucide={() =>
+                                                        import('lucide-svelte/icons/check')}
+                                                    tabler={() =>
+                                                        import('@tabler/icons-svelte/icons/check')}
+                                                    hugeicons={() =>
+                                                        import('@hugeicons/core-free-icons/Tick02Icon')}
+                                                    phosphor={() =>
+                                                        import('phosphor-svelte/lib/CheckIcon')}
+                                                    remixicon={() =>
+                                                        import('remixicon-svelte/icons/check-line')}
                                                     class="size-4"
                                                 />
                                             {/if}

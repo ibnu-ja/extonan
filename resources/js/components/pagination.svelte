@@ -95,11 +95,16 @@
                     {#snippet child({ props })}
                         <Link href={pageUrl(1)} {...linkOpts} {...props}>
                             <Icon
-                                lucide="ChevronsLeftIcon"
-                                tabler="IconChevronsLeft"
-                                hugeicons="ArrowLeftDoubleIcon"
-                                phosphor="CaretDoubleLeftIcon"
-                                remixicon="RiSkipBackLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/chevrons-left')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/chevrons-left')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/ArrowLeftDoubleIcon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/CaretDoubleLeftIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/skip-back-line')}
                                 class="size-4"
                             />
                         </Link>
@@ -118,11 +123,16 @@
                                 {...props}
                             >
                                 <Icon
-                                    lucide="ChevronLeftIcon"
-                                    tabler="IconChevronLeft"
-                                    hugeicons="ArrowLeft01Icon"
-                                    phosphor="CaretLeftIcon"
-                                    remixicon="RiArrowLeftSLine"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/chevron-left')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/chevron-left')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/ArrowLeft01Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/CaretLeftIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/arrow-left-s-line')}
                                     class="size-4"
                                 />
                             </Link>
@@ -176,11 +186,16 @@
                                 {...props}
                             >
                                 <Icon
-                                    lucide="ChevronRightIcon"
-                                    tabler="IconChevronRight"
-                                    hugeicons="ArrowRight01Icon"
-                                    phosphor="CaretRightIcon"
-                                    remixicon="RiArrowRightSLine"
+                                    lucide={() =>
+                                        import('lucide-svelte/icons/chevron-right')}
+                                    tabler={() =>
+                                        import('@tabler/icons-svelte/icons/chevron-right')}
+                                    hugeicons={() =>
+                                        import('@hugeicons/core-free-icons/ArrowRight01Icon')}
+                                    phosphor={() =>
+                                        import('phosphor-svelte/lib/CaretRightIcon')}
+                                    remixicon={() =>
+                                        import('remixicon-svelte/icons/arrow-right-s-line')}
                                     class="size-4"
                                 />
                             </Link>
@@ -195,11 +210,16 @@
                     {#snippet child({ props })}
                         <Link href={pageUrl(lastPage)} {...linkOpts} {...props}>
                             <Icon
-                                lucide="ChevronsRightIcon"
-                                tabler="IconChevronsRight"
-                                hugeicons="ArrowRightDoubleIcon"
-                                phosphor="CaretDoubleRightIcon"
-                                remixicon="RiSkipForwardLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/chevrons-right')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/chevrons-right')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/ArrowRightDoubleIcon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/CaretDoubleRightIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/skip-forward-line')}
                                 class="size-4"
                             />
                         </Link>
@@ -216,11 +236,16 @@
                     {#snippet child({ props })}
                         <Link href={pageUrl(1)} {...linkOpts} {...props}>
                             <Icon
-                                lucide="ChevronsLeftIcon"
-                                tabler="IconChevronsLeft"
-                                hugeicons="ArrowLeftDoubleIcon"
-                                phosphor="CaretDoubleLeftIcon"
-                                remixicon="RiSkipBackLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/chevrons-left')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/chevrons-left')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/ArrowLeftDoubleIcon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/CaretDoubleLeftIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/skip-back-line')}
                                 class="size-4"
                             />
                         </Link>
@@ -238,11 +263,16 @@
                             {...props}
                         >
                             <Icon
-                                lucide="ChevronLeftIcon"
-                                tabler="IconChevronLeft"
-                                hugeicons="ArrowLeft01Icon"
-                                phosphor="CaretLeftIcon"
-                                remixicon="RiArrowLeftSLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/chevron-left')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/chevron-left')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/ArrowLeft01Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/CaretLeftIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/arrow-left-s-line')}
                                 class="size-4"
                             />
                         </Link>
@@ -319,11 +349,16 @@
                             {...props}
                         >
                             <Icon
-                                lucide="ChevronRightIcon"
-                                tabler="IconChevronRight"
-                                hugeicons="ArrowRight01Icon"
-                                phosphor="CaretRightIcon"
-                                remixicon="RiArrowRightSLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/chevron-right')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/chevron-right')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/ArrowRight01Icon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/CaretRightIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/arrow-right-s-line')}
                                 class="size-4"
                             />
                         </Link>
@@ -337,11 +372,16 @@
                     {#snippet child({ props })}
                         <Link href={pageUrl(lastPage)} {...linkOpts} {...props}>
                             <Icon
-                                lucide="ChevronsRightIcon"
-                                tabler="IconChevronsRight"
-                                hugeicons="ArrowRightDoubleIcon"
-                                phosphor="CaretDoubleRightIcon"
-                                remixicon="RiSkipForwardLine"
+                                lucide={() =>
+                                    import('lucide-svelte/icons/chevrons-right')}
+                                tabler={() =>
+                                    import('@tabler/icons-svelte/icons/chevrons-right')}
+                                hugeicons={() =>
+                                    import('@hugeicons/core-free-icons/ArrowRightDoubleIcon')}
+                                phosphor={() =>
+                                    import('phosphor-svelte/lib/CaretDoubleRightIcon')}
+                                remixicon={() =>
+                                    import('remixicon-svelte/icons/skip-forward-line')}
                                 class="size-4"
                             />
                         </Link>
