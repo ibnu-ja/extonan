@@ -40,7 +40,7 @@ class PostFormData extends Data
             epNo: $meta->ep_no ?? null,
             isPublished: $post->is_published,
             canPublish: $canPublish,
-            links: $post->links->map(fn ($r) => ResourceData::fromModel($r))->values()->toArray(),
+            links: $post->links->map(fn ($r) => ResourceData::fromModel($r))->values()->all(),
             embed: $post->embed ? ResourceData::fromModel($post->embed) : null,
             saluran: $post->saluran ? ResourceData::fromModel($post->saluran) : null,
             thumbnailItem: $media ? MediaData::fromModel($media) : null,
