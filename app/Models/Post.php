@@ -229,4 +229,40 @@ class Post extends BasePost
             ->orderByRaw('"metadata" ->> \'ep_no\' collate "numeric"')
             ->orderByDesc('title->native');
     }
+
+    #[Scope]
+    protected function searchTitle(Builder $query, string $search): void
+    {
+        try {
+            $builder = self::search($search);
+            $builder->limit = 1000;
+            $result = $builder->raw();
+            $ids = array_column($result['hits'] ?? [], 'id');
+
+            if (! empty($ids)) {
+                $orders = array_map(fn ($id) => sprintf('id = %d desc', $id), $ids);
+                $rawOrder = implode(', ', $orders);
+                $query->whereIn('id', $ids)->orderByRaw($rawOrder);
+
+                return;
+            }
+        } catch (\Throwable) {
+            // fallback to database ilike if scout driver is offline / in testing
+        }
+
+        $query->where(function (Builder $q) use ($search) {
+            $q->where('title->en', 'ilike', "%{$search}%")
+                ->orWhere('title->id', 'ilike', "%{$search}%")
+                ->orWhere('title->romaji', 'ilike', "%{$search}%")
+                ->orWhere('title->native', 'ilike', "%{$search}%");
+        });
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->getTranslations('title'),
+        ];
+    }
 }

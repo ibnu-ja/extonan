@@ -35,6 +35,8 @@ class PostShowData extends Data
         public DataCollection $links,
         public ?ResourceData $saluran = null,
         public ?ResourceData $embed = null,
+        /** @var array<string, mixed>|null */
+        public ?array $metadata = null,
     ) {}
 
     public static function fromModel(Post $post, ?User $user = null): self
@@ -68,6 +70,7 @@ class PostShowData extends Data
             embed: $post->embed
                 ? ResourceData::fromModel($post->embed)
                 : null,
+            metadata: $meta ? json_decode(json_encode($meta), true) : null,
         );
     }
 }

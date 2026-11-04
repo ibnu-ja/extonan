@@ -282,6 +282,7 @@ declare namespace App {
                 embed: App.Data.Anime.ResourceData | null;
                 saluran: App.Data.Anime.ResourceData | null;
                 thumbnailItem: App.Data.MediaData | null;
+                vgmdbData: Record<string, any> | null;
             };
             export type PostShowData = {
                 id: number;
@@ -298,6 +299,7 @@ declare namespace App {
                 links: App.Data.Anime.ResourceData[];
                 saluran: App.Data.Anime.ResourceData | null;
                 embed: App.Data.Anime.ResourceData | null;
+                metadata: Record<string, any> | null;
             };
             export type PostShowResponse = {
                 anime: App.Data.Anime.AnimeListItemData;
@@ -334,6 +336,14 @@ declare namespace App {
             };
         }
         namespace Music {
+            export type AlbumIndexResponse = {
+                albums: Spatie.LaravelData.PaginatedDataCollection<
+                    number,
+                    App.Data.MusicSummaryData
+                >;
+                canCreate: boolean;
+                canViewUnpublished: boolean;
+            };
             export type MusicIndexResponse = {
                 mv: Spatie.LaravelData.PaginatedDataCollection<
                     number,

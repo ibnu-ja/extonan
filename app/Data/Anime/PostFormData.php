@@ -25,6 +25,8 @@ class PostFormData extends Data
         public ?ResourceData $embed = null,
         public ?ResourceData $saluran = null,
         public ?MediaData $thumbnailItem = null,
+        /** @var array<string, mixed>|null */
+        public ?array $vgmdbData = null,
     ) {}
 
     public static function fromModel(Post $post, bool $canPublish): self
@@ -44,6 +46,7 @@ class PostFormData extends Data
             embed: $post->embed ? ResourceData::fromModel($post->embed) : null,
             saluran: $post->saluran ? ResourceData::fromModel($post->saluran) : null,
             thumbnailItem: $media ? MediaData::fromModel($media) : null,
+            vgmdbData: isset($meta->vgmdb_data) ? json_decode(json_encode($meta->vgmdb_data), true) : null,
         );
     }
 }

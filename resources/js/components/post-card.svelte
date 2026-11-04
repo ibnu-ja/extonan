@@ -85,7 +85,10 @@
     );
 
     const resolvedAspect = $derived(
-        aspect ?? (postType === 'album' ? 'square' : 'video'),
+        aspect ??
+            (postType === 'album' || postType === 'single'
+                ? 'square'
+                : 'video'),
     );
 
     const displayTitle = $derived.by(() => {
@@ -112,7 +115,7 @@
             return mvShow.url(post.id);
         }
 
-        if (postType === 'album') {
+        if (postType === 'album' || postType === 'single') {
             return albumShow.url(post.id);
         }
 
@@ -128,7 +131,7 @@
             return mvEdit.url(post.id);
         }
 
-        if (postType === 'album') {
+        if (postType === 'album' || postType === 'single') {
             return albumEdit.url(post.id);
         }
 
@@ -175,7 +178,7 @@
 
         if (postType === 'mv') {
             router.delete(mvDestroy.url(post.id));
-        } else if (postType === 'album') {
+        } else if (postType === 'album' || postType === 'single') {
             router.delete(albumDestroy.url(post.id));
         } else if (resolvedAnimeId) {
             router.delete(
@@ -189,7 +192,7 @@
 
         if (postType === 'mv') {
             router.put(mvUpdate.url(post.id), { isPublished: true });
-        } else if (postType === 'album') {
+        } else if (postType === 'album' || postType === 'single') {
             router.put(albumUpdate.url(post.id), { isPublished: true });
         } else if (resolvedAnimeId) {
             router.put(

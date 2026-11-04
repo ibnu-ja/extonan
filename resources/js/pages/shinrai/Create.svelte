@@ -7,6 +7,7 @@
     import { Icon } from '@/components/icon';
     import MediaManager from '@/components/media-manager/index.svelte';
     import MediaManagerTrigger from '@/components/media-manager/media-manager-trigger.svelte';
+    import TracksEditor from '@/components/tracks-editor.svelte';
     import { Button } from '@/components/ui/button';
     import * as Card from '@/components/ui/card/index.js';
     import * as DropdownMenu from '@/components/ui/dropdown-menu/index.js';
@@ -65,7 +66,8 @@
                 (post?.saluran as App.Data.Anime.ResourceData | null) ?? null,
             thumbnailItem:
                 (post?.thumbnailItem as App.Data.MediaData | null) ?? null,
-            vgmdbData: null,
+            vgmdbData:
+                (post?.vgmdbData as Record<string, any> | null) ?? null,
         }),
     );
 
@@ -793,7 +795,11 @@
         <div class="grid gap-4 md:gap-6 md:grid-cols-12">
             <div class="md:col-span-8 space-y-6">
                 {@render card('Basic Information', basicInfoContent)}
-                {@render card('Streaming', streamingContent, streamingAction)}
+                {#if form.postType === 'mv'}
+                    {@render card('Streaming', streamingContent, streamingAction)}
+                {:else}
+                    <TracksEditor bind:vgmdbData={form.vgmdbData} />
+                {/if}
                 {@render card(
                     'Download Links',
                     downloadLinksContent,
