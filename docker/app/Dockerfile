@@ -125,6 +125,13 @@ ARG APP_BRANCH=unknown
 ARG APP_COMMIT_HASH=unknown
 ARG APP_REPO_URL=""
 
+RUN echo "build commit: ${APP_COMMIT_HASH}"
+
+LABEL org.opencontainers.image.title="extonan-app" \
+    org.opencontainers.image.version="${APP_VERSION}" \
+    org.opencontainers.image.revision="${APP_COMMIT_HASH}" \
+    org.opencontainers.image.source="${APP_REPO_URL}"
+
 ENV APP_VERSION=${APP_VERSION} \
     APP_BRANCH=${APP_BRANCH} \
     APP_COMMIT_HASH=${APP_COMMIT_HASH} \

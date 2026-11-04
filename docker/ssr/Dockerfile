@@ -24,5 +24,23 @@ FROM docker.io/oven/bun:1-alpine
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=bun_builder /app/dist/ssr.js /app/ssr.js
+
+ARG APP_VERSION=dev
+ARG APP_BRANCH=unknown
+ARG APP_COMMIT_HASH=unknown
+ARG APP_REPO_URL=""
+
+RUN echo "build commit: ${APP_COMMIT_HASH}"
+
+LABEL org.opencontainers.image.title="extonan-ssr" \
+    org.opencontainers.image.version="${APP_VERSION}" \
+    org.opencontainers.image.revision="${APP_COMMIT_HASH}" \
+    org.opencontainers.image.source="${APP_REPO_URL}"
+
+ENV APP_VERSION=${APP_VERSION} \
+    APP_BRANCH=${APP_BRANCH} \
+    APP_COMMIT_HASH=${APP_COMMIT_HASH} \
+    APP_REPO_URL=${APP_REPO_URL}
+
 EXPOSE 13714
 CMD ["bun", "ssr.js"]
