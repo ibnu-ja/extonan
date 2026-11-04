@@ -27,24 +27,30 @@ class HomeController extends Controller
             ->map(fn (Anime $a) => AnimeSummaryData::fromModel($a, $user));
 
         $latestEpisodes = Post::whereHasMorph('postable', [Anime::class], function (Builder $query) {
-            $query->current();
-        })->with(['postable', 'author'])
+            $query->visible();
+        })->visible()
+            ->with([
+                'postable' => fn ($query) => $query->withoutGlobalScopes(),
+                'author',
+                'media.originalMedia.variants',
+                'media.variants',
+            ])
             ->take(15)
             ->orderByDesc('published_at')
             ->get()
             ->map(fn (Post $p) => EpisodeSummaryData::fromModel($p, $user, $p->postable?->getTranslations('title') ?? [], $p->postable));
 
-        $latestMv = Post::with('author')
+        $latestMv = Post::with(['author', 'media.originalMedia.variants', 'media.variants'])
             ->where('metadata->post_type', 'mv')
-            ->current()
+            ->visible()
             ->take(10)
             ->orderByDesc('published_at')
             ->get()
             ->map(fn (Post $p) => MusicSummaryData::fromModel($p, $user));
 
-        $latestAlbum = Post::with('author')
+        $latestAlbum = Post::with(['author', 'media.originalMedia.variants', 'media.variants'])
             ->whereIn('metadata->post_type', ['album', 'single'])
-            ->current()
+            ->visible()
             ->take(10)
             ->orderByDesc('published_at')
             ->get()

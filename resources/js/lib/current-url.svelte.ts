@@ -57,7 +57,15 @@ export function currentUrlState(): CurrentUrlState {
             return false;
         }
 
-        return current.startsWith(resolved);
+        if (resolved === '/') {
+            return current === '/';
+        }
+
+        return (
+            current === resolved ||
+            current.startsWith(resolved + '/') ||
+            current.startsWith(resolved + '?')
+        );
     }
 
     function whenCurrentUrl<TIfTrue, TIfFalse>(

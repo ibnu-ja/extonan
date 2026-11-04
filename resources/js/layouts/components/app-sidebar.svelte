@@ -28,10 +28,27 @@
     const isLoggedIn = $derived(!!auth.user);
     const canRegister = $derived(page.props.canRegister as boolean | undefined);
 
+    const isShinraiMv = $derived(
+        page.url.startsWith('/shinrai') &&
+            ((page.props as any)?.type === 'mv' ||
+                (page.props as any)?.post?.postType === 'mv' ||
+                (page.props as any)?.post?.metadata?.post_type === 'mv'),
+    );
+    const isShinraiAlbum = $derived(
+        page.url.startsWith('/shinrai') &&
+            ((page.props as any)?.type === 'album' ||
+                (page.props as any)?.type === 'single' ||
+                (page.props as any)?.post?.postType === 'album' ||
+                (page.props as any)?.post?.postType === 'single' ||
+                (page.props as any)?.post?.metadata?.post_type === 'album' ||
+                (page.props as any)?.post?.metadata?.post_type === 'single'),
+    );
+
     const mainNavItems = $derived(<NavItem[]>[
         {
             title: 'Home',
             href: home(),
+            exactActive: true,
             icon: {
                 lucide: () => import('lucide-svelte/icons/house'),
                 tabler: () => import('@tabler/icons-svelte/icons/home'),
@@ -56,6 +73,7 @@
         {
             title: 'Album',
             href: album(),
+            isActive: isShinraiAlbum || undefined,
             icon: {
                 lucide: () => import('lucide-svelte/icons/disc-3'),
                 tabler: () => import('@tabler/icons-svelte/icons/disc'),
@@ -68,6 +86,7 @@
         {
             title: 'MV',
             href: mv(),
+            isActive: isShinraiMv || undefined,
             icon: {
                 lucide: () => import('lucide-svelte/icons/clapperboard'),
                 tabler: () => import('@tabler/icons-svelte/icons/movie'),

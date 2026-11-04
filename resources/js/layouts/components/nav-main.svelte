@@ -19,7 +19,7 @@
 <Sidebar.Group>
     <Sidebar.GroupLabel>Platform</Sidebar.GroupLabel>
     <Sidebar.Menu>
-        {#each items as { title, href, icon: Icon, isActive, items: subItems } (href)}
+        {#each items as { title, href, icon: Icon, isActive, exactActive, items: subItems } (href)}
             <Sidebar.MenuItem>
                 {#if subItems?.length}
                     <Collapsible.Root open={isActive}>
@@ -85,7 +85,13 @@
                     </Collapsible.Root>
                 {:else}
                     <Sidebar.MenuButton
-                        isActive={url.isCurrentUrl(href, url.currentUrl)}
+                        isActive={isActive ??
+                            (exactActive
+                                ? url.isCurrentUrl(href, url.currentUrl)
+                                : url.isCurrentOrParentUrl(
+                                      href,
+                                      url.currentUrl,
+                                  ))}
                         tooltipContent={title}
                         class="transition-all duration-200"
                     >

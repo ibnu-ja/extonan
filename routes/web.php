@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\MVController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ShinraiPostController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -32,5 +33,6 @@ Route::get('/anime/az', [AnimeController::class, 'az'])->name('anime.az');
 Route::resource('/anime/{anime}/post', PostController::class)->except('index');
 Route::resource('/album', AlbumController::class);
 Route::resource('/mv', MVController::class);
+Route::resource('/shinrai', ShinraiPostController::class)->except(['index', 'show']);
 
 require __DIR__.'/settings.php';

@@ -52,7 +52,7 @@ class EpisodeSummaryData extends Data
             publishedAt: $post->published_at?->toIso8601String(),
             isPublished: $post->is_published,
             isCurrent: $post->is_current,
-            animeId: $postable->id,
+            animeId: $postable?->id ?? (int) $post->postable_id,
             permissions: PermissionsData::fromModel($post, $user),
         );
     }

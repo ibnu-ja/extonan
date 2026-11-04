@@ -183,11 +183,11 @@ declare namespace App {
                 canCreate: boolean;
             };
             export type AnimeCreateResponse = {
-                anime?: App.Data.Anime.AnimeFormData;
                 genres?: App.Data.LabelValue[];
                 tags?: App.Data.TagItem[];
                 seasons?: App.Enums.Season[];
                 anilistQuery?: string;
+                anime?: App.Data.Anime.AnimeFormData;
             };
             export type AnimeFilterData = {
                 genreIn: string[];
@@ -331,6 +331,37 @@ declare namespace App {
                 latestEpisodes: App.Data.EpisodeSummaryData[];
                 latestMv: App.Data.MusicSummaryData[];
                 latestAlbum: App.Data.MusicSummaryData[];
+            };
+        }
+        namespace Music {
+            export type MusicIndexResponse = {
+                mv: Spatie.LaravelData.PaginatedDataCollection<
+                    number,
+                    App.Data.MusicSummaryData
+                >;
+                canCreate: boolean;
+                canViewUnpublished: boolean;
+            };
+            export type MusicShowResponse = {
+                post: App.Data.Anime.PostShowData;
+                related: App.Data.MusicSummaryData[];
+                canPublish: boolean;
+            };
+            export type ShinraiCreateResponse = {
+                type: string;
+                post?: App.Data.Anime.PostFormData;
+                canPublish: boolean;
+            };
+            export type ShinraiStoreData = {
+                title: Record<string, string | null>;
+                description: Record<string, string | null>;
+                postType: string;
+                isPublished: boolean;
+                links: App.Data.Anime.ResourceData[];
+                embed: App.Data.Anime.ResourceData | null;
+                saluran: App.Data.Anime.ResourceData | null;
+                thumbnailItem: App.Data.MediaData | null;
+                vgmdbData: Record<string, any> | null;
             };
         }
     }

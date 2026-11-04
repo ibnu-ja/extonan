@@ -9,6 +9,7 @@
     import * as Item from '@/components/ui/item';
     import * as SpeedDial from '@/components/ui/speed-dial/index.js';
     import { t, formatDate } from '@/lib/locale.svelte';
+    import { getResolution } from '@/lib/resolution';
     import { index as animeIndex, show as animeShow } from '@/routes/anime';
     import {
         show as postShow,
@@ -82,41 +83,6 @@
             }
         }
     });
-
-    function getResolution(name: string): {
-        label: string;
-        variant: 'default' | 'secondary' | 'destructive' | 'outline';
-    } | null {
-        const pattern = /(\d{3,4}x\d{3,4}|\d{3,4}p)/;
-        const match = name.match(pattern);
-
-        if (!match) {
-            return null;
-        }
-
-        const res = match[0];
-        const map: Record<string, string> = {
-            '3840x2160': '4K',
-            '1920x1080': '1080p',
-            '1440x1080': '1080p',
-            '1280x720': '720p',
-            '960x720': '720p',
-            '848x480': '480p',
-        };
-
-        const label = res.includes('x') ? (map[res] ?? res) : res;
-        const variantMap: Record<
-            string,
-            'default' | 'secondary' | 'destructive' | 'outline'
-        > = {
-            '4K': 'default',
-            '1080p': 'secondary',
-            '720p': 'outline',
-            '480p': 'outline',
-        };
-
-        return { label, variant: variantMap[label] ?? 'outline' };
-    }
 </script>
 
 <svelte:head>

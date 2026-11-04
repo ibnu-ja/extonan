@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ResourceType;
 use App\Models\Post;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->longText('value');
-            $table->enum('type', ['embed', 'link']);
+            $table->enum('type', array_column(ResourceType::cases(), 'value'));
             $table->foreignIdFor(Post::class);
             $table->timestamps();
         });

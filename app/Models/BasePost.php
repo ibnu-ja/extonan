@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Gate;
 use Laravel\Scout\Searchable;
 use Oddvalue\LaravelDrafts\Concerns\HasDrafts;
 use Plank\Mediable\Mediable;
@@ -65,22 +66,25 @@ abstract class BasePost extends Model
     #[Scope]
     protected function visible(Builder $query): void
     {
-        $user = auth()->user();
+        if (Gate::allows(Permission::POST_READ_ANY->value)) {
+            // Editor / Admin sees all current posts (including drafts)
+            $query->current();
 
-        $query->when($user, function (Builder $q) use ($user) {
-            // Check if user has the 'post.read.any' permission
-            $q->when(
-                $user->can(Permission::POST_READ_ANY->value),
-                // Editor sees all unpublished posts
-                fn (Builder $q) => $q->current(),
-                fn (Builder $q) => $q->when(
-                    // Check if user has the 'post.read.self' permission
-                    $user->can(Permission::POST_READ_SELF->value),
-                    // Author and contributor see their own unpublished posts
-                    fn (Builder $q) => $q->published()->orWhere(fn (Builder $q) => $q->current()->where('author_id', $user->getAuthIdentifier())),
-                ),
-            );
-            // Guest or user without permissions can only see published posts
-        }, fn (Builder $q) => $q->withoutDrafts());
+            return;
+        }
+
+        if (Gate::allows(Permission::POST_READ_SELF->value)) {
+            // Author / Contributor sees published posts + their own unpublished drafts
+            $userId = Auth::id();
+            $query->where(function (Builder $q) use ($userId) {
+                $q->withoutDrafts()->current()
+                    ->orWhere(fn (Builder $sub) => $sub->current()->where('author_id', $userId));
+            });
+
+            return;
+        }
+
+        // Guest or user without permissions can only see published posts
+        $query->withoutDrafts()->current();
     }
 }

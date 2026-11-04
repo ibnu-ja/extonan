@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\StoreShinraiPostRequest;
+use App\Data\Anime\PostFormData;
+use App\Data\Anime\ResourceData;
+use App\Data\Music\ShinraiCreateResponse;
+use App\Data\Music\ShinraiStoreData;
+use App\Enums\ResourceType;
 use App\Models\Post;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 use Oddvalue\LaravelDrafts\Http\Middleware\WithDraftsMiddleware;
+use Spatie\LaravelData\Optional;
 
 class ShinraiPostController extends Controller implements HasMiddleware
 {
@@ -18,7 +27,7 @@ class ShinraiPostController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            // new Middleware('auth', except: ['show', 'store']),
+            'auth',
             WithDraftsMiddleware::class,
         ];
     }
@@ -28,99 +37,161 @@ class ShinraiPostController extends Controller implements HasMiddleware
      */
     public function create(): Response
     {
-        \Gate::authorize('create', Post::class);
+        Gate::authorize('create', Post::class);
 
-        return Inertia::render('Shinrai/Create', [
-            'canPublish' => request()->user()->can('publish', Post::class),
-        ]);
+        $type = request()->query('type', 'mv');
+        $user = Auth::user();
+
+        return Inertia::render('shinrai/Create', new ShinraiCreateResponse(
+            type: $type,
+            canPublish: $user?->can('publish', Post::class) ?? false,
+        ));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreShinraiPostRequest $request)
+    public function store(Request $request): RedirectResponse
     {
-        // if user wants to publish but does not have capability to publish
-        // or user cannot create
-        \Gate::authorize('create', Post::class);
-        if ($request->boolean('is_published') && $request->user()->cannot('publish', Post::class)) {
-            abort(403);
+        Gate::authorize('create', Post::class);
+
+        $data = ShinraiStoreData::from($request);
+        $this->authorizePublishIfRequested($data, $request->user());
+
+        $post = Post::create($data->toModelArray());
+
+        if (! empty($data->links)) {
+            $post->resources()->createMany(array_map(fn (ResourceData $r) => $r->toArray(), $data->links));
         }
-        // return $request->validated();
-        //        return $request->all();
-        $post = Post::create($request->validated());
 
-        $post->resources()->createMany($request->validated()['links']);
+        if ($data->embed !== null) {
+            $post->resources()->create($data->embed->toArray());
+        }
 
-        if (! is_null($request->validated()['thumbnail_item'])) {
-            $post->syncMedia($request->validated()['thumbnail_item']['id'], 'thumbnail');
+        if ($data->saluran !== null) {
+            $post->resources()->create($data->saluran->toArray());
+        }
+
+        if ($data->thumbnailItem !== null) {
+            $post->syncMedia($data->thumbnailItem->id, 'thumbnail');
         } else {
             $post->detachMediaTags('thumbnail');
         }
 
-        $route = $request->validated()['metadata']['post_type'] == 'mv' ? 'mv.index' : 'album.index';
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Post created successfully!']);
 
-        return redirect()->route($route)->banner('Post created successfully!');
+        $route = $data->postType === 'mv' ? 'mv.show' : 'album.show';
+
+        return redirect()->route($route, $post);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Post $post)
+    public function edit(Post $shinrai): Response
     {
-        \Gate::authorize('update', $post);
+        Gate::authorize('update', $shinrai);
 
-        return Inertia::render('Shinrai/Create', [
-            'post' => $post->load(['author', 'links', 'media'])->append('thumbnail_item'),
-            'canPublish' => request()->user()->can('publish', $post),
-        ]);
+        $user = Auth::user();
+        $shinrai->load(['links', 'embed', 'saluran', 'media.originalMedia.variants', 'media.variants']);
+
+        return Inertia::render('shinrai/Create', new ShinraiCreateResponse(
+            type: $shinrai->metadata?->post_type ?? 'mv',
+            post: PostFormData::fromModel($shinrai, $user?->can('publish', $shinrai) ?? false),
+            canPublish: $user?->can('publish', $shinrai) ?? false,
+        ));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Post $post, StorePostRequest $request)
+    public function update(Request $request, Post $shinrai): RedirectResponse
     {
-        \Gate::authorize('update', $post);
-        if ($request->boolean('is_published') && $request->user()->cannot('publish', Post::class)) {
-            abort(403);
-        }
-        $validated = $request->validated();
+        Gate::authorize('update', $shinrai);
 
-        $linksss = collect($validated['links'])->map(function ($item) {
-            return array_filter([
-                'id' => $item['id'] ?? null,  // This will return null if 'id' does not exist, making the key potentially removable
-                'name' => $item['name'],
-                'type' => $item['type'],
-                'value' => json_encode($item['value']),
-            ], function ($value, $key) {
-                // Filter out the 'id' key if the value is null
-                return ! (is_null($value) && $key === 'id');
-            }, ARRAY_FILTER_USE_BOTH);
-        });
+        $data = ShinraiStoreData::from($request);
+        $this->authorizePublishIfRequested($data, $request->user(), $shinrai);
 
-        $post->update($validated);
+        $shinrai->update($data->toModelArray());
 
-        $post->links()->upsert($linksss->toArray(), uniqueBy: ['id'], update: ['name', 'value']);
+        $this->upsertResources($shinrai, ResourceType::Link, $data->links);
+        $this->replaceSingleResource($shinrai, ResourceType::Embed, $data->embed);
+        $this->replaceSingleResource($shinrai, ResourceType::Saluran, $data->saluran);
 
-        if (! is_null($request->validated()['thumbnail_item'])) {
-            $post->syncMedia($request->validated()['thumbnail_item']['id'], 'thumbnail');
+        if ($data->thumbnailItem !== null) {
+            $shinrai->syncMedia($data->thumbnailItem->id, 'thumbnail');
         } else {
-            $post->detachMediaTags('thumbnail');
+            $shinrai->detachMediaTags('thumbnail');
         }
 
-        return redirect()->back()->banner('Episode updated successfully!');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Post updated successfully!']);
+
+        $route = ($shinrai->metadata?->post_type ?? 'mv') === 'mv' ? 'mv.show' : 'album.show';
+
+        return redirect()->route($route, $shinrai);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Post $shinrai): RedirectResponse
     {
-        // dd($post);
-        \Gate::authorize('delete', $post);
-        $post->delete();
+        Gate::authorize('delete', $shinrai);
 
-        return redirect()->back()->banner('Episode deleted successfully!');
+        $type = $shinrai->metadata?->post_type ?? 'mv';
+        $shinrai->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Post deleted successfully!']);
+
+        $route = $type === 'mv' ? 'mv.index' : 'album.index';
+
+        return redirect()->route($route);
+    }
+
+    /** @param ResourceData[] $items */
+    private function upsertResources(Post $post, ResourceType $type, array $items): void
+    {
+        $submittedIds = collect($items)
+            ->map(fn (ResourceData $r) => $r->id instanceof Optional ? null : $r->id)
+            ->filter()
+            ->values();
+
+        $query = $post->resources()->where('type', $type);
+
+        if ($submittedIds->isNotEmpty()) {
+            $query->whereNotIn('id', $submittedIds);
+        }
+
+        $query->delete();
+
+        if ($items === []) {
+            return;
+        }
+
+        $post->resources()->upsert(
+            array_map(fn (ResourceData $r) => [...$r->toArray(), 'value' => json_encode($r->value)], $items),
+            uniqueBy: ['id'],
+            update: ['name', 'type', 'value'],
+        );
+    }
+
+    private function replaceSingleResource(Post $post, ResourceType $type, ?ResourceData $item): void
+    {
+        $post->resources()->where('type', $type)->delete();
+
+        if ($item !== null) {
+            $post->resources()->create($item->toArray());
+        }
+    }
+
+    private function authorizePublishIfRequested(ShinraiStoreData $data, ?User $user, ?Post $post = null): void
+    {
+        $requestingPublish = $post
+            ? $data->isPublished && ! $post->is_published
+            : $data->isPublished;
+
+        if ($requestingPublish && $user?->cannot('publish', Post::class)) {
+            abort(403);
+        }
     }
 }
