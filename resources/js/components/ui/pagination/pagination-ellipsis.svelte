@@ -1,7 +1,7 @@
 <script lang="ts">
-	import EllipsisIcon from "@lucide/svelte/icons/ellipsis";
-	import { cn, type WithElementRef, type WithoutChildren } from "@/lib/utils.js";
 	import type { HTMLAttributes } from "svelte/elements";
+	import { cn, type WithElementRef, type WithoutChildren } from "@/lib/utils.js";
+	import { Icon } from "@/components/icon/index.js";
 
 	let {
 		ref = $bindable(null),
@@ -17,6 +17,12 @@
 	class={cn("flex size-9 items-center justify-center", className)}
 	{...restProps}
 >
-	<EllipsisIcon class="size-4" />
+	<Icon
+		lucide={() => import("lucide-svelte/icons/ellipsis")}
+		tabler={() => import("@tabler/icons-svelte/icons/dots")}
+		hugeicons={() => import("@hugeicons/core-free-icons/MoreHorizontalCircle01Icon")}
+		phosphor={() => import("phosphor-svelte/lib/DotsThreeIcon")}
+		remixicon={() => import("remixicon-svelte/icons/more-line")}
+	/>
 	<span class="sr-only">More pages</span>
 </span>

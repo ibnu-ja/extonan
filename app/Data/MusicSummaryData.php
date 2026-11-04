@@ -4,8 +4,8 @@ namespace App\Data;
 
 use App\Models\Post;
 use App\Models\User;
-use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class MusicSummaryData extends Data
@@ -22,7 +22,6 @@ class MusicSummaryData extends Data
         public ?string $publishedAt,
         public bool $isPublished,
         public bool $isCurrent,
-        public string $link,
         public PermissionsData $permissions,
     ) {}
 
@@ -46,7 +45,6 @@ class MusicSummaryData extends Data
             publishedAt: $post->published_at?->toIso8601String(),
             isPublished: $post->is_published,
             isCurrent: $post->is_current,
-            link: route('album.show', $post),
             permissions: PermissionsData::fromModel($post, $user),
         );
     }

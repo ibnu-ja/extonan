@@ -4,8 +4,8 @@ namespace App\Data;
 
 use App\Models\Anime;
 use App\Models\User;
-use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class AnimeSummaryData extends Data
@@ -20,7 +20,6 @@ class AnimeSummaryData extends Data
         public array $genres,
         public ?string $bannerImage,
         public CoverImageData $coverImage,
-        public string $link,
         public PermissionsData $permissions,
     ) {}
 
@@ -40,7 +39,6 @@ class AnimeSummaryData extends Data
                 medium: $meta->coverImage->medium ?? '',
                 color: $meta->coverImage->color ?? '',
             ),
-            link: route('anime.show', $anime),
             permissions: PermissionsData::fromModel($anime, $user),
         );
     }

@@ -7,7 +7,6 @@ declare namespace App {
             genres: string[];
             bannerImage: string | null;
             coverImage: App.Data.CoverImageData;
-            link: string;
             permissions: App.Data.PermissionsData;
         };
         export type CoverImageData = {
@@ -28,7 +27,7 @@ declare namespace App {
             publishedAt: string | null;
             isPublished: boolean;
             isCurrent: boolean;
-            link: string;
+            animeId: number;
             permissions: App.Data.PermissionsData;
         };
         export type LabelValue = {
@@ -62,52 +61,168 @@ declare namespace App {
             publishedAt: string | null;
             isPublished: boolean;
             isCurrent: boolean;
-            link: string;
             permissions: App.Data.PermissionsData;
-        };
-        export type PaginationData = {
-            currentPage: number;
-            lastPage: number;
-            perPage: number;
-            total: number;
-            links: {
-                url: string | null;
-                label: string;
-                active: boolean;
-            }[];
         };
         export type PermissionsData = {
             update: boolean;
             delete: boolean;
             publish: boolean;
         };
+        export type TagItem = {
+            id: number;
+            name: string;
+            isAdult: boolean;
+        };
         export type UserSummaryData = {
             id: number;
             name: string | null;
             avatar: string | null;
         };
+        namespace Anilist {
+            export type AnilistMediaData = {
+                id: number | null;
+                idMal: number | null;
+                coverImage: App.Data.Anilist.CoverImageData | null;
+                title: App.Data.Anilist.TitleData | null;
+                startDate: App.Data.Anilist.FuzzyDateData | null;
+                endDate: App.Data.Anilist.FuzzyDateData | null;
+                episodes: number | null;
+                description: string | null;
+                bannerImage: string | null;
+                season: App.Enums.Season | null;
+                seasonYear: number | null;
+                seasonInt: number | null;
+                genres: string[];
+                tags: App.Data.Anilist.TagData[];
+                studios: App.Data.Anilist.StudioConnectionData | null;
+                characters: App.Data.Anilist.CharacterConnectionData | null;
+            };
+            export type CharacterConnectionData = {
+                edges: App.Data.Anilist.CharacterEdgeData[];
+            };
+            export type CharacterData = {
+                id: number;
+                name: App.Data.Anilist.CharacterNameData | null;
+                image: App.Data.Anilist.CharacterImageData | null;
+            };
+            export type CharacterEdgeData = {
+                node: App.Data.Anilist.CharacterData | null;
+                role: App.Enums.CharacterRole | null;
+                voiceActors: App.Data.Anilist.StaffData[];
+            };
+            export type CharacterImageData = {
+                large: string | null;
+                medium: string | null;
+            };
+            export type CharacterNameData = {
+                first: string | null;
+                middle: string | null;
+                last: string | null;
+                full: string | null;
+                native: string | null;
+            };
+            export type CoverImageData = {
+                extraLarge: string | null;
+                large: string | null;
+                medium: string | null;
+                color: string | null;
+            };
+            export type FuzzyDateData = {
+                year: number | null;
+                month: number | null;
+                day: number | null;
+            };
+            export type StaffData = {
+                id: number;
+                name: App.Data.Anilist.StaffNameData | null;
+                image: App.Data.Anilist.StaffImageData | null;
+                languageV2: string | null;
+            };
+            export type StaffImageData = {
+                large: string | null;
+                medium: string | null;
+            };
+            export type StaffNameData = {
+                first: string | null;
+                middle: string | null;
+                last: string | null;
+                full: string | null;
+                native: string | null;
+            };
+            export type StudioConnectionData = {
+                edges: App.Data.Anilist.StudioEdgeData[];
+            };
+            export type StudioData = {
+                id: number;
+                name: string;
+                isAnimationStudio: boolean;
+            };
+            export type StudioEdgeData = {
+                node: App.Data.Anilist.StudioData | null;
+                isMain: boolean;
+            };
+            export type TagData = {
+                id: number;
+                name: string;
+                rank: number | null;
+                isAdult: boolean | null;
+                category: string | null;
+                isMediaSpoiler: boolean | null;
+                isGeneralSpoiler: boolean | null;
+                description: string | null;
+            };
+            export type TitleData = {
+                romaji: string | null;
+                english: string | null;
+                native: string | null;
+            };
+        }
         namespace Anime {
             export type AnimeAZResponse = {
                 items: App.Data.Anime.AnimeListItemData[];
                 canCreate: boolean;
+            };
+            export type AnimeCreateResponse = {
+                anime?: App.Data.Anime.AnimeFormData;
+                genres?: App.Data.LabelValue[];
+                tags?: App.Data.TagItem[];
+                seasons?: App.Enums.Season[];
+                anilistQuery?: string;
+            };
+            export type AnimeFilterData = {
+                genreIn: string[];
+                genreNotIn: string[];
+                tagIn: string[];
+                tagNotIn: string[];
+                seasonIn: string[];
+                seasonNotIn: string[];
+                title: string | null;
+                isPublished: boolean | null;
             };
             export type AnimeFormData = {
                 id: number | null;
                 title: Record<string, string | null>;
                 description: Record<string, string | null>;
                 anilistId: number | null;
-                metadata: object | null;
+                metadata: App.Data.Anilist.AnilistMediaData | null;
                 isPublished: boolean;
                 canPublish: boolean;
             };
+            export type AnimeIndexRequest = {
+                filter: App.Data.Anime.AnimeFilterData;
+                sort: string | null;
+                perPage: number | null;
+            };
             export type AnimeIndexResponse = {
-                items: App.Data.Anime.AnimeListItemData[];
-                pagination: App.Data.PaginationData;
-                seasons: string[];
-                canCreate: boolean;
-                genres: App.Data.LabelValue[];
-                tags: App.Data.LabelValue[];
-                sortOptions: App.Data.LabelValue[];
+                anime: Spatie.LaravelData.PaginatedDataCollection<
+                    number,
+                    App.Data.Anime.AnimeListItemData
+                >;
+                seasons?: string[];
+                genres?: App.Data.LabelValue[];
+                tags?: App.Data.TagItem[];
+                sortOptions?: App.Data.LabelValue[];
+                perPageValues: number[];
             };
             export type AnimeListItemData = {
                 id: number;
@@ -115,13 +230,99 @@ declare namespace App {
                 slug: Record<string, string | null>;
                 coverImage: App.Data.CoverImageData;
                 isPublished: boolean;
-                link: string;
                 permissions: App.Data.PermissionsData;
             };
             export type AnimeShowResponse = {
                 anime: App.Data.Anime.AnimeListItemData;
-                episodes: App.Data.EpisodeSummaryData[];
+                episodes: App.Data.Anime.EpisodeShowData[];
                 canCreateEpisode: boolean;
+                metadata: App.Data.Anilist.AnilistMediaData | null;
+            };
+            export type AnimeStoreData = {
+                title: Record<string, string | null>;
+                description: Record<string, string | null>;
+                anilistId: number | null;
+                metadata: App.Data.Anilist.AnilistMediaData | null;
+                isPublished: boolean;
+            };
+            export type EpisodeListItemData = {
+                id: number;
+                title: Record<string, string | null>;
+                slug: Record<string, string | null>;
+                epNo: string | null;
+                thumbnail: App.Data.CoverImageData | null;
+                publishedAt: string | null;
+            };
+            export type EpisodeShowData = {
+                id: number;
+                title: Record<string, string | null>;
+                epNo: string | null;
+                postType: string;
+                thumbnail: App.Data.CoverImageData | null;
+                author: App.Data.UserSummaryData | null;
+                publishedAt: string | null;
+                isPublished: boolean;
+                permissions: App.Data.PermissionsData;
+            };
+            export type PostCreateResponse = {
+                anime: App.Data.Anime.AnimeListItemData;
+                post?: App.Data.Anime.PostFormData;
+                canPublish: boolean;
+                metadata: App.Data.Anilist.AnilistMediaData | null;
+            };
+            export type PostFormData = {
+                id: number | null;
+                title: Record<string, string | null>;
+                description: Record<string, string | null>;
+                postType: string;
+                epNo: string | null;
+                isPublished: boolean;
+                canPublish: boolean;
+                links: App.Data.Anime.ResourceData[];
+                embed: App.Data.Anime.ResourceData | null;
+                saluran: App.Data.Anime.ResourceData | null;
+                thumbnailItem: App.Data.MediaData | null;
+            };
+            export type PostShowData = {
+                id: number;
+                title: Record<string, string | null>;
+                description: Record<string, string | null>;
+                slug: Record<string, string | null>;
+                epNo: string | null;
+                postType: string;
+                thumbnail: App.Data.CoverImageData | null;
+                author: App.Data.UserSummaryData | null;
+                publishedAt: string | null;
+                isPublished: boolean;
+                permissions: App.Data.PermissionsData;
+                links: App.Data.Anime.ResourceData[];
+                saluran: App.Data.Anime.ResourceData | null;
+                embed: App.Data.Anime.ResourceData | null;
+            };
+            export type PostShowResponse = {
+                anime: App.Data.Anime.AnimeListItemData;
+                episodes: App.Data.Anime.EpisodeListItemData[];
+                post: App.Data.Anime.PostShowData;
+            };
+            export type PostStoreData = {
+                title: Record<string, string | null>;
+                description: Record<string, string | null>;
+                postType: string;
+                epNo: string | null;
+                isPublished: boolean;
+                links: App.Data.Anime.ResourceData[];
+                embed: App.Data.Anime.ResourceData | null;
+                saluran: App.Data.Anime.ResourceData | null;
+                thumbnailItem: App.Data.MediaData | null;
+            };
+            export type ResourceData = {
+                id?: number;
+                name: string;
+                type: App.Enums.ResourceType;
+                value: {
+                    name: string;
+                    value: string;
+                }[];
             };
         }
         namespace Home {
@@ -134,6 +335,7 @@ declare namespace App {
         }
     }
     namespace Enums {
+        export type CharacterRole = 'MAIN' | 'SUPPORTING' | 'BACKGROUND';
         export type Permission =
             | 'post.create'
             | 'post.read.any'
@@ -151,7 +353,9 @@ declare namespace App {
             | 'user.delete.self'
             | 'user.edit.self'
             | 'user.edit.any';
+        export type ResourceType = 'link' | 'saluran' | 'embed';
         export type Role = 'admin' | 'editor' | 'author' | 'contributor';
+        export type Season = 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL';
     }
     namespace Http {
         namespace Requests {

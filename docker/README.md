@@ -73,6 +73,10 @@ systemctl --user start extonan-pod.service
 
 Same as Podman Kube.
 
+### Scaling
+
+TODO: [read socket](https://github.com/eriksjolund/podman-networking-docs?tab=readme-ov-file#example-use-reuseporttrue-to-share-a-port-between-services) 
+
 ## Compose
 
 TODO

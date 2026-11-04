@@ -9,7 +9,6 @@
     import { Form } from '@inertiajs/svelte';
     import AppHead from '@/components/app-head.svelte';
     import InputError from '@/components/input-error.svelte';
-    import PasskeyVerify from '@/components/passkey-verify.svelte';
     import PasswordInput from '@/components/password-input.svelte';
     import TextLink from '@/components/text-link.svelte';
     import { Button } from '@/components/ui/button';
@@ -20,6 +19,7 @@
     import { register } from '@/routes';
     import { store } from '@/routes/login';
     import { request } from '@/routes/password';
+    import PasskeyVerify from './components/passkey-verify.svelte';
 
     let {
         status = '',

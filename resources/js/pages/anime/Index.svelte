@@ -1,5 +1,5 @@
 <script module lang="ts">
-    import { index as animeIndex } from '@/routes/anime';
+    import { create as animeCreate, index as animeIndex } from '@/routes/anime';
 
     export const layout = {
         breadcrumbs: [{ title: 'Anime', href: animeIndex() }],
@@ -7,25 +7,53 @@
 </script>
 
 <script lang="ts">
-    import { page, router } from '@inertiajs/svelte';
-    import { Clapperboard, Tag, Calendar, Eye, EyeOff } from 'lucide-svelte';
+    import { Link, page, router } from '@inertiajs/svelte';
+    import { onMount } from 'svelte';
+    import FilterBar from '@/components/anime/filter-bar.svelte';
+    import FilterDropdown from '@/components/anime/filter-dropdown.svelte';
+    import Grid from '@/components/anime/grid.svelte';
+    import { Icon } from '@/components/icon';
+    import Pagination from '@/components/pagination.svelte';
     import { Button } from '@/components/ui/button';
     import * as ButtonGroup from '@/components/ui/button-group';
+    import { Fab } from '@/components/ui/fab';
+    import { useAuth } from '@/lib/auth.svelte';
     import { useAnime } from '@/lib/use-anime.svelte';
     import type { AnimeFilterState } from '@/lib/use-anime.svelte';
     import type { RouteQueryOptions } from '@/wayfinder';
-    import FilterBar from './index/components/filter-bar.svelte';
-    import FilterDropdown from './index/components/filter-dropdown.svelte';
-    import Grid from './index/components/grid.svelte';
-    import Pagination from './index/components/pagination.svelte';
 
     let {
-        items = [],
-        pagination,
+        anime,
         sortOptions = [],
+        perPageValues = [12, 16, 20, 50],
     }: App.Data.Anime.AnimeIndexResponse = $props();
 
+    // TODO: Show validation errors from page.props.errors
+
     const { genres, tags, seasons, buildFilterQuery } = useAnime();
+    const { can } = useAuth();
+
+    onMount(() => {
+        const params = pageSearchParams();
+
+        if (!params.has('perPage')) {
+            const width = window.innerWidth;
+            let val = 12;
+
+            if (width >= 1536) {
+                val = 20;
+            } else if (width >= 1280) {
+                val = 16;
+            }
+
+            params.set('perPage', String(val));
+            router.get(
+                page.url.split('?')[0] + '?' + params.toString(),
+                undefined,
+                { preserveScroll: true, only: ['anime'] },
+            );
+        }
+    });
 
     let debounceTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -52,10 +80,11 @@
             tagNotIn: [],
             seasonIn: [],
             seasonNotIn: [],
+            isPublished: null,
         };
 
         for (const [key, value] of params) {
-            const match = key.match(/^filter\[(\w+)]\[\]$/);
+            const match = key.match(/^filter\[(\w+)](?:\[\d*])?$/);
 
             if (match) {
                 const filterKey = match[1] as keyof AnimeFilterState;
@@ -77,8 +106,13 @@
 
     let filters = $state<AnimeFilterState>(parseFilterState());
     let sort = $state(pageSearchParams().get('sort') || 'title->romaji');
-    const canReadDrafts = $derived(
-        page.props.auth?.permissions?.includes('post.read.self') ?? false,
+    let selectedTagNames = $derived(
+        filters.tagIn.map((id) => tags.find((t) => t.key === id)?.value ?? id),
+    );
+    let selectedTagNotInNames = $derived(
+        filters.tagNotIn.map(
+            (id) => tags.find((t) => t.key === id)?.value ?? id,
+        ),
     );
     let publishFilter = $state<'published' | 'draft' | null>(
         (() => {
@@ -92,28 +126,32 @@
         })(),
     );
 
+    const hasActiveFilters = $derived(filters.title !== '');
+
+    function clearSearch() {
+        filters.title = '';
+        applyFilters();
+    }
+
     function applyFilters() {
-        const query: Record<string, unknown> = {};
-        const filter = buildFilterQuery(filters);
-
-        if (Object.keys(filter).length > 0) {
-            query.filter = filter;
-        }
-
-        if (sort) {
-            query.sort = sort;
-        }
-
-        if (publishFilter) {
-            query.filter = {
-                ...(query.filter as Record<string, unknown>),
-                is_published: publishFilter === 'published' ? true : false,
-            };
-        }
+        const query = buildFilterQuery({
+            filter: {
+                ...filters,
+                isPublished:
+                    publishFilter === 'published'
+                        ? true
+                        : publishFilter === 'draft'
+                          ? false
+                          : null,
+            },
+            sort: sort || null,
+            perPage: null,
+        } satisfies App.Data.Anime.AnimeIndexRequest);
 
         router.get(animeIndex.url({ query } as RouteQueryOptions), undefined, {
             preserveState: true,
             preserveScroll: true,
+            only: ['anime'],
         });
     }
 
@@ -138,15 +176,17 @@
     }
 
     function onTagSelect(item: string, mode: 'in' | 'notIn' | 'none') {
+        const tagId = tags.find((t) => t.value === item)?.key ?? item;
+
         if (mode === 'in') {
-            filters.tagIn = [...filters.tagIn, item];
-            filters.tagNotIn = filters.tagNotIn.filter((t) => t !== item);
+            filters.tagIn = [...filters.tagIn, tagId];
+            filters.tagNotIn = filters.tagNotIn.filter((t) => t !== tagId);
         } else if (mode === 'notIn') {
-            filters.tagNotIn = [...filters.tagNotIn, item];
-            filters.tagIn = filters.tagIn.filter((t) => t !== item);
+            filters.tagNotIn = [...filters.tagNotIn, tagId];
+            filters.tagIn = filters.tagIn.filter((t) => t !== tagId);
         } else {
-            filters.tagIn = filters.tagIn.filter((t) => t !== item);
-            filters.tagNotIn = filters.tagNotIn.filter((t) => t !== item);
+            filters.tagIn = filters.tagIn.filter((t) => t !== tagId);
+            filters.tagNotIn = filters.tagNotIn.filter((t) => t !== tagId);
         }
 
         debouncedApply();
@@ -166,6 +206,24 @@
 
         debouncedApply();
     }
+
+    function clearGenreFilters() {
+        filters.genreIn = [];
+        filters.genreNotIn = [];
+        applyFilters();
+    }
+
+    function clearTagFilters() {
+        filters.tagIn = [];
+        filters.tagNotIn = [];
+        applyFilters();
+    }
+
+    function clearSeasonFilters() {
+        filters.seasonIn = [];
+        filters.seasonNotIn = [];
+        applyFilters();
+    }
 </script>
 
 <svelte:head>
@@ -177,39 +235,66 @@
         bind:search={filters.title}
         {sort}
         {sortOptions}
+        {hasActiveFilters}
         onsortchange={(v) => {
             sort = v;
             applyFilters();
         }}
         onsearchchange={onSearchChange}
+        onclear={clearSearch}
     />
 
     <div class="flex flex-wrap items-center gap-2">
         <FilterDropdown
             label="Genre"
-            icon={Clapperboard}
+            icon={{
+                lucide: () => import('lucide-svelte/icons/clapperboard'),
+                tabler: () => import('@tabler/icons-svelte/icons/movie'),
+                hugeicons: () =>
+                    import('@hugeicons/core-free-icons/ClapperboardIcon'),
+                phosphor: () => import('phosphor-svelte/lib/FilmReelIcon'),
+                remixicon: () => import('remixicon-svelte/icons/movie-line'),
+            }}
             items={genres.map((g) => g.value)}
             selectedIn={filters.genreIn}
             selectedNotIn={filters.genreNotIn}
             onselect={onGenreSelect}
+            onclear={clearGenreFilters}
         />
         <FilterDropdown
             label="Tag"
-            icon={Tag}
+            icon={{
+                lucide: () => import('lucide-svelte/icons/tag'),
+                tabler: () => import('@tabler/icons-svelte/icons/tag'),
+                hugeicons: () => import('@hugeicons/core-free-icons/Tag01Icon'),
+                phosphor: () => import('phosphor-svelte/lib/TagIcon'),
+                remixicon: () =>
+                    import('remixicon-svelte/icons/price-tag-3-line'),
+            }}
             items={tags.map((g) => g.value)}
-            selectedIn={filters.tagIn}
-            selectedNotIn={filters.tagNotIn}
+            selectedIn={selectedTagNames}
+            selectedNotIn={selectedTagNotInNames}
+            sortActive
             onselect={onTagSelect}
+            onclear={clearTagFilters}
         />
         <FilterDropdown
             label="Season"
-            icon={Calendar}
+            icon={{
+                lucide: () => import('lucide-svelte/icons/calendar'),
+                tabler: () => import('@tabler/icons-svelte/icons/calendar'),
+                hugeicons: () =>
+                    import('@hugeicons/core-free-icons/Calendar03Icon'),
+                phosphor: () => import('phosphor-svelte/lib/CalendarIcon'),
+                remixicon: () => import('remixicon-svelte/icons/calendar-line'),
+            }}
             items={seasons}
             selectedIn={filters.seasonIn}
             selectedNotIn={filters.seasonNotIn}
             onselect={onSeasonSelect}
+            onclear={clearSeasonFilters}
         />
-        {#if canReadDrafts}
+        {#if can('post.read.self')}
             <ButtonGroup.Root>
                 <Button
                     variant={publishFilter === 'published'
@@ -223,7 +308,16 @@
                         applyFilters();
                     }}
                 >
-                    <Eye class="size-4" />
+                    <Icon
+                        lucide={() => import('lucide-svelte/icons/eye')}
+                        tabler={() => import('@tabler/icons-svelte/icons/eye')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/ViewIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/EyeIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/eye-line')}
+                        class="size-4"
+                    />
                     Published
                 </Button>
                 <Button
@@ -236,16 +330,47 @@
                         applyFilters();
                     }}
                 >
-                    <EyeOff class="size-4" />
+                    <Icon
+                        lucide={() => import('lucide-svelte/icons/eye-off')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/eye-off')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/ViewOffSlashIcon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/EyeSlashIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/eye-off-line')}
+                        class="size-4"
+                    />
                     Draft
                 </Button>
             </ButtonGroup.Root>
         {/if}
     </div>
 
-    <Grid {items} />
+    <Grid items={anime.data} />
 
-    {#if pagination}
-        <Pagination links={pagination.links} />
+    {#if anime}
+        <Pagination data={anime} only={['anime']} {perPageValues} />
+    {/if}
+
+    {#if can('post.create')}
+        <Fab>
+            {#snippet child({ props })}
+                <Link href={animeCreate().url} prefetch="hover" {...props}>
+                    <Icon
+                        lucide={() => import('lucide-svelte/icons/plus')}
+                        tabler={() => import('@tabler/icons-svelte/icons/plus')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/PlusSignIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/PlusIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/add-line')}
+                        class="size-6"
+                    />
+                    Add
+                </Link>
+            {/snippet}
+        </Fab>
     {/if}
 </div>

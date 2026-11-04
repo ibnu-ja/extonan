@@ -14,14 +14,16 @@ final readonly class AnimeSeasonsQuery
     {
         $subquery = DB::table('anime')
             ->select(
-                DB::raw('metadata->>\'season\' as season'),
-                DB::raw('metadata->>\'seasonYear\' as year'),
-                DB::raw('CONCAT(INITCAP(metadata->>\'season\'), \' \', metadata->>\'seasonYear\') AS season_year'))
-            ->distinct();
+                'season',
+                DB::raw('season_year AS year'),
+                DB::raw('CONCAT(INITCAP(season), \' \', season_year) AS season_year_label'))
+            ->distinct()
+            ->whereNotNull('season')
+            ->whereNotNull('season_year');
 
         return DB::query()
             ->fromSub($subquery, 'anime_season_order')
-            ->select('season_year')
+            ->select(DB::raw('season_year_label AS season_year'))
             ->orderByRaw('CAST(year AS INTEGER)')
             ->orderByRaw('CASE
                 WHEN season = \'WINTER\' THEN 1

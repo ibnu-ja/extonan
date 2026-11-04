@@ -3,8 +3,8 @@
 namespace App\Data;
 
 use App\Models\User;
-use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class UserSummaryData extends Data

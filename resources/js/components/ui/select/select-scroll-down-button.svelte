@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Select as SelectPrimitive } from "bits-ui";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
-	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
+	import { Icon } from "@/components/icon/index.js";
 
 	let {
 		ref = $bindable(null),
@@ -13,8 +13,14 @@
 <SelectPrimitive.ScrollDownButton
 	bind:ref
 	data-slot="select-scroll-down-button"
-	class={cn("bg-popover z-10 flex cursor-default items-center justify-center py-1 [&_svg:not([class*='size-'])]:size-4 bottom-0 w-full", className)}
+	class={cn("cn-select-scroll-down-button bg-popover z-10 flex cursor-default items-center justify-center py-1 [&_svg:not([class*='size-'])]:size-4 bottom-0 w-full", className)}
 	{...restProps}
 >
-	<ChevronDownIcon  />
+	<Icon
+		lucide={() => import("lucide-svelte/icons/chevron-down")}
+		tabler={() => import("@tabler/icons-svelte/icons/chevron-down")}
+		hugeicons={() => import("@hugeicons/core-free-icons/ArrowDown01Icon")}
+		phosphor={() => import("phosphor-svelte/lib/CaretDownIcon")}
+		remixicon={() => import("remixicon-svelte/icons/arrow-down-s-line")}
+	/>
 </SelectPrimitive.ScrollDownButton>

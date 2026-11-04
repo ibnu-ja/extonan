@@ -11,7 +11,7 @@ class RecordAuthorObserver
      */
     public function creating(BasePost $post): void
     {
-        $post->author_id = auth()->id();
+        $post->author_id = $post->author_id ?? auth()->id();
     }
 
     /**

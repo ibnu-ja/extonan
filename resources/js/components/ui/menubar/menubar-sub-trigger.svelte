@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { Menubar as MenubarPrimitive } from "bits-ui";
-	import ChevronRightIcon from "@lucide/svelte/icons/chevron-right";
-	import { cn, type WithoutChild } from "@/lib/utils.js";
+	import { Icon } from "@/components/icon/index.js";
+	import { cn } from "@/lib/utils.js";
 
 	let {
 		ref = $bindable(null),
 		class: className,
-		inset = undefined,
+		inset,
 		children,
 		...restProps
-	}: WithoutChild<MenubarPrimitive.SubTriggerProps> & {
+	}: MenubarPrimitive.SubTriggerProps & {
 		inset?: boolean;
 	} = $props();
 </script>
@@ -19,11 +19,18 @@
 	data-slot="menubar-sub-trigger"
 	data-inset={inset}
 	class={cn(
-		"focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none data-[inset]:ps-8",
+		"cn-menubar-sub-trigger flex cursor-default select-none items-center outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
 		className
 	)}
 	{...restProps}
 >
 	{@render children?.()}
-	<ChevronRightIcon class="ms-auto size-4" />
+	<Icon
+		lucide={() => import("lucide-svelte/icons/chevron-right")}
+		tabler={() => import("@tabler/icons-svelte/icons/chevron-right")}
+		hugeicons={() => import("@hugeicons/core-free-icons/ArrowRight01Icon")}
+		phosphor={() => import("phosphor-svelte/lib/CaretRightIcon")}
+		remixicon={() => import("remixicon-svelte/icons/arrow-right-s-line")}
+		class="cn-rtl-flip ml-auto size-4"
+	/>
 </MenubarPrimitive.SubTrigger>

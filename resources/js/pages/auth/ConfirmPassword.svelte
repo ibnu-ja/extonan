@@ -14,12 +14,12 @@
     } from '@/actions/Laravel/Passkeys/Http/Controllers/PasskeyConfirmationController';
     import AppHead from '@/components/app-head.svelte';
     import InputError from '@/components/input-error.svelte';
-    import PasskeyVerify from '@/components/passkey-verify.svelte';
     import PasswordInput from '@/components/password-input.svelte';
     import { Button } from '@/components/ui/button';
     import { Label } from '@/components/ui/label';
     import { Spinner } from '@/components/ui/spinner';
     import { store } from '@/routes/password/confirm';
+    import PasskeyVerify from './components/passkey-verify.svelte';
 </script>
 
 <AppHead title="Confirm password" />

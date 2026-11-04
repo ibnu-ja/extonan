@@ -1,11 +1,7 @@
 <script lang="ts">
 	import { Toaster as Sonner, type ToasterProps as SonnerProps } from "svelte-sonner";
 	import { mode } from "mode-watcher";
-	import Loader2Icon from '@lucide/svelte/icons/loader-2';
-	import CircleCheckIcon from '@lucide/svelte/icons/circle-check';
-	import OctagonXIcon from '@lucide/svelte/icons/octagon-x';
-	import InfoIcon from '@lucide/svelte/icons/info';
-	import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
+	import { Icon } from "@/components/icon/index.js";
 
 	let { ...restProps }: SonnerProps = $props();
 </script>
@@ -17,18 +13,53 @@
 	{...restProps}
 >
 	{#snippet loadingIcon()}
-		<Loader2Icon class="size-4 animate-spin" />
+		<Icon
+			lucide={() => import("lucide-svelte/icons/loader-circle")}
+			tabler={() => import("@tabler/icons-svelte/icons/loader")}
+			hugeicons={() => import("@hugeicons/core-free-icons/Loading03Icon")}
+			phosphor={() => import("phosphor-svelte/lib/SpinnerIcon")}
+			remixicon={() => import("remixicon-svelte/icons/loader-line")}
+			class="size-4 animate-spin"
+		/>
 	{/snippet}
 	{#snippet successIcon()}
-		<CircleCheckIcon class="size-4" />
+		<Icon
+			lucide={() => import("lucide-svelte/icons/circle-check")}
+			tabler={() => import("@tabler/icons-svelte/icons/circle-check")}
+			hugeicons={() => import("@hugeicons/core-free-icons/CheckmarkCircle02Icon")}
+			phosphor={() => import("phosphor-svelte/lib/CheckCircleIcon")}
+			remixicon={() => import("remixicon-svelte/icons/checkbox-circle-line")}
+			class="size-4"
+		/>
 	{/snippet}
 	{#snippet errorIcon()}
-		<OctagonXIcon class="size-4" />
+		<Icon
+			lucide={() => import("lucide-svelte/icons/octagon-x")}
+			tabler={() => import("@tabler/icons-svelte/icons/alert-octagon")}
+			hugeicons={() => import("@hugeicons/core-free-icons/MultiplicationSignCircleIcon")}
+			phosphor={() => import("phosphor-svelte/lib/XCircleIcon")}
+			remixicon={() => import("remixicon-svelte/icons/error-warning-line")}
+			class="size-4"
+		/>
 	{/snippet}
 	{#snippet infoIcon()}
-		<InfoIcon class="size-4" />
+		<Icon
+			lucide={() => import("lucide-svelte/icons/info")}
+			tabler={() => import("@tabler/icons-svelte/icons/info-circle")}
+			hugeicons={() => import("@hugeicons/core-free-icons/InformationCircleIcon")}
+			phosphor={() => import("phosphor-svelte/lib/InfoIcon")}
+			remixicon={() => import("remixicon-svelte/icons/information-line")}
+			class="size-4"
+		/>
 	{/snippet}
 	{#snippet warningIcon()}
-		<TriangleAlertIcon class="size-4" />
+		<Icon
+			lucide={() => import("lucide-svelte/icons/triangle-alert")}
+			tabler={() => import("@tabler/icons-svelte/icons/alert-triangle")}
+			hugeicons={() => import("@hugeicons/core-free-icons/Alert02Icon")}
+			phosphor={() => import("phosphor-svelte/lib/WarningIcon")}
+			remixicon={() => import("remixicon-svelte/icons/close-circle-line")}
+			class="size-4"
+		/>
 	{/snippet}
 </Sonner>

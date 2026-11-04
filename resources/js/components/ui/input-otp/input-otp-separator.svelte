@@ -2,7 +2,7 @@
 	import type { HTMLAttributes } from "svelte/elements";
 	import type { WithElementRef } from "@/lib/utils.js";
 	import { cn } from "@/lib/utils.js";
-	import MinusIcon from '@lucide/svelte/icons/minus';
+	import { Icon } from "@/components/icon/index.js";
 
 	let {
 		ref = $bindable(null),
@@ -22,6 +22,12 @@
 	{#if children}
 		{@render children?.()}
 	{:else}
-		<MinusIcon  />
+		<Icon
+			lucide={() => import("lucide-svelte/icons/minus")}
+			tabler={() => import("@tabler/icons-svelte/icons/minus")}
+			hugeicons={() => import("@hugeicons/core-free-icons/MinusSignIcon")}
+			phosphor={() => import("phosphor-svelte/lib/MinusIcon")}
+			remixicon={() => import("remixicon-svelte/icons/subtract-line")}
+		/>
 	{/if}
 </div>

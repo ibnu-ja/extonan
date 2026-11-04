@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
-	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
+	import { Icon } from "@/components/icon/index.js";
 	import { cn } from "@/lib/utils.js";
 
 	let {
@@ -19,11 +19,18 @@
 	data-slot="dropdown-menu-sub-trigger"
 	data-inset={inset}
 	class={cn(
-		"focus:bg-accent focus:text-accent-foreground data-open:bg-accent data-open:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 [&_svg:not([class*='size-'])]:size-4 flex cursor-pointer items-center outline-hidden select-none data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+		"cn-dropdown-menu-sub-trigger flex cursor-default items-center outline-hidden select-none data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0",
 		className
 	)}
 	{...restProps}
 >
 	{@render children?.()}
-	<ChevronRightIcon class="ml-auto" />
+	<Icon
+		lucide={() => import("lucide-svelte/icons/chevron-right")}
+		tabler={() => import("@tabler/icons-svelte/icons/chevron-right")}
+		hugeicons={() => import("@hugeicons/core-free-icons/ArrowRight01Icon")}
+		phosphor={() => import("phosphor-svelte/lib/CaretRightIcon")}
+		remixicon={() => import("remixicon-svelte/icons/arrow-right-s-line")}
+		class="cn-rtl-flip ml-auto"
+	/>
 </DropdownMenuPrimitive.SubTrigger>

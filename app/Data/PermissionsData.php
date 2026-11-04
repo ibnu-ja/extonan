@@ -5,8 +5,8 @@ namespace App\Data;
 use App\Models\BasePost;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Spatie\LaravelData\Attributes\TypeScript;
 use Spatie\LaravelData\Data;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class PermissionsData extends Data

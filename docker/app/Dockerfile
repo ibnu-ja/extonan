@@ -43,10 +43,6 @@ COPY --from=upstream /usr/local/bin/frankenphp /usr/local/bin/frankenphp
 ARG PUID=0
 ARG PGID=0
 ARG TZ=UTC
-ARG APP_VERSION=dev
-ARG APP_BRANCH=unknown
-ARG APP_COMMIT_HASH=unknown
-ARG APP_REPO_URL=""
 
 ENV TERM=xterm-color \
     OCTANE_SERVER=frankenphp \
@@ -58,10 +54,6 @@ ENV TERM=xterm-color \
     PUID=${PUID} \
     PGID=${PGID} \
     APP_ENV=production \
-    APP_VERSION=${APP_VERSION} \
-    APP_BRANCH=${APP_BRANCH} \
-    APP_COMMIT_HASH=${APP_COMMIT_HASH} \
-    APP_REPO_URL=${APP_REPO_URL} \
     COMPOSER_ALLOW_SUPERUSER=1 \
     COMPOSER_FUND=0 \
     COMPOSER_MAX_PARALLEL_HTTP=48 \
@@ -89,19 +81,8 @@ RUN install-php-extensions \
 RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
-COPY --from=composer /app/bootstrap/cache /app/bootstrap/cache
-COPY docker/runtime/php.ini /usr/local/etc/php/conf.d/99-php.ini
-COPY docker/runtime/Caddyfile /etc/caddy/Caddyfile
-COPY docker/runtime/start-container /usr/local/bin/start-container
-COPY docker/runtime/healthcheck /usr/local/bin/healthcheck
-COPY docker/runtime/supervisord.conf /etc/supervisor/supervisord.conf
-COPY docker/runtime/octane.conf /etc/supervisor/conf.d/octane.conf
-COPY docker/runtime/supervisord.horizon.conf /etc/supervisor/conf.d/supervisord.horizon.conf
-COPY docker/runtime/supervisord.scheduler.conf /etc/supervisor/conf.d/supervisord.scheduler.conf
-COPY docker/runtime/supervisord.worker.conf /etc/supervisor/conf.d/supervisord.worker.conf
-COPY docker/runtime/supervisord.reverb.conf /etc/supervisor/conf.d/supervisord.reverb.conf
-COPY docker/runtime/supervisord.ssr.conf /etc/supervisor/conf.d/supervisord.ssr.conf
 COPY --from=composer /app/vendor /app/vendor
+COPY --from=composer /app/bootstrap/cache /app/bootstrap/cache
 COPY --from=bun_builder /app/public/build /app/public/build
 
 COPY composer.json composer.lock ./
@@ -121,10 +102,40 @@ RUN mkdir -p \
     storage/framework/cache \
     storage/logs \
     bootstrap/cache \
-    && chmod +x /usr/local/bin/start-container /usr/local/bin/healthcheck \
     && composer dump-autoload --optimize --apcu --no-dev \
     && if [ "${SUPERVISOR_PHP_USER}" != "root" ]; then chown -R laravel:laravel /app; fi \
     && find / -perm /6000 -type f -exec chmod a-s {} + 2>/dev/null || true
+
+# Runtime configuration (placed near the end so runtime tweaks don't bust code/vendor cache)
+COPY docker/runtime/php.ini /usr/local/etc/php/conf.d/99-php.ini
+COPY docker/runtime/Caddyfile /etc/caddy/Caddyfile
+COPY docker/runtime/supervisord.conf /etc/supervisor/supervisord.conf
+COPY docker/runtime/octane.conf /etc/supervisor/conf.d/octane.conf
+COPY docker/runtime/supervisord.horizon.conf /etc/supervisor/conf.d/supervisord.horizon.conf
+COPY docker/runtime/supervisord.scheduler.conf /etc/supervisor/conf.d/supervisord.scheduler.conf
+COPY docker/runtime/supervisord.worker.conf /etc/supervisor/conf.d/supervisord.worker.conf
+COPY docker/runtime/supervisord.reverb.conf /etc/supervisor/conf.d/supervisord.reverb.conf
+COPY docker/runtime/supervisord.ssr.conf /etc/supervisor/conf.d/supervisord.ssr.conf
+COPY docker/runtime/start-container /usr/local/bin/start-container
+COPY docker/runtime/healthcheck /usr/local/bin/healthcheck
+RUN chmod +x /usr/local/bin/start-container /usr/local/bin/healthcheck
+
+ARG APP_VERSION=dev
+ARG APP_BRANCH=unknown
+ARG APP_COMMIT_HASH=unknown
+ARG APP_REPO_URL=""
+
+RUN echo "build commit: ${APP_COMMIT_HASH}"
+
+LABEL org.opencontainers.image.title="extonan-app" \
+    org.opencontainers.image.version="${APP_VERSION}" \
+    org.opencontainers.image.revision="${APP_COMMIT_HASH}" \
+    org.opencontainers.image.source="${APP_REPO_URL}"
+
+ENV APP_VERSION=${APP_VERSION} \
+    APP_BRANCH=${APP_BRANCH} \
+    APP_COMMIT_HASH=${APP_COMMIT_HASH} \
+    APP_REPO_URL=${APP_REPO_URL}
 
 USER ${USER}
 

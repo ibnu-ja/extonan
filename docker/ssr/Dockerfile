@@ -17,13 +17,30 @@ WORKDIR /app
 COPY bun.lock package.json ./
 RUN bun install --frozen-lockfile
 COPY --from=wayfinder /app /app
-RUN WAYFINDER_COMMAND=echo bun run build:ssr
+RUN WAYFINDER_COMMAND=echo bun run build:ssr \
+    && bun build bootstrap/ssr/ssr.js --outdir /app/dist --target bun
 
 FROM docker.io/oven/bun:1-alpine
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=bun_builder /app/node_modules /app/node_modules
-COPY --from=bun_builder /app/bootstrap/ssr /app/bootstrap/ssr
-COPY --from=bun_builder /app/public /app/public
+COPY --from=bun_builder /app/dist/ssr.js /app/ssr.js
+
+ARG APP_VERSION=dev
+ARG APP_BRANCH=unknown
+ARG APP_COMMIT_HASH=unknown
+ARG APP_REPO_URL=""
+
+RUN echo "build commit: ${APP_COMMIT_HASH}"
+
+LABEL org.opencontainers.image.title="extonan-ssr" \
+    org.opencontainers.image.version="${APP_VERSION}" \
+    org.opencontainers.image.revision="${APP_COMMIT_HASH}" \
+    org.opencontainers.image.source="${APP_REPO_URL}"
+
+ENV APP_VERSION=${APP_VERSION} \
+    APP_BRANCH=${APP_BRANCH} \
+    APP_COMMIT_HASH=${APP_COMMIT_HASH} \
+    APP_REPO_URL=${APP_REPO_URL}
+
 EXPOSE 13714
-CMD ["bun", "bootstrap/ssr/ssr.js"]
+CMD ["bun", "ssr.js"]

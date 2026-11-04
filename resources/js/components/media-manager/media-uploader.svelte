@@ -1,6 +1,6 @@
 <script lang="ts">
-    import AlertCircle from 'lucide-svelte/icons/alert-circle';
     import { store as mediaStore } from '@/actions/App/Http/Controllers/MediaController';
+    import { Icon } from '@/components/icon';
     import * as Alert from '@/components/ui/alert';
     import { Button } from '@/components/ui/button';
     import DropZone from './drop-zone.svelte';
@@ -124,7 +124,16 @@
 
 {#if errors.length > 0}
     <Alert.Root variant="destructive">
-        <AlertCircle />
+        <Icon
+            lucide={() => import('lucide-svelte/icons/circle-alert')}
+            tabler={() => import('@tabler/icons-svelte/icons/alert-circle')}
+            hugeicons={() =>
+                import('@hugeicons/core-free-icons/AlertCircleIcon')}
+            phosphor={() => import('phosphor-svelte/lib/WarningCircleIcon')}
+            remixicon={() =>
+                import('remixicon-svelte/icons/error-warning-line')}
+            class="size-4"
+        />
         <Alert.Title>Upload failed</Alert.Title>
         <Alert.Description>
             <ul class="list-inside list-disc text-sm">

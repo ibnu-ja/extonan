@@ -54,7 +54,7 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-    class="border-2 border-dashed rounded-lg p-8 flex items-center justify-center transition-colors data-[active=true]:border-primary data-[active=true]:bg-muted"
+    class="border-2 border-dashed rounded-[var(--radius)] p-8 flex items-center justify-center transition-colors data-[active=true]:border-primary data-[active=true]:bg-muted"
     data-active={active}
     ondragenter={setActive}
     ondragover={setActive}

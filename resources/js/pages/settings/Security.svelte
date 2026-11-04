@@ -17,12 +17,12 @@
     import AppHead from '@/components/app-head.svelte';
     import Heading from '@/components/heading.svelte';
     import InputError from '@/components/input-error.svelte';
-    import ManagePasskeys from '@/components/manage-passkeys.svelte';
-    import type { Props as ManagePasskeysProps } from '@/components/manage-passkeys.svelte';
-    import ManageTwoFactor from '@/components/manage-two-factor.svelte';
     import PasswordInput from '@/components/password-input.svelte';
     import { Button } from '@/components/ui/button';
     import { Label } from '@/components/ui/label';
+    import ManagePasskeys from './components/manage-passkeys.svelte';
+    import type { Props as ManagePasskeysProps } from './components/manage-passkeys.svelte';
+    import ManageTwoFactor from './components/manage-two-factor.svelte';
     const canManageTwoFactor = $derived(Boolean(page.props.canManageTwoFactor));
     const requiresConfirmation = $derived(
         Boolean(page.props.requiresConfirmation),

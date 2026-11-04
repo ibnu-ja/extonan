@@ -5,11 +5,25 @@
 </script>
 
 <script lang="ts">
+    import { Icon } from '@/components/icon';
     import MediaManager from '@/components/media-manager/index.svelte';
     import MediaManagerTrigger from '@/components/media-manager/media-manager-trigger.svelte';
+    import * as SpeedDial from '@/components/ui/speed-dial/index.js';
 
     let singleValue = $state<App.Data.MediaData | null>(null);
     let multiValue = $state<App.Data.MediaData[] | null>(null);
+
+    function onEdit() {
+        console.log('Edit clicked');
+    }
+
+    function onShare() {
+        console.log('Share clicked');
+    }
+
+    function onDelete() {
+        console.log('Delete clicked');
+    }
 </script>
 
 <svelte:head>
@@ -30,7 +44,7 @@
             <MediaManager title="Select Thumbnail" bind:value={singleValue}>
                 {#snippet header({ title, onOpen })}
                     <div
-                        class="flex items-center justify-between rounded-lg border p-4"
+                        class="flex items-center justify-between rounded-[var(--radius)] border p-4"
                     >
                         <div>
                             <h4 class="font-heading text-lg font-semibold">
@@ -55,14 +69,14 @@
                                     <img
                                         src={item.mediumUrl ?? item.url}
                                         alt={item.filename}
-                                        class="h-20 w-20 rounded object-cover"
+                                        class="h-20 w-20 rounded-[var(--radius)] object-cover"
                                     />
                                 {/each}
                             {:else}
                                 <img
                                     src={val.mediumUrl ?? val.url}
                                     alt={val.filename}
-                                    class="h-20 w-20 rounded object-cover"
+                                    class="h-20 w-20 rounded-[var(--radius)] object-cover"
                                 />
                             {/if}
                         </div>
@@ -101,7 +115,7 @@
             >
                 {#snippet header({ title, onOpen })}
                     <div
-                        class="flex items-center justify-between rounded-lg border p-4"
+                        class="flex items-center justify-between rounded-[var(--radius)] border p-4"
                     >
                         <h4 class="font-heading text-lg font-semibold">
                             {title}
@@ -122,14 +136,14 @@
                                     <img
                                         src={item.mediumUrl ?? item.url}
                                         alt={item.filename}
-                                        class="h-20 w-20 rounded object-cover"
+                                        class="h-20 w-20 rounded-[var(--radius)] object-cover"
                                     />
                                 {/each}
                             {:else}
                                 <img
                                     src={val.mediumUrl ?? val.url}
                                     alt={val.filename}
-                                    class="h-20 w-20 rounded object-cover"
+                                    class="h-20 w-20 rounded-[var(--radius)] object-cover"
                                 />
                             {/if}
                         </div>
@@ -149,5 +163,158 @@
                     2,
                 )}</pre>
         {/if}
+    </div>
+
+    <div>
+        <h2
+            class="font-heading scroll-m-20 text-2xl font-semibold tracking-tight"
+        >
+            Speed Dial
+        </h2>
+        <p class="text-muted-foreground text-sm">
+            FAB that expands action items above. Trigger toggles Plus/X with
+            rotation. Different button variants for each action.
+        </p>
+
+        <SpeedDial.Root>
+            <SpeedDial.Trigger>
+                {#snippet icon()}
+                    <Icon
+                        lucide={() => import('lucide-svelte/icons/plus')}
+                        tabler={() => import('@tabler/icons-svelte/icons/plus')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/PlusSignIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/PlusIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/add-line')}
+                        class="size-4"
+                    />
+                {/snippet}
+                {#snippet iconClose()}
+                    <Icon
+                        lucide={() => import('lucide-svelte/icons/x')}
+                        tabler={() => import('@tabler/icons-svelte/icons/x')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/Cancel01Icon')}
+                        phosphor={() => import('phosphor-svelte/lib/XIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/close-line')}
+                        class="size-4"
+                    />
+                {/snippet}
+                {#snippet labelClose()}
+                    Closess
+                {/snippet}
+                Add
+            </SpeedDial.Trigger>
+            <SpeedDial.Content>
+                <SpeedDial.Item variant="default" onclick={onEdit}>
+                    <Icon
+                        lucide={() => import('lucide-svelte/icons/file-pen')}
+                        tabler={() => import('@tabler/icons-svelte/icons/edit')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/PencilEdit02Icon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/PencilSimpleIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/edit-line')}
+                        class="size-4"
+                    />
+                    Edit
+                </SpeedDial.Item>
+                <SpeedDial.Item variant="secondary" onclick={onShare}>
+                    <Icon
+                        lucide={() => import('lucide-svelte/icons/share-2')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/share')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/Share01Icon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/ShareNetworkIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/share-line')}
+                        class="size-4"
+                    />
+                    Share
+                </SpeedDial.Item>
+                <SpeedDial.Item
+                    variant="outline"
+                    onclick={() => console.log('Download')}
+                >
+                    <Icon
+                        lucide={() => import('lucide-svelte/icons/download')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/download')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/Download01Icon')}
+                        phosphor={() =>
+                            import('phosphor-svelte/lib/DownloadSimpleIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/download-line')}
+                        class="size-4"
+                    />
+                    Download
+                </SpeedDial.Item>
+                <SpeedDial.Item
+                    variant="ghost"
+                    onclick={() => console.log('Preview')}
+                >
+                    <Icon
+                        lucide={() => import('lucide-svelte/icons/eye')}
+                        tabler={() => import('@tabler/icons-svelte/icons/eye')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/ViewIcon')}
+                        phosphor={() => import('phosphor-svelte/lib/EyeIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/eye-line')}
+                        class="size-4"
+                    />
+                    Preview
+                </SpeedDial.Item>
+                <SpeedDial.Item variant="destructive" onclick={onDelete}>
+                    <Icon
+                        lucide={() => import('lucide-svelte/icons/trash-2')}
+                        tabler={() =>
+                            import('@tabler/icons-svelte/icons/trash')}
+                        hugeicons={() =>
+                            import('@hugeicons/core-free-icons/Delete02Icon')}
+                        phosphor={() => import('phosphor-svelte/lib/TrashIcon')}
+                        remixicon={() =>
+                            import('remixicon-svelte/icons/delete-bin-line')}
+                        class="size-4"
+                    />
+                    Delete
+                </SpeedDial.Item>
+            </SpeedDial.Content>
+        </SpeedDial.Root>
+
+        <div class="mt-4">
+            <h3 class="font-heading text-lg font-semibold">Variants demo</h3>
+            <p class="text-muted-foreground text-xs mb-2">
+                Each item uses a different button variant:
+            </p>
+            <div class="flex flex-wrap gap-2">
+                <span
+                    class="inline-flex items-center gap-1 rounded-[var(--radius)] bg-primary px-2 py-0.5 text-xs text-primary-foreground"
+                    >default</span
+                >
+                <span
+                    class="inline-flex items-center gap-1 rounded-[var(--radius)] bg-secondary px-2 py-0.5 text-xs text-secondary-foreground"
+                    >secondary</span
+                >
+                <span
+                    class="inline-flex items-center gap-1 rounded-[var(--radius)] border px-2 py-0.5 text-xs"
+                    >outline</span
+                >
+                <span
+                    class="inline-flex items-center gap-1 rounded-[var(--radius)] bg-muted px-2 py-0.5 text-xs text-muted-foreground"
+                    >ghost</span
+                >
+                <span
+                    class="inline-flex items-center gap-1 rounded-[var(--radius)] bg-destructive/10 px-2 py-0.5 text-xs text-destructive"
+                    >destructive</span
+                >
+            </div>
+        </div>
     </div>
 </div>
