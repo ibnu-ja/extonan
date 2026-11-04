@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\ResourceType;
 use Carbon\CarbonImmutable;
+use Eloquent;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,13 +31,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource whereValue($value)
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
+#[Fillable(['name', 'value', 'type'])]
 class Resource extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['name', 'value', 'type'];
 
     public function post(): BelongsTo
     {

@@ -6,6 +6,7 @@ use App\Enums\ResourceType;
 use App\Http\Requests\ShinraiPostType;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -199,32 +200,30 @@ class Post extends BasePost
         );
     }
 
-    public function scopePrev(Builder $query, BasePost $basePost, Post $post): void
+    #[Scope]
+    protected function prev(Builder $query, BasePost $basePost, Post $post): void
     {
         $query->whereHasMorph('postable', [Anime::class], function (Builder $query) use ($basePost) {
             $query->select('id')->where('id', '=', $basePost->id)->with('author');
         })->with(['author'])->where('title', '<', $post->title)->orderBy('title');
     }
 
-    public function scopeNext(Builder $query, BasePost $basePost, Post $post): void
+    #[Scope]
+    protected function next(Builder $query, BasePost $basePost, Post $post): void
     {
         $query->whereHasMorph('postable', [Anime::class], function (Builder $query) use ($basePost) {
             $query->select('id')->where('id', '=', $basePost->id)->with('author');
         })->with(['author'])->where('title', '>', $post->title)->orderBy('title');
     }
 
-    /**
-     * TODO gunakan syntax scope baru
-     */
-    public function scopeShinrai(Builder $query): void
+    #[Scope]
+    protected function shinrai(Builder $query): void
     {
         $query->whereIn('metadata->post_type', array_column(ShinraiPostType::cases(), 'value'));
     }
 
-    /**
-     * TODO gunakan syntax scope baru
-     */
-    public function scopeOrderByEpisodeAndNativeTitle(Builder $query): void
+    #[Scope]
+    protected function orderByEpisodeAndNativeTitle(Builder $query): void
     {
         $query
             ->orderByRaw('"metadata" ->> \'ep_no\' collate "numeric"')

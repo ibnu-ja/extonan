@@ -1,5 +1,4 @@
 import '@inertiajs/svelte';
-import type { Config } from 'ziggy-js';
 
 export interface Auth {
     user: User;
@@ -12,7 +11,6 @@ export type PageProps<
     auth: Auth;
     sidebarOpen: boolean;
     [key: string]: unknown;
-    ziggy: Config & { location: string };
 };
 
 export interface User {
